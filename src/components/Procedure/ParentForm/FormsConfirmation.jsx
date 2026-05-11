@@ -68,7 +68,7 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     onStepSubmitSuccess();
                 }
             } catch (err) {
-                showNotification(err?.response?.data?.message, "error");
+                showNotification(err?.response?.data?.message || "Xác nhận biểu mẫu thất bại! Vui lòng thử lại", "error");
             }
         },
     }));

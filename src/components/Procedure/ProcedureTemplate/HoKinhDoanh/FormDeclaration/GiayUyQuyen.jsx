@@ -20,7 +20,7 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
     const parseKinhGui = (kg = "") => {
         const knownPrefixes = [
             "Phòng Kinh tế xã ",
-            "Phòng Kinh tế, Hạ tầng và Đô thị phường ",
+            "Phòng Kinh tế, Hạ tầng và Đô thị Phường ",
             "Phòng Kinh tế, Hạ tầng và Đô thị thị trấn ",
         ];
         for (const p of knownPrefixes) {
@@ -33,7 +33,7 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
 
     const _initParsed = parseKinhGui(localStorage.getItem("giayDeNghi_kinhGui") || "");
     const [kinhGuiPrefix, setKinhGuiPrefix] = useState(
-        () => _initParsed.prefix || "Phòng Kinh tế, Hạ tầng và Đô thị phường"
+        () => _initParsed.prefix || "Phòng Kinh tế, Hạ tầng và Đô thị Phường"
     );
     const [kinhGuiName, setKinhGuiName] = useState(() => _initParsed.name);
 
@@ -220,6 +220,9 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     className={styles.input}
                                     name="nhanUyQuyen_hoTen"
                                     defaultValue={localNhanUyQuyen.nhanUyQuyen_hoTen || user?.fullname || (dataJson?.nhanUyQuyen_hoTen || "")}
+                                    onChange={e => {
+                                        e.target.value = e.target.value?.trim().toUpperCase()
+                                    }}
                                     required
                                 />
                             </div>

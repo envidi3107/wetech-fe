@@ -19,6 +19,8 @@ export function generateHtmlString(element, options = {}) {
   const bodyHtml = element.outerHTML;
   // ── 2. Thu thập toàn bộ CSS hiện có trên trang ────────────────────────
   //       Bao gồm CSS Modules (đã được hash class name và inject vào DOM).
+  //       Lọc bỏ các rule font-family không phải Times New Roman để tránh
+  //       Roboto/font khác ghi đè font Times New Roman khi render PDF.
   let cssText = "";
   try {
     for (const sheet of document.styleSheets) {
@@ -26,7 +28,16 @@ export function generateHtmlString(element, options = {}) {
         const rules = sheet.cssRules || sheet.rules;
         if (!rules) continue;
         for (const rule of rules) {
-          cssText += rule.cssText + "\n";
+          // Lọc bỏ các CSS rule chứa font-family khác Times New Roman
+          // (vd: Roboto từ index.css, Poppins, ...) để tránh ghi đè font
+          const ruleText = rule.cssText;
+          if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
+            // Giữ lại rule nhưng xóa bỏ property font-family
+            const cleaned = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
+            cssText += cleaned + "\n";
+          } else {
+            cssText += ruleText + "\n";
+          }
         }
       } catch {
         // Stylesheet cross-origin (CDN, external) — bỏ qua, tránh lỗi SecurityError
@@ -45,16 +56,24 @@ export function generateHtmlString(element, options = {}) {
   <meta name="pdf-orientation" content="${landscape ? "landscape" : "portrait"}" />
   <title>${title}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+    ${cssText}
+  </style>
+  <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body {
       margin: 0;
       padding: 0;
       background: #fff;
       color: #000;
-      font-family: 'Roboto', sans-serif !important;
+      font-family: 'Times New Roman', serif !important;
       font-size: 14pt;
       line-height: 1.5;
+    }
+
+    p, span, div, td, th, li, ul, ol, h1, h2, h3, h4, h5, h6,
+    strong, em, b, i, a, label, pre {
+      font-family: 'Times New Roman', serif !important;
+      mso-bidi-font-family: 'Times New Roman';
     }
     
     table {
@@ -70,8 +89,6 @@ export function generateHtmlString(element, options = {}) {
       white-space: normal !important;
       font-size: 11pt !important;
     }
-
-    ${cssText}
   </style>
 </head>
 <body>

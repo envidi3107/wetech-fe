@@ -67,15 +67,13 @@ export default function GiayDeNghi({ dataJson }) {
     const isCaNhan = subject === "ca_nhan";
     const isGiaDinh = subject === "thanh_vien_gd";
 
-    const today = getToday();
-
     let kinhGuiTemp = kinhGui;
     if (kinhGuiTemp.includes("xã")) {
-        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.lastIndexOf("xã") + 3).trim();
-    } else if (kinhGuiTemp.includes("phường")) {
-        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.lastIndexOf("phường") + 6).trim();
+        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.indexOf("xã") + 3).trim();
+    } else if (kinhGuiTemp.includes("Phường") || kinhGuiTemp.includes("phường")) {
+        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.indexOf("Phường") + 6).trim();
     } else if (kinhGuiTemp.includes("thị trấn")) {
-        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.lastIndexOf("thị trấn") + 7).trim();
+        kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.indexOf("thị trấn") + 7).trim();
     }
 
     return (
@@ -262,7 +260,7 @@ export default function GiayDeNghi({ dataJson }) {
                                                 margin: 0,
                                                 whiteSpace: "pre-wrap",
                                                 wordBreak: "break-word",
-                                                fontFamily: "Roboto",
+                                                fontFamily: "'Times New Roman', serif",
                                                 fontSize: "16px"
                                             }}>{row.chiTiet}</pre>}
                                     </td>

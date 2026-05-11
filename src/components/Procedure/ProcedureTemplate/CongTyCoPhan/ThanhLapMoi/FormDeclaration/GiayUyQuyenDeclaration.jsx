@@ -19,11 +19,9 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
     const { procedure } = useProcessProcedure();
 
-    let typeCompanyPrefix = "CÔNG TY CỔ PHẦN";
-    if (procedure?.typeCompany === "cong_ty_tnhh_mot_thanh_vien") {
-        typeCompanyPrefix = "CÔNG TY TNHH MỘT THÀNH VIÊN";
-    } else if (procedure?.typeCompany === "cong_ty_tnhh_hai_thanh_vien_tro_len") {
-        typeCompanyPrefix = "CÔNG TY TNHH HAI THÀNH VIÊN TRỞ LÊN";
+    let typeCompanyPrefix = "CÔNG TY TNHH";
+    if (procedure?.typeCompany === "cong_ty_co_phan") {
+        typeCompanyPrefix = "CÔNG TY CỔ PHẦN";
     }
 
     const companyName = giayDeNghiData?.tenCongTyVN

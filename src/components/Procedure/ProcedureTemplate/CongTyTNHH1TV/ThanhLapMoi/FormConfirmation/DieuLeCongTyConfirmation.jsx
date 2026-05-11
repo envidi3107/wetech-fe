@@ -29,7 +29,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
                 <p className={styles.title}>ĐIỀU LỆ</p>
                 <p className={styles.subTitle}>
-                    CÔNG TY TNHH MỘT THÀNH VIÊN{" "}
+                    CÔNG TY TNHH {" "}
                     {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
                 </p>
             </div>
@@ -156,7 +156,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p className={styles.articleTitle}>Điều 4: Chủ sở hữu công ty</p>
             <div className={styles.flexRow}>
                 <p>
-                    <strong>Họ và tên: </strong>
+                    <span>Họ và tên: </span>
                     {dataJson.chuSoHuu_hoTen || "........................................."}
                 </p>
                 <p>Giới tính: {dataJson.chuSoHuu_gioiTinh || ".........."}</p>
@@ -350,7 +350,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <div className={styles.flexRow}>
                 <p>
-                    <strong>Họ và tên: </strong>
+                    <span>Họ và tên: </span>
                     {dataJson.nguoiDaiDien_hoTen || "........................................."}
                 </p>
                 <p>Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}</p>
@@ -371,7 +371,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     .join(", ") || ".........................................................."}
             </p>
             <p>
-                <strong>Chức danh: </strong>
+                <span>Chức danh: </span>
                 {dataJson.nguoiDaiDien_chucDanh || "Giám đốc"}
             </p>
 

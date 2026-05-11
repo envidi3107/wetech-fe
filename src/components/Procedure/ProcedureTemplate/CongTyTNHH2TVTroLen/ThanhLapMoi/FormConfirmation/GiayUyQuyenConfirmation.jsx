@@ -51,11 +51,6 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
         email: nhanUyQuyen_email || "",
     };
 
-    function formatWard(ward) {
-        if (!ward) return "";
-        return ward.charAt(0).toUpperCase() + ward.slice(1).toLowerCase();
-    }
-
     // Determine the prefix to display
     let prefix = "Phòng Đăng ký kinh doanh";
 
@@ -114,7 +109,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 <span>Là người đại diện đăng ký thành lập CÔNG TY TNHH </span>
                 <span>{chuHo_ten}</span>
                 <span> tại {prefix} </span>
-                <span>{formatWard(chuHo_xa_phuong)}</span>
+                <span>{chuHo_xa_phuong}</span>
             </div>
 
             <div
@@ -182,7 +177,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
             </div>
             <div className={styles.infoLine} style={{ lineHeight: "1.8" }}>
-                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập CÔNG TY TNHH <span>{chuHo_ten}</span> tại {prefix} <span>{formatWard(chuHo_xa_phuong)}</span>
+                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập CÔNG TY TNHH <span>{chuHo_ten}</span> tại {prefix} <span>{chuHo_xa_phuong}</span>
             </div>
 
             <div

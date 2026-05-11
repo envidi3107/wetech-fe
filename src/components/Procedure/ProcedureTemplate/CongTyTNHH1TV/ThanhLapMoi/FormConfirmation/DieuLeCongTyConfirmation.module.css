@@ -2,7 +2,7 @@
     max-width: 800px;
     margin: 0 auto;
     background-color: #fff;
-    font-family: Roboto, sans-serif;
+    font-family: 'Times New Roman', serif;
     font-size: 16px;
     line-height: 1.5;
     color: #000;
@@ -113,6 +113,8 @@
 .signatureBox .bold {
     font-weight: bold;
     margin: 0;
+    white-space: nowrap;
+
 }
 
 .signatureName {

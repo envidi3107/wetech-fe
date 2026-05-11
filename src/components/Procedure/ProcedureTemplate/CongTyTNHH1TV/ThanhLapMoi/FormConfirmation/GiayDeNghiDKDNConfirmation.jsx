@@ -8,7 +8,7 @@ const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x
 
 function GiayDeNghiDKDNConfirmation({ dataJson }) {
     if (!dataJson) {
-        return <div className={styles.emptyMessage}>Chưa có dữ liệu để hiển thị.</div>;
+        return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
     }
 
     const {
@@ -158,12 +158,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         return [soNha, xa, tinh].filter(Boolean).join(", ");
     };
 
-    const getLastName = (fullName) => {
-        if (!fullName) return "";
-        const nameParts = fullName.trim().split(" ");
-        return nameParts[nameParts.length - 1];
-    };
-
     const formatCurrency = (value) => {
         if (value === null || value === undefined || value === "") return "";
         const str = value.toString().trim();
@@ -191,7 +185,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <h2 className={styles.nationTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
                 <p className={styles.dateRight} style={{ fontStyle: "italic" }}>
-                    <CurrentDate prefix={lienLac_tinh} />
+                    <CurrentDate />
                 </p>
             </div>
 

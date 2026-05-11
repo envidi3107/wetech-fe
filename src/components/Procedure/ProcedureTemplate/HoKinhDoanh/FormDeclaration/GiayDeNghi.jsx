@@ -256,11 +256,11 @@ const GiayDeNghi = forwardRef(function GiayDeNghi({ formId, dataJson, onSubmit, 
 
     // Helpers extracted to SharedFormComponents
     const getKinhGuiPrefix = (ward) => {
-        if (!ward) return "Phòng Kinh tế, Hạ tầng và Đô thị phường ";
+        if (!ward) return "Phòng Kinh tế, Hạ tầng và Đô thị Phường ";
         const w = ward.toLowerCase();
         if (w.startsWith("xã")) return "Phòng Kinh tế xã ";
         if (w.startsWith("thị trấn")) return "Phòng Kinh tế, Hạ tầng và Đô thị thị trấn ";
-        return "Phòng Kinh tế, Hạ tầng và Đô thị phường ";
+        return "Phòng Kinh tế, Hạ tầng và Đô thị Phường ";
     };
     const currentKinhGuiPrefix = getKinhGuiPrefix(truSoXaValue);
 

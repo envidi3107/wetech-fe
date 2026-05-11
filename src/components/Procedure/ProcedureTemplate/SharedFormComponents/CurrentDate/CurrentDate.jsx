@@ -16,7 +16,7 @@ const processProvince = (province) => {
 
 export default function CurrentDate({ prefix, style, className }) {
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
-    const defaultProvince = giayDeNghiData?.lienLac_tinh || "";
+    const defaultProvince = giayDeNghiData?.truSo_tinh || "";
 
     const displayPrefix = prefix !== undefined ? processProvince(prefix) : (processProvince(defaultProvince) || "………");
 

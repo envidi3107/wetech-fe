@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./confirmation.module.css";
-import { getToday, formatDate } from "@/utils/dateTimeUtils";
+import { formatDate } from "@/utils/dateTimeUtils";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
-import SignatureBlock from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/SignatureBlock/SignatureBlock";
 
 export default function GiayUyQuyen({ dataJson }) {
     if (!dataJson) return null;
@@ -20,7 +19,7 @@ export default function GiayUyQuyen({ dataJson }) {
 
         chuHo_ten = "",
         chuHo_xa_phuong = "",
-        kinhGuiPrefix = "Phòng Kinh tế, Hạ tầng và Đô thị phường ",
+        kinhGuiPrefix = "Phòng Kinh tế, Hạ tầng và Đô thị Phường ",
     } = dataJson;
 
     const benB = {
@@ -35,15 +34,6 @@ export default function GiayUyQuyen({ dataJson }) {
         phone: dataJson.nhanUyQuyen_phone || "",
         email: dataJson.nhanUyQuyen_email || "",
     };
-
-    const today = getToday();
-
-
-
-    function formatWard(ward) {
-        if (!ward) return "";
-        return ward.charAt(0).toUpperCase() + ward.slice(1).toLowerCase();
-    }
 
     return (
         <div className={styles.page}>
@@ -100,7 +90,7 @@ export default function GiayUyQuyen({ dataJson }) {
                 <span>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </span>
                 <span>{chuHo_ten}</span>
                 <span> tại {kinhGuiPrefix.trim()} </span>
-                <span>{formatWard(chuHo_xa_phuong)}</span>
+                <span>{chuHo_xa_phuong}</span>
             </div>
 
             <div
@@ -169,7 +159,7 @@ export default function GiayUyQuyen({ dataJson }) {
             </div>
             <div className={styles.infoLine} style={{ lineHeight: "1.8" }}>
                 Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập HỘ KINH DOANH <span>{chuHo_ten}</span> tại {kinhGuiPrefix.trim()}{" "}
-                <span>{formatWard(chuHo_xa_phuong)}</span>
+                <span>{chuHo_xa_phuong}</span>
             </div>
 
             <div
@@ -186,7 +176,7 @@ export default function GiayUyQuyen({ dataJson }) {
             <div className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</div>
 
             <div className={styles.dateLocation}>
-                <CurrentDate prefix={formatWard(chuHo_xa_phuong)} />
+                <CurrentDate prefix={chuHo_xa_phuong} />
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", padding: "0 40px" }}>
