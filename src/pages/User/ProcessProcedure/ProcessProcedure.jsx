@@ -303,7 +303,7 @@ const ProcessProcedure = () => {
                                     } else if (activeTab === 0 && currentFormStep > 0) {
                                         setCurrentFormStep((prev) => prev - 1);
                                     } else if (activeTab === 0 && currentFormStep === 0) {
-                                        navigate(`/list-procedures/${procedure.typeCompany}`);
+                                        navigate(-1);
                                     } else if (activeTab === 1 && currentFormStep > 0) {
                                         setCurrentFormStep((prev) => prev - 1);
                                     } else {

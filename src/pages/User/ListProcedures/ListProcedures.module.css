@@ -44,6 +44,26 @@
     box-shadow: 0 4px 8px 0 rgba(145, 158, 171, 0.16);
 }
 
+.select {
+    display: block;
+    width: min(100%, 360px);
+    margin: 0 0 32px auto;
+    padding: 10px 14px;
+    border: 1px solid #c4c4c4;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.select:focus {
+    outline: none;
+    border-color: #1b154b;
+    box-shadow: 0 0 0 3px rgba(27, 21, 75, 0.12);
+}
+
 /* ====== SERVICE GROUP ====== */
 .service-group {
     margin-bottom: 40px;

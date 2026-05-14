@@ -69,6 +69,28 @@ const typeCompanyOptions = [
                             }
                         ],
                     },
+                    {
+                        title: "Thành lập mới văn phòng đại diện",
+                        value: "thanh_lap_moi_van_phong_dai_dien",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDKDNDeclaration,
+                                confirmation: GiayDeNghiDKDNConfirmation,
+                            }
+                        ],
+                    },
+                    {
+                        title: "Thành lập mới địa điểm kinh doanh",
+                        value: "thanh_lap_moi_dia_diem_kinh_doanh",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDKDNDeclaration,
+                                confirmation: GiayDeNghiDKDNConfirmation,
+                            }
+                        ],
+                    },
                 ],
             },
             {
@@ -142,6 +164,41 @@ const typeCompanyOptions = [
             {
                 title: "Đăng ký thay đổi",
                 value: "dang_ky_thay_doi",
+                procedures: [
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                        value: "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                                declaration: "GiayDeNghiDKDNDeclaration",
+                                confirmation: "GiayDeNghiDKDNConfirmation",
+                            }
+                        ],
+                    },
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                        value: "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                                declaration: "GiayDeNghiDKDNDeclaration",
+                                confirmation: "GiayDeNghiDKDNConfirmation",
+                            }
+                        ],
+                    },
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty TNHH 1 thành viên",
+                        value: "giay_de_nghi_dang_ky_thay_doi_chu_so_huu_cong_ty_tnhh_1_thanh_vien",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty TNHH 1 thành viên",
+                                declaration: "GiayDeNghiDKDNDeclaration",
+                                confirmation: "GiayDeNghiDKDNConfirmation",
+                            }
+                        ],
+                    }
+                ]
             },
             {
                 title: "Tạm ngừng - tiếp tục KD",

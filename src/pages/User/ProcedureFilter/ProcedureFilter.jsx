@@ -1,63 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ProcedureFilter.module.css";
 import Navbar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import CourseSkeleton from "@/components/Loading/Skeleton/CourseSkeleton";
+import ProcedureCard from "@/components/Procedure/ProcedureCard/ProcedureCard";
 import { publicAxios } from "@/services/axios-instance";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import serviceType from "@/consts/serviceType";
 
-const formatPrice = (price) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price || 0).replace("₫", "đ");
+const WindowIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M3.75 3.75V13.75H13.75V3.75H3.75ZM3.75 16.25V26.25H13.75V16.25H3.75ZM16.25 3.75V13.75H26.25V3.75H16.25ZM16.25 16.25V26.25H26.25V16.25H16.25Z"
+            fill="#443F6B"
+        />
+    </svg>
+);
 
-function ProcedureCard({ procedure, onClick }) {
-    const discount =
-        procedure.realPrice > procedure.salePrice
-            ? Math.round(((procedure.realPrice - procedure.salePrice) / procedure.realPrice) * 100)
-            : 0;
+const ArrowIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <g clipPath="url(#clip0_833_12029)">
+            <path
+                d="M13.825 7.1582L10 10.9749L6.175 7.1582L5 8.3332L10 13.3332L15 8.3332L13.825 7.1582Z"
+                fill="#0C0C0C"
+            />
+        </g>
+        <defs>
+            <clipPath id="clip0_833_12029">
+                <rect width="20" height="20" fill="white" />
+            </clipPath>
+        </defs>
+    </svg>
+);
 
-    return (
-        <div className={styles.procedureCard} onClick={onClick}>
-            <div className={styles.cardImg}>
-                {procedure.linkImage ? (
-                    <img src={procedure.linkImage} alt={procedure.title} />
-                ) : (
-                    <div className={styles.cardImgPlaceholder}>
-                        <svg
-                            viewBox="0 0 24 24"
-                            width="40"
-                            height="40"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
-                            />
-                        </svg>
-                    </div>
-                )}
-                {discount > 0 && <span className={styles.discountBadge}>-{discount}%</span>}
-            </div>
-            <div className={styles.cardBody}>
-                <p className={styles.cardCategory}>{procedure.typeCompanyTitle || procedure.serviceTypeTitle || "—"}</p>
-                <h3 className={styles.cardTitle}>{procedure.title}</h3>
-                <p className={styles.cardDesc}>{procedure.description}</p>
-                <div className={styles.cardPrices}>
-                    <span className={styles.salePrice}>{formatPrice(procedure.salePrice)}</span>
-                    {procedure.realPrice > procedure.salePrice && (
-                        <span className={styles.realPrice}>{formatPrice(procedure.realPrice)}</span>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// ===== Main Page =====
 const ProcedureFilter = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -66,14 +44,16 @@ const ProcedureFilter = () => {
     const [allProcedures, setAllProcedures] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedPriceFilters, setSelectedPriceFilters] = useState([]);
     const [searchTerm, setSearchTerm] = useState(queryParam);
     const [loading, setLoading] = useState(true);
+    const [selectedProcedure, setSelectedProcedure] = useState(null);
+    const [viewMode, setViewMode] = useState("list");
 
-    const pageTitle = "Tất cả thủ tục pháp lý";
+    const pageTitle = "Tất cả thủ tục";
 
-    // --- Fetch all ---
     useEffect(() => {
-        const fetch = async () => {
+        const fetchProcedures = async () => {
             setLoading(true);
             try {
                 const res = await publicAxios.get("/api/procedurer/get-all");
@@ -84,18 +64,19 @@ const ProcedureFilter = () => {
                 setLoading(false);
             }
         };
-        fetch();
+
+        fetchProcedures();
     }, []);
 
-    // --- Apply filters ---
     useEffect(() => {
         let result = allProcedures;
 
         if (searchTerm.trim()) {
+            const lowerSearchTerm = searchTerm.toLowerCase();
             result = result.filter(
                 (p) =>
-                    p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    p.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+                    p.title?.toLowerCase().includes(lowerSearchTerm) ||
+                    p.description?.toLowerCase().includes(lowerSearchTerm),
             );
         }
 
@@ -103,8 +84,17 @@ const ProcedureFilter = () => {
             result = result.filter((p) => selectedCategories.includes(p.serviceType));
         }
 
+        if (selectedPriceFilters.length > 0) {
+            result = result.filter((p) => {
+                if (selectedPriceFilters.includes("free") && selectedPriceFilters.includes("paid")) return true;
+                if (selectedPriceFilters.includes("free")) return p.salePrice === 0;
+                if (selectedPriceFilters.includes("paid")) return p.salePrice > 0;
+                return true;
+            });
+        }
+
         setFiltered(result);
-    }, [allProcedures, searchTerm, selectedCategories]);
+    }, [allProcedures, searchTerm, selectedCategories, selectedPriceFilters]);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -114,16 +104,35 @@ const ProcedureFilter = () => {
         setSelectedCategories((prev) => (prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]));
     };
 
-    // Count per category from allProcedures
-    const countFor = (value) => allProcedures.filter((p) => p.serviceType === value).length;
+    const togglePriceFilter = (value) => {
+        setSelectedPriceFilters((prev) => (prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]));
+    };
 
-    // Group result by serviceTypeTitle for display
-    const grouped = filtered.reduce((acc, p) => {
-        const key = p.serviceTypeTitle || p.typeCompanyTitle;
-        acc[key] = acc[key] ?? [];
-        acc[key].push(p);
-        return acc;
-    }, {});
+    const openModal = (procedure) => {
+        setSelectedProcedure(procedure);
+    };
+
+    const closeModal = () => {
+        setSelectedProcedure(null);
+    };
+
+    const handleRegister = () => {
+        if (selectedProcedure?.procedureId) {
+            navigate(`/process-procedure/${selectedProcedure.procedureId}`);
+            window.scrollTo(0, 0);
+        }
+
+        closeModal();
+    };
+
+    const toggleViewMode = () => {
+        setViewMode((prev) => (prev === "list" ? "grid" : "list"));
+    };
+
+    const countFor = (value) => allProcedures.filter((p) => p.serviceType === value).length;
+    const countFree = allProcedures.filter((p) => p.salePrice === 0).length;
+    const countPaid = allProcedures.filter((p) => p.salePrice > 0).length;
+    const nextViewLabel = viewMode === "grid" ? "Hiển thị danh sách" : "Hiển thị dạng lưới";
 
     return (
         <div className={styles.procedureFilter}>
@@ -132,7 +141,6 @@ const ProcedureFilter = () => {
                 <Breadcrumb items={[{ label: "Trang chủ", link: "/" }, { label: "Thủ tục pháp lý" }]} />
 
                 <div className={styles["procedures-page-layout"]}>
-                    {/* Left Column: Title + Filter */}
                     <div className={styles["filter-column"]}>
                         <h2 className={styles["procedure-title-sidebar"]}>{pageTitle}</h2>
                         <div className={styles["filter-container"]}>
@@ -157,10 +165,41 @@ const ProcedureFilter = () => {
                                     ))}
                                 </div>
                             </div>
+
+                            <div className={styles["filter-section"]}>
+                                <div className={styles["section-header"]}>
+                                    <span>Giá</span>
+                                </div>
+                                <div className={styles["section-content"]}>
+                                    <label className={styles["filter-option"]}>
+                                        <div className={styles["option-left"]}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPriceFilters.includes("free")}
+                                                onChange={() => togglePriceFilter("free")}
+                                            />
+                                            <span className={styles["custom-checkbox"]}></span>
+                                            <span className={styles["option-text"]}>Miễn phí</span>
+                                        </div>
+                                        <span className={styles["option-count"]}>{countFree}</span>
+                                    </label>
+                                    <label className={styles["filter-option"]}>
+                                        <div className={styles["option-left"]}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPriceFilters.includes("paid")}
+                                                onChange={() => togglePriceFilter("paid")}
+                                            />
+                                            <span className={styles["custom-checkbox"]}></span>
+                                            <span className={styles["option-text"]}>Trả phí</span>
+                                        </div>
+                                        <span className={styles["option-count"]}>{countPaid}</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Main Content */}
                     <div className={styles["main-content"]}>
                         <div className={styles["procedure-header"]}>
                             <div className={styles["header-controls"]}>
@@ -173,48 +212,46 @@ const ProcedureFilter = () => {
                                     />
                                     <i className="fa-solid fa-magnifying-glass"></i>
                                 </div>
+                                <div className={styles["sort-dropdown"]}>
+                                    <span className={styles["sort-text"]}>Phổ biến nhất</span>
+                                    <ArrowIcon />
+                                </div>
+                                <button
+                                    type="button"
+                                    className={`${styles["view-mode-icon"]} ${
+                                        viewMode === "grid" ? styles["view-mode-icon-active"] : ""
+                                    }`}
+                                    onClick={toggleViewMode}
+                                    title={nextViewLabel}
+                                    aria-label={nextViewLabel}
+                                >
+                                    <WindowIcon />
+                                </button>
                             </div>
                         </div>
 
                         <div className={styles["procedures-list-container"]}>
                             {loading ? (
-                                <div className={styles["procedures-grid"]}>
-                                    {Array.from({ length: 8 }).map((_, index) => (
+                                <div className={styles["procedures-list"]}>
+                                    {Array.from({ length: 5 }).map((_, index) => (
                                         <CourseSkeleton key={index} />
                                     ))}
                                 </div>
                             ) : filtered.length > 0 ? (
-                                selectedCategories.length > 0 ? (
-                                    // Grouped View
-                                    Object.entries(grouped).map(([groupTitle, items]) => (
-                                        <div key={groupTitle} className={styles["procedure-group-section"]}>
-                                            <div className={styles["group-header"]}>
-                                                <h3 className={styles["group-title"]}>Thủ tục: {groupTitle}</h3>
-                                                <p className={styles["group-subtitle"]}>{items.length} thủ tục</p>
-                                            </div>
-                                            <div className={styles["procedures-grid"]}>
-                                                {items.map((p) => (
-                                                    <ProcedureCard
-                                                        key={p.procedureId}
-                                                        procedure={p}
-                                                        onClick={() => navigate(`/process-procedure/${p.procedureId}`)}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    // Flat View
-                                    <div className={styles["procedures-grid"]}>
-                                        {filtered.map((p) => (
-                                            <ProcedureCard
-                                                key={p.procedureId}
-                                                procedure={p}
-                                                onClick={() => navigate(`/process-procedure/${p.procedureId}`)}
-                                            />
-                                        ))}
-                                    </div>
-                                )
+                                <div
+                                    className={`${styles["procedures-list"]} ${
+                                        viewMode === "grid" ? styles["procedures-grid"] : ""
+                                    }`}
+                                >
+                                    {filtered.map((procedure) => (
+                                        <ProcedureCard
+                                            key={procedure.procedureId}
+                                            procedure={procedure}
+                                            onOpenModal={openModal}
+                                            viewMode={viewMode}
+                                        />
+                                    ))}
+                                </div>
                             ) : (
                                 <p className={styles["empty"]}>Không tìm thấy thủ tục nào phù hợp.</p>
                             )}
@@ -222,6 +259,47 @@ const ProcedureFilter = () => {
                     </div>
                 </div>
             </div>
+
+            {selectedProcedure && (
+                <div className={styles["modal-overlay"]} onClick={closeModal}>
+                    <div className={styles["modal-box"]} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles["modal-header"]}>
+                            <h3>Thông tin các hồ sơ cần chuẩn bị trước khi nộp hồ sơ</h3>
+                            <button type="button" className={styles["modal-close"]} onClick={closeModal}>
+                                ×
+                            </button>
+                        </div>
+                        <div className={styles["modal-body"]}>
+                            <p>{selectedProcedure.description} cần chuẩn bị 1 trong các hồ sơ đính kèm sau:</p>
+                            {selectedProcedure.forms && selectedProcedure.forms.length > 0 && (
+                                <ol className={styles["modal-list"]}>
+                                    {selectedProcedure.forms.map((form, i) => (
+                                        <li key={i}>{form.name}</li>
+                                    ))}
+                                </ol>
+                            )}
+                            <p>Quý khách nhận được kết quả sau 5-7 ngày làm việc bao gồm:</p>
+                            <ol className={styles["modal-list"]}>
+                                <li>Giấy phép kinh doanh</li>
+                                <li>Dấu (mộc) công ty hàng cao cấp</li>
+                                <li>Chữ ký số cao cấp</li>
+                                <li>Tài khoản ngân hàng chọn số của TechcomBank</li>
+                                <li>Thông báo phát hành hoá đơn điện tử</li>
+                                <li>Cập nhật chính sách thuế liên tục</li>
+                            </ol>
+                        </div>
+                        <div className={styles["modal-footer"]}>
+                            <button type="button" className={styles["btn-cancel"]} onClick={closeModal}>
+                                <span className={styles["icon-cancel"]}>×</span> Hủy
+                            </button>
+                            <button type="button" className={styles["btn-confirm"]} onClick={handleRegister}>
+                                <span className={styles["icon-confirm"]}>✓</span> Thực hiện
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <Footer />
         </div>
     );

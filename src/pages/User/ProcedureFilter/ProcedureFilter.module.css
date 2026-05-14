@@ -17,6 +17,7 @@
     align-items: flex-start;
 }
 
+/* ── Header Controls ── */
 .procedure-header {
     display: flex;
     align-items: center;
@@ -46,24 +47,60 @@
     border: none;
     outline: none;
     font-size: 14px;
-    color: #333;
+    color: var(--primary-content, #0c0c0c);
     padding-right: 25px;
     background: transparent;
+    font-family: var(--secondary-font-family, "Roboto");
 }
 
 .search-box-custom i {
     position: absolute;
     right: 0;
-    color: #555;
+    color: var(--secondary-content, #505050);
     font-size: 14px;
 }
 
-.view-mode {
-    color: #555;
-    font-size: 18px;
+/* Sort dropdown */
+.sort-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
 }
 
+.sort-text {
+    font-size: 14px;
+    font-family: var(--secondary-font-family, "Roboto");
+    color: var(--primary-content, #0c0c0c);
+    font-weight: 400;
+}
+
+/* View mode icon */
+.view-mode-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
+}
+
+.view-mode-icon:hover,
+.view-mode-icon-active {
+    background: #f5f4fb;
+    border-color: #d6d2ef;
+}
+
+/* ── Filter Column (Left Sidebar) ── */
 .filter-column {
     width: 250px;
     flex-shrink: 0;
@@ -81,11 +118,12 @@
     font-weight: 800;
     font-size: 24px;
     margin: 0 0 20px 0;
-    color: #000;
+    color: var(--primary-content, #0c0c0c);
     line-height: 1.2;
-    font-family: "Roboto Condensed";
+    font-family: var(--primary-font-family, "Roboto Condensed");
 }
 
+/* ── Main Content ── */
 .main-content {
     flex-grow: 1;
     min-width: 0;
@@ -95,66 +133,30 @@
 .procedures-list-container {
     display: flex;
     flex-direction: column;
-    gap: 40px;
     width: 100%;
 }
 
-.procedure-group-section {
+/* Vertical list (not grid) */
+.procedures-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
-}
-
-.group-header {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.group-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #000;
-    margin: 0 0 4px 0;
-    font-family: "Roboto Condensed";
-}
-
-.group-subtitle {
-    font-size: 14px;
-    margin: 0;
-    font-family: "Roboto";
-    color: var(--Neutral-colors-Gray-7, #717171);
 }
 
 .procedures-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    align-items: stretch;
 }
 
-@media (max-width: 1200px) {
-    .procedures-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 992px) {
-    .procedures-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .procedures-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-
-/* ── Filter Sidebar Elements (from FilterCourse.module.css) ── */
+/* ── Filter Sidebar Elements ── */
 .filter-container {
     width: 100%;
     background-color: transparent;
     box-shadow: none;
-    font-family: "Inter", sans-serif;
-    color: #1e1e2f;
+    font-family: var(--secondary-font-family, "Roboto");
+    color: var(--primary-content, #0c0c0c);
 }
 
 .filter-section {
@@ -163,9 +165,9 @@
 
 .section-header {
     font-weight: 700;
-    font-size: 18px;
-    color: var(--Brand-Color-Secondary, #1b154b);
-    font-family: "Roboto Condensed";
+    font-size: 16px;
+    color: var(--primary-color, #1b154b);
+    font-family: var(--primary-font-family, "Roboto Condensed");
     margin-bottom: 12px;
     cursor: default;
 }
@@ -182,12 +184,12 @@
     justify-content: space-between;
     cursor: pointer;
     font-size: 14px;
-    color: #555;
+    color: var(--secondary-content, #505050);
     transition: color 0.2s;
 }
 
 .filter-option:hover {
-    color: #000;
+    color: var(--primary-content, #0c0c0c);
 }
 
 .option-left {
@@ -210,9 +212,9 @@
     transition: all 0.2s;
 }
 
-.filter-option input[type="checkbox"]:checked + .custom-checkbox {
-    background-color: #2e2e48;
-    border-color: #2e2e48;
+.filter-option input[type="checkbox"]:checked+.custom-checkbox {
+    background-color: var(--primary-color, #1b154b);
+    border-color: var(--primary-color, #1b154b);
 }
 
 .custom-checkbox::after {
@@ -228,12 +230,18 @@
     transform: rotate(45deg);
 }
 
-.filter-option input[type="checkbox"]:checked + .custom-checkbox::after {
+.filter-option input[type="checkbox"]:checked+.custom-checkbox::after {
     display: block;
 }
 
 .option-text {
     line-height: 1.4;
+    font-size: 14px;
+    color: var(--secondary-content, #505050);
+}
+
+.filter-option:hover .option-text {
+    color: var(--primary-content, #0c0c0c);
 }
 
 .option-count {
@@ -241,29 +249,30 @@
     color: #999;
 }
 
-/* ── Procedure Card Updates to Match CourseCardMini layout inside ProcedureFilter ── */
+/* ── Horizontal Procedure Card ── */
 .procedureCard {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color, #c8c7d4);
     cursor: pointer;
     transition:
         transform 0.2s,
         box-shadow 0.2s;
     display: flex;
-    flex-direction: column;
-    height: 100%;
+    flex-direction: row;
+    align-items: stretch;
 }
 
 .procedureCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(27, 21, 75, 0.15);
+    box-shadow: 0 4px 16px rgba(27, 21, 75, 0.12);
 }
 
 .cardImg {
     position: relative;
-    height: 150px;
+    width: 200px;
+    min-height: 140px;
+    flex-shrink: 0;
     background: #f0f0f8;
     overflow: hidden;
 }
@@ -274,50 +283,22 @@
     object-fit: cover;
 }
 
-.cardImgPlaceholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9090b0;
-}
-
-.discountBadge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #e53935;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
 .cardBody {
-    padding: 14px 16px 16px;
+    padding: 16px 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-}
-
-.cardCategory {
-    font-size: 11px;
-    font-weight: 600;
-    color: #1b154b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
+    gap: 4px;
+    justify-content: center;
 }
 
 .cardTitle {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
-    color: #111;
+    color: var(--info-color);
     margin: 0;
     line-height: 1.4;
+    font-family: var(--primary-font-family, "Roboto Condensed");
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -327,35 +308,50 @@
 }
 
 .cardDesc {
-    font-size: 12px;
-    color: #666;
-    margin: 0;
+    font-size: 15px;
+    color: var(--secondary-content, #505050);
+    margin: 2px 0 0 0;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    flex: 1;
+    font-family: var(--secondary-font-family, "Roboto");
 }
 
 .cardPrices {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .salePrice {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
-    color: #1b154b;
+    color: var(--primary-content, #0c0c0c);
+    font-family: var(--primary-font-family, "Roboto Condensed");
 }
 
 .realPrice {
-    font-size: 13px;
-    color: #aaa;
+    font-size: 14px;
+    color: var(--secondary-content);
     text-decoration: line-through;
+    font-family: var(--secondary-font-family, "Roboto");
+}
+
+.cardDetailLink {
+    font-size: 16px;
+    color: var(--secondary-content, #505050);
+    margin-top: 4px;
+    font-family: var(--secondary-font-family, "Roboto");
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.procedureCard:hover .cardDetailLink {
+    color: var(--primary-color, #1b154b);
 }
 
 .empty {
@@ -363,4 +359,166 @@
     font-size: 15px;
     padding: 40px 0;
     text-align: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 992px) {
+    .procedures-page-layout {
+        flex-direction: column;
+        padding: 15px 24px;
+        gap: 24px;
+    }
+
+    .filter-column {
+        width: 100%;
+        position: static;
+        max-height: none;
+    }
+
+    .cardImg {
+        width: 160px;
+        min-height: 120px;
+    }
+}
+
+@media (max-width: 600px) {
+    .procedureCard {
+        flex-direction: column;
+    }
+
+    .cardImg {
+        width: 100%;
+        min-height: 160px;
+    }
+
+    .header-controls {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 8px;
+    width: 600px;
+    max-width: 95vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #1b154b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+}
+
+.modal-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    flex: 1;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    padding: 0 4px;
+    margin-left: 12px;
+}
+
+.modal-close:hover {
+    opacity: 0.8;
+}
+
+.modal-body {
+    padding: 24px 32px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 14px;
+    color: #0c0c0c;
+    line-height: 1.6;
+}
+
+.modal-body p {
+    margin: 0 0 12px 0;
+}
+
+.modal-list {
+    padding-left: 20px;
+    margin: 0 0 20px 0;
+}
+
+.modal-list li {
+    margin-bottom: 4px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 32px 24px;
+}
+
+.btn-cancel,
+.btn-confirm {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #d9d9d9;
+    background: white;
+    color: #1b154b;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover,
+.btn-confirm:hover {
+    background: #f5f5f5;
+    border-color: #c4c4c4;
+}
+
+.icon-cancel {
+    background: #ff4d4f;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.icon-confirm {
+    background: #8bc34a;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
 }

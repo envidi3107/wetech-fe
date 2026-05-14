@@ -102,6 +102,7 @@
 }
 
 .add-form-btn {
+    display: none;
     padding: 8px 16px;
     background-color: #e9ecef;
     color: #333;
@@ -149,6 +150,41 @@
 
 .remove-form-btn:hover {
     text-decoration: underline;
+}
+
+.generated-forms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.generated-forms-list h4 {
+    margin: 0;
+    font-size: 15px;
+    color: #495057;
+}
+
+.generated-form-item {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.generated-form-item span {
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.generated-form-item input {
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #212529;
+    background-color: #f8f9fa;
+    font-family: inherit;
 }
 
 /* Nút Submit */

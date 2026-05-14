@@ -23,22 +23,9 @@ const ProcedureForm = ({ procedureId }) => {
     });
 
     const [forms, setForms] = useState([]);
+    const [selectedProcedureType, setSelectedProcedureType] = useState("");
     const [previewImage, setPreviewImage] = useState(null);
-
     const allFormTypes = [];
-    const currentTypeCompanyData = typeCompanyOptions.find((tc) => tc.value === formData.typeCompany);
-    if (currentTypeCompanyData) {
-        const currentServiceData = currentTypeCompanyData.services?.find((svc) => svc.value === formData.serviceType);
-        if (currentServiceData) {
-            currentServiceData.procedures?.forEach((proc) => {
-                proc.formsType?.forEach((ft) => {
-                    if (ft.title && !allFormTypes.find((a) => a.value === (ft.value || ft.title))) {
-                        allFormTypes.push({ title: ft.title, value: ft.value || ft.title });
-                    }
-                });
-            });
-        }
-    }
 
     // ============ Derived options from typeCompany ============
 
@@ -49,6 +36,7 @@ const ProcedureForm = ({ procedureId }) => {
     // Danh sách procedures theo service đang chọn
     const currentServiceObj = serviceOptions.find((s) => s.value === formData.serviceType);
     const procedureOptions = currentServiceObj?.procedures || [];
+    const selectedProcedureValue = selectedProcedureType || forms[0]?.type || "";
 
     // ============================================================
 
@@ -75,6 +63,7 @@ const ProcedureForm = ({ procedureId }) => {
                         if (procedure.linkImage) setPreviewImage(procedure.linkImage);
                         if (procedure.forms && Array.isArray(procedure.forms)) {
                             setForms(procedure.forms);
+                            setSelectedProcedureType(procedure.forms[0]?.type || "");
                         }
                     }
                 } catch (error) {
@@ -99,6 +88,8 @@ const ProcedureForm = ({ procedureId }) => {
                 serviceType: "",
                 serviceTypeTitle: "",
             });
+            setForms([]);
+            setSelectedProcedureType("");
             return;
         }
 
@@ -109,6 +100,8 @@ const ProcedureForm = ({ procedureId }) => {
                 serviceType: value,
                 serviceTypeTitle: selectedSvc?.title || "",
             });
+            setForms([]);
+            setSelectedProcedureType("");
             return;
         }
 
@@ -149,6 +142,18 @@ const ProcedureForm = ({ procedureId }) => {
             name: "", // reset Tên biểu mẫu
         };
         setForms(updatedForms);
+    };
+
+    const handleProcedureSelectionChange = (selectedValue) => {
+        setSelectedProcedureType(selectedValue);
+        const selectedProc = procedureOptions.find((p) => (p.value || p.title) === selectedValue);
+        const nextForms =
+            selectedProc?.formsType?.map((ft) => ({
+                name: ft.title,
+                type: selectedValue,
+            })) || [];
+
+        setForms(nextForms);
     };
 
     // --- Submit Handler ---
@@ -303,7 +308,61 @@ const ProcedureForm = ({ procedureId }) => {
                         </button>
                     </div>
 
-                    {forms.map((form, index) => {
+                    <div className={styles["form-block"]}>
+                        <div className={styles["form-group-procedure-info"]} style={{ marginBottom: "16px" }}>
+                            <label>
+                                {"Lo\u1ea1i bi\u1ec3u m\u1eabu"} <span style={{ color: "red" }}>*</span>
+                            </label>
+                            {procedureOptions.length > 0 ? (
+                                <select
+                                    value={selectedProcedureValue}
+                                    onChange={(e) => handleProcedureSelectionChange(e.target.value)}
+                                >
+                                    <option value="" disabled>
+                                        {"-- Ch\u1ecdn lo\u1ea1i bi\u1ec3u m\u1eabu --"}
+                                    </option>
+                                    {procedureOptions.map((proc) => {
+                                        const val = proc.value || proc.title;
+                                        return (
+                                            <option key={val} value={val}>
+                                                {proc.title}
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            ) : (
+                                <input
+                                    type="text"
+                                    value=""
+                                    readOnly
+                                    placeholder={"Ch\u01b0a c\u00f3 lo\u1ea1i bi\u1ec3u m\u1eabu"}
+                                />
+                            )}
+                        </div>
+
+                        {selectedProcedureValue && (
+                            <div className={styles["generated-forms-list"]}>
+                                <h4>{"T\u00ean bi\u1ec3u m\u1eabu"}</h4>
+                                {forms.length > 0 ? (
+                                    forms.map((form, index) => (
+                                        <div
+                                            key={`${form.type}-${form.name}-${index}`}
+                                            className={styles["generated-form-item"]}
+                                        >
+                                            <span>#{index + 1}</span>
+                                            <input type="text" value={form.name || ""} readOnly />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p style={{ color: "#6c757d", fontSize: "14px", fontStyle: "italic" }}>
+                                        {"Lo\u1ea1i bi\u1ec3u m\u1eabu n\u00e0y ch\u01b0a c\u00f3 t\u00ean bi\u1ec3u m\u1eabu."}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {false && forms.map((form, index) => {
                         // Lấy formsType của procedure đang chọn cho biểu mẫu này
                         const selectedProc = procedureOptions.find((p) => (p.value || p.title) === form.type);
                         const formTypeOptions = selectedProc?.formsType || [];
@@ -393,7 +452,7 @@ const ProcedureForm = ({ procedureId }) => {
                         );
                     })}
 
-                    {forms.length === 0 && (
+                    {false && forms.length === 0 && (
                         <p style={{ color: "#6c757d", fontSize: "14px", fontStyle: "italic" }}>
                             Chưa có biểu mẫu nào. Nhấn "Thêm biểu mẫu" để tạo.
                         </p>

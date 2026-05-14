@@ -15,6 +15,7 @@ const Navbar = () => {
     const fullname = user?.fullname || "Người dùng";
     const email = user?.email || "Chưa có email";
     const linkImage = user?.linkImage || avatarImage;
+    const isAdmin = String(user?.role || "").toUpperCase().includes("ADMIN");
 
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
@@ -244,6 +245,11 @@ const Navbar = () => {
                                         </div>
                                         <hr className={styles["dropdown-divider"]} />
                                         <ul>
+                                            {isAdmin && (
+                                                <li>
+                                                    <Link to="/dashboard">Trang quản trị</Link>
+                                                </li>
+                                            )}
                                             <li>
                                                 <Link to="/my-courses">Khóa học của tôi</Link>
                                             </li>

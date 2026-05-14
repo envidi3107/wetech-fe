@@ -5,6 +5,7 @@ import Navbar from "@/components/NavBar/NavBar";
 import { publicAxios } from "@/services/axios-instance";
 import Banner from "@/components/Banner/Banner";
 import typeCompanyOptions from "@/consts/typeCompany";
+import serviceType from "@/consts/serviceType";
 import { useNavigate, useParams } from "react-router-dom";
 import ProcedureCard from "@/components/Procedure/ProcedureCard/ProcedureCard";
 
@@ -20,6 +21,7 @@ const ListProcedures = () => {
         return index !== -1 ? index : 0;
     });
     const [allProcedures, setAllProcedures] = useState([]); // grouped array
+    const [selectedServiceType, setSelectedServiceType] = useState("all");
     const [loading, setLoading] = useState(false);
 
     // Modal state
@@ -48,7 +50,13 @@ const ListProcedures = () => {
 
     const handleTabChange = (index) => {
         setActiveTab(index);
+        setSelectedServiceType("all");
     };
+
+    const filteredProcedures =
+        selectedServiceType === "all"
+            ? allProcedures
+            : allProcedures.filter((group) => group.serviceType === selectedServiceType);
 
     const openModal = (procedure) => {
         setSelectedProcedure(procedure);
@@ -86,12 +94,25 @@ const ListProcedures = () => {
                     </div>
 
                     {/* Nội dung: hiển thị theo từng group serviceType */}
+                    <select
+                        className={styles.select}
+                        value={selectedServiceType}
+                        onChange={(e) => setSelectedServiceType(e.target.value)}
+                    >
+                        <option value="all">Tất cả</option>
+                        {serviceType.map((item) => (
+                            <option key={item.value} value={item.value}>
+                                {item.label}
+                            </option>
+                        ))}
+                    </select>
+
                     {loading ? (
                         <p className={styles["empty-text"]}>Đang tải...</p>
-                    ) : allProcedures.length === 0 ? (
+                    ) : filteredProcedures.length === 0 ? (
                         <p className={styles["empty-text"]}>Chưa có thủ tục nào cho loại công ty này.</p>
                     ) : (
-                        allProcedures.map((group, gIndex) => (
+                        filteredProcedures.map((group, gIndex) => (
                             <div key={gIndex} className={styles["service-group"]}>
                                 <h2 className={styles["service-group-title"]}>
                                     {group.serviceTypeTitle?.toUpperCase()}

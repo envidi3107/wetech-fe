@@ -30,6 +30,7 @@ import MyCourses from "./pages/User/MyCourses/MyCourses";
 import ChangePassword from "./pages/User/ChangePassword/ChangePassword";
 import CartPage from "./pages/User/CartPage/CartPage";
 import ChatWidget from "./components/ChatWidget/ChatWidget";
+import AdminApiLoading from "./components/AdminApiLoading/AdminApiLoading";
 import { CartProvider } from "./context/CartContext";
 import { NotificationProvider, NotificationContext } from "./context/NotificationContext";
 import Notification from "./components/Notification/Notification";
@@ -45,6 +46,8 @@ function AppContent() {
             setNotificationHelper(notificationContext);
         }
     }, [notificationContext]);
+
+    const withAdminLoading = (element) => <AdminApiLoading>{element}</AdminApiLoading>;
 
     return (
         <CartProvider>
@@ -71,14 +74,14 @@ function AppContent() {
                 <Route path="/register-payment/:idTransaction" element={<RegisterPayment />} />
                 <Route path="/scan-qr/:idTransaction" element={<ScanQR />} />
 
-                <Route path="/dashboard" element={<DashBoard />} />
-                <Route path="/list-customer" element={<ListCustomer />} />
-                <Route path="/sales" element={<Transactions />} />
-                <Route path="/list-course" element={<ListCourse />} />
-                <Route path="/list-procedure" element={<ListProcedure />} />
-                <Route path="/create-procedure" element={<ProcedureManager />} />
-                <Route path="/manage-procedure/:procedureId" element={<ProcedureManager />} />
-                <Route path="/manage-course/:courseId" element={<CourseManager />} />
+                <Route path="/dashboard" element={withAdminLoading(<DashBoard />)} />
+                <Route path="/list-customer" element={withAdminLoading(<ListCustomer />)} />
+                <Route path="/sales" element={withAdminLoading(<Transactions />)} />
+                <Route path="/list-course" element={withAdminLoading(<ListCourse />)} />
+                <Route path="/list-procedure" element={withAdminLoading(<ListProcedure />)} />
+                <Route path="/create-procedure" element={withAdminLoading(<ProcedureManager />)} />
+                <Route path="/manage-procedure/:procedureId" element={withAdminLoading(<ProcedureManager />)} />
+                <Route path="/manage-course/:courseId" element={withAdminLoading(<CourseManager />)} />
                 <Route path="/cart" element={<CartPage />} />
 
                 {/* Catch-all route for 404 */}

@@ -6,7 +6,6 @@ import {
     QuocTichSelect,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
-import Signature from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/Signature/Signature";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import deleteIcon from "@/assets/delete-icon.png";
 
@@ -62,7 +61,7 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
                 loaiCoPhanKhacList: loaiCoPhanKhacList,
                 loaiCoPhanKhac_ten: loaiCoPhanKhacList[0] || "",
                 chuKy_ten: formData.get("chuKy_ten") || "",
-                chuKy_hoTen: formData.get("chuKy_hoTen") || ""
+                chuKy_hoTen: formData.get("chuKy_hoTen") || "",
             };
         },
         getExportData: () => {
@@ -81,7 +80,7 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
                 loaiCoPhanKhacList: loaiCoPhanKhacList,
                 loaiCoPhanKhac_ten: loaiCoPhanKhacList[0] || "",
                 chuKy_ten: formData.get("chuKy_ten") || "",
-                chuKy_hoTen: formData.get("chuKy_hoTen") || ""
+                chuKy_hoTen: formData.get("chuKy_hoTen") || "",
             };
         },
         importData: (imported) => {
@@ -99,13 +98,14 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        if (onSubmit) onSubmit({
-            coDongList: rows,
-            loaiCoPhanKhacList: loaiCoPhanKhacList,
-            loaiCoPhanKhac_ten: loaiCoPhanKhacList[0] || "",
-            chuKy_ten: formData.get("chuKy_ten") || "",
-            chuKy_hoTen: formData.get("chuKy_hoTen") || ""
-        });
+        if (onSubmit)
+            onSubmit({
+                coDongList: rows,
+                loaiCoPhanKhacList: loaiCoPhanKhacList,
+                loaiCoPhanKhac_ten: loaiCoPhanKhacList[0] || "",
+                chuKy_ten: formData.get("chuKy_ten") || "",
+                chuKy_hoTen: formData.get("chuKy_hoTen") || "",
+            });
     };
 
     const handleAdd = () => {
@@ -140,16 +140,20 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
             <div className={styles.wrapper}>
-                <div style={{ textAlign: "center", marginTop: "10px", fontWeight: "bold", fontSize: "16px", textTransform: "uppercase" }}>
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginTop: "10px",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        textTransform: "uppercase",
+                    }}
+                >
                     DANH SÁCH CỔ ĐÔNG SÁNG LẬP CÔNG TY CỔ PHẦN
                 </div>
 
                 <div className={styles.actionRow}>
-                    <button
-                        type="button"
-                        className={styles.btnPrimary}
-                        onClick={handleAdd}
-                    >
+                    <button type="button" className={styles.btnPrimary} onClick={handleAdd}>
                         Thêm dòng
                     </button>
                 </div>
@@ -158,42 +162,86 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 40 }}>STT</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 150 }}>Tên cổ đông sáng lập</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 120 }}>Ngày, tháng, năm sinh</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 80 }}>Giới tính</th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 40 }}>
+                                    STT
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 150 }}>
+                                    Tên cổ đông sáng lập
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 120 }}>
+                                    Ngày, tháng, năm sinh
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 80 }}>
+                                    Giới tính
+                                </th>
                                 <th rowSpan={4} className={styles.th} style={{ minWidth: 180 }}>
                                     Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân
                                 </th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 100 }}>Quốc tịch</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 100 }}>Dân tộc</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 150 }}>Địa chỉ liên lạc</th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 100 }}>
+                                    Quốc tịch
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 100 }}>
+                                    Dân tộc
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 150 }}>
+                                    Địa chỉ liên lạc
+                                </th>
                                 <th colSpan={8 + (loaiCoPhanKhacList.length - 1) * 2} className={styles.th}>
                                     Vốn góp
-                                    <InfoTooltip color="#fff" content="Ghi giá trị vốn cổ phần của từng cổ đông sáng lập. Tài sản hình thành giá trị vốn cổ phần cần được liệt kê cụ thể" />
+                                    <InfoTooltip
+                                        color="#fff"
+                                        content="Ghi giá trị vốn cổ phần của từng cổ đông sáng lập. Tài sản hình thành giá trị vốn cổ phần cần được liệt kê cụ thể"
+                                    />
                                 </th>
                                 <th rowSpan={4} className={styles.th} style={{ minWidth: 120 }}>
                                     Thời hạn góp vốn
-                                    <InfoTooltip color="#fff" content="Khi đăng ký thành lập doanh nghiệp, thời hạn góp vốn là thời hạn cổ đông dự kiến hoàn thành góp vốn" />
+                                    <InfoTooltip
+                                        color="#fff"
+                                        content="Khi đăng ký thành lập doanh nghiệp, thời hạn góp vốn là thời hạn cổ đông dự kiến hoàn thành góp vốn"
+                                    />
                                 </th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 120 }}>Ghi chú (nếu có)</th>
-                                <th rowSpan={4} className={styles.th} style={{ minWidth: 60 }}>Thao tác</th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 120 }}>
+                                    Ghi chú (nếu có)
+                                </th>
+                                <th rowSpan={4} className={styles.th} style={{ minWidth: 60 }}>
+                                    Thao tác
+                                </th>
                             </tr>
                             <tr>
-                                <th colSpan={2} className={styles.th}>Tổng số cổ phần</th>
-                                <th rowSpan={3} className={styles.th} style={{ minWidth: 60 }}>Tỷ lệ (%)</th>
-                                <th colSpan={2 + loaiCoPhanKhacList.length * 2} className={styles.th}>Loại cổ phần</th>
+                                <th colSpan={2} className={styles.th}>
+                                    Tổng số cổ phần
+                                </th>
+                                <th rowSpan={3} className={styles.th} style={{ minWidth: 60 }}>
+                                    Tỷ lệ (%)
+                                </th>
+                                <th colSpan={2 + loaiCoPhanKhacList.length * 2} className={styles.th}>
+                                    Loại cổ phần
+                                </th>
                                 <th rowSpan={3} className={styles.th} style={{ minWidth: 160 }}>
                                     Loại tài sản, số lượng, giá trị tài sản góp vốn
-                                    <InfoTooltip color="#fff" content="Loại tài sản góp vốn bao gồm: Đồng Việt Nam; Ngoại tệ tự do chuyển đổi; Vàng; Quyền sử dụng đất; Quyền sở hữu trí tuệ; Công nghệ; Bí quyết kỹ thuật; Tài sản khác" />
+                                    <InfoTooltip
+                                        color="#fff"
+                                        content="Loại tài sản góp vốn bao gồm: Đồng Việt Nam; Ngoại tệ tự do chuyển đổi; Vàng; Quyền sử dụng đất; Quyền sở hữu trí tuệ; Công nghệ; Bí quyết kỹ thuật; Tài sản khác"
+                                    />
                                 </th>
                             </tr>
                             <tr>
-                                <th rowSpan={2} className={styles.th} style={{ minWidth: 100 }}>Số lượng</th>
-                                <th rowSpan={2} className={styles.th} style={{ minWidth: 100 }}>Giá trị</th>
-                                <th colSpan={2} className={styles.th}>Phổ thông</th>
+                                <th rowSpan={2} className={styles.th} style={{ minWidth: 100 }}>
+                                    Số lượng
+                                </th>
+                                <th rowSpan={2} className={styles.th} style={{ minWidth: 100 }}>
+                                    Giá trị
+                                </th>
+                                <th colSpan={2} className={styles.th}>
+                                    Phổ thông
+                                </th>
                                 {loaiCoPhanKhacList.map((ten, i) => (
-                                    <th colSpan={2} key={i} className={styles.th} style={{ padding: "4px", position: "relative" }}>
+                                    <th
+                                        colSpan={2}
+                                        key={i}
+                                        className={styles.th}
+                                        style={{ padding: "4px", position: "relative" }}
+                                    >
                                         <input
                                             type="text"
                                             className={styles.input}
@@ -202,37 +250,94 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
                                             onChange={(e) => handleKhacNameChange(i, e.target.value)}
                                             style={{
                                                 color: "#fff",
-                                                textAlign: "center", backgroundColor: "transparent",
+                                                textAlign: "center",
+                                                backgroundColor: "transparent",
                                                 border: "none",
                                                 outline: "none",
                                                 width: "calc(100% - 40px)",
                                                 margin: "0 auto",
                                                 display: "block",
-                                                fontWeight: "bold"
+                                                fontWeight: "bold",
                                             }}
                                         />
                                         {i === loaiCoPhanKhacList.length - 1 && (
-                                            <button type="button" onClick={handleAddKhac} style={{ position: "absolute", right: 2, top: "50%", transform: "translateY(-50%)", background: "#28a745", color: "white", border: "none", borderRadius: "50%", width: "20px", height: "20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", lineHeight: 1 }}>+</button>
+                                            <button
+                                                type="button"
+                                                onClick={handleAddKhac}
+                                                style={{
+                                                    position: "absolute",
+                                                    right: 2,
+                                                    top: "50%",
+                                                    transform: "translateY(-50%)",
+                                                    background: "#28a745",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "50%",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    cursor: "pointer",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    fontSize: "14px",
+                                                    lineHeight: 1,
+                                                }}
+                                            >
+                                                +
+                                            </button>
                                         )}
                                         {i > 0 && (
-                                            <button type="button" onClick={() => handleRemoveKhac(i)} style={{ position: "absolute", left: 2, top: "50%", transform: "translateY(-50%)", background: "#dc3545", color: "white", border: "none", borderRadius: "50%", width: "20px", height: "20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", lineHeight: 1 }}>-</button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveKhac(i)}
+                                                style={{
+                                                    position: "absolute",
+                                                    left: 2,
+                                                    top: "50%",
+                                                    transform: "translateY(-50%)",
+                                                    background: "#dc3545",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "50%",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    cursor: "pointer",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    fontSize: "14px",
+                                                    lineHeight: 1,
+                                                }}
+                                            >
+                                                -
+                                            </button>
                                         )}
                                     </th>
                                 ))}
                             </tr>
                             <tr>
-                                <th className={styles.th} style={{ minWidth: 100 }}>Số lượng</th>
-                                <th className={styles.th} style={{ minWidth: 100 }}>Giá trị</th>
+                                <th className={styles.th} style={{ minWidth: 100 }}>
+                                    Số lượng
+                                </th>
+                                <th className={styles.th} style={{ minWidth: 100 }}>
+                                    Giá trị
+                                </th>
                                 {loaiCoPhanKhacList.map((_, i) => (
                                     <React.Fragment key={i}>
-                                        <th className={styles.th} style={{ minWidth: 100 }}>Số lượng</th>
-                                        <th className={styles.th} style={{ minWidth: 100 }}>Giá trị</th>
+                                        <th className={styles.th} style={{ minWidth: 100 }}>
+                                            Số lượng
+                                        </th>
+                                        <th className={styles.th} style={{ minWidth: 100 }}>
+                                            Giá trị
+                                        </th>
                                     </React.Fragment>
                                 ))}
                             </tr>
                             <tr className={styles.colNumberRow}>
                                 {Array.from({ length: 16 + loaiCoPhanKhacList.length * 2 }).map((_, i) => (
-                                    <td key={i} className={styles.colNumber}>{i + 1}</td>
+                                    <td key={i} className={styles.colNumber}>
+                                        {i + 1}
+                                    </td>
                                 ))}
                                 <td className={styles.colNumber}></td>
                             </tr>
@@ -247,7 +352,9 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
                             )}
                             {rows.map((row, idx) => (
                                 <tr key={idx} className={styles.trEdit}>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>{idx + 1}</td>
+                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                        {idx + 1}
+                                    </td>
                                     <td className={styles.td}>
                                         <input
                                             className={styles.input}
@@ -294,44 +401,96 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
 
                                     {/* 9 - 16: Vốn góp */}
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="tongSoCoPhan_soLuong" value={row.tongSoCoPhan_soLuong} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="tongSoCoPhan_soLuong"
+                                            value={row.tongSoCoPhan_soLuong}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="tongSoCoPhan_giaTri" value={row.tongSoCoPhan_giaTri} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="tongSoCoPhan_giaTri"
+                                            value={row.tongSoCoPhan_giaTri}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="tyLe" value={row.tyLe} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="tyLe"
+                                            value={row.tyLe}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="loaiCoPhan_phoThong_soLuong" value={row.loaiCoPhan_phoThong_soLuong} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="loaiCoPhan_phoThong_soLuong"
+                                            value={row.loaiCoPhan_phoThong_soLuong}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="loaiCoPhan_phoThong_giaTri" value={row.loaiCoPhan_phoThong_giaTri} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="loaiCoPhan_phoThong_giaTri"
+                                            value={row.loaiCoPhan_phoThong_giaTri}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     {loaiCoPhanKhacList.map((_, i) => {
-                                        const slKey = i === 0 ? "loaiCoPhan_khac_soLuong" : `loaiCoPhan_khac_soLuong_${i}`;
-                                        const gtKey = i === 0 ? "loaiCoPhan_khac_giaTri" : `loaiCoPhan_khac_giaTri_${i}`;
+                                        const slKey =
+                                            i === 0 ? "loaiCoPhan_khac_soLuong" : `loaiCoPhan_khac_soLuong_${i}`;
+                                        const gtKey =
+                                            i === 0 ? "loaiCoPhan_khac_giaTri" : `loaiCoPhan_khac_giaTri_${i}`;
                                         return (
                                             <React.Fragment key={i}>
                                                 <td className={styles.td}>
-                                                    <input className={styles.input} name={slKey} value={row[slKey] || ""} onChange={(e) => handleRowChange(idx, e)} />
+                                                    <input
+                                                        className={styles.input}
+                                                        name={slKey}
+                                                        value={row[slKey] || ""}
+                                                        onChange={(e) => handleRowChange(idx, e)}
+                                                    />
                                                 </td>
                                                 <td className={styles.td}>
-                                                    <input className={styles.input} name={gtKey} value={row[gtKey] || ""} onChange={(e) => handleRowChange(idx, e)} />
+                                                    <input
+                                                        className={styles.input}
+                                                        name={gtKey}
+                                                        value={row[gtKey] || ""}
+                                                        onChange={(e) => handleRowChange(idx, e)}
+                                                    />
                                                 </td>
                                             </React.Fragment>
                                         );
                                     })}
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="loaiTaiSanGopVon" value={row.loaiTaiSanGopVon} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="loaiTaiSanGopVon"
+                                            value={row.loaiTaiSanGopVon}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
 
                                     {/* 17 - 19 */}
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="thoiHanGopVon" value={row.thoiHanGopVon} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="thoiHanGopVon"
+                                            value={row.thoiHanGopVon}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
                                     <td className={styles.td}>
-                                        <input className={styles.input} name="ghiChu" value={row.ghiChu} onChange={(e) => handleRowChange(idx, e)} />
+                                        <input
+                                            className={styles.input}
+                                            name="ghiChu"
+                                            value={row.ghiChu}
+                                            onChange={(e) => handleRowChange(idx, e)}
+                                        />
                                     </td>
 
                                     {/* Actions */}

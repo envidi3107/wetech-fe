@@ -14,12 +14,34 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.procedure-card-grid {
+    flex-direction: column;
+    height: 100%;
+}
+
 .procedure-image {
     width: 160px;
     height: 100px;
     object-fit: cover;
     border-radius: 8px;
     flex-shrink: 0;
+}
+
+.procedure-card-grid .procedure-image {
+    width: 100%;
+    height: 160px;
+}
+
+.procedure-card-grid .procedure-info {
+    height: 100%;
+}
+
+.procedure-card-grid .procedure-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .procedure-info {

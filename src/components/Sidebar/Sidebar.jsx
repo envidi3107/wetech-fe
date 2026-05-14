@@ -31,6 +31,11 @@ const Sidebar = () => {
 
             {/* Menu */}
             <div className={styles["sidebar-menu"]}>
+                <Link to="/" className={styles["menu-item"]}>
+                    <i className={`fa-solid fa-house ${styles["menu-icon"]}`}></i>
+                    <span>Trang chủ</span>
+                </Link>
+
                 <Link
                     to="/dashboard"
                     className={`${styles["menu-item"]} ${isActive("/dashboard") ? styles.active : ""}`}
