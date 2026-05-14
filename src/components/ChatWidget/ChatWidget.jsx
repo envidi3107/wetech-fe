@@ -16,6 +16,19 @@ export default function ChatWidget() {
         return () => clearTimeout(timeoutId);
     }, []);
 
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen]);
+
     return (
         <div className={styles["chat-widget-container"]}>
             {/* Khung chat */}
