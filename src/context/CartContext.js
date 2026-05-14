@@ -1,14 +1,16 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
 import { authAxios } from "@/services/axios-instance";
+import { useAuth } from "@/context/AuthContext";
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
+    const { isAuthenticated } = useAuth();
     const [cartCount, setCartCount] = useState(0);
 
-    const fetchCartCount = async () => {
+    const fetchCartCount = useCallback(async () => {
         const token = sessionStorage.getItem("authToken");
         if (!token) {
             setCartCount(0);
@@ -28,13 +30,18 @@ export const CartProvider = ({ children }) => {
             // Don't reset to 0 here to avoid flickering if it's just a temporary network error,
             // but if desired, we could. For now, keep as is.
         }
-    };
+    }, []);
 
     useEffect(() => {
-        if (cartCount > 0) return;
+        if (!isAuthenticated) {
+            setCartCount(0);
+            return;
+        }
 
         fetchCartCount();
-    }, [cartCount]);
+    }, [fetchCartCount, isAuthenticated]);
 
-    return <CartContext.Provider value={{ cartCount, fetchCartCount }}>{children}</CartContext.Provider>;
+    const value = useMemo(() => ({ cartCount, fetchCartCount }), [cartCount, fetchCartCount]);
+
+    return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

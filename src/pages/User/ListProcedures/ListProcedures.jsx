@@ -8,6 +8,7 @@ import typeCompanyOptions from "@/consts/typeCompany";
 import serviceType from "@/consts/serviceType";
 import { useNavigate, useParams } from "react-router-dom";
 import ProcedureCard from "@/components/Procedure/ProcedureCard/ProcedureCard";
+import { useNotification } from "@/hooks/useNotification";
 
 // Tabs chính = từng item trong typeCompanyOptions
 const tabs = typeCompanyOptions;
@@ -23,7 +24,7 @@ const ListProcedures = () => {
     const [allProcedures, setAllProcedures] = useState([]); // grouped array
     const [selectedServiceType, setSelectedServiceType] = useState("all");
     const [loading, setLoading] = useState(false);
-
+    const { showNotification } = useNotification();
     // Modal state
     const [selectedProcedure, setSelectedProcedure] = useState(null);
 
@@ -39,7 +40,7 @@ const ListProcedures = () => {
                 );
                 setAllProcedures(res.data || []);
             } catch (error) {
-                console.error("Lỗi khi tải danh sách thủ tục:", error);
+                showNotification("Lỗi khi tải danh sách thủ tục", "error");
                 setAllProcedures([]);
             } finally {
                 setLoading(false);
@@ -50,6 +51,7 @@ const ListProcedures = () => {
 
     const handleTabChange = (index) => {
         setActiveTab(index);
+        navigate(`/list-procedures/${tabs[index].value}`);
         setSelectedServiceType("all");
     };
 

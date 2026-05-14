@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import SearchInput from "@/components/SearchInput/SearchInput";
 
 const Navbar = () => {
-    const { cartCount, fetchCartCount } = useCart();
+    const { cartCount } = useCart();
     const { user, logout, isAuthenticated } = useAuth();
 
     // Fallback values if user is null (though isAuthenticated should handle showing/hiding)
@@ -24,10 +24,6 @@ const Navbar = () => {
     const userDropdownRef = useRef(null);
     const servicesDropdownRef = useRef(null);
     const procedureDropdownRef = useRef(null);
-
-    useEffect(() => {
-        fetchCartCount();
-    }, [fetchCartCount]);
 
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);

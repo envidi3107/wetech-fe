@@ -50,7 +50,7 @@ function AppContent() {
     const withAdminLoading = (element) => <AdminApiLoading>{element}</AdminApiLoading>;
 
     return (
-        <CartProvider>
+        <>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<LoginForm />} />
@@ -89,21 +89,21 @@ function AppContent() {
             </Routes>
             <Notification />
             {!hideChatWidget && <ChatWidget />}
-        </CartProvider>
+        </>
     );
 }
 
 function App() {
     return (
-        <CartProvider>
-            <NotificationProvider>
-                <AuthProvider>
+        <NotificationProvider>
+            <AuthProvider>
+                <CartProvider>
                     <Router>
                         <AppContent />
                     </Router>
-                </AuthProvider>
-            </NotificationProvider>
-        </CartProvider>
+                </CartProvider>
+            </AuthProvider>
+        </NotificationProvider>
     );
 }
 
