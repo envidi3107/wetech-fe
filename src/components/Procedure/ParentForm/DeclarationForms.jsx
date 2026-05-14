@@ -55,7 +55,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.name?.toLowerCase().includes("uỷ quyền") || currentForm?.name?.toLowerCase().includes("ủy quyền");
 
     // Detect form type by component name or title
-    const formComponentName = CurrentFormComponent?.displayName || CurrentFormComponent?.name || "";
+    const formComponentName = CurrentFormComponent?.displayName || CurrentFormComponent?.name || CurrentFormComponent?.render?.name || "";
     const isGiayDKDN = formComponentName === "GiayDeNghiDKDNDeclaration" ||
         currentForm?.name?.toLowerCase().includes("đăng ký doanh nghiệp");
 
@@ -70,6 +70,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
 
     const isDanhSachCoDongSangLap = formComponentName === "DanhSachCoDongSangLapDeclaration" ||
         currentForm?.name?.toLowerCase().includes("cổ đông sáng lập");
+
+    const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration";
 
     useEffect(() => {
         async function fetchFormSubmission() {
@@ -468,7 +470,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     }
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${isDangKyThayDoiDoanhNghiep ? styles.wideContainer : ""}`}>
             <input
                 ref={importInputRef}
                 type="file"

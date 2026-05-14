@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./ProgressStepper.module.css";
 
 const ProgressStepper = ({ currentStep = 3, isSuccess = false, steps = [] }) => {
+    if (steps.length <= 1) return null;
+
     return (
         <div className={styles["header-payment"]}>
             <div className={styles.steps}>

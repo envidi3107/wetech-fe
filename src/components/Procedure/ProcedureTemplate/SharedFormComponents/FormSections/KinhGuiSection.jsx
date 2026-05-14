@@ -1,51 +1,75 @@
 import { useState, useEffect } from "react";
+import Select from "react-select";
 import localStyles from "./KinhGuiSection.module.css";
 
-export default function KinhGuiSection({ dataJson, styles, autoKinhGui }) {
-    // autoKinhGui: string passed from parent when province is selected in DiaChiTruSo
-    // e.g. "Kính gửi Phòng Đăng ký kinh doanh Thành phố Hà Nội"
+export default function KinhGuiSection({
+    dataJson,
+    styles,
+    autoKinhGui,
+    prefixText,
+    provinceOptions,
+    selectedProvinceName,
+    onProvinceNameChange,
+}) {
     const [manualValue, setManualValue] = useState(dataJson?.kinhGui || "");
 
     useEffect(() => {
         setManualValue(dataJson?.kinhGui || "");
     }, [dataJson]);
 
-    const displayValue = autoKinhGui !== undefined && autoKinhGui !== null
-        ? autoKinhGui
-        : manualValue;
+    const displayValue = autoKinhGui !== undefined && autoKinhGui !== null ? autoKinhGui : manualValue;
+    const hasProvinceSelect = Array.isArray(provinceOptions) && typeof onProvinceNameChange === "function";
+    const selectOptions = hasProvinceSelect
+        ? provinceOptions.map((province) => ({ value: province.name, label: province.name, code: province.code }))
+        : [];
+    const selectedProvince = selectOptions.find((option) => option.value === selectedProvinceName) || null;
 
     return (
         <div className={styles.formGroup}>
-            <h3 className={`${styles.sectionTitle}`}>
-                Kính gửi:
-            </h3>
+            <h3 className={styles.sectionTitle}>Kính gửi:</h3>
             <div className={localStyles.inputWithSuffixKinhGui}>
-                {autoKinhGui !== undefined && autoKinhGui !== null ? (
-                    // Auto-filled from province selection – show as read-only styled text
-                    <p
-                        style={{
-                            margin: 0,
-                            fontSize: "14px",
-                            color: "#505050",
-                            borderBottom: "1px dashed #1e1b4b",
-                            flex: 1,
-                            paddingBottom: "2px",
-                        }}
-                    >
-                        {autoKinhGui || <span style={{ color: "#999" }}>Chọn tỉnh/thành phố trụ sở để tự động điền</span>}
+                {hasProvinceSelect ? (
+                    <div className={localStyles.provinceKinhGui}>
+                        <span className={localStyles.prefixText}>
+                            {prefixText || "Cơ quan đăng ký kinh doanh cấp tỉnh"}
+                        </span>
+                        <Select
+                            className={localStyles.provinceSelect}
+                            value={selectedProvince}
+                            options={selectOptions}
+                            placeholder="Chọn tỉnh/thành phố"
+                            isClearable
+                            onChange={(option) => onProvinceNameChange(option?.value || "")}
+                            noOptionsMessage={() => "Không tìm thấy"}
+                        />
+                    </div>
+                ) : autoKinhGui !== undefined && autoKinhGui !== null ? (
+                    <p className={localStyles.autoKinhGuiText}>
+                        {autoKinhGui || (
+                            <span style={{ color: "#999" }}>
+                                Chọn tỉnh/thành phố trụ sở để tự động điền
+                            </span>
+                        )}
                     </p>
                 ) : (
-                    // Manual input fallback
                     <input
                         type="text"
                         className={localStyles.inputKinhGui}
                         value={manualValue}
-                        onChange={(e) => setManualValue(e.target.value)}
+                        onChange={(event) => setManualValue(event.target.value)}
                         placeholder="Nhập kính gửi"
                         required
                     />
                 )}
             </div>
+            {hasProvinceSelect && (
+                <>
+                    <p className={localStyles.previewText}>
+                        {displayValue || "Chọn tỉnh/thành phố để tự động điền Cơ quan đăng ký kinh doanh."}
+                    </p>
+                    <input type="hidden" name="kinhGuiProvince" value={selectedProvinceName || ""} />
+                </>
+            )}
             <input type="hidden" name="kinhGui" value={displayValue} />
         </div>
     );

@@ -17,7 +17,6 @@ import BaoHiemXaHoiSection from "@/components/Procedure/ProcedureTemplate/Shared
 import ChuSoHuuHuongLoiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ChuSoHuuHuongLoiSection";
 import { buildKinhGui } from "@/consts/provinceRoomMap";
 
-
 const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
     { formId, dataJson, onSubmit, formRef },
     componentRef,
@@ -76,8 +75,7 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
 
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
-
-            {/* KÍNH GỬI + NGƯỜI NỘP HỒ SƠ */}
+            {/* NGƯỜI NỘP HỒ SƠ */}
             <div className={styles.sectionGroup}>
                 <ThongTinNguoiNopSection dataJson={dataJson} styles={styles} />
             </div>
@@ -89,11 +87,7 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
             <TenCongTySection dataJson={dataJson} styles={styles} prefix="CÔNG TY TNHH" />
 
             {/* ĐỊA CHỈ TRỤ SỞ */}
-            <DiaChiTruSoSection
-                dataJson={dataJson}
-                styles={styles}
-                onProvinceNameChange={handleProvinceNameChange}
-            />
+            <DiaChiTruSoSection dataJson={dataJson} styles={styles} onProvinceNameChange={handleProvinceNameChange} />
 
             {/* KÍNH GỬI – tự động cập nhật theo tỉnh/thành phố trụ sở */}
             <KinhGuiSection dataJson={dataJson} styles={styles} autoKinhGui={kinhGuiValue} />

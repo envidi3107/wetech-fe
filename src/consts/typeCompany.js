@@ -4,6 +4,8 @@ import GiayDeNghiDKDNDeclaration from "@/components/Procedure/ProcedureTemplate/
 import GiayDeNghiDKDNConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation";
 import DanhSachCSHHuongLoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
 import DanhSachCSHHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
+import GiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
 import GiayDeNghi from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayDeNghi";
 import GiayDeNghi2 from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/GiayDeNghi";
 import GiayUyQuyen from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayUyQuyen";
@@ -171,8 +173,8 @@ const typeCompanyOptions = [
                         formsType: [
                             {
                                 title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
-                                declaration: "GiayDeNghiDKDNDeclaration",
-                                confirmation: "GiayDeNghiDKDNConfirmation",
+                                declaration: GiayDeNghiDangKyThayDoiDeclaration,
+                                confirmation: GiayDeNghiDangKyThayDoiConfirmation,
                             }
                         ],
                     },

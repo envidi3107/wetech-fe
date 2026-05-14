@@ -2,6 +2,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .inputSuffixKinhGui {
@@ -28,6 +29,42 @@
     background: transparent;
 }
 
+.autoKinhGuiText {
+    margin: 0;
+    font-size: 14px;
+    color: #505050;
+    border-bottom: 1px dashed #1e1b4b;
+    flex: 1;
+    padding-bottom: 2px;
+}
+
+.provinceKinhGui {
+    display: grid;
+    grid-template-columns: minmax(210px, auto) minmax(240px, 1fr);
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.prefixText {
+    color: #505050;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.provinceSelect {
+    min-width: 0;
+}
+
+.previewText {
+    margin: 8px 0 0;
+    color: #505050;
+    font-size: 14px;
+    border-bottom: 1px dashed #1e1b4b;
+    padding-bottom: 4px;
+}
+
 
 .input,
 .select {
@@ -41,6 +78,16 @@
     background-color: #fff;
     min-height: 40px;
     font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+    .provinceKinhGui {
+        grid-template-columns: 1fr;
+    }
+
+    .prefixText {
+        white-space: normal;
+    }
 }
 
 .input:focus,
