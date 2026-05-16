@@ -41,6 +41,9 @@ const EMPTY_AUTHORIZED_REP = {
     ghiChu: "",
 };
 
+const TNHH1TV_EXCLUDED_A_OPTION_NAMES = new Set(["a_doiThanhVien", "a_doiCoDong"]);
+const TNHH1TV_A_CHANGE_OPTIONS = A_CHANGE_OPTIONS.filter((option) => !TNHH1TV_EXCLUDED_A_OPTION_NAMES.has(option.name));
+
 function Field({ label, name, dataJson, required = false, type = "text", children }) {
     const shouldUppercase = label?.toLocaleLowerCase("vi-VN").includes("ghi bằng chữ in hoa");
 
@@ -165,8 +168,25 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                     Thêm dòng
                 </button>
             </div>
-            <div style={{ overflowX: "auto", marginTop: 12 }}>
-                <table className={styles.table}>
+            <div className={localStyles.authorizedRepTableWrapper}>
+                <table className={`${styles.table} ${localStyles.authorizedRepTable}`}>
+                    <colgroup>
+                        <col className={localStyles.colIndex} />
+                        <col className={localStyles.colOrganization} />
+                        <col className={localStyles.colName} />
+                        <col className={localStyles.colDate} />
+                        <col className={localStyles.colGender} />
+                        <col className={localStyles.colLegalPaper} />
+                        <col className={localStyles.colNationality} />
+                        <col className={localStyles.colEthnicity} />
+                        <col className={localStyles.colAddress} />
+                        <col className={localStyles.colCapital} />
+                        <col className={localStyles.colRatio} />
+                        <col className={localStyles.colRepresentedAt} />
+                        <col className={localStyles.colSignature} />
+                        <col className={localStyles.colNote} />
+                        <col className={localStyles.colAction} />
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>STT</th>
@@ -276,7 +296,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setKinhGuiValue(matchedProvince ? buildKinhGui(matchedProvince) : parsed.kinhGui || "");
         setMainOption(parsed.noiDungThayDoi || "A");
         setAOptions(
-            A_CHANGE_OPTIONS.reduce((acc, option) => {
+            TNHH1TV_A_CHANGE_OPTIONS.reduce((acc, option) => {
                 acc[option.name] = isTruthy(parsed[option.name]);
                 return acc;
             }, {}),
@@ -318,7 +338,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             return false;
         }
 
-        if (mainOption === "A" && !Object.values(aOptions).some(Boolean)) {
+        if (mainOption === "A" && !TNHH1TV_A_CHANGE_OPTIONS.some((option) => !!aOptions[option.name])) {
             window.alert("Vui lòng chọn ít nhất một nội dung thay đổi trong Mục A.");
             return false;
         }
@@ -344,7 +364,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             data.sapNhap_maSoDoanhNghiep = "";
         }
         A_CHANGE_OPTIONS.forEach((option) => {
-            data[option.name] = aOptions[option.name] ? "true" : "false";
+            data[option.name] =
+                !TNHH1TV_EXCLUDED_A_OPTION_NAMES.has(option.name) && aOptions[option.name] ? "true" : "false";
         });
         data.nganhNgheBoSungList = nganhBoSungRows;
         data.nganhNgheBoList = nganhBoRows;
@@ -403,7 +424,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                 Chọn một hoặc nhiều nội dung thay đổi, phần kê khai tương ứng hiển thị ở cột bên phải.
                             </p>
                             <div className={localStyles.optionList}>
-                                {A_CHANGE_OPTIONS.map((option) => (
+                                {TNHH1TV_A_CHANGE_OPTIONS.map((option) => (
                                     <div key={option.name} className={localStyles.optionRow}>
                                         <label className={localStyles.optionItem}>
                                             <input
@@ -698,7 +719,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         hợp danh.
                                     </label>
                                     <TextAreaField
-                                        label="Cam kết sau khi giảm vốn (nếu đăng ký giảm vốn điều lệ)"
+                                        label="Cam kết sau khi giảm vốn (chỉ ghi cam kết trong trường hợp đăng ký giảm vốn điều lệ)"
                                         name="camKetSauGiamVon"
                                         dataJson={normalizedData}
                                         rows={3}

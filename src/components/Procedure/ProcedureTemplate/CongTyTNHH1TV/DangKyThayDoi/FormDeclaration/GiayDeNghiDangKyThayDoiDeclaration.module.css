@@ -97,6 +97,46 @@
     min-width: 0;
 }
 
+.authorizedRepTableWrapper {
+    overflow-x: auto;
+    margin-top: 12px;
+}
+
+.authorizedRepTable {
+    min-width: 2180px;
+    table-layout: fixed;
+}
+
+.authorizedRepTable .colIndex {
+    width: 64px;
+}
+
+.authorizedRepTable .colOrganization,
+.authorizedRepTable .colName,
+.authorizedRepTable .colLegalPaper,
+.authorizedRepTable .colAddress {
+    width: 220px;
+}
+
+.authorizedRepTable .colDate,
+.authorizedRepTable .colGender,
+.authorizedRepTable .colNationality,
+.authorizedRepTable .colEthnicity,
+.authorizedRepTable .colCapital,
+.authorizedRepTable .colRepresentedAt,
+.authorizedRepTable .colSignature,
+.authorizedRepTable .colNote {
+    width: 150px;
+}
+
+.authorizedRepTable .colRatio {
+    width: 90px;
+}
+
+.authorizedRepTable .colAction {
+    width: 76px;
+}
+
 .formLayout input[type="checkbox"],
 .formLayout input[type="radio"] {
     accent-color: var(--success-color);
