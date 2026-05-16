@@ -15,6 +15,10 @@ import DateInput from "@/components/DateInput/DateInput";
 import CapitalInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CapitalInput/CapitalInput";
 
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 /**
  * Map fields from corporate form (Giấy đề nghị đăng ký doanh nghiệp)
@@ -282,8 +286,9 @@ const GiayDeNghi = forwardRef(function GiayDeNghi({ formId, dataJson, onSubmit, 
                                 type="text"
                                 className={styles.input}
                                 name="nguoiDaiDien_hoTen"
-                                defaultValue={getDefaultValue("nguoiDaiDien_hoTen")}
+                                defaultValue={toUppercaseValue(getDefaultValue("nguoiDaiDien_hoTen"))}
                                 style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
                                 required
                             />
                         </div>
@@ -402,8 +407,9 @@ const GiayDeNghi = forwardRef(function GiayDeNghi({ formId, dataJson, onSubmit, 
                                 type="text"
                                 className={styles.inputNoBorder}
                                 name="hkd_tenVN"
-                                defaultValue={getDefaultValue("hkd_tenVN")}
+                                defaultValue={toUppercaseValue(getDefaultValue("hkd_tenVN"))}
                                 style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
                                 required
                             />
                         </div>

@@ -1,3 +1,8 @@
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
+
 export default function TenCongTySection({ dataJson, styles, prefix }) {
     return (
         <div className={styles.sectionGroup}>
@@ -13,8 +18,9 @@ export default function TenCongTySection({ dataJson, styles, prefix }) {
                             type="text"
                             className={styles.inputNoBorder}
                             name="tenCongTyVN"
-                            defaultValue={dataJson?.tenCongTyVN || ""}
+                            defaultValue={toUppercaseValue(dataJson?.tenCongTyVN)}
                             style={{ textTransform: "uppercase" }}
+                            onInput={handleUppercaseInput}
                             required
                         />
                     </div>
@@ -23,8 +29,9 @@ export default function TenCongTySection({ dataJson, styles, prefix }) {
                         type="text"
                         className={styles.input}
                         name="tenCongTyVN"
-                        defaultValue={dataJson?.tenCongTyVN || ""}
+                        defaultValue={toUppercaseValue(dataJson?.tenCongTyVN)}
                         style={{ textTransform: "uppercase" }}
+                        onInput={handleUppercaseInput}
                         required
                     />
                 )}

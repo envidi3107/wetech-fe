@@ -10,6 +10,10 @@ import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 const EMPTY_CO_DONG_ROW = {
     hoTen: "",
@@ -339,7 +343,7 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration(
                 <div className={styles.grid2}>
                     <div className={styles.formGroup}>
                         <label className={styles.label}>Họ và tên người đại diện theo pháp luật: <span style={{ color: "red" }}>*</span></label>
-                        <input type="text" className={styles.input} name="nguoiDaiDien_hoTen" defaultValue={mergedData?.nguoiDaiDien_hoTen || ""} required style={{ textTransform: "uppercase" }} />
+                        <input type="text" className={styles.input} name="nguoiDaiDien_hoTen" defaultValue={toUppercaseValue(mergedData?.nguoiDaiDien_hoTen)} required style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} />
                     </div>
                     <GioiTinhSelect name="nguoiDaiDien_gioiTinh" defaultValue={mergedData?.nguoiDaiDien_gioiTinh} required />
                     <div className={styles.formGroup}>

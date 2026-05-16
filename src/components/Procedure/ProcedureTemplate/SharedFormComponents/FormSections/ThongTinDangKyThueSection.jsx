@@ -5,6 +5,10 @@ import { GioiTinhSelect } from "@/components/Procedure/ProcedureTemplate/SharedF
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import CopyAddressCheckbox from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CopyAddressCheckbox/CopyAddressCheckbox";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 
 export default function ThongTinDangKyThueSection({ dataJson, styles, isNote = false }) {
@@ -190,7 +194,7 @@ export default function ThongTinDangKyThueSection({ dataJson, styles, isNote = f
                             <div className={styles.grid2}>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>Họ, chữ đệm và tên Giám đốc/Tổng giám đốc: <span className={styles.required}>*</span></label>
-                                    <input type="text" className={styles.input} name="giamDoc_hoTen" defaultValue={dataJson?.giamDoc_hoTen || dataJson?.nguoiDaiDien_hoTen || ""} onChange={(e) => e.target.value = e.target.value.toUpperCase()} required />
+                                    <input type="text" className={styles.input} name="giamDoc_hoTen" defaultValue={toUppercaseValue(dataJson?.giamDoc_hoTen || dataJson?.nguoiDaiDien_hoTen)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>Ngày, tháng, năm sinh: <span className={styles.required}>*</span></label>
@@ -219,7 +223,7 @@ export default function ThongTinDangKyThueSection({ dataJson, styles, isNote = f
                             <div key={`ketoan-group-${keToanKey}`}>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>Họ, chữ đệm và tên Kế toán trưởng/Phụ trách kế toán:</label>
-                                    <input type="text" className={styles.input} name="keToan_hoTen" defaultValue={keToanState.hoTen} onChange={(e) => e.target.value = e.target.value.toUpperCase()} />
+                                    <input type="text" className={styles.input} name="keToan_hoTen" defaultValue={toUppercaseValue(keToanState.hoTen)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} />
                                 </div>
                                 <div className={styles.grid2}>
                                     <div className={styles.formGroup}>

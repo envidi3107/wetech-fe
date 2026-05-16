@@ -19,7 +19,7 @@ export const A_CHANGE_OPTIONS = [
     { name: "a_doiDiaChi", label: "ĐĂNG KÝ THAY ĐỔI ĐỊA CHỈ TRỤ SỞ CHÍNH" },
     {
         name: "a_doiThanhVien",
-        label: "ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH/THÀNH VIÊN HỢP DANH CÔNG TY HỢP DANH",
+        label: "ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH",
     },
     {
         name: "a_doiVonDieuLe",

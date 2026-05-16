@@ -8,6 +8,10 @@ import DateInput from "@/components/DateInput/DateInput";
 import CapitalInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CapitalInput/CapitalInput";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration({ formId, dataJson, onSubmit, formRef }, componentRef) {
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
@@ -154,7 +158,7 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration({ fo
                     </label>
                     <div className={styles.inputPrefixWrapper}>
                         <p>CÔNG TY TNHH</p>
-                        <input type="text" name="tenCongTyVN" className={styles.inputNoBorder} defaultValue={defaultTenCongTyVN} style={{ textTransform: "uppercase" }} required />
+                        <input type="text" name="tenCongTyVN" className={styles.inputNoBorder} defaultValue={toUppercaseValue(defaultTenCongTyVN)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
                     </div>
                 </div>
                 <div className={styles.grid2}>

@@ -13,6 +13,10 @@ import TaiSanGopVonSection from "@/components/Procedure/ProcedureTemplate/Shared
 import ThongTinDangKyThueSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDangKyThueSection";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
+import {
     A_CHANGE_OPTIONS,
     FOOTNOTES,
     MAIN_CHANGE_OPTIONS,
@@ -38,6 +42,8 @@ const EMPTY_AUTHORIZED_REP = {
 };
 
 function Field({ label, name, dataJson, required = false, type = "text", children }) {
+    const shouldUppercase = label?.toLocaleLowerCase("vi-VN").includes("ghi bằng chữ in hoa");
+
     return (
         <div className={styles.formGroup}>
             <label className={styles.label}>
@@ -48,7 +54,9 @@ function Field({ label, name, dataJson, required = false, type = "text", childre
                     type={type}
                     className={styles.input}
                     name={name}
-                    defaultValue={dataJson?.[name] || ""}
+                    defaultValue={shouldUppercase ? toUppercaseValue(dataJson?.[name]) : dataJson?.[name] || ""}
+                    style={shouldUppercase ? { textTransform: "uppercase" } : undefined}
+                    onInput={shouldUppercase ? handleUppercaseInput : undefined}
                     required={required}
                 />
             )}
@@ -251,6 +259,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [nganhBoRows, setNganhBoRows] = useState([]);
     const [nganhSuaRows, setNganhSuaRows] = useState([]);
     const [authorizedRepRows, setAuthorizedRepRows] = useState([]);
+    const [coSoThayDoi, setCoSoThayDoi] = useState("");
+    const [pendingScrollTarget, setPendingScrollTarget] = useState("");
 
     useEffect(() => {
         const parsed = normalizeDataJson(dataJson);
@@ -258,8 +268,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             parsed.kinhGuiProvince ||
             provinces.find(
                 (province) =>
-                    buildKinhGui(province.name) === parsed.kinhGui ||
-                    parsed.kinhGui?.trim().endsWith(province.name),
+                    buildKinhGui(province.name) === parsed.kinhGui || parsed.kinhGui?.trim().endsWith(province.name),
             )?.name ||
             "";
 
@@ -276,7 +285,18 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setNganhBoRows(parsed.nganhNgheBoList || []);
         setNganhSuaRows(parsed.nganhNgheSuaList || []);
         setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
+        setCoSoThayDoi(parsed.coSoThayDoi || "");
     }, [dataJson, provinces]);
+
+    useEffect(() => {
+        if (!pendingScrollTarget || mainOption !== "A" || !aOptions[pendingScrollTarget]) return;
+
+        window.requestAnimationFrame(() => {
+            const targetSection = document.getElementById(`a-section-${pendingScrollTarget}`);
+            targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+            setPendingScrollTarget("");
+        });
+    }, [aOptions, mainOption, pendingScrollTarget]);
 
     const handleKinhGuiProvinceChange = (provinceName) => {
         setKinhGuiProvince(provinceName);
@@ -285,6 +305,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
     const toggleAOption = (name) => {
         setAOptions((prev) => ({ ...prev, [name]: !prev[name] }));
+    };
+
+    const scrollToAOption = (name) => {
+        setAOptions((prev) => (prev[name] ? prev : { ...prev, [name]: true }));
+        setPendingScrollTarget(name);
     };
 
     const validateSelection = () => {
@@ -313,6 +338,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         data.kinhGui = kinhGuiValue;
         data.kinhGuiProvince = kinhGuiProvince;
         data.noiDungThayDoi = mainOption;
+        data.coSoThayDoi = coSoThayDoi;
+        if (coSoThayDoi !== "sap_nhap") {
+            data.sapNhap_tenDoanhNghiep = "";
+            data.sapNhap_maSoDoanhNghiep = "";
+        }
         A_CHANGE_OPTIONS.forEach((option) => {
             data[option.name] = aOptions[option.name] ? "true" : "false";
         });
@@ -332,6 +362,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setNganhBoRows(parsed.nganhNgheBoList || []);
             setNganhSuaRows(parsed.nganhNgheSuaList || []);
             setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
+            setCoSoThayDoi(parsed.coSoThayDoi || "");
         },
     }));
 
@@ -373,16 +404,27 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             </p>
                             <div className={localStyles.optionList}>
                                 {A_CHANGE_OPTIONS.map((option) => (
-                                    <label key={option.name} className={localStyles.optionItem}>
-                                        <input
-                                            type="checkbox"
-                                            name={option.name}
-                                            value="true"
-                                            checked={!!aOptions[option.name]}
-                                            onChange={() => toggleAOption(option.name)}
-                                        />
-                                        {option.label}
-                                    </label>
+                                    <div key={option.name} className={localStyles.optionRow}>
+                                        <label className={localStyles.optionItem}>
+                                            <input
+                                                type="checkbox"
+                                                name={option.name}
+                                                value="true"
+                                                checked={!!aOptions[option.name]}
+                                                onChange={() => toggleAOption(option.name)}
+                                            />
+                                            <span>{option.label}</span>
+                                        </label>
+                                        <button
+                                            type="button"
+                                            className={localStyles.scrollButton}
+                                            onClick={() => scrollToAOption(option.name)}
+                                            aria-label={`Di chuyển đến ${option.label}`}
+                                            title="Di chuyển đến phần kê khai"
+                                        >
+                                            ↓
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -400,495 +442,513 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         onProvinceNameChange={handleKinhGuiProvinceChange}
                     />
 
-            <div className={styles.sectionGroup}>
-                <div className={styles.grid2}>
-                    <Field
-                        label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
-                        name="tenDoanhNghiep"
-                        dataJson={normalizedData}
-                        required
-                    />
-                    <Field
-                        label="Mã số doanh nghiệp/Mã số thuế"
-                        name="maSoDoanhNghiep"
-                        dataJson={normalizedData}
-                        required
-                    />
-                </div>
-            </div>
-
-            {mainOption === "A" && (
-                <>
                     <div className={styles.sectionGroup}>
-                        <h3 className={styles.sectionTitle}>Doanh nghiệp đăng ký thay đổi trên cơ sở</h3>
-                        <p className={styles.note}>
-                            Chỉ kê khai khi đăng ký thay đổi trên cơ sở tách hoặc sáp nhập doanh nghiệp.
-                        </p>
-                        <div className={styles.radioGroup} style={{ alignItems: "flex-start", flexWrap: "wrap" }}>
-                            {[
-                                ["khong_ap_dung", "Không áp dụng"],
-                                ["tach", "Tách doanh nghiệp"],
-                                ["sap_nhap", "Sáp nhập doanh nghiệp"],
-                            ].map(([value, label]) => (
-                                <label key={value} className={styles.radioLabel}>
-                                    <input
-                                        type="radio"
-                                        name="coSoThayDoi"
-                                        value={value}
-                                        className={styles.radioInput}
-                                        defaultChecked={(normalizedData.coSoThayDoi || "khong_ap_dung") === value}
-                                    />
-                                    {label}
-                                </label>
-                            ))}
-                        </div>
+                        <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp:</h3>
                         <div className={styles.grid2}>
                             <Field
-                                label="Tên doanh nghiệp bị sáp nhập (nếu có)"
-                                name="sapNhap_tenDoanhNghiep"
-                                dataJson={normalizedData}
-                            />
-                            <Field
-                                label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
-                                name="sapNhap_maSoDoanhNghiep"
-                                dataJson={normalizedData}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>
-                                Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới, ven biển
-                                hoặc khu vực ảnh hưởng quốc phòng, an ninh
-                            </label>
-                            <YesNoRadio name="anNinhQuocPhong" dataJson={normalizedData} />
-                        </div>
-                    </div>
-
-                    {isASelected("a_doiTen") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>Đăng ký thay đổi tên doanh nghiệp</h3>
-                            <Field
-                                label="Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi (ghi bằng chữ in hoa)"
-                                name="tenSauThayDoiVN"
+                                label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
+                                name="tenDoanhNghiep"
                                 dataJson={normalizedData}
                                 required
                             />
-                            <div className={styles.grid2}>
-                                <Field
-                                    label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
-                                    name="tenSauThayDoiEN"
-                                    dataJson={normalizedData}
-                                />
-                                <Field
-                                    label="Tên doanh nghiệp viết tắt sau khi thay đổi"
-                                    name="tenSauThayDoiVietTat"
-                                    dataJson={normalizedData}
-                                />
-                            </div>
+                            <Field
+                                label="Mã số doanh nghiệp/Mã số thuế"
+                                name="maSoDoanhNghiep"
+                                dataJson={normalizedData}
+                                required
+                            />
                         </div>
-                    )}
+                    </div>
 
-                    {isASelected("a_doiDiaChi") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>Đăng ký thay đổi địa chỉ trụ sở chính</h3>
-                            <AddressBlock dataJson={normalizedData} prefix="truSo" />
-                            <div className={styles.grid2}>
-                                <Field
-                                    label="Điện thoại"
-                                    name="truSo_phone"
-                                    dataJson={normalizedData}
-                                    type="tel"
-                                    required
-                                />
-                                <Field label="Số fax (nếu có)" name="truSo_fax" dataJson={normalizedData} />
-                                <Field
-                                    label="Thư điện tử (nếu có)"
-                                    name="truSo_email"
-                                    dataJson={normalizedData}
-                                    type="email"
-                                />
-                                <Field label="Website (nếu có)" name="truSo_website" dataJson={normalizedData} />
-                            </div>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="doiDiaChiNhanThongBaoThue"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.doiDiaChiNhanThongBaoThue)}
-                                />
-                                Đồng thời thay đổi địa chỉ nhận thông báo thuế tương ứng với địa chỉ trụ sở chính
-                            </label>
-                            <div className={styles.formGroup} style={{ marginTop: 12 }}>
-                                <label className={styles.label}>Doanh nghiệp nằm trong</label>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                                    {["Khu công nghiệp", "Khu chế xuất", "Khu kinh tế", "Khu công nghệ cao"].map(
-                                        (item) => (
-                                            <label key={item} className={styles.radioLabel}>
-                                                <input
-                                                    type="checkbox"
-                                                    name={`truSo_loaiKhu_${item.replace(/\s+/g, "_")}`}
-                                                    value="true"
-                                                    className={styles.radioInput}
-                                                    defaultChecked={isTruthy(
-                                                        normalizedData[`truSo_loaiKhu_${item.replace(/\s+/g, "_")}`],
-                                                    )}
-                                                />
-                                                {item}
-                                            </label>
-                                        ),
-                                    )}
+                    {mainOption === "A" && (
+                        <>
+                            <div className={styles.sectionGroup}>
+                                <h3 className={styles.sectionTitle}>Doanh nghiệp đăng ký thay đổi trên cơ sở:</h3>
+                                <p className={styles.note}>
+                                    Chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi trên cơ sở tách doanh
+                                    nghiệp hoặc sáp nhập doanh nghiệp.
+                                </p>
+                                <div
+                                    className={styles.radioGroup}
+                                    style={{ alignItems: "flex-start", flexWrap: "wrap" }}
+                                >
+                                    {[
+                                        ["tach", "Tách doanh nghiệp"],
+                                        ["sap_nhap", "Sáp nhập doanh nghiệp"],
+                                    ].map(([value, label]) => (
+                                        <label key={value} className={styles.radioLabel}>
+                                            <input
+                                                type="radio"
+                                                name="coSoThayDoi"
+                                                value={value}
+                                                className={styles.radioInput}
+                                                checked={coSoThayDoi === value}
+                                                onChange={() => setCoSoThayDoi(value)}
+                                            />
+                                            {label}
+                                        </label>
+                                    ))}
+                                </div>
+                                {coSoThayDoi === "sap_nhap" && (
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp bị sáp nhập:</h3>
+                                        <div className={styles.grid2}>
+                                            <Field
+                                                label="Tên doanh nghiệp bị sáp nhập (nếu có)"
+                                                name="sapNhap_tenDoanhNghiep"
+                                                dataJson={normalizedData}
+                                            />
+                                            <Field
+                                                label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
+                                                name="sapNhap_maSoDoanhNghiep"
+                                                dataJson={normalizedData}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>
+                                        Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
+                                        ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh
+                                    </label>
+                                    <YesNoRadio name="anNinhQuocPhong" dataJson={normalizedData} />
                                 </div>
                             </div>
-                            <AttachmentNote>
-                                Doanh nghiệp cam kết trụ sở doanh nghiệp thuộc quyền sử dụng hợp pháp và được sử dụng
-                                đúng mục đích theo quy định của pháp luật.
-                            </AttachmentNote>
-                        </div>
+
+                            {isASelected("a_doiTen") && (
+                                <div id="a-section-a_doiTen" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi tên doanh nghiệp</h3>
+                                    <Field
+                                        label="Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi (ghi bằng chữ in hoa)"
+                                        name="tenSauThayDoiVN"
+                                        dataJson={normalizedData}
+                                        required
+                                    />
+                                    <div className={styles.grid2}>
+                                        <Field
+                                            label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
+                                            name="tenSauThayDoiEN"
+                                            dataJson={normalizedData}
+                                        />
+                                        <Field
+                                            label="Tên doanh nghiệp viết tắt sau khi thay đổi"
+                                            name="tenSauThayDoiVietTat"
+                                            dataJson={normalizedData}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {isASelected("a_doiDiaChi") && (
+                                <div id="a-section-a_doiDiaChi" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi địa chỉ trụ sở chính</h3>
+                                    <AddressBlock dataJson={normalizedData} prefix="truSo" />
+                                    <div className={styles.grid2}>
+                                        <Field
+                                            label="Điện thoại"
+                                            name="truSo_phone"
+                                            dataJson={normalizedData}
+                                            type="tel"
+                                            required
+                                        />
+                                        <Field label="Số fax (nếu có)" name="truSo_fax" dataJson={normalizedData} />
+                                        <Field
+                                            label="Thư điện tử (nếu có)"
+                                            name="truSo_email"
+                                            dataJson={normalizedData}
+                                            type="email"
+                                        />
+                                        <Field
+                                            label="Website (nếu có)"
+                                            name="truSo_website"
+                                            dataJson={normalizedData}
+                                        />
+                                    </div>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="doiDiaChiNhanThongBaoThue"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.doiDiaChiNhanThongBaoThue)}
+                                        />
+                                        Đồng thời thay đổi địa chỉ nhận thông báo thuế tương ứng với địa chỉ trụ sở
+                                        chính
+                                    </label>
+                                    <div className={styles.formGroup} style={{ marginTop: 12 }}>
+                                        <div className={styles.sectionTitle}>Doanh nghiệp nằm trong</div>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                                            {[
+                                                "Khu công nghiệp",
+                                                "Khu chế xuất",
+                                                "Khu kinh tế",
+                                                "Khu công nghệ cao",
+                                            ].map((item) => (
+                                                <label key={item} className={styles.radioLabel}>
+                                                    <input
+                                                        type="checkbox"
+                                                        name={`truSo_loaiKhu_${item.replace(/\s+/g, "_")}`}
+                                                        value="true"
+                                                        className={styles.radioInput}
+                                                        defaultChecked={isTruthy(
+                                                            normalizedData[
+                                                                `truSo_loaiKhu_${item.replace(/\s+/g, "_")}`
+                                                            ],
+                                                        )}
+                                                    />
+                                                    {item}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <AttachmentNote>
+                                        Doanh nghiệp cam kết trụ sở doanh nghiệp thuộc quyền sử dụng hợp pháp và được sử
+                                        dụng đúng mục đích theo quy định của pháp luật.
+                                    </AttachmentNote>
+                                </div>
+                            )}
+
+                            {isASelected("a_doiThanhVien") && (
+                                <div id="a-section-a_doiThanhVien" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi thành viên công ty TNHH</h3>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="doiThanhVien_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={normalizedData.doiThanhVien_guiKem !== "false"}
+                                        />
+                                        Gửi kèm danh sách thành viên theo mẫu tương ứng.
+                                    </label>
+                                    <TextAreaField
+                                        label="Ghi chú về hồ sơ thành viên gửi kèm"
+                                        name="doiThanhVien_ghiChu"
+                                        dataJson={normalizedData}
+                                    />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiVonDieuLe") && (
+                                <div id="a-section-a_doiVonDieuLe" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Đăng ký thay đổi vốn điều lệ, phần vốn góp, tỷ lệ phần vốn góp
+                                    </h3>
+                                    <CapitalInput
+                                        title="Vốn điều lệ đã đăng ký"
+                                        labelNumber="Vốn điều lệ đã đăng ký (bằng số; VNĐ)"
+                                        labelText="Vốn điều lệ đã đăng ký (bằng chữ; VNĐ)"
+                                        nameNumber="vonDieuLeDaDangKy"
+                                        nameText="vonDieuLeDaDangKy_bangChu"
+                                        defaultNumber={normalizedData.vonDieuLeDaDangKy || ""}
+                                        defaultText={normalizedData.vonDieuLeDaDangKy_bangChu || ""}
+                                    />
+                                    <CapitalInput
+                                        title="Vốn điều lệ sau khi thay đổi"
+                                        labelNumber="Vốn điều lệ sau khi thay đổi (bằng số; VNĐ)"
+                                        labelText="Vốn điều lệ sau khi thay đổi (bằng chữ; VNĐ)"
+                                        nameNumber="vonDieuLeSauThayDoi"
+                                        nameText="vonDieuLeSauThayDoi_bangChu"
+                                        defaultNumber={normalizedData.vonDieuLeSauThayDoi || ""}
+                                        defaultText={normalizedData.vonDieuLeSauThayDoi_bangChu || ""}
+                                    />
+                                    <div className={styles.grid2}>
+                                        <Field
+                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
+                                            name="vonDieuLe_ngoaiTe"
+                                            dataJson={normalizedData}
+                                        />
+                                        <Field
+                                            label="Hình thức tăng, giảm vốn"
+                                            name="hinhThucTangGiamVon"
+                                            dataJson={normalizedData}
+                                            required
+                                        />
+                                        <Field
+                                            label="Thời điểm thay đổi vốn"
+                                            name="thoiDiemThayDoiVon"
+                                            dataJson={normalizedData}
+                                            required
+                                        >
+                                            <DateInput
+                                                name="thoiDiemThayDoiVon"
+                                                className={styles.input}
+                                                defaultValue={normalizedData.thoiDiemThayDoiVon || ""}
+                                                required
+                                            />
+                                        </Field>
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>
+                                                Hiển thị thông tin ngoại tệ trên Giấy chứng nhận đăng ký doanh nghiệp?
+                                            </label>
+                                            <YesNoRadio name="hienThiNgoaiTe" dataJson={normalizedData} />
+                                        </div>
+                                    </div>
+                                    <NguonVonDieuLeSection dataJson={normalizedData} styles={styles} isNote />
+                                    <TaiSanGopVonSection dataJson={normalizedData} styles={styles} />
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="doiVonGop_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.doiVonGop_guiKem)}
+                                        />
+                                        Gửi kèm phần vốn góp, tỷ lệ phần vốn góp mới của thành viên công ty TNHH/công ty
+                                        hợp danh.
+                                    </label>
+                                    <TextAreaField
+                                        label="Cam kết sau khi giảm vốn (nếu đăng ký giảm vốn điều lệ)"
+                                        name="camKetSauGiamVon"
+                                        dataJson={normalizedData}
+                                        rows={3}
+                                    />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiNganhNghe") && (
+                                <div id="a-section-a_doiNganhNghe" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Thông báo thay đổi ngành, nghề kinh doanh
+                                        <InfoTooltip content={FOOTNOTES.nganhNghe} />
+                                    </h3>
+                                    <h4 className={styles.sectionTitle}>1. Bổ sung ngành, nghề kinh doanh</h4>
+                                    <NganhNgheTable rows={nganhBoSungRows} onChangeRows={setNganhBoSungRows} />
+                                    <h4 className={styles.sectionTitle}>2. Bỏ ngành, nghề kinh doanh</h4>
+                                    <NganhNgheTable rows={nganhBoRows} onChangeRows={setNganhBoRows} />
+                                    <h4 className={styles.sectionTitle}>3. Sửa đổi chi tiết ngành, nghề kinh doanh</h4>
+                                    <NganhNgheTable rows={nganhSuaRows} onChangeRows={setNganhSuaRows} />
+                                    <AttachmentNote>
+                                        Trường hợp thay đổi ngành, nghề kinh doanh từ ngành này sang ngành khác, kê khai
+                                        đồng thời ngành mới tại mục 1 và ngành cũ tại mục 2.
+                                    </AttachmentNote>
+                                </div>
+                            )}
+
+                            {isASelected("a_doiVonDauTuDNTN") && (
+                                <div id="a-section-a_doiVonDauTuDNTN" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Đăng ký thay đổi vốn đầu tư của chủ doanh nghiệp tư nhân
+                                    </h3>
+                                    <CapitalInput
+                                        title="Vốn đầu tư đã đăng ký"
+                                        labelNumber="Vốn đầu tư đã đăng ký (bằng số; VNĐ)"
+                                        labelText="Vốn đầu tư đã đăng ký (bằng chữ; VNĐ)"
+                                        nameNumber="vonDauTuDaDangKy"
+                                        nameText="vonDauTuDaDangKy_bangChu"
+                                        defaultNumber={normalizedData.vonDauTuDaDangKy || ""}
+                                        defaultText={normalizedData.vonDauTuDaDangKy_bangChu || ""}
+                                    />
+                                    <CapitalInput
+                                        title="Vốn đầu tư sau khi thay đổi"
+                                        labelNumber="Vốn đầu tư sau khi thay đổi (bằng số; VNĐ)"
+                                        labelText="Vốn đầu tư sau khi thay đổi (bằng chữ; VNĐ)"
+                                        nameNumber="vonDauTuSauThayDoi"
+                                        nameText="vonDauTuSauThayDoi_bangChu"
+                                        defaultNumber={normalizedData.vonDauTuSauThayDoi || ""}
+                                        defaultText={normalizedData.vonDauTuSauThayDoi_bangChu || ""}
+                                    />
+                                    <div className={styles.grid2}>
+                                        <Field
+                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
+                                            name="vonDauTu_ngoaiTe"
+                                            dataJson={normalizedData}
+                                        />
+                                        <Field
+                                            label="Hình thức tăng, giảm vốn"
+                                            name="vonDauTu_hinhThucTangGiam"
+                                            dataJson={normalizedData}
+                                        />
+                                        <Field
+                                            label="Thời điểm thay đổi vốn"
+                                            name="vonDauTu_thoiDiemThayDoi"
+                                            dataJson={normalizedData}
+                                        >
+                                            <DateInput
+                                                name="vonDauTu_thoiDiemThayDoi"
+                                                className={styles.input}
+                                                defaultValue={normalizedData.vonDauTu_thoiDiemThayDoi || ""}
+                                            />
+                                        </Field>
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>
+                                                Hiển thị thông tin ngoại tệ trên Giấy chứng nhận đăng ký doanh nghiệp?
+                                            </label>
+                                            <YesNoRadio name="vonDauTu_hienThiNgoaiTe" dataJson={normalizedData} />
+                                        </div>
+                                    </div>
+                                    <TextAreaField
+                                        label="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
+                                        name="vonDauTu_taiSanGopVon"
+                                        dataJson={normalizedData}
+                                        rows={5}
+                                    />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiNguoiDaiDienUyQuyen") && (
+                                <div id="a-section-a_doiNguoiDaiDienUyQuyen" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Thông báo thay đổi người đại diện theo ủy quyền
+                                        <InfoTooltip content={FOOTNOTES.nguoiDaiDienUyQuyen} />
+                                    </h3>
+                                    <AuthorizedRepTable rows={authorizedRepRows} onChangeRows={setAuthorizedRepRows} />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiCoDong") && (
+                                <div id="a-section-a_doiCoDong" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Thông báo thay đổi cổ đông sáng lập/cổ đông là nhà đầu tư nước ngoài
+                                    </h3>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="doiCoDongSangLap_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.doiCoDongSangLap_guiKem)}
+                                        />
+                                        Gửi kèm danh sách cổ đông sáng lập theo Mẫu số 7.
+                                    </label>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="doiCoDongNuocNgoai_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.doiCoDongNuocNgoai_guiKem)}
+                                        />
+                                        Gửi kèm danh sách cổ đông là nhà đầu tư nước ngoài theo Mẫu số 8.
+                                    </label>
+                                    <TextAreaField
+                                        label="Ghi chú về thay đổi cổ đông"
+                                        name="doiCoDong_ghiChu"
+                                        dataJson={normalizedData}
+                                    />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiThongTinThue") && (
+                                <div id="a-section-a_doiThongTinThue" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Thông báo thay đổi thông tin đăng ký thuế
+                                        <InfoTooltip content={FOOTNOTES.thueKeToan} />
+                                    </h3>
+                                    <ThongTinDangKyThueSection dataJson={normalizedData} styles={styles} isNote />
+                                </div>
+                            )}
+
+                            {isASelected("a_doiChuSoHuuHuongLoi") && (
+                                <div id="a-section-a_doiChuSoHuuHuongLoi" className={styles.sectionGroup}>
+                                    <h3 className={styles.sectionTitle}>
+                                        Thông báo thay đổi thông tin về chủ sở hữu hưởng lợi
+                                    </h3>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="cshhl_mau10_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.cshhl_mau10_guiKem)}
+                                        />
+                                        Gửi kèm Mẫu số 10 về chủ sở hữu hưởng lợi của doanh nghiệp.
+                                    </label>
+                                    <label className={styles.radioLabel}>
+                                        <input
+                                            type="checkbox"
+                                            name="cshhl_mau11_guiKem"
+                                            value="true"
+                                            className={styles.radioInput}
+                                            defaultChecked={isTruthy(normalizedData.cshhl_mau11_guiKem)}
+                                        />
+                                        Gửi kèm Mẫu số 11 về thông tin để xác định chủ sở hữu hưởng lợi.
+                                    </label>
+                                    <TextAreaField
+                                        label="Ghi chú về chủ sở hữu hưởng lợi"
+                                        name="cshhl_ghiChu"
+                                        dataJson={normalizedData}
+                                    />
+                                </div>
+                            )}
+                        </>
                     )}
 
-                    {isASelected("a_doiThanhVien") && (
+                    {mainOption === "B" && (
                         <div className={styles.sectionGroup}>
                             <h3 className={styles.sectionTitle}>
-                                Đăng ký thay đổi thành viên công ty TNHH/thành viên hợp danh
+                                Bổ sung, cập nhật thông tin đăng ký doanh nghiệp
+                                <InfoTooltip content={FOOTNOTES.boSungCapNhat} />
                             </h3>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="doiThanhVien_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={normalizedData.doiThanhVien_guiKem !== "false"}
-                                />
-                                Gửi kèm danh sách thành viên theo mẫu tương ứng.
-                            </label>
                             <TextAreaField
-                                label="Ghi chú về hồ sơ thành viên gửi kèm"
-                                name="doiThanhVien_ghiChu"
+                                label="Nội dung bổ sung, cập nhật thông tin đăng ký doanh nghiệp"
+                                name="boSungCapNhat_noiDung"
                                 dataJson={normalizedData}
+                                required
+                                rows={8}
                             />
                         </div>
                     )}
 
-                    {isASelected("a_doiVonDieuLe") && (
+                    {mainOption === "C" && (
                         <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Đăng ký thay đổi vốn điều lệ, phần vốn góp, tỷ lệ phần vốn góp
-                            </h3>
-                            <CapitalInput
-                                title="Vốn điều lệ đã đăng ký"
-                                labelNumber="Vốn điều lệ đã đăng ký (bằng số; VNĐ)"
-                                labelText="Vốn điều lệ đã đăng ký (bằng chữ; VNĐ)"
-                                nameNumber="vonDieuLeDaDangKy"
-                                nameText="vonDieuLeDaDangKy_bangChu"
-                                defaultNumber={normalizedData.vonDieuLeDaDangKy || ""}
-                                defaultText={normalizedData.vonDieuLeDaDangKy_bangChu || ""}
-                            />
-                            <CapitalInput
-                                title="Vốn điều lệ sau khi thay đổi"
-                                labelNumber="Vốn điều lệ sau khi thay đổi (bằng số; VNĐ)"
-                                labelText="Vốn điều lệ sau khi thay đổi (bằng chữ; VNĐ)"
-                                nameNumber="vonDieuLeSauThayDoi"
-                                nameText="vonDieuLeSauThayDoi_bangChu"
-                                defaultNumber={normalizedData.vonDieuLeSauThayDoi || ""}
-                                defaultText={normalizedData.vonDieuLeSauThayDoi_bangChu || ""}
-                            />
+                            <h3 className={styles.sectionTitle}>Đề nghị hiệu đính thông tin đăng ký doanh nghiệp</h3>
                             <div className={styles.grid2}>
                                 <Field
-                                    label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
-                                    name="vonDieuLe_ngoaiTe"
-                                    dataJson={normalizedData}
-                                />
-                                <Field
-                                    label="Hình thức tăng, giảm vốn"
-                                    name="hinhThucTangGiamVon"
-                                    dataJson={normalizedData}
-                                    required
-                                />
-                                <Field
-                                    label="Thời điểm thay đổi vốn"
-                                    name="thoiDiemThayDoiVon"
+                                    label="Ngày cấp Giấy chứng nhận/Giấy xác nhận"
+                                    name="hieuDinh_ngayCapGiay"
                                     dataJson={normalizedData}
                                     required
                                 >
                                     <DateInput
-                                        name="thoiDiemThayDoiVon"
+                                        name="hieuDinh_ngayCapGiay"
                                         className={styles.input}
-                                        defaultValue={normalizedData.thoiDiemThayDoiVon || ""}
+                                        defaultValue={normalizedData.hieuDinh_ngayCapGiay || ""}
                                         required
                                     />
                                 </Field>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>
-                                        Hiển thị thông tin ngoại tệ trên Giấy chứng nhận đăng ký doanh nghiệp?
-                                    </label>
-                                    <YesNoRadio name="hienThiNgoaiTe" dataJson={normalizedData} />
-                                </div>
-                            </div>
-                            <NguonVonDieuLeSection dataJson={normalizedData} styles={styles} isNote />
-                            <TaiSanGopVonSection dataJson={normalizedData} styles={styles} />
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="doiVonGop_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.doiVonGop_guiKem)}
-                                />
-                                Gửi kèm phần vốn góp, tỷ lệ phần vốn góp mới của thành viên công ty TNHH/công ty hợp
-                                danh.
-                            </label>
-                            <TextAreaField
-                                label="Cam kết sau khi giảm vốn (nếu đăng ký giảm vốn điều lệ)"
-                                name="camKetSauGiamVon"
-                                dataJson={normalizedData}
-                                rows={3}
-                            />
-                        </div>
-                    )}
-
-                    {isASelected("a_doiNganhNghe") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Thông báo thay đổi ngành, nghề kinh doanh
-                                <InfoTooltip content={FOOTNOTES.nganhNghe} />
-                            </h3>
-                            <h4 className={styles.sectionTitle}>1. Bổ sung ngành, nghề kinh doanh</h4>
-                            <NganhNgheTable rows={nganhBoSungRows} onChangeRows={setNganhBoSungRows} />
-                            <h4 className={styles.sectionTitle}>2. Bỏ ngành, nghề kinh doanh</h4>
-                            <NganhNgheTable rows={nganhBoRows} onChangeRows={setNganhBoRows} />
-                            <h4 className={styles.sectionTitle}>3. Sửa đổi chi tiết ngành, nghề kinh doanh</h4>
-                            <NganhNgheTable rows={nganhSuaRows} onChangeRows={setNganhSuaRows} />
-                            <AttachmentNote>
-                                Trường hợp thay đổi ngành, nghề kinh doanh từ ngành này sang ngành khác, kê khai đồng
-                                thời ngành mới tại mục 1 và ngành cũ tại mục 2.
-                            </AttachmentNote>
-                        </div>
-                    )}
-
-                    {isASelected("a_doiVonDauTuDNTN") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Đăng ký thay đổi vốn đầu tư của chủ doanh nghiệp tư nhân
-                            </h3>
-                            <CapitalInput
-                                title="Vốn đầu tư đã đăng ký"
-                                labelNumber="Vốn đầu tư đã đăng ký (bằng số; VNĐ)"
-                                labelText="Vốn đầu tư đã đăng ký (bằng chữ; VNĐ)"
-                                nameNumber="vonDauTuDaDangKy"
-                                nameText="vonDauTuDaDangKy_bangChu"
-                                defaultNumber={normalizedData.vonDauTuDaDangKy || ""}
-                                defaultText={normalizedData.vonDauTuDaDangKy_bangChu || ""}
-                            />
-                            <CapitalInput
-                                title="Vốn đầu tư sau khi thay đổi"
-                                labelNumber="Vốn đầu tư sau khi thay đổi (bằng số; VNĐ)"
-                                labelText="Vốn đầu tư sau khi thay đổi (bằng chữ; VNĐ)"
-                                nameNumber="vonDauTuSauThayDoi"
-                                nameText="vonDauTuSauThayDoi_bangChu"
-                                defaultNumber={normalizedData.vonDauTuSauThayDoi || ""}
-                                defaultText={normalizedData.vonDauTuSauThayDoi_bangChu || ""}
-                            />
-                            <div className={styles.grid2}>
                                 <Field
-                                    label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
-                                    name="vonDauTu_ngoaiTe"
+                                    label="Ngày nộp hồ sơ đăng ký doanh nghiệp"
+                                    name="hieuDinh_ngayNopHoSo"
                                     dataJson={normalizedData}
-                                />
-                                <Field
-                                    label="Hình thức tăng, giảm vốn"
-                                    name="vonDauTu_hinhThucTangGiam"
-                                    dataJson={normalizedData}
-                                />
-                                <Field
-                                    label="Thời điểm thay đổi vốn"
-                                    name="vonDauTu_thoiDiemThayDoi"
-                                    dataJson={normalizedData}
+                                    required
                                 >
                                     <DateInput
-                                        name="vonDauTu_thoiDiemThayDoi"
+                                        name="hieuDinh_ngayNopHoSo"
                                         className={styles.input}
-                                        defaultValue={normalizedData.vonDauTu_thoiDiemThayDoi || ""}
+                                        defaultValue={normalizedData.hieuDinh_ngayNopHoSo || ""}
+                                        required
                                     />
                                 </Field>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>
-                                        Hiển thị thông tin ngoại tệ trên Giấy chứng nhận đăng ký doanh nghiệp?
-                                    </label>
-                                    <YesNoRadio name="vonDauTu_hienThiNgoaiTe" dataJson={normalizedData} />
-                                </div>
                             </div>
                             <TextAreaField
-                                label="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
-                                name="vonDauTu_taiSanGopVon"
+                                label="Thông tin trên Giấy chứng nhận/Giấy xác nhận là"
+                                name="hieuDinh_thongTinTrenGiay"
                                 dataJson={normalizedData}
-                                rows={5}
-                            />
-                        </div>
-                    )}
-
-                    {isASelected("a_doiNguoiDaiDienUyQuyen") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Thông báo thay đổi người đại diện theo ủy quyền
-                                <InfoTooltip content={FOOTNOTES.nguoiDaiDienUyQuyen} />
-                            </h3>
-                            <AuthorizedRepTable rows={authorizedRepRows} onChangeRows={setAuthorizedRepRows} />
-                        </div>
-                    )}
-
-                    {isASelected("a_doiCoDong") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Thông báo thay đổi cổ đông sáng lập/cổ đông là nhà đầu tư nước ngoài
-                            </h3>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="doiCoDongSangLap_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.doiCoDongSangLap_guiKem)}
-                                />
-                                Gửi kèm danh sách cổ đông sáng lập theo Mẫu số 7.
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="doiCoDongNuocNgoai_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.doiCoDongNuocNgoai_guiKem)}
-                                />
-                                Gửi kèm danh sách cổ đông là nhà đầu tư nước ngoài theo Mẫu số 8.
-                            </label>
-                            <TextAreaField
-                                label="Ghi chú về thay đổi cổ đông"
-                                name="doiCoDong_ghiChu"
-                                dataJson={normalizedData}
-                            />
-                        </div>
-                    )}
-
-                    {isASelected("a_doiThongTinThue") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Thông báo thay đổi thông tin đăng ký thuế
-                                <InfoTooltip content={FOOTNOTES.thueKeToan} />
-                            </h3>
-                            <ThongTinDangKyThueSection dataJson={normalizedData} styles={styles} isNote />
-                        </div>
-                    )}
-
-                    {isASelected("a_doiChuSoHuuHuongLoi") && (
-                        <div className={styles.sectionGroup}>
-                            <h3 className={styles.sectionTitle}>
-                                Thông báo thay đổi thông tin về chủ sở hữu hưởng lợi
-                            </h3>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="cshhl_mau10_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.cshhl_mau10_guiKem)}
-                                />
-                                Gửi kèm Mẫu số 10 về chủ sở hữu hưởng lợi của doanh nghiệp.
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="checkbox"
-                                    name="cshhl_mau11_guiKem"
-                                    value="true"
-                                    className={styles.radioInput}
-                                    defaultChecked={isTruthy(normalizedData.cshhl_mau11_guiKem)}
-                                />
-                                Gửi kèm Mẫu số 11 về thông tin để xác định chủ sở hữu hưởng lợi.
-                            </label>
-                            <TextAreaField
-                                label="Ghi chú về chủ sở hữu hưởng lợi"
-                                name="cshhl_ghiChu"
-                                dataJson={normalizedData}
-                            />
-                        </div>
-                    )}
-                </>
-            )}
-
-            {mainOption === "B" && (
-                <div className={styles.sectionGroup}>
-                    <h3 className={styles.sectionTitle}>
-                        Bổ sung, cập nhật thông tin đăng ký doanh nghiệp
-                        <InfoTooltip content={FOOTNOTES.boSungCapNhat} />
-                    </h3>
-                    <TextAreaField
-                        label="Nội dung bổ sung, cập nhật thông tin đăng ký doanh nghiệp"
-                        name="boSungCapNhat_noiDung"
-                        dataJson={normalizedData}
-                        required
-                        rows={8}
-                    />
-                </div>
-            )}
-
-            {mainOption === "C" && (
-                <div className={styles.sectionGroup}>
-                    <h3 className={styles.sectionTitle}>Đề nghị hiệu đính thông tin đăng ký doanh nghiệp</h3>
-                    <div className={styles.grid2}>
-                        <Field
-                            label="Ngày cấp Giấy chứng nhận/Giấy xác nhận"
-                            name="hieuDinh_ngayCapGiay"
-                            dataJson={normalizedData}
-                            required
-                        >
-                            <DateInput
-                                name="hieuDinh_ngayCapGiay"
-                                className={styles.input}
-                                defaultValue={normalizedData.hieuDinh_ngayCapGiay || ""}
                                 required
                             />
-                        </Field>
-                        <Field
-                            label="Ngày nộp hồ sơ đăng ký doanh nghiệp"
-                            name="hieuDinh_ngayNopHoSo"
-                            dataJson={normalizedData}
-                            required
-                        >
-                            <DateInput
-                                name="hieuDinh_ngayNopHoSo"
-                                className={styles.input}
-                                defaultValue={normalizedData.hieuDinh_ngayNopHoSo || ""}
+                            <TextAreaField
+                                label="Thông tin đã đăng ký trong hồ sơ đăng ký doanh nghiệp là"
+                                name="hieuDinh_thongTinHoSo"
+                                dataJson={normalizedData}
                                 required
                             />
-                        </Field>
+                        </div>
+                    )}
+
+                    <div className={styles.sectionGroup}>
+                        <label className={styles.radioLabel}>
+                            <input
+                                type="checkbox"
+                                name="deNghiCapGiayXacNhan"
+                                value="true"
+                                className={styles.radioInput}
+                                defaultChecked={isTruthy(normalizedData.deNghiCapGiayXacNhan)}
+                            />
+                            Đề nghị cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho các thông tin thay đổi
+                            nêu trên.
+                        </label>
                     </div>
-                    <TextAreaField
-                        label="Thông tin trên Giấy chứng nhận/Giấy xác nhận là"
-                        name="hieuDinh_thongTinTrenGiay"
-                        dataJson={normalizedData}
-                        required
-                    />
-                    <TextAreaField
-                        label="Thông tin đã đăng ký trong hồ sơ đăng ký doanh nghiệp là"
-                        name="hieuDinh_thongTinHoSo"
-                        dataJson={normalizedData}
-                        required
-                    />
-                </div>
-            )}
-
-            <div className={styles.sectionGroup}>
-                <label className={styles.radioLabel}>
-                    <input
-                        type="checkbox"
-                        name="deNghiCapGiayXacNhan"
-                        value="true"
-                        className={styles.radioInput}
-                        defaultChecked={isTruthy(normalizedData.deNghiCapGiayXacNhan)}
-                    />
-                    Đề nghị cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho các thông tin thay đổi nêu
-                    trên.
-                </label>
-            </div>
                 </div>
             </div>
         </form>

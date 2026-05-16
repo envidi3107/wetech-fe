@@ -7,6 +7,10 @@ import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/QuocGiaInput/QuocGiaInput";
 import { useEffect } from "react";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 export default function ThongTinChuSoHuuSection({ dataJson, styles }) {
     const [provCode_chuSoHuu, setProvCode_chuSoHuu] = useState("");
@@ -25,7 +29,7 @@ export default function ThongTinChuSoHuuSection({ dataJson, styles }) {
     const handleFillCard = (card) => {
         setLocalData(prev => ({
             ...prev,
-            chuSoHuu_hoTen: card.fullName,
+            chuSoHuu_hoTen: toUppercaseValue(card.fullName),
             chuSoHuu_ngaySinh: card.dob,
             chuSoHuu_gioiTinh: card.gender,
             chuSoHuu_cccd: card.cccd,
@@ -55,7 +59,7 @@ export default function ThongTinChuSoHuuSection({ dataJson, styles }) {
                             <label className={styles.label}>
                                 Họ, chữ đệm và tên (ghi bằng chữ in hoa): <span className={styles.required}>*</span>
                             </label>
-                            <input type="text" className={styles.input} name="chuSoHuu_hoTen" defaultValue={localData?.chuSoHuu_hoTen || ""} style={{ textTransform: "uppercase" }} onChange={(e) => e.target.value = e.target.value.toUpperCase()} required />
+                            <input type="text" className={styles.input} name="chuSoHuu_hoTen" defaultValue={toUppercaseValue(localData?.chuSoHuu_hoTen)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>

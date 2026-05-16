@@ -195,7 +195,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({ dataJson }) {
                                 Tách doanh nghiệp <Checkbox checked={data.coSoThayDoi === "tach"} />
                                 &nbsp;&nbsp; Sáp nhập doanh nghiệp <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
                             </p>
-                            {(data.sapNhap_tenDoanhNghiep || data.sapNhap_maSoDoanhNghiep) && (
+                            {data.coSoThayDoi === "sap_nhap" && (
                                 <>
                                     <Line label="Tên doanh nghiệp bị sáp nhập" value={data.sapNhap_tenDoanhNghiep} />
                                     <Line label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập" value={data.sapNhap_maSoDoanhNghiep} />

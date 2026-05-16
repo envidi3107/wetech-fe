@@ -7,6 +7,10 @@ import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComp
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/QuocGiaInput/QuocGiaInput";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote = false }) {
     const [provCode_lienLac, setProvCode_lienLac] = useState("");
@@ -26,7 +30,7 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
     const handleFillCard = (card) => {
         setLocalData(prev => ({
             ...prev,
-            nguoiDaiDien_hoTen: card.fullName,
+            nguoiDaiDien_hoTen: toUppercaseValue(card.fullName),
             nguoiDaiDien_ngaySinh: card.dob,
             nguoiDaiDien_gioiTinh: card.gender,
             nguoiDaiDien_cccd: card.cccd,
@@ -112,7 +116,7 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                     <div className={styles.grid2}>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Họ, chữ đệm và tên (ghi bằng chữ in hoa): <span className={styles.required}>*</span></label>
-                            <input type="text" className={styles.input} name="nguoiDaiDien_hoTen" defaultValue={localData?.nguoiDaiDien_hoTen || ""} style={{ textTransform: "uppercase" }} onChange={(e) => e.target.value = e.target.value.toUpperCase()} required />
+                            <input type="text" className={styles.input} name="nguoiDaiDien_hoTen" defaultValue={toUppercaseValue(localData?.nguoiDaiDien_hoTen)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
                         </div>
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Ngày, tháng, năm sinh: <span className={styles.required}>*</span></label>

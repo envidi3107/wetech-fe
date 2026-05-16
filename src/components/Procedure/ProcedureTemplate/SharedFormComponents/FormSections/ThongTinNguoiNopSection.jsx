@@ -8,6 +8,10 @@ import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormCom
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import { useEffect } from "react";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 export default function ThongTinNguoiNopSection({ dataJson, styles, isNote = false }) {
     const [provCode_lienLac, setProvCode_lienLac] = useState("");
@@ -26,7 +30,7 @@ export default function ThongTinNguoiNopSection({ dataJson, styles, isNote = fal
     const handleFillCard = (card) => {
         setLocalData(prev => ({
             ...prev,
-            nguoiNop_hoTen: card.fullName,
+            nguoiNop_hoTen: toUppercaseValue(card.fullName),
             nguoiNop_ngaySinh: card.dob,
             nguoiNop_gioiTinh: card.gender,
             nguoiNop_cccd: card.cccd,
@@ -65,8 +69,9 @@ export default function ThongTinNguoiNopSection({ dataJson, styles, isNote = fal
                                 type="text"
                                 className={styles.input}
                                 name="nguoiNop_hoTen"
-                                defaultValue={localData?.nguoiNop_hoTen || ""}
-                                onChange={(e) => e.target.value = e.target.value.toUpperCase()}
+                                defaultValue={toUppercaseValue(localData?.nguoiNop_hoTen)}
+                                style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
                                 required
                             />
                         </div>

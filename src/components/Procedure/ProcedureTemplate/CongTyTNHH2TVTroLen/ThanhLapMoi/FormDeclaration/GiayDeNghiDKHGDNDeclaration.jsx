@@ -16,6 +16,10 @@ import CapitalInput from "@/components/Procedure/ProcedureTemplate/SharedFormCom
 
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 /**
  * Map fields from corporate form (Giấy đề nghị đăng ký doanh nghiệp)
@@ -368,8 +372,9 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
                                 type="text"
                                 className={styles.input}
                                 name="nguoiDaiDien_hoTen"
-                                defaultValue={getDefaultValue("nguoiDaiDien_hoTen")}
+                                defaultValue={toUppercaseValue(getDefaultValue("nguoiDaiDien_hoTen"))}
                                 style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
                                 required
                             />
                         </div>
@@ -487,8 +492,9 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
                                 type="text"
                                 className={styles.inputNoBorder}
                                 name="hkd_tenVN"
-                                defaultValue={getDefaultValue("hkd_tenVN")}
+                                defaultValue={toUppercaseValue(getDefaultValue("hkd_tenVN"))}
                                 style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
                                 required
                             />
                         </div>
