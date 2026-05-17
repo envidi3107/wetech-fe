@@ -39,6 +39,33 @@ const TOOLTIP = {
     chuKy: "Chữ ký chỉ thể hiện ở bản xác nhận/in hồ sơ; form khai báo không yêu cầu nhập cột chữ ký.",
 };
 
+const hasValue = (value) => {
+    if (Array.isArray(value)) return value.length > 0;
+    return value !== undefined && value !== null && value !== "";
+};
+
+const setIfEmpty = (target, key, value) => {
+    if (!hasValue(target[key]) && hasValue(value)) {
+        target[key] = value;
+    }
+};
+
+const buildPrefilledData = (rawData) => {
+    const data = normalizeDataJson(rawData);
+    const prefilledData = { ...data };
+
+    setIfEmpty(prefilledData, "tenDoanhNghiep", data.tenCongTyVN);
+    setIfEmpty(prefilledData, "maSoDoanhNghiep", data.maSoThue);
+    setIfEmpty(prefilledData, "chuSoHuu_lienLac_quocGia", data.chuSoHuu_quocGia);
+    setIfEmpty(prefilledData, "chuSoHuu_thuongTru_quocGia", data.chuSoHuu_quocGia);
+
+    if (!hasValue(prefilledData.loaiChuSoHuu)) {
+        prefilledData.loaiChuSoHuu = hasValue(prefilledData.chuSoHuuToChuc_ten) ? "to_chuc" : "ca_nhan";
+    }
+
+    return prefilledData;
+};
+
 function YesNoRadio({ name, value, onChange }) {
     return (
         <div className={styles.radioGroup}>
@@ -258,7 +285,7 @@ const GiayDeNghiDangKyThayDoiChuSoHuuDeclaration = forwardRef(function GiayDeNgh
     componentRef,
 ) {
     const { provinces } = useFetchAddress();
-    const [normalizedData, setNormalizedData] = useState(() => normalizeDataJson(dataJson));
+    const [normalizedData, setNormalizedData] = useState(() => buildPrefilledData(dataJson));
     const [formVersion, setFormVersion] = useState(0);
     const [kinhGuiProvince, setKinhGuiProvince] = useState("");
     const [kinhGuiValue, setKinhGuiValue] = useState("");
@@ -267,7 +294,7 @@ const GiayDeNghiDangKyThayDoiChuSoHuuDeclaration = forwardRef(function GiayDeNgh
     const [representativeRows, setRepresentativeRows] = useState([]);
 
     useEffect(() => {
-        const parsed = normalizeDataJson(dataJson);
+        const parsed = buildPrefilledData(dataJson);
         setNormalizedData(parsed);
         setAnNinhQuocPhong(parsed.anNinhQuocPhong || "Không");
         setLoaiChuSoHuu(parsed.loaiChuSoHuu || (parsed.chuSoHuuToChuc_ten ? "to_chuc" : "ca_nhan"));
@@ -320,7 +347,7 @@ const GiayDeNghiDangKyThayDoiChuSoHuuDeclaration = forwardRef(function GiayDeNgh
         getDraftData: collectData,
         getExportData: collectData,
         importData: (importedData) => {
-            const parsed = normalizeDataJson(importedData);
+            const parsed = buildPrefilledData(importedData);
             setNormalizedData(parsed);
             setAnNinhQuocPhong(parsed.anNinhQuocPhong || "Không");
             setLoaiChuSoHuu(parsed.loaiChuSoHuu || (parsed.chuSoHuuToChuc_ten ? "to_chuc" : "ca_nhan"));

@@ -80,6 +80,10 @@ const normalizeFormName = (value = "") =>
         .replace(/Đ/g, "D")
         .toLowerCase();
 
+const OLD_REGISTRATION_FORM_NAME = "giay de nghi dang ky doanh nghiep";
+
+const isOldRegistrationForm = (form) => normalizeFormName(form?.name).trim() === OLD_REGISTRATION_FORM_NAME;
+
 const isRegistrationForm = (form) => {
     const normalizedName = normalizeFormName(form?.name);
     return normalizedName.includes("dang ky doanh nghiep") || normalizedName.includes("dkdn");
@@ -190,6 +194,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.name?.toLowerCase().includes("cổ đông sáng lập");
 
     const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration";
+    const isDangKyThayDoiChuSoHuu =
+        formComponentName === "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
     const isDangKyThayDoiNguoiDaiDienPhapLuat =
         formComponentName === "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
     const isDangKyThayDoiPrefillForm = [
@@ -223,8 +229,14 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 params: { id: sourceProcedure.procedureId },
             });
             const sourceForms = response.data?.result?.forms || [];
-            const registrationForm = sourceForms.find(isRegistrationForm);
+            const registrationForm = sourceForms.find(
+                isDangKyThayDoiChuSoHuu ? isOldRegistrationForm : isRegistrationForm,
+            );
             if (!registrationForm?.formId) continue;
+
+            if (isDangKyThayDoiChuSoHuu) {
+                return { registrationForm };
+            }
 
             const candidate = {
                 registrationForm,
@@ -249,6 +261,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
 
         return fallbackSource;
     }, [
+        isDangKyThayDoiChuSoHuu,
         isDangKyThayDoiNguoiDaiDienPhapLuat,
         isDangKyThayDoiPrefillForm,
         procedure?.procedureId,
