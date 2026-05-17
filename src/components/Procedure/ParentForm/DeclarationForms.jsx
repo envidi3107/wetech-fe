@@ -178,31 +178,37 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
 
     // Detect form type by component name or title
     const formComponentName = CurrentFormComponent?.displayName || CurrentFormComponent?.name || CurrentFormComponent?.render?.name || "";
+    const formNameLower = currentForm?.name?.toLowerCase() || "";
+
+    const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration" ||
+        formNameLower.includes("thay đổi nội dung");
+
+    const isDangKyThayDoiChuSoHuu =
+        formComponentName === "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration" ||
+        formNameLower.includes("thay đổi chủ sở hữu");
+
+    const isDangKyThayDoiNguoiDaiDienPhapLuat =
+        formComponentName === "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration" ||
+        formNameLower.includes("thay đổi người đại diện");
+
+    const isDangKyThayDoiPrefillForm = isDangKyThayDoiDoanhNghiep || isDangKyThayDoiChuSoHuu || isDangKyThayDoiNguoiDaiDienPhapLuat;
+
     const isGiayDKDN = formComponentName === "GiayDeNghiDKDNDeclaration" ||
-        currentForm?.name?.toLowerCase().includes("đăng ký doanh nghiệp");
+        (formNameLower.includes("đăng ký doanh nghiệp") && !isDangKyThayDoiPrefillForm);
 
     const isCSHHuongLoi = formComponentName === "DanhSachCSHHuongLoiDeclaration" ||
-        currentForm?.name?.toLowerCase().includes("csh hưởng lợi");
+        formNameLower.includes("csh hưởng lợi");
 
     const isDieuLeCongTy = formComponentName === "DieuLeCongTyDeclaration" ||
-        currentForm?.name?.toLowerCase().includes("điều lệ công ty") || currentForm?.name?.toLowerCase().includes("charter");
+        formNameLower.includes("điều lệ công ty") || formNameLower.includes("charter");
 
     const isDanhSachThanhVien = formComponentName === "DanhSachThanhVienDeclaration" ||
-        currentForm?.name?.toLowerCase().includes("danh sách thành viên");
+        formNameLower.includes("danh sách thành viên");
 
     const isDanhSachCoDongSangLap = formComponentName === "DanhSachCoDongSangLapDeclaration" ||
-        currentForm?.name?.toLowerCase().includes("cổ đông sáng lập");
+        formNameLower.includes("cổ đông sáng lập");
 
-    const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration";
-    const isDangKyThayDoiChuSoHuu =
-        formComponentName === "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
-    const isDangKyThayDoiNguoiDaiDienPhapLuat =
-        formComponentName === "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
-    const isDangKyThayDoiPrefillForm = [
-        "GiayDeNghiDangKyThayDoiDeclaration",
-        "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration",
-        "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration",
-    ].includes(formComponentName);
+
 
     const fetchInitialDangKyThayDoiData = useCallback(async () => {
         const sourceTypeCompany = procedure?.typeCompany;
