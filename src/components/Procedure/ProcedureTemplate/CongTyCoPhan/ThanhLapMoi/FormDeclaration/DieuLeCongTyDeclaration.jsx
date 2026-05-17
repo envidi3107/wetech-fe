@@ -10,6 +10,7 @@ import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
+import { CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 import {
     handleUppercaseInput,
     toUppercaseValue,
@@ -298,7 +299,7 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration(
 
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
-            <TenCongTySection dataJson={mergedData} styles={styles} prefix="CÔNG TY CỔ PHẦN" />
+            <TenCongTySection dataJson={mergedData} styles={styles} prefix={CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS} />
 
             <div className={styles.sectionGroup}>
                 <h3 className={styles.sectionTitle}>Thông tin địa chỉ trụ sở chính:</h3>

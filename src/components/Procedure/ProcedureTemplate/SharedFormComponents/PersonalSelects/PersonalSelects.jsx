@@ -1,18 +1,19 @@
 import React from "react";
 import styles from "./PersonalSelects.module.css";
 
-export const GioiTinhSelect = ({ name, defaultValue, required = true, onChange }) => {
+export const GioiTinhSelect = ({ name, defaultValue, required = true, onChange, hideLabel = false }) => {
     return (
         <div className={styles.formGroup}>
-            <label className={styles.label}>
+            {!hideLabel && <label className={styles.label}>
                 Giới tính {required && <span className={styles.required}>*</span>}
-            </label>
+            </label>}
             <select
                 key={defaultValue || "empty_gioitinh"}
                 className={styles.select}
                 name={name}
                 defaultValue={defaultValue || ""}
                 required={required}
+                aria-label={hideLabel ? name : undefined}
                 onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             >
                 <option value="" disabled>--Chọn giới tính--</option>
@@ -23,18 +24,19 @@ export const GioiTinhSelect = ({ name, defaultValue, required = true, onChange }
     );
 };
 
-export const DanTocSelect = ({ name, defaultValue, required = true, onChange }) => {
+export const DanTocSelect = ({ name, defaultValue, required = true, onChange, hideLabel = false }) => {
     return (
         <div className={styles.formGroup}>
-            <label className={styles.label}>
+            {!hideLabel && <label className={styles.label}>
                 Dân tộc {required && <span className={styles.required}>*</span>}
-            </label>
+            </label>}
             <select
                 key={defaultValue || "empty_dantoc"}
                 className={styles.select}
                 name={name}
                 defaultValue={defaultValue || ""}
                 required={required}
+                aria-label={hideLabel ? name : undefined}
                 onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             >
                 <option value="" disabled>--Chọn dân tộc--</option>
@@ -51,18 +53,19 @@ export const DanTocSelect = ({ name, defaultValue, required = true, onChange }) 
     );
 };
 
-export const QuocTichSelect = ({ name, defaultValue, required = true, onChange }) => {
+export const QuocTichSelect = ({ name, defaultValue, required = true, onChange, hideLabel = false }) => {
     return (
         <div className={styles.formGroup}>
-            <label className={styles.label}>
+            {!hideLabel && <label className={styles.label}>
                 Quốc tịch {required && <span className={styles.required}>*</span>}
-            </label>
+            </label>}
             <select
                 key={defaultValue || "empty_quoctich"}
                 className={styles.select}
                 name={name}
                 defaultValue={defaultValue || ""}
                 required={required}
+                aria-label={hideLabel ? name : undefined}
                 onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             >
                 <option value="" disabled>--Chọn quốc tịch--</option>

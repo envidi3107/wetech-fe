@@ -1,0 +1,45 @@
+.representativeTableWrapper {
+    overflow-x: auto;
+    margin-top: 12px;
+}
+
+.representativeTable {
+    min-width: 2050px;
+    table-layout: fixed;
+}
+
+.representativeTable .colIndex {
+    width: 64px;
+}
+
+.representativeTable .colName,
+.representativeTable .colLegalPaper,
+.representativeTable .colAddress {
+    width: 240px;
+}
+
+.representativeTable .colDate,
+.representativeTable .colGender,
+.representativeTable .colNationality,
+.representativeTable .colEthnicity,
+.representativeTable .colCapital,
+.representativeTable .colRepresentedAt,
+.representativeTable .colNote {
+    width: 160px;
+}
+
+.representativeTable .colRatio {
+    width: 90px;
+}
+
+.representativeTable .colAction {
+    width: 76px;
+}
+
+.tableSelect > div {
+    margin-bottom: 0;
+}
+
+.tableSelect select {
+    width: 100%;
+}

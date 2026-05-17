@@ -4,6 +4,9 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 export default function TenCongTySection({ dataJson, styles, prefix }) {
+    const prefixOptions = Array.isArray(prefix) ? prefix : prefix ? [prefix] : [];
+    const selectedPrefix = dataJson?.tenCongTyPrefix || prefixOptions[0] || "";
+
     return (
         <div className={styles.sectionGroup}>
             <h3 className={styles.sectionTitle}>Tên công ty:</h3>
@@ -13,7 +16,25 @@ export default function TenCongTySection({ dataJson, styles, prefix }) {
                 </label>
                 {prefix ? (
                     <div className={styles.inputPrefixWrapper}>
-                        <p>{prefix}</p>
+                        {prefixOptions.length > 1 ? (
+                            <select
+                                className={styles.prefixSelect}
+                                name="tenCongTyPrefix"
+                                defaultValue={selectedPrefix}
+                                aria-label="Chọn prefix tên công ty"
+                            >
+                                {prefixOptions.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <>
+                                <p>{selectedPrefix}</p>
+                                <input type="hidden" name="tenCongTyPrefix" value={selectedPrefix} />
+                            </>
+                        )}
                         <input
                             type="text"
                             className={styles.inputNoBorder}

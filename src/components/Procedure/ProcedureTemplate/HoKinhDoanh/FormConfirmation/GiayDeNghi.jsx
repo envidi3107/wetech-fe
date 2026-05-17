@@ -91,7 +91,7 @@ export default function GiayDeNghi({ dataJson }) {
 
             <div className={styles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</div>
 
-            <div style={{ textAlign: "center", margin: "15px 0", fontSize: "16px" }}>
+            <div style={{ textAlign: "center", margin: "15px 0", fontSize: "var(--procedure-confirmation-font-size)" }}>
                 Kính gửi: {kinhGui}
             </div>
 
@@ -124,7 +124,7 @@ export default function GiayDeNghi({ dataJson }) {
                 </div>
             </div>
 
-            <p style={{ fontStyle: "italic", fontSize: "16px", margin: "4px 0 10px 16px" }}>
+            <p style={{ fontStyle: "italic", fontSize: "var(--procedure-confirmation-font-size)", margin: "4px 0 10px 16px" }}>
                 Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
                 bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
             </p>
@@ -261,7 +261,7 @@ export default function GiayDeNghi({ dataJson }) {
                                                 whiteSpace: "pre-wrap",
                                                 wordBreak: "break-word",
                                                 fontFamily: "'Times New Roman', serif",
-                                                fontSize: "16px"
+                                                fontSize: "var(--procedure-confirmation-font-size)"
                                             }}>{row.chiTiet}</pre>}
                                     </td>
                                     <td style={{ textAlign: "center" }}>{row.maNganh}</td>

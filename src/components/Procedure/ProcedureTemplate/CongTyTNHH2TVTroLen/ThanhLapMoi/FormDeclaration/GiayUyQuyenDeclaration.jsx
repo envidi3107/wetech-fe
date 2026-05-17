@@ -12,12 +12,17 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import DateInput from "@/components/DateInput/DateInput";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
     { formId, dataJson, onSubmit, formRef },
     componentRef,
 ) {
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
+    const companyNamePrefix = dataJson?.tenCongTyPrefix || getCompanyNamePrefix(giayDeNghiData, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     const [provCode_uyQuyen, setProvCode_uyQuyen] = useState("");
     const [provCode_nhanUyQuyen_thuongTru, setProvCode_nhanUyQuyen_thuongTru] = useState("");
@@ -152,6 +157,7 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson || giayDeNghiData ? "loaded" : "empty"}>
             <input type="hidden" name="kinhGuiPrefix" value={kinhGuiPrefix} />
+            <input type="hidden" name="tenCongTyPrefix" value={companyNamePrefix} />
             <div className={styles.row}>
                 {/* Left side: Form fields */}
                 <div className={styles.colLeft}>
@@ -397,7 +403,7 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
                     </div><div className={styles.greyBox}>
                         <div className={styles.greyBoxContent}>
                             <span className={styles.greyText}>
-                                Là người đại diện đăng ký thành lập <b>CÔNG TY TNHH</b>
+                                Là người đại diện đăng ký thành lập <b>{companyNamePrefix}</b>
                             </span>
                             <input
                                 className={styles.spacer}

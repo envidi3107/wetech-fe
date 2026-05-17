@@ -5,7 +5,8 @@ export default function BaoHiemXaHoiSection({ dataJson, styles, note }) {
             {note && <div className={styles.note}>{note}</div>}
             <div className={styles.formGroup}>
                 <label className={styles.label}>
-                    Phương thức đóng bảo hiểm xã hội (<em>chọn 1 trong 3 phương thức</em>): <span className={styles.required}>*</span>
+                    Phương thức đóng bảo hiểm xã hội (chọn 1 trong 3 phương thức):{" "}
+                    <span className={styles.required}>*</span>
                 </label>
                 <div className={styles.radioGroup}>
                     <label className={styles.radioLabel}>
@@ -14,10 +15,12 @@ export default function BaoHiemXaHoiSection({ dataJson, styles, note }) {
                             name="phuongThucDongBHXH"
                             value="hang_thang"
                             className={styles.radioInput}
-                            defaultChecked={!dataJson?.phuongThucDongBHXH || dataJson.phuongThucDongBHXH === "hang_thang"}
+                            defaultChecked={
+                                !dataJson?.phuongThucDongBHXH || dataJson.phuongThucDongBHXH === "hang_thang"
+                            }
                             required
-                        />
-                        {" "}Hàng tháng
+                        />{" "}
+                        Hàng tháng
                     </label>
                     <label className={styles.radioLabel}>
                         <input
@@ -26,8 +29,8 @@ export default function BaoHiemXaHoiSection({ dataJson, styles, note }) {
                             value="3_thang"
                             className={styles.radioInput}
                             defaultChecked={dataJson?.phuongThucDongBHXH === "3_thang"}
-                        />
-                        {" "}03 tháng một lần
+                        />{" "}
+                        03 tháng một lần
                     </label>
                     <label className={styles.radioLabel}>
                         <input
@@ -36,8 +39,8 @@ export default function BaoHiemXaHoiSection({ dataJson, styles, note }) {
                             value="6_thang"
                             className={styles.radioInput}
                             defaultChecked={dataJson?.phuongThucDongBHXH === "6_thang"}
-                        />
-                        {" "}06 tháng một lần
+                        />{" "}
+                        06 tháng một lần
                     </label>
                 </div>
             </div>

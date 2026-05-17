@@ -5,6 +5,12 @@ import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import DateInput from "@/components/DateInput/DateInput";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { buildKinhGui } from "@/consts/provinceRoomMap";
+import {
+    DanTocSelect,
+    GioiTinhSelect,
+    QuocTichSelect,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import nganhNgheStyles from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable.module.css";
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
 import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
@@ -26,6 +32,9 @@ import {
     isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+import cshStyles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration.module.css";
+import deleteIcon from "@/assets/delete-icon.png";
+import Select from "react-select";
 
 const EMPTY_AUTHORIZED_REP = {
     chuSoHuu: "",
@@ -41,6 +50,71 @@ const EMPTY_AUTHORIZED_REP = {
     thoiDiemDaiDien: "",
     chuKy: "",
     ghiChu: "",
+};
+
+const EMPTY_CSH_HUONG_LOI_ROW = {
+    hoTen: "",
+    ngaySinh: "",
+    gioiTinh: "",
+    giaTo: "",
+    diaChiLienLac: "",
+    tyLeSoHuuVon: "",
+    tyLeSoHuuBieuQuyet: "",
+    quyenChiPhoi: "",
+    ghiChu: "",
+};
+
+const quyenChiPhoiOptions = [
+    { value: "", label: "Chọn quyền chi phối..." },
+    {
+        value: "Bổ nhiệm, miễn nhiệm hoặc bãi nhiệm đa số hoặc tất cả thành viên hội đồng quản trị, chủ tịch hội đồng quản trị, chủ tịch hội đồng thành viên; người đại diện theo pháp luật, giám đốc hoặc tổng giám đốc của doanh nghiệp;",
+        label: "Bổ nhiệm, miễn nhiệm hoặc bãi nhiệm đa số hoặc tất cả thành viên hội đồng quản trị, chủ tịch hội đồng quản trị, chủ tịch hội đồng thành viên; người đại diện theo pháp luật, giám đốc hoặc tổng giám đốc của doanh nghiệp;",
+    },
+    { value: "Sửa đổi, bổ sung điều lệ của doanh nghiệp;", label: "Sửa đổi, bổ sung điều lệ của doanh nghiệp;" },
+    { value: "Thay đổi cơ cấu tổ chức quản lý công ty;", label: "Thay đổi cơ cấu tổ chức quản lý công ty;" },
+    { value: "Tổ chức lại, giải thể công ty.", label: "Tổ chức lại, giải thể công ty." },
+];
+
+const cshSelectStyles = {
+    control: (base) => ({
+        ...base,
+        border: "none",
+        borderBottom: "1px solid transparent",
+        boxShadow: "none",
+        backgroundColor: "transparent",
+        minHeight: "40px",
+        fontSize: "14px",
+        "&:hover": { borderColor: "transparent" },
+    }),
+    valueContainer: (base) => ({
+        ...base,
+        padding: "0 8px",
+        justifyContent: "center",
+    }),
+    singleValue: (base) => ({
+        ...base,
+        textAlign: "center",
+    }),
+    placeholder: (base) => ({
+        ...base,
+        textAlign: "center",
+        color: "#505050",
+    }),
+    menu: (base) => ({
+        ...base,
+        width: "max-content",
+        maxWidth: "400px",
+        left: "50%",
+        transform: "translateX(-50%)",
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        fontSize: "14px",
+        backgroundColor: state.isSelected ? "#1d126eff" : state.isFocused ? "#f0f0ff" : "#fff",
+        color: state.isSelected ? "#fff" : "#333",
+        cursor: "pointer",
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
 };
 
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
@@ -80,7 +154,7 @@ function TextAreaField({ label, name, dataJson, required = false, rows = 4 }) {
                 defaultValue={dataJson?.[name] || ""}
                 required={required}
                 rows={rows}
-                style={{ minHeight: rows * 28, resize: "vertical" }}
+                style={{ minHeight: rows * 28, resize: "vertical", fontFamily: "inherit" }}
             />
         </div>
     );
@@ -160,12 +234,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                 <h4 className={styles.sectionTitle} style={{ margin: 0 }}>
                     Thông tin người đại diện theo ủy quyền sau khi thay đổi
                 </h4>
-                <button
-                    type="button"
-                    onClick={addRow}
-                    className={styles.input}
-                    style={{ width: "auto", cursor: "pointer" }}
-                >
+                <button type="button" onClick={addRow} className={nganhNgheStyles.btnPrimary}>
                     Thêm dòng
                 </button>
             </div>
@@ -184,7 +253,6 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                         <col className={localStyles.colCapital} />
                         <col className={localStyles.colRatio} />
                         <col className={localStyles.colRepresentedAt} />
-                        <col className={localStyles.colSignature} />
                         <col className={localStyles.colNote} />
                         <col className={localStyles.colAction} />
                     </colgroup>
@@ -208,10 +276,6 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                             </th>
                             <th>Tỷ lệ (%)</th>
                             <th>Thời điểm đại diện phần vốn</th>
-                            <th>
-                                Chữ ký
-                                <InfoTooltip content={FOOTNOTES.chuKyUyQuyen} />
-                            </th>
                             <th>Ghi chú</th>
                             <th></th>
                         </tr>
@@ -219,7 +283,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                     <tbody>
                         {rows.length === 0 && (
                             <tr>
-                                <td colSpan={15} style={{ textAlign: "center" }}>
+                                <td colSpan={14} style={{ textAlign: "left" }}>
                                     Chưa có dòng nào.
                                 </td>
                             </tr>
@@ -227,6 +291,73 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                         {rows.map((row, index) => (
                             <tr key={index}>
                                 <td style={{ textAlign: "center" }}>{index + 1}</td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.chuSoHuu || ""}
+                                        onChange={(e) => updateRow(index, "chuSoHuu", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.hoTen || ""}
+                                        placeholder="Họ tên"
+                                        onChange={(e) => updateRow(index, "hoTen", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <DateInput
+                                        className={styles.input}
+                                        name={`nguoiDaiDienUyQuyen_${index}_ngaySinh`}
+                                        value={row.ngaySinh || ""}
+                                        onChange={(e) => updateRow(index, "ngaySinh", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <div>
+                                        <GioiTinhSelect
+                                            name={`nguoiDaiDienUyQuyen_${index}_gioiTinh`}
+                                            defaultValue={row.gioiTinh || ""}
+                                            required={false}
+                                            hideLabel
+                                            onChange={(value) => updateRow(index, "gioiTinh", value)}
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.giayTo || ""}
+                                        placeholder="Số, ngày cấp, cơ quan cấp"
+                                        onChange={(e) => updateRow(index, "giayTo", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <div>
+                                        <QuocTichSelect
+                                            name={`nguoiDaiDienUyQuyen_${index}_quocTich`}
+                                            defaultValue={row.quocTich || ""}
+                                            required={false}
+                                            hideLabel
+                                            onChange={(value) => updateRow(index, "quocTich", value)}
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <DanTocSelect
+                                            name={`nguoiDaiDienUyQuyen_${index}_danToc`}
+                                            defaultValue={row.danToc || ""}
+                                            required={false}
+                                            hideLabel
+                                            onChange={(value) => updateRow(index, "danToc", value)}
+                                        />
+                                    </div>
+                                </td>
                                 {[
                                     ["chuSoHuu", "Tên tổ chức"],
                                     ["hoTen", "Họ tên"],
@@ -239,23 +370,219 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                                     ["tongVonDaiDien", "VNĐ/ngoại tệ"],
                                     ["tyLe", "%"],
                                     ["thoiDiemDaiDien", "Thời điểm"],
-                                    ["chuKy", "Người ký"],
                                     ["ghiChu", "Ghi chú"],
-                                ].map(([field, placeholder]) => (
-                                    <td key={field}>
-                                        <input
-                                            type="text"
-                                            className={styles.tableInput}
-                                            value={row[field] || ""}
-                                            placeholder={placeholder}
-                                            onChange={(e) => updateRow(index, field, e.target.value)}
-                                        />
-                                    </td>
-                                ))}
+                                ]
+                                    .filter(
+                                        ([field]) =>
+                                            ![
+                                                "chuSoHuu",
+                                                "hoTen",
+                                                "ngaySinh",
+                                                "gioiTinh",
+                                                "giayTo",
+                                                "quocTich",
+                                                "danToc",
+                                            ].includes(field),
+                                    )
+                                    .map(([field, placeholder]) => (
+                                        <td key={field}>
+                                            <input
+                                                type="text"
+                                                className={styles.input}
+                                                value={row[field] || ""}
+                                                placeholder={placeholder}
+                                                onChange={(e) => updateRow(index, field, e.target.value)}
+                                            />
+                                        </td>
+                                    ))}
                                 <td style={{ textAlign: "center" }}>
                                     <button type="button" onClick={() => removeRow(index)}>
                                         Xóa
                                     </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+function BeneficialOwnerTable({ rows, onChangeRows }) {
+    const updateRow = (index, field, value) => {
+        const nextRows = [...rows];
+        nextRows[index] = { ...nextRows[index], [field]: value };
+        onChangeRows(nextRows);
+    };
+
+    const addRow = () => onChangeRows([...rows, { ...EMPTY_CSH_HUONG_LOI_ROW }]);
+    const removeRow = (index) => onChangeRows(rows.filter((_, rowIndex) => rowIndex !== index));
+
+    return (
+        <div className={cshStyles.wrapper}>
+            <div className={cshStyles.actionRow}>
+                <button type="button" className={cshStyles.btnPrimary} onClick={addRow}>
+                    Thêm dòng
+                </button>
+            </div>
+
+            <div className={cshStyles.tableScrollWrapper}>
+                <table className={cshStyles.table}>
+                    <thead>
+                        <tr>
+                            <th rowSpan={2} className={cshStyles.th}>
+                                STT
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 180 }}>
+                                Họ và tên
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
+                                Ngày, tháng, năm sinh
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 60 }}>
+                                Giới tính
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 200 }}>
+                                Số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
+                                Địa chỉ liên lạc
+                            </th>
+                            <th colSpan={3} className={cshStyles.th}>
+                                Chủ sở hữu hưởng lợi của doanh nghiệp
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
+                                Ghi chú
+                            </th>
+                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 90 }}>
+                                Thao tác
+                            </th>
+                        </tr>
+                        <tr>
+                            <th className={cshStyles.th} style={{ minWidth: 50 }}>
+                                Tỷ lệ sở hữu vốn điều lệ (%)
+                            </th>
+                            <th className={cshStyles.th} style={{ minWidth: 50 }}>
+                                Tỷ lệ sở hữu cổ phần có quyền biểu quyết (%)
+                            </th>
+                            <th className={cshStyles.th} style={{ minWidth: 100 }}>
+                                Quyền chi phối
+                            </th>
+                        </tr>
+                        <tr className={cshStyles.colNumberRow}>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ""].map((number, index) => (
+                                <td key={index} className={cshStyles.colNumber}>
+                                    {number}
+                                </td>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows.length === 0 && (
+                            <tr>
+                                <td colSpan={11} className={cshStyles.emptyRow}>
+                                    Chưa có chủ sở hữu hưởng lợi. Nhấn "Thêm dòng" để bắt đầu.
+                                </td>
+                            </tr>
+                        )}
+                        {rows.map((row, index) => (
+                            <tr key={index} className={cshStyles.trEdit}>
+                                <td className={cshStyles.td} style={{ textAlign: "center" }}>
+                                    {index + 1}
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        className={cshStyles.input}
+                                        value={row.hoTen || ""}
+                                        onChange={(event) => updateRow(index, "hoTen", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <DateInput
+                                        className={cshStyles.input}
+                                        name={`cshHuongLoi_${index}_ngaySinh`}
+                                        value={row.ngaySinh || ""}
+                                        onChange={(event) => updateRow(index, "ngaySinh", event.target.value)}
+                                    />
+                                </td>
+                                <td
+                                    className={cshStyles.tdWrapper}
+                                    onChange={(event) => updateRow(index, "gioiTinh", event.target.value)}
+                                >
+                                    <GioiTinhSelect
+                                        name={`cshHuongLoi_${index}_gioiTinh`}
+                                        defaultValue={row.gioiTinh || ""}
+                                        required={false}
+                                        onChange={(value) => updateRow(index, "gioiTinh", value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        type="text"
+                                        className={cshStyles.input}
+                                        value={row.giaTo || ""}
+                                        onChange={(event) => updateRow(index, "giaTo", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        type="text"
+                                        className={cshStyles.input}
+                                        value={row.diaChiLienLac || ""}
+                                        onChange={(event) => updateRow(index, "diaChiLienLac", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        className={cshStyles.input}
+                                        value={row.tyLeSoHuuVon || ""}
+                                        onChange={(event) => updateRow(index, "tyLeSoHuuVon", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        className={cshStyles.input}
+                                        value={row.tyLeSoHuuBieuQuyet || ""}
+                                        onChange={(event) => updateRow(index, "tyLeSoHuuBieuQuyet", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.tdWrapper}>
+                                    <Select
+                                        options={quyenChiPhoiOptions}
+                                        styles={cshSelectStyles}
+                                        value={
+                                            quyenChiPhoiOptions.find((option) => option.value === row.quyenChiPhoi) ||
+                                            quyenChiPhoiOptions[0]
+                                        }
+                                        onChange={(selectedOption) => {
+                                            updateRow(
+                                                index,
+                                                "quyenChiPhoi",
+                                                selectedOption ? selectedOption.value : "",
+                                            );
+                                        }}
+                                        placeholder="Chọn quyền chi phối..."
+                                        menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
+                                        menuPosition="fixed"
+                                    />
+                                </td>
+                                <td className={cshStyles.td}>
+                                    <input
+                                        className={cshStyles.input}
+                                        value={row.ghiChu || ""}
+                                        onChange={(event) => updateRow(index, "ghiChu", event.target.value)}
+                                    />
+                                </td>
+                                <td className={cshStyles.tdAction}>
+                                    <img
+                                        src={deleteIcon}
+                                        alt="xóa"
+                                        onClick={() => removeRow(index)}
+                                        width="18"
+                                        height="18"
+                                        style={{ cursor: "pointer", display: "block", margin: "0 auto" }}
+                                    />
                                 </td>
                             </tr>
                         ))}
@@ -291,6 +618,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [nganhBoRows, setNganhBoRows] = useState([]);
     const [nganhSuaRows, setNganhSuaRows] = useState([]);
     const [authorizedRepRows, setAuthorizedRepRows] = useState([]);
+    const [cshHuongLoiRows, setCshHuongLoiRows] = useState([]);
     const [coSoThayDoi, setCoSoThayDoi] = useState("");
     const [pendingScrollTarget, setPendingScrollTarget] = useState("");
 
@@ -317,6 +645,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setNganhBoRows(parsed.nganhNgheBoList || []);
         setNganhSuaRows(parsed.nganhNgheSuaList || []);
         setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
+        setCshHuongLoiRows(parsed.cshHuongLoiList || []);
         setCoSoThayDoi(parsed.coSoThayDoi || "");
     }, [availableAChangeOptions, dataJson, provinces]);
 
@@ -344,6 +673,18 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setPendingScrollTarget(name);
     };
 
+    const areAllAOptionsSelected =
+        availableAChangeOptions.length > 0 && availableAChangeOptions.every((option) => !!aOptions[option.name]);
+
+    const toggleAllAOptions = () => {
+        setAOptions(
+            availableAChangeOptions.reduce((acc, option) => {
+                acc[option.name] = !areAllAOptionsSelected;
+                return acc;
+            }, {}),
+        );
+    };
+
     const validateSelection = () => {
         if (!kinhGuiValue) {
             window.alert("Vui lòng chọn tỉnh/thành phố cho mục Kính gửi.");
@@ -367,6 +708,9 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
         const formData = new FormData(formRef.current);
         const data = Object.fromEntries(formData.entries());
+        Object.keys(data).forEach((key) => {
+            if (key.startsWith("cshHuongLoi_") || key.startsWith("nguoiDaiDienUyQuyen_")) delete data[key];
+        });
         data.kinhGui = kinhGuiValue;
         data.kinhGuiProvince = kinhGuiProvince;
         data.noiDungThayDoi = mainOption;
@@ -376,13 +720,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             data.sapNhap_maSoDoanhNghiep = "";
         }
         A_CHANGE_OPTIONS.forEach((option) => {
-            data[option.name] =
-                !excludedAOptionNamesSet.has(option.name) && aOptions[option.name] ? "true" : "false";
+            data[option.name] = !excludedAOptionNamesSet.has(option.name) && aOptions[option.name] ? "true" : "false";
         });
         data.nganhNgheBoSungList = nganhBoSungRows;
         data.nganhNgheBoList = nganhBoRows;
         data.nganhNgheSuaList = nganhSuaRows;
         data.nguoiDaiDienUyQuyenList = authorizedRepRows;
+        data.cshHuongLoiList = cshHuongLoiRows;
         return data;
     };
 
@@ -395,6 +739,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setNganhBoRows(parsed.nganhNgheBoList || []);
             setNganhSuaRows(parsed.nganhNgheSuaList || []);
             setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
+            setCshHuongLoiRows(parsed.cshHuongLoiList || []);
             setCoSoThayDoi(parsed.coSoThayDoi || "");
         },
     }));
@@ -435,6 +780,9 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             <p className={localStyles.stickyNote}>
                                 Chọn một hoặc nhiều nội dung thay đổi, phần kê khai tương ứng hiển thị ở cột bên phải.
                             </p>
+                            <button type="button" className={localStyles.selectAllButton} onClick={toggleAllAOptions}>
+                                {areAllAOptionsSelected ? "Bỏ chọn tất cả" : "Tích chọn tất cả"}
+                            </button>
                             <div className={localStyles.optionList}>
                                 {availableAChangeOptions.map((option) => (
                                     <div key={option.name} className={localStyles.optionRow}>
@@ -534,7 +882,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
                             {isASelected("a_doiTen") && (
                                 <div id="a-section-a_doiTen" className={styles.sectionGroup}>
-                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi tên doanh nghiệp</h3>
+                                    <h3 className={styles.sectionTitle}>ĐĂNG KÝ THAY ĐỔI TÊN DOANH NGHIỆP</h3>
                                     <Field
                                         label="Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi (ghi bằng chữ in hoa)"
                                         name="tenSauThayDoiVN"
@@ -558,7 +906,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
                             {isASelected("a_doiDiaChi") && (
                                 <div id="a-section-a_doiDiaChi" className={styles.sectionGroup}>
-                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi địa chỉ trụ sở chính</h3>
+                                    <h3 className={styles.sectionTitle}>ĐĂNG KÝ THAY ĐỔI ĐỊA CHỈ TRỤ SỞ CHÍNH</h3>
+                                    <h3 className={styles.sectionTitle}>Trụ sở chính sau khi thay đổi:</h3>
                                     <AddressBlock dataJson={normalizedData} prefix="truSo" />
                                     <div className={styles.grid2}>
                                         <Field
@@ -593,7 +942,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         chính
                                     </label>
                                     <div className={styles.formGroup} style={{ marginTop: 12 }}>
-                                        <div className={styles.sectionTitle}>Doanh nghiệp nằm trong</div>
+                                        <h3 className={styles.sectionTitle}>Doanh nghiệp nằm trong</h3>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                                             {[
                                                 "Khu công nghiệp",
@@ -627,7 +976,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
                             {isASelected("a_doiThanhVien") && (
                                 <div id="a-section-a_doiThanhVien" className={styles.sectionGroup}>
-                                    <h3 className={styles.sectionTitle}>Đăng ký thay đổi thành viên công ty TNHH</h3>
+                                    <h3 className={styles.sectionTitle}>ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH</h3>
                                     <label className={styles.radioLabel}>
                                         <input
                                             type="checkbox"
@@ -649,7 +998,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiVonDieuLe") && (
                                 <div id="a-section-a_doiVonDieuLe" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Đăng ký thay đổi vốn điều lệ, phần vốn góp, tỷ lệ phần vốn góp
+                                        ĐĂNG KÝ THAY ĐỔI VỐN ĐIỀU LỆ, PHẦN VỐN GÓP, TỶ LỆ PHẦN VỐN GÓP
                                     </h3>
                                     <CapitalInput
                                         title="Vốn điều lệ đã đăng ký"
@@ -671,8 +1020,24 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     />
                                     <div className={styles.grid2}>
                                         <Field
-                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
-                                            name="vonDieuLe_ngoaiTe"
+                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có, bằng số)"
+                                            name="vonDieuLe_ngoaiTeBangSo"
+                                            dataJson={normalizedData}
+                                        >
+                                            <input
+                                                type="text"
+                                                className={styles.input}
+                                                name="vonDieuLe_ngoaiTeBangSo"
+                                                defaultValue={
+                                                    normalizedData.vonDieuLe_ngoaiTeBangSo ||
+                                                    normalizedData.vonDieuLe_ngoaiTe ||
+                                                    ""
+                                                }
+                                            />
+                                        </Field>
+                                        <Field
+                                            label="Loại ngoại tệ"
+                                            name="vonDieuLe_ngoaiTeDonVi"
                                             dataJson={normalizedData}
                                         />
                                         <Field
@@ -706,17 +1071,6 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         <ThongTinCoPhanSection dataJson={normalizedData} styles={styles} />
                                     )}
                                     <TaiSanGopVonSection dataJson={normalizedData} styles={styles} />
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="doiVonGop_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={isTruthy(normalizedData.doiVonGop_guiKem)}
-                                        />
-                                        Gửi kèm phần vốn góp, tỷ lệ phần vốn góp mới của thành viên công ty TNHH/công ty
-                                        hợp danh.
-                                    </label>
                                     <TextAreaField
                                         label="Cam kết sau khi giảm vốn (chỉ ghi cam kết trong trường hợp đăng ký giảm vốn điều lệ)"
                                         name="camKetSauGiamVon"
@@ -729,14 +1083,14 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiNganhNghe") && (
                                 <div id="a-section-a_doiNganhNghe" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Thông báo thay đổi ngành, nghề kinh doanh
+                                        THÔNG BÁO THAY ĐỔI NGÀNH, NGHỀ KINH DOANH
                                         <InfoTooltip content={FOOTNOTES.nganhNghe} />
                                     </h3>
-                                    <h4 className={styles.sectionTitle}>1. Bổ sung ngành, nghề kinh doanh</h4>
+                                    <h4 className={styles.sectionTitle}>1. BỔ SUNG NGÀNH, NGHỀ KINH DOANH</h4>
                                     <NganhNgheTable rows={nganhBoSungRows} onChangeRows={setNganhBoSungRows} />
-                                    <h4 className={styles.sectionTitle}>2. Bỏ ngành, nghề kinh doanh</h4>
+                                    <h4 className={styles.sectionTitle}>2. BỎ NGÀNH, NGHỀ KINH DOANH</h4>
                                     <NganhNgheTable rows={nganhBoRows} onChangeRows={setNganhBoRows} />
-                                    <h4 className={styles.sectionTitle}>3. Sửa đổi chi tiết ngành, nghề kinh doanh</h4>
+                                    <h4 className={styles.sectionTitle}>3. SỬA ĐỔI CHI TIẾT NGÀNH, NGHỀ KINH DOANH</h4>
                                     <NganhNgheTable rows={nganhSuaRows} onChangeRows={setNganhSuaRows} />
                                     <AttachmentNote>
                                         Trường hợp thay đổi ngành, nghề kinh doanh từ ngành này sang ngành khác, kê khai
@@ -748,7 +1102,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiVonDauTuDNTN") && (
                                 <div id="a-section-a_doiVonDauTuDNTN" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Đăng ký thay đổi vốn đầu tư của chủ doanh nghiệp tư nhân
+                                        ĐĂNG KÝ THAY ĐỔI VỐN ĐẦU TƯ CỦA CHỦ DOANH NGHIỆP TƯ NHÂN
                                     </h3>
                                     <CapitalInput
                                         title="Vốn đầu tư đã đăng ký"
@@ -770,8 +1124,24 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     />
                                     <div className={styles.grid2}>
                                         <Field
-                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có)"
-                                            name="vonDauTu_ngoaiTe"
+                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có, bằng số)"
+                                            name="vonDauTu_ngoaiTeBangSo"
+                                            dataJson={normalizedData}
+                                        >
+                                            <input
+                                                type="text"
+                                                className={styles.input}
+                                                name="vonDauTu_ngoaiTeBangSo"
+                                                defaultValue={
+                                                    normalizedData.vonDauTu_ngoaiTeBangSo ||
+                                                    normalizedData.vonDauTu_ngoaiTe ||
+                                                    ""
+                                                }
+                                            />
+                                        </Field>
+                                        <Field
+                                            label="Loại ngoại tệ"
+                                            name="vonDauTu_ngoaiTeDonVi"
                                             dataJson={normalizedData}
                                         />
                                         <Field
@@ -809,7 +1179,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiNguoiDaiDienUyQuyen") && (
                                 <div id="a-section-a_doiNguoiDaiDienUyQuyen" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Thông báo thay đổi người đại diện theo ủy quyền
+                                        THÔNG BÁO THAY ĐỔI NGƯỜI ĐẠI DIỆN THEO ỦY QUYỀN
                                         <InfoTooltip content={FOOTNOTES.nguoiDaiDienUyQuyen} />
                                     </h3>
                                     <AuthorizedRepTable rows={authorizedRepRows} onChangeRows={setAuthorizedRepRows} />
@@ -819,7 +1189,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiCoDong") && (
                                 <div id="a-section-a_doiCoDong" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Thông báo thay đổi cổ đông sáng lập/cổ đông là nhà đầu tư nước ngoài
+                                        THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI
                                     </h3>
                                     <label className={styles.radioLabel}>
                                         <input
@@ -852,43 +1222,25 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiThongTinThue") && (
                                 <div id="a-section-a_doiThongTinThue" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Thông báo thay đổi thông tin đăng ký thuế
+                                        THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ
                                         <InfoTooltip content={FOOTNOTES.thueKeToan} />
                                     </h3>
-                                    <ThongTinDangKyThueSection dataJson={normalizedData} styles={styles} isNote />
+                                    <ThongTinDangKyThueSection
+                                        dataJson={normalizedData}
+                                        styles={styles}
+                                        isNote
+                                        hideKeToanCopyCheckbox
+                                    />
                                 </div>
                             )}
 
                             {isASelected("a_doiChuSoHuuHuongLoi") && (
                                 <div id="a-section-a_doiChuSoHuuHuongLoi" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>
-                                        Thông báo thay đổi thông tin về chủ sở hữu hưởng lợi
+                                        THÔNG BÁO THAY ĐỔI THÔNG TIN VỀ CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP/THÔNG BÁO
+                                        THAY ĐỔI THÔNG TIN ĐỂ XÁC ĐỊNH CHỦ SỞ HỮU HƯỞNG LỢI
                                     </h3>
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="cshhl_mau10_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={isTruthy(normalizedData.cshhl_mau10_guiKem)}
-                                        />
-                                        Gửi kèm Mẫu số 10 về chủ sở hữu hưởng lợi của doanh nghiệp.
-                                    </label>
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="cshhl_mau11_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={isTruthy(normalizedData.cshhl_mau11_guiKem)}
-                                        />
-                                        Gửi kèm Mẫu số 11 về thông tin để xác định chủ sở hữu hưởng lợi.
-                                    </label>
-                                    <TextAreaField
-                                        label="Ghi chú về chủ sở hữu hưởng lợi"
-                                        name="cshhl_ghiChu"
-                                        dataJson={normalizedData}
-                                    />
+                                    <BeneficialOwnerTable rows={cshHuongLoiRows} onChangeRows={setCshHuongLoiRows} />
                                 </div>
                             )}
                         </>

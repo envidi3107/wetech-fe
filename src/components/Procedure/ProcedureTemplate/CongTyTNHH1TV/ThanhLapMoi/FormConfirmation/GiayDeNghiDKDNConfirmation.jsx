@@ -3,6 +3,10 @@ import styles from "./GiayDeNghiDKDNConfirmation.module.css";
 import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import { formatDate } from "@/utils/dateTimeUtils";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x" : ""}</div>;
 
@@ -34,6 +38,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         nguoiNop_thuongTru_quocGia = "Việt Nam",
 
         tenCongTyVN = "",
+        tenCongTyPrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
         tenCongTyEN = "",
         tenCongTyVietTat = "",
 
@@ -153,6 +158,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         doanhNghiepCoCSHHuongLoi = "co",
         tinhTrangThanhLap = "moi",
     } = dataJson;
+    const companyNamePrefix = getCompanyNamePrefix({ tenCongTyPrefix }, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     const addressToString = (soNha, xa, tinh) => {
         return [soNha, xa, tinh].filter(Boolean).join(", ");
@@ -303,7 +309,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>2. Tên công ty:</strong>
                 </p>
                 <p>
-                    Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): CÔNG TY TNHH{" "}
+                    Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
                     <span style={{ textTransform: "uppercase" }}>{tenCongTyVN}</span>
                 </p>
                 <p>
@@ -402,14 +408,19 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <td style={{ textAlign: "center" }}>{index + 1}</td>
                                     <td>
                                         <div>{nganh.tenNganh}</div>
-                                        {nganh.chiTiet && <pre
-                                            style={{
-                                                margin: 0,
-                                                whiteSpace: "pre-wrap",
-                                                wordBreak: "break-word",
-                                                fontFamily: "inherit",
-                                                fontSize: "inherit"
-                                            }}>{nganh.chiTiet}</pre>}
+                                        {nganh.chiTiet && (
+                                            <pre
+                                                style={{
+                                                    margin: 0,
+                                                    whiteSpace: "pre-wrap",
+                                                    wordBreak: "break-word",
+                                                    fontFamily: "inherit",
+                                                    fontSize: "inherit",
+                                                }}
+                                            >
+                                                {nganh.chiTiet}
+                                            </pre>
+                                        )}
                                     </td>
                                     <td style={{ textAlign: "center" }}>{nganh.maNganh}</td>
                                     <td style={{ textAlign: "center" }}>{nganh.laNganhChinh ? "x" : ""}</td>
@@ -496,7 +507,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     Vốn điều lệ (<em>bằng số; VNĐ</em>): {vonDieuLe} VNĐ
                 </p>
                 <p>
-                    Vốn điều lệ (<em>bằng chữ; VNĐ</em>): <span style={{ fontStyle: "italic" }}>{vonDieuLe_bangChu}</span>
+                    Vốn điều lệ (<em>bằng chữ; VNĐ</em>):{" "}
+                    <span style={{ fontStyle: "italic" }}>{vonDieuLe_bangChu}</span>
                 </p>
                 <p>
                     Giá trị tương đương theo đơn vị tiền nước ngoài (<em>nếu có, bằng số, loại ngoại tệ</em>):{" "}
@@ -949,7 +961,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <tbody>
                         <tr>
                             <td style={{ width: "50%" }}></td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
+                            <td className={styles.textCenter} style={{ verticalAlign: "top", whiteSpace: "nowrap" }}>
                                 <p>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>
                                     <br />(<em>Ký và ghi họ tên</em>)

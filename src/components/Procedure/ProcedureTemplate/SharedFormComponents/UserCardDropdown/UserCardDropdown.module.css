@@ -109,13 +109,14 @@
 
 .tableContainer {
     flex: 1;
-    overflow-y: auto;
+    overflow: auto;
     border: 1px solid var(--border-color, #c8c7d4);
     border-radius: 4px;
 }
 
 .table {
     width: 100%;
+    min-width: 1120px;
     border-collapse: collapse;
 }
 

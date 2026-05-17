@@ -11,7 +11,12 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 
-export default function ThongTinDangKyThueSection({ dataJson, styles, isNote = false }) {
+export default function ThongTinDangKyThueSection({
+    dataJson,
+    styles,
+    isNote = false,
+    hideKeToanCopyCheckbox = false,
+}) {
     const [provCode_thongBaoThue, setProvCode_thongBaoThue] = useState("");
     const { provinces, communes: communes_thongBaoThue, loadingCommunes: loadingCommunes_thongBaoThue } = useFetchAddress(provCode_thongBaoThue);
     const sectionRef = useRef(null);
@@ -216,10 +221,12 @@ export default function ThongTinDangKyThueSection({ dataJson, styles, isNote = f
                         <td style={{ textAlign: "center" }}>10.2</td>
                         <td>
                             <p className={styles.sectionTitle}>Thông tin về Kế toán trưởng/Phụ trách kế toán (nếu có):</p>
-                            <CopyAddressCheckbox
-                                label="Tích chọn nếu Kế toán trưởng/Phụ trách kế toán đồng thời là người soạn hồ sơ"
-                                onChange={handleCopyNguoiNopToKeToan}
-                            />
+                            {!hideKeToanCopyCheckbox && (
+                                <CopyAddressCheckbox
+                                    label="Tích chọn nếu Kế toán trưởng/Phụ trách kế toán đồng thời là người soạn hồ sơ"
+                                    onChange={handleCopyNguoiNopToKeToan}
+                                />
+                            )}
                             <div key={`ketoan-group-${keToanKey}`}>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>Họ, chữ đệm và tên Kế toán trưởng/Phụ trách kế toán:</label>

@@ -3,6 +3,10 @@ import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/Thanh
 import { formatDate } from "@/utils/dateTimeUtils";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 export default function DieuLeCongTyConfirmation({ dataJson }) {
     const thanhVienList = useGetFormDataJsonFromName("Danh sách thành viên")?.thanhVienList || [];
@@ -10,6 +14,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
     if (!dataJson) return <div style={{ padding: "20px", textAlign: "center" }}>Đang tải dữ liệu...</div>;
 
     const thanhVienRows = thanhVienList;
+    const companyNamePrefix = getCompanyNamePrefix(dataJson, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     const addressToString = (soNha, xa, tinh) => {
         return [soNha, xa, tinh].filter(Boolean).join(", ");
@@ -28,7 +33,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <br />
                 <p className={styles.title}>ĐIỀU LỆ</p>
                 <p className={styles.subTitle}>
-                    CÔNG TY TNHH{" "}
+                    {companyNamePrefix}{" "}
                     {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
                 </p>
             </div>
@@ -159,7 +164,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </table>
 
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Các thành viên cùng đồng ý ký tên và chấp thuận thành lập CÔNG TY TNHH{" "}
+                Các thành viên cùng đồng ý ký tên và chấp thuận thành lập {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || "..................."} với Điều lệ được các thành viên công ty
                 thông qua theo quy định của Luật Doanh nghiệp số 59/2020/QH14 được Quốc hội thông qua ngày 17 tháng 06
                 năm 2020 được sửa đổi, bổ sung một số điều theo luật số 03/2022/QH15, luật số 76/2025/QH15 và các văn
@@ -213,7 +218,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Điều 2. Tên Doanh nghiệp
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): CÔNG TY TNHH{" "}
+                Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>

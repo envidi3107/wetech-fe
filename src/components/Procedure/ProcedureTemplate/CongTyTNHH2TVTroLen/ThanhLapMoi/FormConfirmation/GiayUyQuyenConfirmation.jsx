@@ -4,6 +4,10 @@ import { formatDate, getToday } from "@/utils/dateTimeUtils";
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/confirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import SignatureBlock from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/SignatureBlock/SignatureBlock";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 export default function GiayUyQuyenConfirmation({ dataJson }) {
     if (!dataJson) return null;
@@ -20,6 +24,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
         uyQuyen_tinh = "",
 
         chuHo_ten = "",
+        tenCongTyPrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
         chuHo_xa_phuong = "",
 
         nhanUyQuyen_hoTen = "",
@@ -37,6 +42,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
         nhanUyQuyen_lienLac_xa = "",
         nhanUyQuyen_lienLac_tinh = "",
     } = dataJson;
+    const companyNamePrefix = getCompanyNamePrefix({ tenCongTyPrefix }, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     const benB = {
         hoTen: nhanUyQuyen_hoTen || "",
@@ -106,7 +112,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             </div>
 
             <div className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
-                <span>Là người đại diện đăng ký thành lập CÔNG TY TNHH </span>
+                <span>Là người đại diện đăng ký thành lập {companyNamePrefix} </span>
                 <span>{chuHo_ten}</span>
                 <span> tại {prefix} </span>
                 <span>{chuHo_xa_phuong}</span>
@@ -177,7 +183,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
             </div>
             <div className={styles.infoLine} style={{ lineHeight: "1.8" }}>
-                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập CÔNG TY TNHH <span>{chuHo_ten}</span> tại {prefix} <span>{chuHo_xa_phuong}</span>
+                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập {companyNamePrefix} <span>{chuHo_ten}</span> tại {prefix} <span>{chuHo_xa_phuong}</span>
             </div>
 
             <div

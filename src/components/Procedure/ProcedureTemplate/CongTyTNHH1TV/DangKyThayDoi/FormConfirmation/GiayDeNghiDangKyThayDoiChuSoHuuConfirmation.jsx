@@ -20,7 +20,7 @@ const TOOLTIP = {
 function Line({ label, value }) {
     return (
         <p>
-            {label}: <strong>{value || ""}</strong>
+            {label}: {value || ""}
         </p>
     );
 }
@@ -49,24 +49,24 @@ function IndividualOwner({ data }) {
                 )}
             />
             <p>
-                Điện thoại: <strong>{data.chuSoHuu_phone || ""}</strong>
-                &nbsp;&nbsp; Thư điện tử: <strong>{data.chuSoHuu_email || ""}</strong>
+                Điện thoại: {data.chuSoHuu_phone || ""}
+                &nbsp;&nbsp; Thư điện tử: {data.chuSoHuu_email || ""}
             </p>
             <p style={{ fontStyle: "italic" }}>
                 Trường hợp không có số định danh cá nhân hoặc việc kết nối dữ liệu bị gián đoạn thì kê khai các thông
                 tin cá nhân dưới đây:
             </p>
             <p>
-                Dân tộc: <strong>{data.chuSoHuu_danToc || ""}</strong>
-                &nbsp;&nbsp; Quốc tịch: <strong>{data.chuSoHuu_quocTich || ""}</strong>
+                Dân tộc: {data.chuSoHuu_danToc || ""}
+                &nbsp;&nbsp; Quốc tịch: {data.chuSoHuu_quocTich || ""}
             </p>
             <Line
                 label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
                 value={data.chuSoHuu_soHoChieu}
             />
             <p>
-                Ngày cấp: <strong>{formatDate(data.chuSoHuu_ngayCapHoChieu)}</strong>
-                &nbsp;&nbsp; Nơi cấp: <strong>{data.chuSoHuu_noiCapHoChieu || ""}</strong>
+                Ngày cấp: {formatDate(data.chuSoHuu_ngayCapHoChieu)}
+                &nbsp;&nbsp; Nơi cấp: {data.chuSoHuu_noiCapHoChieu || ""}
             </p>
             <Line
                 label="Nơi thường trú"
@@ -95,8 +95,8 @@ function OrganizationOwner({ data }) {
             <Line label="Tên chủ sở hữu" value={data.chuSoHuuToChuc_ten} />
             <Line label="Mã số doanh nghiệp/Số Quyết định thành lập" value={data.chuSoHuuToChuc_maSo} />
             <p>
-                Ngày cấp: <strong>{formatDate(data.chuSoHuuToChuc_ngayCap)}</strong>
-                &nbsp;&nbsp; Nơi cấp: <strong>{data.chuSoHuuToChuc_noiCap || ""}</strong>
+                Ngày cấp: {formatDate(data.chuSoHuuToChuc_ngayCap)}
+                &nbsp;&nbsp; Nơi cấp: {data.chuSoHuuToChuc_noiCap || ""}
             </p>
             <Line
                 label="Địa chỉ trụ sở chính"
@@ -108,12 +108,12 @@ function OrganizationOwner({ data }) {
                 )}
             />
             <p>
-                Điện thoại: <strong>{data.chuSoHuuToChuc_phone || ""}</strong>
-                &nbsp;&nbsp; Số fax: <strong>{data.chuSoHuuToChuc_fax || ""}</strong>
+                Điện thoại: {data.chuSoHuuToChuc_phone || ""}
+                &nbsp;&nbsp; Số fax: {data.chuSoHuuToChuc_fax || ""}
             </p>
             <p>
-                Thư điện tử: <strong>{data.chuSoHuuToChuc_email || ""}</strong>
-                &nbsp;&nbsp; Website: <strong>{data.chuSoHuuToChuc_website || ""}</strong>
+                Thư điện tử: {data.chuSoHuuToChuc_email || ""}
+                &nbsp;&nbsp; Website: {data.chuSoHuuToChuc_website || ""}
             </p>
             <p>
                 <strong>Mô hình tổ chức công ty:</strong>
@@ -207,7 +207,7 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({ dataJson }) {
                 <h2 className={styles.nationTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
                 <p className={styles.dateRight} style={{ fontStyle: "italic" }}>
-                    <CurrentDate />
+                    <CurrentDate prefix={data.kinhGuiProvince} />
                 </p>
             </div>
 
@@ -216,7 +216,7 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({ dataJson }) {
 
             <div className={styles.content}>
                 <p>
-                    Kính gửi: <strong>{data.kinhGui}</strong>
+                    Kính gửi: {data.kinhGui}
                 </p>
                 <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={data.tenDoanhNghiep} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />

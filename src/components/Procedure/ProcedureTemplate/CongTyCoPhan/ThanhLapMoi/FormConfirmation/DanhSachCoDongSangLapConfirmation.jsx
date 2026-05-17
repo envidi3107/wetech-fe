@@ -9,7 +9,7 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
 
     return (
         <div className={styles.wrapper}>
-            <div style={{ textAlign: "center", marginBottom: "20px", fontWeight: "bold", fontSize: "16px" }}>
+            <div style={{ textAlign: "center", marginBottom: "20px", fontWeight: "bold", fontSize: "var(--procedure-confirmation-font-size)" }}>
                 DANH SÁCH CỔ ĐÔNG SÁNG LẬP CÔNG TY CỔ PHẦN
             </div>
 

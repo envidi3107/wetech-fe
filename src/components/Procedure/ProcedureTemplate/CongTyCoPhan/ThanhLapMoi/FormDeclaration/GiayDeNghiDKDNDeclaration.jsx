@@ -17,6 +17,7 @@ import BaoHiemXaHoiSection from "@/components/Procedure/ProcedureTemplate/Shared
 import ChuSoHuuHuongLoiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ChuSoHuuHuongLoiSection";
 import ThongTinCoPhanSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinCoPhanSection";
 import CoDongNhaDauTuNuocNgoaiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/CoDongNhaDauTuNuocNgoaiSection";
+import { CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 import { buildKinhGui } from "@/consts/provinceRoomMap";
 
@@ -94,7 +95,7 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
 
             <TinhTrangThanhLapSection dataJson={dataJson} styles={styles} isNote={true} />
             <ThongTinChuyenDoiSection dataJson={dataJson} styles={styles} />
-            <TenCongTySection dataJson={dataJson} styles={styles} prefix="CÔNG TY CỔ PHẦN" />
+            <TenCongTySection dataJson={dataJson} styles={styles} prefix={CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS} />
 
             {/* ĐỊA CHỈ TRỤ SỞ */}
             <DiaChiTruSoSection
@@ -129,4 +130,3 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
 });
 
 export default GiayDeNghiDKDNDeclaration;
-

@@ -5,6 +5,10 @@ import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/Thanh
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import { useGetFormDataJsonFromName, useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import { authAxios } from "@/services/axios-instance";
+import {
+    DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
     <span className={styles.checkbox}>
@@ -41,6 +45,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         nguoiNop_thuongTru_quocGia = "Việt Nam",
 
         tenCongTyVN = "",
+        tenCongTyPrefix = DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
         tenCongTyEN = "",
         tenCongTyVietTat = "",
 
@@ -188,6 +193,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         congTyChungKhoan_soGiayPhep = "",
         congTyChungKhoan_ngayCap = ""
     } = dataJson;
+    const companyNamePrefix = getCompanyNamePrefix({ tenCongTyPrefix }, DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX);
 
 
     const addressToString = (soNha, xa, tinh) => {
@@ -341,7 +347,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 )}
 
                 <p style={{ marginTop: "16px" }}><strong>2. Tên công ty:</strong></p>
-                <p>Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): CÔNG TY CỔ PHẦN <span style={{ textTransform: "uppercase" }}>{tenCongTyVN}</span></p>
+                <p>Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix} <span style={{ textTransform: "uppercase" }}>{tenCongTyVN}</span></p>
                 <p>Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>): {tenCongTyEN}</p>
                 <p>Tên công ty viết tắt (<em>nếu có</em>): {tenCongTyVietTat}</p>
 

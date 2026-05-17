@@ -92,7 +92,7 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
 
             <div className={styles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</div>
 
-            <div style={{ textAlign: "center", margin: "15px 0", fontSize: "16px" }}>Kính gửi: {kinhGui}</div>
+            <div style={{ textAlign: "center", margin: "15px 0", fontSize: "var(--procedure-confirmation-font-size)" }}>Kính gửi: {kinhGui}</div>
 
             <div className={styles.infoLine}>
                 <span className={styles.infoLabel}>Tôi là (ghi họ tên bằng chữ in hoa): </span>
@@ -123,7 +123,7 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
                 </div>
             </div>
 
-            <p style={{ fontStyle: "italic", fontSize: "16px", margin: "4px 0 10px 16px" }}>
+            <p style={{ fontStyle: "italic", fontSize: "var(--procedure-confirmation-font-size)", margin: "4px 0 10px 16px" }}>
                 Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
                 bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
             </p>

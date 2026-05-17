@@ -11,6 +11,11 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import { useGetFormDataJsonFromName, useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import DateInput from "@/components/DateInput/DateInput";
+import {
+    DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
     { formId, dataJson, onSubmit, formRef },
@@ -19,10 +24,10 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
     const { procedure } = useProcessProcedure();
 
-    let typeCompanyPrefix = "CÔNG TY TNHH";
-    if (procedure?.typeCompany === "cong_ty_co_phan") {
-        typeCompanyPrefix = "CÔNG TY CỔ PHẦN";
-    }
+    const defaultCompanyNamePrefix = procedure?.typeCompany === "cong_ty_co_phan"
+        ? DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX
+        : DEFAULT_TNHH_COMPANY_NAME_PREFIX;
+    const typeCompanyPrefix = getCompanyNamePrefix(giayDeNghiData, defaultCompanyNamePrefix);
 
     const companyName = giayDeNghiData?.tenCongTyVN
         ? `${typeCompanyPrefix} ${giayDeNghiData.tenCongTyVN.toUpperCase()}`

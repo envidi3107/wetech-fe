@@ -12,6 +12,7 @@ import NguoiDaiDienPhapLuatSection from "@/components/Procedure/ProcedureTemplat
 import VonDieuLeSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/VonDieuLeSection";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import FormattedNumberInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
+import { TNHH_COMPANY_NAME_PREFIX_OPTIONS } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const EMPTY_MEMBER_ROW = {
     hoTen: "",
@@ -24,7 +25,7 @@ const EMPTY_MEMBER_ROW = {
 
 // Các trường chia sẻ với Form 1 (GiayDeNghiDKDN) – luôn lấy từ Form 1
 const FORM1_SHARED_KEYS = [
-    "tenCongTyVN", "tenCongTyEN", "tenCongTyVietTat",
+    "tenCongTyPrefix", "tenCongTyVN", "tenCongTyEN", "tenCongTyVietTat",
     "truSo_tinh", "truSo_xa", "truSo_soNha", "truSo_phone", "truSo_fax",
     "truSo_email", "truSo_website", "truSo_loaiKhu", "truSo_anNinhQuocPhong",
     "nguoiDaiDien_hoTen", "nguoiDaiDien_ngaySinh", "nguoiDaiDien_gioiTinh",
@@ -137,7 +138,7 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration(
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={formKey}>
             {/* 1. TÊN CÔNG TY – lấy từ Form 1 */}
-            <TenCongTySection dataJson={mergedData} styles={styles} prefix="CÔNG TY TNHH" />
+            <TenCongTySection dataJson={mergedData} styles={styles} prefix={TNHH_COMPANY_NAME_PREFIX_OPTIONS} />
 
             {/* 2. ĐỊA CHỈ TRỤ SỞ – lấy từ Form 1 */}
             <DiaChiTruSoSection dataJson={mergedData} styles={styles} />

@@ -3,7 +3,7 @@
     margin: 0 auto;
     background-color: #fff;
     font-family: 'Times New Roman', serif;
-    font-size: 16px;
+    font-size: var(--procedure-confirmation-font-size);
     line-height: 1.5;
     color: #000;
     padding: 20px 0;
@@ -41,7 +41,7 @@
 }
 
 .headerSubtitle {
-    font-size: 16px;
+    font-size: var(--procedure-confirmation-font-size);
     margin: 4px 0 18px;
     text-decoration: underline;
 }

@@ -16,6 +16,7 @@ import ThongTinDangKyThueSection from "@/components/Procedure/ProcedureTemplate/
 import BaoHiemXaHoiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/BaoHiemXaHoiSection";
 import ChuSoHuuHuongLoiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ChuSoHuuHuongLoiSection";
 import { buildKinhGui } from "@/consts/provinceRoomMap";
+import { TNHH_COMPANY_NAME_PREFIX_OPTIONS } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
     { formId, dataJson, onSubmit, formRef },
@@ -84,7 +85,7 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
             <TinhTrangThanhLapSection dataJson={dataJson} styles={styles} />
 
             {/* TÊN CÔNG TY */}
-            <TenCongTySection dataJson={dataJson} styles={styles} prefix="CÔNG TY TNHH" />
+            <TenCongTySection dataJson={dataJson} styles={styles} prefix={TNHH_COMPANY_NAME_PREFIX_OPTIONS} />
 
             {/* ĐỊA CHỈ TRỤ SỞ */}
             <DiaChiTruSoSection dataJson={dataJson} styles={styles} onProvinceNameChange={handleProvinceNameChange} />

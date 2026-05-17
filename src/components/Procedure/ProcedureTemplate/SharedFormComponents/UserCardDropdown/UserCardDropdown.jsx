@@ -9,6 +9,8 @@ import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Proce
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 
+const getCardCountry = (card) => card?.nationality || card?.country || "";
+
 export default function UserCardDropdown({ onSelect }) {
     const { userCards, refreshUserCards } = useProcessProcedure();
     const { showNotification } = useNotification();
@@ -28,7 +30,14 @@ export default function UserCardDropdown({ onSelect }) {
     const { communes: currentCommunes, loadingCommunes: loadingCurrentCommunes } = useFetchAddress(currentProvinceCode);
 
     const handleSelectCard = (card) => {
-        if (onSelect) onSelect(card);
+        const country = getCardCountry(card);
+        if (onSelect) {
+            onSelect({
+                ...card,
+                country,
+                nationality: country,
+            });
+        }
         setIsOpen(false);
         setSearchTerm("");
     };
@@ -59,7 +68,7 @@ export default function UserCardDropdown({ onSelect }) {
             dob: card.dob || "",
             email: card.email || "",
             phone: card.phone || "",
-            nationality: card.nationality || "",
+            nationality: getCardCountry(card),
             ethnicity: card.ethnicity || "",
             permanentStreet: card.permanentAddress?.street || "",
             permanentWard: card.permanentAddress?.ward || "",
@@ -121,7 +130,8 @@ export default function UserCardDropdown({ onSelect }) {
         const lowerTerm = searchTerm.toLowerCase();
         return cardsList.filter((card) =>
             (card.fullName || "").toLowerCase().includes(lowerTerm) ||
-            (card.cccd || "").includes(lowerTerm)
+            (card.cccd || "").includes(lowerTerm) ||
+            getCardCountry(card).toLowerCase().includes(lowerTerm)
         );
     }, [searchTerm, userCards]);
 
@@ -265,6 +275,7 @@ export default function UserCardDropdown({ onSelect }) {
                                                     <th>Ngày sinh</th>
                                                     <th>Giới tính</th>
                                                     <th>CCCD</th>
+                                                    <th>Quốc gia</th>
                                                     <th>Email</th>
                                                     <th>Số điện thoại</th>
                                                     <th>Thường trú</th>
@@ -280,6 +291,7 @@ export default function UserCardDropdown({ onSelect }) {
                                                             <td>{formatDate(card.dob)}</td>
                                                             <td>{card.gender}</td>
                                                             <td style={{ fontWeight: 500, color: "#1b154b" }}>{card.cccd}</td>
+                                                            <td style={{ fontSize: "0.85rem", color: "#555" }}>{getCardCountry(card) || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.email || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.phone || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>
@@ -314,7 +326,7 @@ export default function UserCardDropdown({ onSelect }) {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan={9} className={styles.empty}>
+                                                        <td colSpan={10} className={styles.empty}>
                                                             {!userCards || userCards.length === 0
                                                                 ? "Chưa có dữ liệu đã lưu. Dữ liệu của bạn sẽ tự động lưu lại khi nộp hồ sơ."
                                                                 : "Không tìm thấy kết quả phù hợp."}

@@ -2,6 +2,10 @@ import React from "react";
 import styles from "./DieuLeCongTyConfirmation.module.css";
 import { formatDate } from "@/utils/dateTimeUtils";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const getLastName = (fullName) => {
     if (!fullName) return "";
@@ -21,6 +25,7 @@ const formatCurrency = (value) => {
 
 export default function DieuLeCongTyConfirmation({ dataJson }) {
     if (!dataJson) return <div style={{ padding: "20px", textAlign: "center" }}>Đang tải dữ liệu...</div>;
+    const companyNamePrefix = getCompanyNamePrefix(dataJson, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     return (
         <div className={styles.documentContainer}>
@@ -29,7 +34,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
                 <p className={styles.title}>ĐIỀU LỆ</p>
                 <p className={styles.subTitle}>
-                    CÔNG TY TNHH {" "}
+                    {companyNamePrefix}{" "}
                     {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
                 </p>
             </div>
@@ -44,7 +49,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
 
             <p className={styles.articleTitle}>Điều 1: Hình thức</p>
             <p>
-                1. CÔNG TY TNHH {dataJson.tenCongTyVN?.toUpperCase() || ".............................."} thuộc hình
+                1. {companyNamePrefix} {dataJson.tenCongTyVN?.toUpperCase() || ".............................."} thuộc hình
                 thức Công ty trách nhiệm hữu hạn một thành viên và thuộc sở hữu của cá nhân {dataJson.chuSoHuu_gioiTinh === "Nam" ? "Ông" : "Bà"}{" "}
                 {dataJson.chuSoHuu_hoTen || ".............................."}
             </p>
@@ -71,7 +76,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <strong>1. Tên công ty:</strong>
             </p>
             <p>
-                Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): CÔNG TY TNHH{" "}
+                Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
             </p>
             <p>
@@ -773,7 +778,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
 
             <p className={styles.articleTitle}>Điều 26: Đối tượng áp dụng</p>
             <p>
-                Điều lệ này được áp dụng cho CÔNG TY TNHH{" "}
+                Điều lệ này được áp dụng cho {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || ".............................."}. Mọi nhân viên trong công ty
                 có trách nhiệm thi hành nghiêm chỉnh điều lệ này.
             </p>

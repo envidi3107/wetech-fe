@@ -9,6 +9,10 @@ import CapitalInput from "@/components/Procedure/ProcedureTemplate/SharedFormCom
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
+import {
     handleUppercaseInput,
     toUppercaseValue,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
@@ -73,6 +77,7 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration({ fo
     }, [dataJson, giayDeNghiData]);
 
     const defaultTenCongTyVN = dataJson?.tenCongTyVN || giayDeNghiData?.tenCongTyVN || "";
+    const defaultTenCongTyPrefix = dataJson?.tenCongTyPrefix || giayDeNghiData?.tenCongTyPrefix || DEFAULT_TNHH_COMPANY_NAME_PREFIX;
     const defaultTenCongTyEN = dataJson?.tenCongTyEN || giayDeNghiData?.tenCongTyEN || "";
     const defaultTenCongTyVietTat = dataJson?.tenCongTyVietTat || giayDeNghiData?.tenCongTyVietTat || "";
 
@@ -157,7 +162,18 @@ const DieuLeCongTyDeclaration = forwardRef(function DieuLeCongTyDeclaration({ fo
                         Tên công ty viết bằng tiếng Việt (ghi bằng chữ in hoa) <span className={styles.required}>*</span>
                     </label>
                     <div className={styles.inputPrefixWrapper}>
-                        <p>CÔNG TY TNHH</p>
+                        <select
+                            className={styles.prefixSelect}
+                            name="tenCongTyPrefix"
+                            defaultValue={defaultTenCongTyPrefix}
+                            aria-label="Chọn prefix tên công ty"
+                        >
+                            {TNHH_COMPANY_NAME_PREFIX_OPTIONS.map((option) => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </select>
                         <input type="text" name="tenCongTyVN" className={styles.inputNoBorder} defaultValue={toUppercaseValue(defaultTenCongTyVN)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
                     </div>
                 </div>

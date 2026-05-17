@@ -7,7 +7,7 @@ import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/Cong
 function Line({ label, value }) {
     return (
         <p>
-            {label}: <strong>{value || ""}</strong>
+            {label}: {value || ""}
         </p>
     );
 }
@@ -42,7 +42,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                 <h2 className={styles.nationTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
                 <p className={styles.dateRight} style={{ fontStyle: "italic" }}>
-                    <CurrentDate />
+                    <CurrentDate prefix={data.kinhGuiProvince} />
                 </p>
             </div>
 
@@ -51,7 +51,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
 
             <div className={styles.content}>
                 <p>
-                    Kính gửi: <strong>{data.kinhGui}</strong>
+                    Kính gửi: {data.kinhGui}
                 </p>
                 <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={data.tenDoanhNghiep} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
@@ -73,8 +73,8 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                 <Line label="Chức danh" value={data.nguoiDaiDien_chucDanh} />
                 <Line label="Địa chỉ liên lạc" value={diaChiLienLac} />
                 <p>
-                    Điện thoại: <strong>{data.nguoiDaiDien_phone || ""}</strong>
-                    &nbsp;&nbsp; Thư điện tử: <strong>{data.nguoiDaiDien_email || ""}</strong>
+                    Điện thoại: {data.nguoiDaiDien_phone || ""}
+                    &nbsp;&nbsp; Thư điện tử: {data.nguoiDaiDien_email || ""}
                 </p>
 
                 <p style={{ marginTop: 16, fontStyle: "italic" }}>
@@ -83,16 +83,16 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                     dưới đây:
                 </p>
                 <p>
-                    Dân tộc: <strong>{data.nguoiDaiDien_danToc || ""}</strong>
-                    &nbsp;&nbsp; Quốc tịch: <strong>{data.nguoiDaiDien_quocTich || ""}</strong>
+                    Dân tộc: {data.nguoiDaiDien_danToc || ""}
+                    &nbsp;&nbsp; Quốc tịch: {data.nguoiDaiDien_quocTich || ""}
                 </p>
                 <Line
                     label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
                     value={data.nguoiDaiDien_soHoChieu}
                 />
                 <p>
-                    Ngày cấp: <strong>{formatDate(data.nguoiDaiDien_ngayCapHoChieu)}</strong>
-                    &nbsp;&nbsp; Nơi cấp: <strong>{data.nguoiDaiDien_noiCapHoChieu || ""}</strong>
+                    Ngày cấp: {formatDate(data.nguoiDaiDien_ngayCapHoChieu)}
+                    &nbsp;&nbsp; Nơi cấp: {data.nguoiDaiDien_noiCapHoChieu || ""}
                 </p>
                 <Line label="Nơi thường trú" value={noiThuongTru} />
 

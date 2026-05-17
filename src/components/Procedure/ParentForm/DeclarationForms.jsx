@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import * as XLSX from "xlsx";
 import styles from "./DeclarationForms.module.css";
 import { authAxios } from "@/services/axios-instance";
@@ -38,6 +38,95 @@ import {
     parseImportRowsDanhSachCoDongSangLap,
 } from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ExcelConstants/DanhSachCoDongSangLap.excelConstants";
 
+const TNHH_1TV_TYPE_COMPANY = "cong_ty_tnhh_mot_thanh_vien";
+const THANH_LAP_CONG_TY_SERVICE = "thanh_lap_cong_ty";
+
+const parseFormDataJson = (rawData) => {
+    if (!rawData) return null;
+
+    let parsed = rawData;
+    if (typeof parsed === "string") {
+        try { parsed = JSON.parse(parsed); } catch (e) { }
+    }
+    if (parsed && typeof parsed.dataJson === "string") {
+        try { parsed = JSON.parse(parsed.dataJson); } catch (e) { }
+    } else if (parsed && typeof parsed.dataJson === "object") {
+        parsed = parsed.dataJson;
+    }
+
+    if (parsed?.nganhNgheList && typeof parsed.nganhNgheList === "string") {
+        try { parsed.nganhNgheList = JSON.parse(parsed.nganhNgheList); } catch (e) { }
+    }
+    if (parsed?.thanhVienList && typeof parsed.thanhVienList === "string") {
+        try { parsed.thanhVienList = JSON.parse(parsed.thanhVienList); } catch (e) { }
+    }
+    if (parsed?.cshHuongLoiList && typeof parsed.cshHuongLoiList === "string") {
+        try { parsed.cshHuongLoiList = JSON.parse(parsed.cshHuongLoiList); } catch (e) { }
+    }
+
+    return parsed && typeof parsed === "object" ? parsed : null;
+};
+
+const normalizeFormName = (value = "") =>
+    String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase();
+
+const isRegistrationForm = (form) => {
+    const normalizedName = normalizeFormName(form?.name);
+    return normalizedName.includes("dang ky doanh nghiep") || normalizedName.includes("dkdn");
+};
+
+const isBeneficialOwnerForm = (form) => {
+    const normalizedName = normalizeFormName(form?.name);
+    return (
+        normalizedName.includes("csh") ||
+        (normalizedName.includes("chu so huu") && normalizedName.includes("huong loi"))
+    );
+};
+
+const buildDangKyThayDoiPrefillData = (registrationData, beneficialOwnerData) => {
+    const prefillData = { ...(registrationData || {}) };
+    const cshHuongLoiList = beneficialOwnerData?.cshHuongLoiList || registrationData?.cshHuongLoiList;
+
+    if (registrationData?.tenCongTyVN && !prefillData.tenDoanhNghiep) {
+        prefillData.tenDoanhNghiep = registrationData.tenCongTyVN;
+    }
+    if (registrationData?.maSoDoanhNghiep && !prefillData.maSoDoanhNghiep) {
+        prefillData.maSoDoanhNghiep = registrationData.maSoDoanhNghiep;
+    }
+    if (registrationData?.maSoThue && !prefillData.maSoDoanhNghiep) {
+        prefillData.maSoDoanhNghiep = registrationData.maSoThue;
+    }
+    if (registrationData?.vonDieuLe && !prefillData.vonDieuLeDaDangKy) {
+        prefillData.vonDieuLeDaDangKy = registrationData.vonDieuLe;
+    }
+    if (registrationData?.vonDieuLe_bangChu && !prefillData.vonDieuLeDaDangKy_bangChu) {
+        prefillData.vonDieuLeDaDangKy_bangChu = registrationData.vonDieuLe_bangChu;
+    }
+    if (cshHuongLoiList?.length) {
+        prefillData.cshHuongLoiList = cshHuongLoiList;
+    }
+
+    return prefillData;
+};
+
+const mergePrefillData = (prefillData, currentData) => {
+    const mergedData = { ...(prefillData || {}) };
+
+    Object.entries(currentData || {}).forEach(([key, value]) => {
+        const hasValue = Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null && value !== "";
+        if (hasValue) {
+            mergedData[key] = value;
+        }
+    });
+
+    return mergedData;
+};
+
 
 const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess, setIsSubmittingForm }, ref) => {
     const [dataJson, setDataJson] = useState(null);
@@ -46,7 +135,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     const formRef = useRef(null);
     const componentRef = useRef(null);
     const importInputRef = useRef(null);
-    const { userCards, refreshUserCards } = useProcessProcedure();
+    const { procedure, userCards, refreshUserCards } = useProcessProcedure();
 
     const currentForm = forms?.[currentFormStep];
     const CurrentFormComponent = currentForm?.declaration;
@@ -72,6 +161,64 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.name?.toLowerCase().includes("cổ đông sáng lập");
 
     const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration";
+    const isDangKyThayDoiPrefillForm = [
+        "GiayDeNghiDangKyThayDoiDeclaration",
+        "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration",
+        "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration",
+    ].includes(formComponentName);
+
+    const fetchInitialDangKyThayDoiData = useCallback(async () => {
+        if (procedure?.typeCompany !== TNHH_1TV_TYPE_COMPANY || !isDangKyThayDoiPrefillForm) return null;
+
+        const draftResponse = await authAxios.get("/api/procedurer/search-drafts", {
+            params: {
+                typeCompany: TNHH_1TV_TYPE_COMPANY,
+                serviceType: THANH_LAP_CONG_TY_SERVICE,
+            },
+        });
+
+        const sourceProcedures = (draftResponse.data || [])
+            .filter((item) => item.procedureId && item.procedureId !== procedure?.procedureId);
+
+        let fallbackSource = null;
+        for (const sourceProcedure of sourceProcedures) {
+            const response = await authAxios.get(`/api/procedurer/find-by-id-and-check-status`, {
+                params: { id: sourceProcedure.procedureId },
+            });
+            const sourceForms = response.data?.result?.forms || [];
+            const registrationForm = sourceForms.find(isRegistrationForm);
+            if (!registrationForm?.formId) continue;
+
+            const candidate = {
+                registrationForm,
+                beneficialOwnerForm: sourceForms.find(isBeneficialOwnerForm),
+            };
+            if (candidate.beneficialOwnerForm?.formId) return candidate;
+            if (!fallbackSource) fallbackSource = candidate;
+        }
+
+        return fallbackSource;
+    }, [isDangKyThayDoiPrefillForm, procedure?.procedureId, procedure?.typeCompany]);
+
+    const fetchDangKyThayDoiPrefillData = useCallback(async () => {
+        const sourceForms = await fetchInitialDangKyThayDoiData();
+        if (!sourceForms?.registrationForm?.formId) return null;
+
+        const registrationResponse = await authAxios.get(`/api/form-submission/get/data-json`, {
+            params: { formId: sourceForms.registrationForm.formId },
+        });
+        const registrationData = parseFormDataJson(registrationResponse.data);
+        let beneficialOwnerData = null;
+
+        if (sourceForms.beneficialOwnerForm?.formId) {
+            const beneficialOwnerResponse = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: sourceForms.beneficialOwnerForm.formId },
+            });
+            beneficialOwnerData = parseFormDataJson(beneficialOwnerResponse.data);
+        }
+
+        return registrationData ? buildDangKyThayDoiPrefillData(registrationData, beneficialOwnerData) : null;
+    }, [fetchInitialDangKyThayDoiData]);
 
     useEffect(() => {
         async function fetchFormSubmission() {
@@ -82,26 +229,23 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 const response = await authAxios.get(`/api/form-submission/get/data-json`, {
                     params: { formId: currentForm.formId },
                 });
-                let parsed = response.data;
-                if (typeof parsed === 'string') {
-                    try { parsed = JSON.parse(parsed); } catch (e) { }
-                }
-                if (parsed && typeof parsed.dataJson === 'string') {
-                    try { parsed = JSON.parse(parsed.dataJson); } catch (e) { }
-                } else if (parsed && typeof parsed.dataJson === 'object') {
-                    parsed = parsed.dataJson;
+                const parsed = parseFormDataJson(response.data);
+                if (parsed) {
+                    const prefillData = await fetchDangKyThayDoiPrefillData();
+                    setDataJson(prefillData ? mergePrefillData(prefillData, parsed) : parsed);
+                    setHasServerData(true);
+                    return;
                 }
 
-                // Parse arrays if they were stringified individually
-                if (parsed?.nganhNgheList && typeof parsed.nganhNgheList === 'string') {
-                    try { parsed.nganhNgheList = JSON.parse(parsed.nganhNgheList); } catch (e) { }
-                }
-                if (parsed?.thanhVienList && typeof parsed.thanhVienList === 'string') {
-                    try { parsed.thanhVienList = JSON.parse(parsed.thanhVienList); } catch (e) { }
+                const prefillData = await fetchDangKyThayDoiPrefillData();
+                if (!prefillData) {
+                    setDataJson(null);
+                    setHasServerData(false);
+                    return;
                 }
 
-                setDataJson(parsed);
-                setHasServerData(!!response.data);
+                setDataJson(prefillData);
+                setHasServerData(false);
             } catch (error) {
                 setDataJson(null);
                 setHasServerData(false);
@@ -109,7 +253,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             }
         }
         fetchFormSubmission();
-    }, [currentForm?.formId]);
+    }, [currentForm?.formId, fetchDangKyThayDoiPrefillData]);
 
     const saveMissingUserCards = async (data) => {
         const prefixes = ["nguoiDaiDien", "chuSoHuu", "nguoiNop", "uyQuyen", "nhanUyQuyen"];
