@@ -10,6 +10,7 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 
 const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x" : ""}</div>;
+const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
 
 function Line({ label, value }) {
     return (
@@ -126,7 +127,74 @@ function AssetTable({ data }) {
     );
 }
 
-function GiayDeNghiDangKyThayDoiConfirmation({ dataJson }) {
+function ShareInfoTable({ data }) {
+    const rows = [
+        ["Cổ phần phổ thông", "cp_cptt_soLuong", "cp_cptt_giaTri", "cp_cptt_tiLe"],
+        ["Cổ phần ưu đãi biểu quyết", "cp_cpudbq_soLuong", "cp_cpudbq_giaTri", "cp_cpudbq_tiLe"],
+        ["Cổ phần ưu đãi cổ tức", "cp_cpudct_soLuong", "cp_cpudct_giaTri", "cp_cpudct_tiLe"],
+        ["Cổ phần ưu đãi hoàn lại", "cp_cpudhl_soLuong", "cp_cpudhl_giaTri", "cp_cpudhl_tiLe"],
+        ["Các cổ phần ưu đãi khác", "cp_cpudk_soLuong", "cp_cpudk_giaTri", "cp_cpudk_tiLe"],
+        ["Tổng số", "cp_tongSoLuong", "cp_tongGiaTri", "cp_tongTiLe"],
+    ];
+    const offerRows = [
+        ["Cổ phần phổ thông", "cp_cb_cptt_soLuong"],
+        ["Cổ phần ưu đãi biểu quyết", "cp_cb_cpudbq_soLuong"],
+        ["Cổ phần ưu đãi cổ tức", "cp_cb_cpudct_soLuong"],
+        ["Cổ phần ưu đãi hoàn lại", "cp_cb_cpudhl_soLuong"],
+        ["Cổ phần ưu đãi khác", "cp_cb_cpudk_soLuong"],
+        ["Tổng số", "cp_cb_tongSoLuong"],
+    ];
+
+    return (
+        <>
+            <p><strong>Thông tin về cổ phần sau khi thay đổi:</strong></p>
+            <Line label="Mệnh giá cổ phần" value={data.menhGiaCoPhan} />
+            <table className={styles.borderTable} style={{ marginTop: 8 }}>
+                <thead>
+                    <tr>
+                        <th>Loại cổ phần</th>
+                        <th>Số lượng</th>
+                        <th>Giá trị</th>
+                        <th>Tỷ lệ so với vốn điều lệ (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map(([label, soLuongKey, giaTriKey, tiLeKey]) => (
+                        <tr key={soLuongKey}>
+                            <td>{label}</td>
+                            <td>{data[soLuongKey] || ""}</td>
+                            <td>{data[giaTriKey] || ""}</td>
+                            <td style={{ textAlign: "center" }}>{data[tiLeKey] || ""}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <p><strong>Thông tin về cổ phần được quyền chào bán:</strong></p>
+            <table className={styles.borderTable} style={{ marginTop: 8 }}>
+                <thead>
+                    <tr>
+                        <th>Loại cổ phần được quyền chào bán</th>
+                        <th>Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {offerRows.map(([label, soLuongKey]) => (
+                        <tr key={soLuongKey}>
+                            <td>{label}</td>
+                            <td>{data[soLuongKey] || ""}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+}
+
+function GiayDeNghiDangKyThayDoiConfirmation({
+    dataJson,
+    excludedAOptionNames = DEFAULT_EXCLUDED_A_OPTION_NAMES,
+    includeCoPhanFields = false,
+}) {
     const data = normalizeDataJson(dataJson);
 
     if (!Object.keys(data).length) {
@@ -135,7 +203,9 @@ function GiayDeNghiDangKyThayDoiConfirmation({ dataJson }) {
 
     const mainOption = data.noiDungThayDoi || "A";
     const selectedMainLabel = MAIN_CHANGE_OPTIONS.find((option) => option.value === mainOption)?.label || "";
-    const selectedAOptions = A_CHANGE_OPTIONS.filter((option) => isTruthy(data[option.name]));
+    const excludedAOptionNamesSet = new Set(excludedAOptionNames);
+    const availableAChangeOptions = A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name));
+    const selectedAOptions = availableAChangeOptions.filter((option) => isTruthy(data[option.name]));
 
     return (
         <div className={styles.container}>
@@ -178,7 +248,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({ dataJson }) {
                             <p>Doanh nghiệp chọn và kê khai các nội dung sau:</p>
                             <table className={styles.borderTable}>
                                 <tbody>
-                                    {A_CHANGE_OPTIONS.map((option) => (
+                                    {availableAChangeOptions.map((option) => (
                                         <tr key={option.name}>
                                             <td>{option.label}</td>
                                             <td style={{ textAlign: "center", width: 48 }}>
@@ -262,6 +332,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({ dataJson }) {
                                 <Line label="Hình thức tăng, giảm vốn" value={data.hinhThucTangGiamVon} />
                                 <p><strong>Nguồn vốn điều lệ sau khi thay đổi:</strong></p>
                                 <MoneySourceTable data={data} />
+                                {includeCoPhanFields && <ShareInfoTable data={data} />}
                                 <p><strong>Tài sản góp vốn sau khi thay đổi vốn điều lệ:</strong></p>
                                 <AssetTable data={data} />
                                 <p>Gửi kèm phần vốn góp, tỷ lệ phần vốn góp mới: <Checkbox checked={isTruthy(data.doiVonGop_guiKem)} /></p>

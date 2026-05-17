@@ -6,6 +6,10 @@ import DanhSachCSHHuongLoiDeclaration from "@/components/Procedure/ProcedureTemp
 import DanhSachCSHHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
 import GiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
 import GiayDeNghiDangKyThayDoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
+import GiayDeNghiDangKyThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
+import GiayDeNghiDangKyThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";
 import GiayDeNghi from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayDeNghi";
 import GiayDeNghi2 from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/GiayDeNghi";
 import GiayUyQuyen from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayUyQuyen";
@@ -21,6 +25,10 @@ import DanhSachThanhVienDeclaration from "@/components/Procedure/ProcedureTempla
 import DanhSachThanhVienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormConfirmation/DanhSachThanhVienConfirmation";
 import DieuLeCongTyDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/DieuLeCongTyDeclaration";
 import DieuLeCongTyConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormConfirmation/DieuLeCongTyConfirmation";
+import GiayDeNghiDangKyThayDoiDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
 
 import DanhSachCoDongSangLapDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCoDongSangLapDeclaration";
 import DanhSachCSHHuongLoiDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
@@ -35,6 +43,10 @@ import GiayDeNghiDKDNConfirmation_CP from "@/components/Procedure/ProcedureTempl
 
 import DieuLeCongTyDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DieuLeCongTyDeclaration";
 import DieuLeCongTyConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormConfirmation/DieuLeCongTyConfirmation";
+import GiayDeNghiDangKyThayDoiDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
 
 const typeCompanyOptions = [
     {
@@ -184,8 +196,8 @@ const typeCompanyOptions = [
                         formsType: [
                             {
                                 title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
-                                declaration: "GiayDeNghiDKDNDeclaration",
-                                confirmation: "GiayDeNghiDKDNConfirmation",
+                                declaration: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration,
+                                confirmation: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation,
                             }
                         ],
                     },
@@ -195,8 +207,8 @@ const typeCompanyOptions = [
                         formsType: [
                             {
                                 title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty TNHH 1 thành viên",
-                                declaration: "GiayDeNghiDKDNDeclaration",
-                                confirmation: "GiayDeNghiDKDNConfirmation",
+                                declaration: GiayDeNghiDangKyThayDoiChuSoHuuDeclaration,
+                                confirmation: GiayDeNghiDangKyThayDoiChuSoHuuConfirmation,
                             }
                         ],
                     }
@@ -265,6 +277,30 @@ const typeCompanyOptions = [
             {
                 title: "Đăng ký thay đổi",
                 value: "dang_ky_thay_doi",
+                procedures: [
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                        value: "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDangKyThayDoiDeclaration2TV,
+                                confirmation: GiayDeNghiDangKyThayDoiConfirmation2TV,
+                            }
+                        ],
+                    },
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                        value: "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                                declaration: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration2TV,
+                                confirmation: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation2TV,
+                            }
+                        ],
+                    },
+                ],
             },
             {
                 title: "Tạm ngừng - tiếp tục KD",
@@ -340,6 +376,30 @@ const typeCompanyOptions = [
             {
                 title: "Đăng ký thay đổi",
                 value: "dang_ky_thay_doi",
+                procedures: [
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                        value: "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDangKyThayDoiDeclaration_CP,
+                                confirmation: GiayDeNghiDangKyThayDoiConfirmation_CP,
+                            }
+                        ],
+                    },
+                    {
+                        title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                        value: "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                                declaration: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration_CP,
+                                confirmation: GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation_CP,
+                            }
+                        ],
+                    },
+                ],
             },
             {
                 title: "Tạm ngừng - tiếp tục KD",

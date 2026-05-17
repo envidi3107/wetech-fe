@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/SharedDeclaration.module.css";
 import localStyles from "./GiayDeNghiDangKyThayDoiDeclaration.module.css";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
@@ -6,11 +6,13 @@ import DateInput from "@/components/DateInput/DateInput";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { buildKinhGui } from "@/consts/provinceRoomMap";
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
+import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
 import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
 import CapitalInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CapitalInput/CapitalInput";
 import NguonVonDieuLeSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/NguonVonDieuLeSection";
 import TaiSanGopVonSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/TaiSanGopVonSection";
 import ThongTinDangKyThueSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDangKyThueSection";
+import ThongTinCoPhanSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinCoPhanSection";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import {
     handleUppercaseInput,
@@ -41,8 +43,7 @@ const EMPTY_AUTHORIZED_REP = {
     ghiChu: "",
 };
 
-const TNHH1TV_EXCLUDED_A_OPTION_NAMES = new Set(["a_doiThanhVien", "a_doiCoDong"]);
-const TNHH1TV_A_CHANGE_OPTIONS = A_CHANGE_OPTIONS.filter((option) => !TNHH1TV_EXCLUDED_A_OPTION_NAMES.has(option.name));
+const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
 
 function Field({ label, name, dataJson, required = false, type = "text", children }) {
     const shouldUppercase = label?.toLocaleLowerCase("vi-VN").includes("ghi bằng chữ in hoa");
@@ -266,10 +267,21 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
 }
 
 const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyThayDoiDeclaration(
-    { dataJson, onSubmit, formRef },
+    {
+        dataJson,
+        onSubmit,
+        formRef,
+        excludedAOptionNames = DEFAULT_EXCLUDED_A_OPTION_NAMES,
+        includeCoPhanFields = false,
+    },
     componentRef,
 ) {
     const normalizedData = normalizeDataJson(dataJson);
+    const excludedAOptionNamesSet = useMemo(() => new Set(excludedAOptionNames), [excludedAOptionNames]);
+    const availableAChangeOptions = useMemo(
+        () => A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name)),
+        [excludedAOptionNamesSet],
+    );
     const { provinces } = useFetchAddress();
     const [kinhGuiProvince, setKinhGuiProvince] = useState("");
     const [kinhGuiValue, setKinhGuiValue] = useState("");
@@ -296,7 +308,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setKinhGuiValue(matchedProvince ? buildKinhGui(matchedProvince) : parsed.kinhGui || "");
         setMainOption(parsed.noiDungThayDoi || "A");
         setAOptions(
-            TNHH1TV_A_CHANGE_OPTIONS.reduce((acc, option) => {
+            availableAChangeOptions.reduce((acc, option) => {
                 acc[option.name] = isTruthy(parsed[option.name]);
                 return acc;
             }, {}),
@@ -306,7 +318,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setNganhSuaRows(parsed.nganhNgheSuaList || []);
         setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
         setCoSoThayDoi(parsed.coSoThayDoi || "");
-    }, [dataJson, provinces]);
+    }, [availableAChangeOptions, dataJson, provinces]);
 
     useEffect(() => {
         if (!pendingScrollTarget || mainOption !== "A" || !aOptions[pendingScrollTarget]) return;
@@ -338,7 +350,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             return false;
         }
 
-        if (mainOption === "A" && !TNHH1TV_A_CHANGE_OPTIONS.some((option) => !!aOptions[option.name])) {
+        if (mainOption === "A" && !availableAChangeOptions.some((option) => !!aOptions[option.name])) {
             window.alert("Vui lòng chọn ít nhất một nội dung thay đổi trong Mục A.");
             return false;
         }
@@ -365,7 +377,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         }
         A_CHANGE_OPTIONS.forEach((option) => {
             data[option.name] =
-                !TNHH1TV_EXCLUDED_A_OPTION_NAMES.has(option.name) && aOptions[option.name] ? "true" : "false";
+                !excludedAOptionNamesSet.has(option.name) && aOptions[option.name] ? "true" : "false";
         });
         data.nganhNgheBoSungList = nganhBoSungRows;
         data.nganhNgheBoList = nganhBoRows;
@@ -424,7 +436,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                 Chọn một hoặc nhiều nội dung thay đổi, phần kê khai tương ứng hiển thị ở cột bên phải.
                             </p>
                             <div className={localStyles.optionList}>
-                                {TNHH1TV_A_CHANGE_OPTIONS.map((option) => (
+                                {availableAChangeOptions.map((option) => (
                                     <div key={option.name} className={localStyles.optionRow}>
                                         <label className={localStyles.optionItem}>
                                             <input
@@ -463,23 +475,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         onProvinceNameChange={handleKinhGuiProvinceChange}
                     />
 
-                    <div className={styles.sectionGroup}>
-                        <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp:</h3>
-                        <div className={styles.grid2}>
-                            <Field
-                                label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
-                                name="tenDoanhNghiep"
-                                dataJson={normalizedData}
-                                required
-                            />
-                            <Field
-                                label="Mã số doanh nghiệp/Mã số thuế"
-                                name="maSoDoanhNghiep"
-                                dataJson={normalizedData}
-                                required
-                            />
-                        </div>
-                    </div>
+                    <ThongTinDoanhNghiepSection dataJson={normalizedData} styles={styles} />
 
                     {mainOption === "A" && (
                         <>
@@ -706,6 +702,9 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         </div>
                                     </div>
                                     <NguonVonDieuLeSection dataJson={normalizedData} styles={styles} isNote />
+                                    {includeCoPhanFields && (
+                                        <ThongTinCoPhanSection dataJson={normalizedData} styles={styles} />
+                                    )}
                                     <TaiSanGopVonSection dataJson={normalizedData} styles={styles} />
                                     <label className={styles.radioLabel}>
                                         <input
