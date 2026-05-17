@@ -186,11 +186,13 @@
 
 .inputPrefixWrapper {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
     background-color: #f5f5f5;
     padding-left: 12px;
+    min-height: 40px;
+    overflow: hidden;
 }
 
 .inputPrefixWrapper p {
@@ -204,7 +206,7 @@
 
 .prefixSelect {
     cursor: pointer;
-    align-self: stretch;
+    flex: 0 0 auto;
     border: none;
     border-right: 1px solid #d9d9d9;
     background-color: #f5f5f5;
@@ -214,10 +216,12 @@
     padding: 0 28px 0 0;
     outline: none;
     font-family: inherit;
+    field-sizing: content;
 }
 
 .inputNoBorder {
     flex: 1;
+    min-width: 0;
     border: none;
     background-color: #fff;
     padding: 8px 12px;

@@ -154,6 +154,21 @@
     width: 76px;
 }
 
+.authorizedRepSelectCell {
+    vertical-align: middle;
+}
+
+.authorizedRepSelectCell > div {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+}
+
+.authorizedRepSelectCell > div > div {
+    width: 100%;
+    margin-bottom: 0;
+}
+
 .formLayout input[type="checkbox"],
 .formLayout input[type="radio"] {
     accent-color: var(--success-color);

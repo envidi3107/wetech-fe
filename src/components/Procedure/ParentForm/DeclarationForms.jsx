@@ -39,7 +39,14 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ExcelConstants/DanhSachCoDongSangLap.excelConstants";
 
 const TNHH_1TV_TYPE_COMPANY = "cong_ty_tnhh_mot_thanh_vien";
+const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
+const CO_PHAN_TYPE_COMPANY = "cong_ty_co_phan";
 const THANH_LAP_CONG_TY_SERVICE = "thanh_lap_cong_ty";
+const DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES = new Set([
+    TNHH_1TV_TYPE_COMPANY,
+    TNHH_2TV_TYPE_COMPANY,
+    CO_PHAN_TYPE_COMPANY,
+]);
 
 const parseFormDataJson = (rawData) => {
     if (!rawData) return null;
@@ -54,15 +61,11 @@ const parseFormDataJson = (rawData) => {
         parsed = parsed.dataJson;
     }
 
-    if (parsed?.nganhNgheList && typeof parsed.nganhNgheList === "string") {
-        try { parsed.nganhNgheList = JSON.parse(parsed.nganhNgheList); } catch (e) { }
-    }
-    if (parsed?.thanhVienList && typeof parsed.thanhVienList === "string") {
-        try { parsed.thanhVienList = JSON.parse(parsed.thanhVienList); } catch (e) { }
-    }
-    if (parsed?.cshHuongLoiList && typeof parsed.cshHuongLoiList === "string") {
-        try { parsed.cshHuongLoiList = JSON.parse(parsed.cshHuongLoiList); } catch (e) { }
-    }
+    ["nganhNgheList", "thanhVienList", "coDongList", "loaiCoPhanKhacList", "cshHuongLoiList"].forEach((key) => {
+        if (parsed?.[key] && typeof parsed[key] === "string") {
+            try { parsed[key] = JSON.parse(parsed[key]); } catch (e) { }
+        }
+    });
 
     return parsed && typeof parsed === "object" ? parsed : null;
 };
@@ -71,6 +74,8 @@ const normalizeFormName = (value = "") =>
     String(value)
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\u0111/g, "d")
+        .replace(/\u0110/g, "D")
         .replace(/đ/g, "d")
         .replace(/Đ/g, "D")
         .toLowerCase();
@@ -88,7 +93,22 @@ const isBeneficialOwnerForm = (form) => {
     );
 };
 
-const buildDangKyThayDoiPrefillData = (registrationData, beneficialOwnerData) => {
+const isMemberListForm = (form) => {
+    const normalizedName = normalizeFormName(form?.name);
+    return normalizedName.includes("danh sach thanh vien");
+};
+
+const isFoundingShareholderForm = (form) => {
+    const normalizedName = normalizeFormName(form?.name);
+    return normalizedName.includes("co dong sang lap");
+};
+
+const buildDangKyThayDoiPrefillData = (
+    registrationData,
+    beneficialOwnerData,
+    memberListData,
+    foundingShareholderData,
+) => {
     const prefillData = { ...(registrationData || {}) };
     const cshHuongLoiList = beneficialOwnerData?.cshHuongLoiList || registrationData?.cshHuongLoiList;
 
@@ -109,6 +129,15 @@ const buildDangKyThayDoiPrefillData = (registrationData, beneficialOwnerData) =>
     }
     if (cshHuongLoiList?.length) {
         prefillData.cshHuongLoiList = cshHuongLoiList;
+    }
+    if (memberListData?.thanhVienList?.length) {
+        prefillData.thanhVienList = memberListData.thanhVienList;
+    }
+    if (foundingShareholderData?.coDongList?.length) {
+        prefillData.coDongList = foundingShareholderData.coDongList;
+    }
+    if (foundingShareholderData?.loaiCoPhanKhacList?.length) {
+        prefillData.loaiCoPhanKhacList = foundingShareholderData.loaiCoPhanKhacList;
     }
 
     return prefillData;
@@ -161,6 +190,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.name?.toLowerCase().includes("cổ đông sáng lập");
 
     const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration";
+    const isDangKyThayDoiNguoiDaiDienPhapLuat =
+        formComponentName === "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
     const isDangKyThayDoiPrefillForm = [
         "GiayDeNghiDangKyThayDoiDeclaration",
         "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration",
@@ -168,11 +199,17 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     ].includes(formComponentName);
 
     const fetchInitialDangKyThayDoiData = useCallback(async () => {
-        if (procedure?.typeCompany !== TNHH_1TV_TYPE_COMPANY || !isDangKyThayDoiPrefillForm) return null;
+        const sourceTypeCompany = procedure?.typeCompany;
+        if (
+            !DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES.has(sourceTypeCompany) ||
+            !isDangKyThayDoiPrefillForm
+        ) {
+            return null;
+        }
 
         const draftResponse = await authAxios.get("/api/procedurer/search-drafts", {
             params: {
-                typeCompany: TNHH_1TV_TYPE_COMPANY,
+                typeCompany: sourceTypeCompany,
                 serviceType: THANH_LAP_CONG_TY_SERVICE,
             },
         });
@@ -192,13 +229,31 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             const candidate = {
                 registrationForm,
                 beneficialOwnerForm: sourceForms.find(isBeneficialOwnerForm),
+                memberListForm: sourceForms.find(isMemberListForm),
+                foundingShareholderForm: sourceForms.find(isFoundingShareholderForm),
             };
-            if (candidate.beneficialOwnerForm?.formId) return candidate;
+
+            if (isDangKyThayDoiNguoiDaiDienPhapLuat) {
+                return { registrationForm };
+            }
+
+            if (
+                candidate.beneficialOwnerForm?.formId ||
+                candidate.memberListForm?.formId ||
+                candidate.foundingShareholderForm?.formId
+            ) {
+                return candidate;
+            }
             if (!fallbackSource) fallbackSource = candidate;
         }
 
         return fallbackSource;
-    }, [isDangKyThayDoiPrefillForm, procedure?.procedureId, procedure?.typeCompany]);
+    }, [
+        isDangKyThayDoiNguoiDaiDienPhapLuat,
+        isDangKyThayDoiPrefillForm,
+        procedure?.procedureId,
+        procedure?.typeCompany,
+    ]);
 
     const fetchDangKyThayDoiPrefillData = useCallback(async () => {
         const sourceForms = await fetchInitialDangKyThayDoiData();
@@ -209,6 +264,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         });
         const registrationData = parseFormDataJson(registrationResponse.data);
         let beneficialOwnerData = null;
+        let memberListData = null;
+        let foundingShareholderData = null;
 
         if (sourceForms.beneficialOwnerForm?.formId) {
             const beneficialOwnerResponse = await authAxios.get(`/api/form-submission/get/data-json`, {
@@ -217,7 +274,28 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             beneficialOwnerData = parseFormDataJson(beneficialOwnerResponse.data);
         }
 
-        return registrationData ? buildDangKyThayDoiPrefillData(registrationData, beneficialOwnerData) : null;
+        if (sourceForms.memberListForm?.formId) {
+            const memberListResponse = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: sourceForms.memberListForm.formId },
+            });
+            memberListData = parseFormDataJson(memberListResponse.data);
+        }
+
+        if (sourceForms.foundingShareholderForm?.formId) {
+            const foundingShareholderResponse = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: sourceForms.foundingShareholderForm.formId },
+            });
+            foundingShareholderData = parseFormDataJson(foundingShareholderResponse.data);
+        }
+
+        return registrationData
+            ? buildDangKyThayDoiPrefillData(
+                registrationData,
+                beneficialOwnerData,
+                memberListData,
+                foundingShareholderData,
+            )
+            : null;
     }, [fetchInitialDangKyThayDoiData]);
 
     useEffect(() => {

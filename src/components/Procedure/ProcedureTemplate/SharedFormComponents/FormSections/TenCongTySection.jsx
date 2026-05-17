@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     handleUppercaseInput,
     toUppercaseValue,
@@ -5,7 +6,11 @@ import {
 
 export default function TenCongTySection({ dataJson, styles, prefix }) {
     const prefixOptions = Array.isArray(prefix) ? prefix : prefix ? [prefix] : [];
-    const selectedPrefix = dataJson?.tenCongTyPrefix || prefixOptions[0] || "";
+    const defaultPrefix = prefixOptions[0] || "";
+    const [selectedPrefix, setSelectedPrefix] = useState(dataJson?.tenCongTyPrefix || defaultPrefix);
+    useEffect(() => {
+        setSelectedPrefix(dataJson?.tenCongTyPrefix || defaultPrefix);
+    }, [dataJson?.tenCongTyPrefix, defaultPrefix]);
 
     return (
         <div className={styles.sectionGroup}>
@@ -20,7 +25,8 @@ export default function TenCongTySection({ dataJson, styles, prefix }) {
                             <select
                                 className={styles.prefixSelect}
                                 name="tenCongTyPrefix"
-                                defaultValue={selectedPrefix}
+                                value={selectedPrefix}
+                                onChange={(event) => setSelectedPrefix(event.target.value)}
                                 aria-label="Chọn prefix tên công ty"
                             >
                                 {prefixOptions.map((option) => (

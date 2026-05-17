@@ -13,42 +13,42 @@
  * @returns {string} Chuỗi HTML đầy đủ (<!DOCTYPE html> ... </html>)
  */
 export function generateHtmlString(element, options = {}) {
-  const { title = "Biểu mẫu", lang = "vi", landscape = false } = options;
+    const { title = "Biểu mẫu", lang = "vi", landscape = false } = options;
 
-  // ── 1. Lấy HTML nội dung đã render ────────────────────────────────────
-  const bodyHtml = element.outerHTML;
-  // ── 2. Thu thập toàn bộ CSS hiện có trên trang ────────────────────────
-  //       Bao gồm CSS Modules (đã được hash class name và inject vào DOM).
-  //       Lọc bỏ các rule font-family không phải Times New Roman để tránh
-  //       Roboto/font khác ghi đè font Times New Roman khi render PDF.
-  let cssText = "";
-  try {
-    for (const sheet of document.styleSheets) {
-      try {
-        const rules = sheet.cssRules || sheet.rules;
-        if (!rules) continue;
-        for (const rule of rules) {
-          // Lọc bỏ các CSS rule chứa font-family khác Times New Roman
-          // (vd: Roboto từ index.css, Poppins, ...) để tránh ghi đè font
-          const ruleText = rule.cssText;
-          if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
-            // Giữ lại rule nhưng xóa bỏ property font-family
-            const cleaned = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
-            cssText += cleaned + "\n";
-          } else {
-            cssText += ruleText + "\n";
-          }
+    // ── 1. Lấy HTML nội dung đã render ────────────────────────────────────
+    const bodyHtml = element.outerHTML;
+    // ── 2. Thu thập toàn bộ CSS hiện có trên trang ────────────────────────
+    //       Bao gồm CSS Modules (đã được hash class name và inject vào DOM).
+    //       Lọc bỏ các rule font-family không phải Times New Roman để tránh
+    //       Roboto/font khác ghi đè font Times New Roman khi render PDF.
+    let cssText = "";
+    try {
+        for (const sheet of document.styleSheets) {
+            try {
+                const rules = sheet.cssRules || sheet.rules;
+                if (!rules) continue;
+                for (const rule of rules) {
+                    // Lọc bỏ các CSS rule chứa font-family khác Times New Roman
+                    // (vd: Roboto từ index.css, Poppins, ...) để tránh ghi đè font
+                    const ruleText = rule.cssText;
+                    if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
+                        // Giữ lại rule nhưng xóa bỏ property font-family
+                        const cleaned = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
+                        cssText += cleaned + "\n";
+                    } else {
+                        cssText += ruleText + "\n";
+                    }
+                }
+            } catch {
+                // Stylesheet cross-origin (CDN, external) — bỏ qua, tránh lỗi SecurityError
+            }
         }
-      } catch {
-        // Stylesheet cross-origin (CDN, external) — bỏ qua, tránh lỗi SecurityError
-      }
+    } catch (err) {
+        console.warn("[generateHtmlFile] Không thể đọc stylesheets:", err);
     }
-  } catch (err) {
-    console.warn("[generateHtmlFile] Không thể đọc stylesheets:", err);
-  }
 
-  // ── 3. Tạo HTML document hoàn chỉnh ───────────────────────────────────
-  return `<!DOCTYPE html>
+    // ── 3. Tạo HTML document hoàn chỉnh ───────────────────────────────────
+    return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
@@ -60,6 +60,16 @@ export function generateHtmlString(element, options = {}) {
   </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
+    @page {
+      size: A4 ${landscape ? "landscape" : "portrait"};
+      margin: 15mm 15mm 20mm;
+    }
+
+    @page landscape {
+      size: A4 landscape;
+      margin: 15mm 15mm 20mm;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -79,7 +89,7 @@ export function generateHtmlString(element, options = {}) {
     table {
       width: 100% !important;
       max-width: 100% !important;
-      zoom: ${landscape ? 1 : 0.85} !important;
+      zoom: 1 !important;
     }
     
     table td, table th {
@@ -107,7 +117,7 @@ export function generateHtmlString(element, options = {}) {
  * @returns {File} File HTML (type: "text/html")
  */
 export function generateHtmlFile(element, filename, options = {}) {
-  const htmlString = generateHtmlString(element, { title: filename, ...options });
-  const blob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
-  return new File([blob], filename, { type: "text/html" });
+    const htmlString = generateHtmlString(element, { title: filename, ...options });
+    const blob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
+    return new File([blob], filename, { type: "text/html" });
 }

@@ -1,12 +1,19 @@
+import { useEffect, useState } from "react";
 import {
     handleUppercaseInput,
     toUppercaseValue,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 export default function ThongTinDoanhNghiepSection({
     dataJson,
     styles,
     includeChairPersonalId = false,
+    companyNamePrefixOptions = TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+    defaultCompanyNamePrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
 }) {
     const fieldClassName = styles.formGroup;
     const labelClassName = styles.label;
@@ -34,15 +41,47 @@ export default function ThongTinDoanhNghiepSection({
         );
     };
 
+    const [selectedCompanyNamePrefix, setSelectedCompanyNamePrefix] = useState(
+        dataJson?.tenCongTyPrefix || defaultCompanyNamePrefix,
+    );
+
+    useEffect(() => {
+        setSelectedCompanyNamePrefix(dataJson?.tenCongTyPrefix || defaultCompanyNamePrefix);
+    }, [dataJson?.tenCongTyPrefix, defaultCompanyNamePrefix]);
+
     return (
         <div className={styles.sectionGroup}>
             <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp:</h3>
             <div className={styles.grid2}>
-                {renderField({
-                    label: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
-                    name: "tenDoanhNghiep",
-                    required: true,
-                })}
+                <div className={fieldClassName}>
+                    <label className={labelClassName}>
+                        Tên doanh nghiệp (ghi bằng chữ in hoa) <span className={requiredClassName}>*</span>
+                    </label>
+                    <div className={styles.inputPrefixWrapper}>
+                        <select
+                            className={styles.prefixSelect}
+                            name="tenCongTyPrefix"
+                            value={selectedCompanyNamePrefix}
+                            onChange={(event) => setSelectedCompanyNamePrefix(event.target.value)}
+                            aria-label="Chọn prefix tên doanh nghiệp"
+                        >
+                            {companyNamePrefixOptions.map((option) => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </select>
+                        <input
+                            type="text"
+                            className={styles.inputNoBorder}
+                            name="tenDoanhNghiep"
+                            defaultValue={toUppercaseValue(dataJson?.tenDoanhNghiep)}
+                            style={{ textTransform: "uppercase" }}
+                            onInput={handleUppercaseInput}
+                            required
+                        />
+                    </div>
+                </div>
                 {renderField({
                     label: "Mã số doanh nghiệp/Mã số thuế",
                     name: "maSoDoanhNghiep",

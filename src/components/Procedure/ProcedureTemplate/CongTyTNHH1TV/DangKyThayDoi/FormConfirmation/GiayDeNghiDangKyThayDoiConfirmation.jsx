@@ -8,9 +8,18 @@ import {
     isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+import {
+    CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
+    DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x" : ""}</div>;
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
+const compactPdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable}`;
+const widePdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable} ${styles.widePdfTable}`;
 
 function isEmptyValue(value) {
     return value === undefined || value === null || String(value).trim() === "";
@@ -62,9 +71,22 @@ function Line({ label, value }) {
     );
 }
 
-function Section({ title, children }) {
+function withCompanyNamePrefix(value, prefix) {
+    if (isEmptyValue(value)) return "";
+
+    const displayValue = String(value).trim();
+    const upperDisplayValue = displayValue.toLocaleUpperCase("vi-VN");
+    const knownPrefixes = [...TNHH_COMPANY_NAME_PREFIX_OPTIONS, ...CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS];
+    const alreadyHasPrefix = knownPrefixes.some((knownPrefix) =>
+        upperDisplayValue.startsWith(knownPrefix.toLocaleUpperCase("vi-VN")),
+    );
+
+    return alreadyHasPrefix ? displayValue : `${prefix} ${displayValue}`;
+}
+
+function Section({ title, children, className }) {
     return (
-        <div style={{ marginTop: 16 }}>
+        <div className={className} style={{ marginTop: 16 }}>
             <p style={{ textAlign: "center" }}>{title}</p>
             {children}
         </div>
@@ -116,6 +138,174 @@ function BusinessChangeTable({ index, title, rows, headers }) {
                 <tbody>{renderBusinessRows(rows)}</tbody>
             </table>
         </>
+    );
+}
+
+function MemberChangeTable({ rows }) {
+    return (
+        <table className={widePdfTableClassName} style={{ marginTop: 8 }}>
+            <thead>
+                <tr>
+                    <th rowSpan={2}>STT</th>
+                    <th rowSpan={2}>Tên thành viên</th>
+                    <th rowSpan={2}>Ngày, tháng, năm sinh đối với thành viên là cá nhân</th>
+                    <th rowSpan={2}>Giới tính</th>
+                    <th rowSpan={2}>Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân</th>
+                    <th rowSpan={2}>Quốc tịch</th>
+                    <th rowSpan={2}>Dân tộc</th>
+                    <th rowSpan={2}>Địa chỉ liên lạc</th>
+                    <th colSpan={3}>Vốn góp</th>
+                    <th rowSpan={2}>Thời hạn góp vốn</th>
+                    <th rowSpan={2}>Chữ ký của thành viên</th>
+                    <th rowSpan={2}>Ghi chú</th>
+                </tr>
+                <tr>
+                    <th>Phần vốn góp</th>
+                    <th>Tỷ lệ (%)</th>
+                    <th>Loại tài sản, số lượng, giá trị tài sản góp vốn</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rows?.length ? (
+                    rows.map((row, index) => (
+                        <tr key={index}>
+                            <td style={{ textAlign: "center" }}>{index + 1}</td>
+                            <td>{row.hoTen}</td>
+                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>{formatDate(row.ngaySinh)}</td>
+                            <td style={{ textAlign: "center" }}>{row.gioiTinh}</td>
+                            <td>{row.giaTo}</td>
+                            <td style={{ textAlign: "center" }}>{row.quocTich}</td>
+                            <td style={{ textAlign: "center" }}>{row.danToc}</td>
+                            <td>{row.diaChiLienLac}</td>
+                            <td style={{ textAlign: "center" }}>
+                                {formatUnitValue(row.phanVonGop, "VNĐ")}
+                                {row.phanVonGopNgoaiTe_GiaTri ? (
+                                    <>
+                                        <br />({row.phanVonGopNgoaiTe_GiaTri} {row.phanVonGopNgoaiTe_Loai})
+                                    </>
+                                ) : (
+                                    ""
+                                )}
+                            </td>
+                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLe, "%")}</td>
+                            <td>{row.loaiTaiSan}</td>
+                            <td style={{ textAlign: "center" }}>{row.thoiHan}</td>
+                            <td>{row.chuKy}</td>
+                            <td>{row.ghiChu}</td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan={14} style={{ textAlign: "center" }}>
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+    );
+}
+
+function FoundingShareholderChangeTable({ rows, loaiCoPhanKhacList }) {
+    const otherShareTypes = loaiCoPhanKhacList?.length ? loaiCoPhanKhacList : [""];
+    const colSpan = 17 + otherShareTypes.length * 2;
+
+    return (
+        <table className={widePdfTableClassName} style={{ marginTop: 8 }}>
+            <thead>
+                <tr>
+                    <th rowSpan={4}>STT</th>
+                    <th rowSpan={4}>Tên cổ đông sáng lập</th>
+                    <th rowSpan={4}>Ngày, tháng, năm sinh</th>
+                    <th rowSpan={4}>Giới tính</th>
+                    <th rowSpan={4}>Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân</th>
+                    <th rowSpan={4}>Quốc tịch</th>
+                    <th rowSpan={4}>Dân tộc</th>
+                    <th rowSpan={4}>Địa chỉ liên lạc</th>
+                    <th colSpan={8 + (otherShareTypes.length - 1) * 2}>Vốn góp</th>
+                    <th rowSpan={4}>Thời hạn góp vốn</th>
+                    <th rowSpan={4}>Chữ ký của cổ đông sáng lập</th>
+                    <th rowSpan={4}>Ghi chú</th>
+                </tr>
+                <tr>
+                    <th colSpan={2}>Tổng số cổ phần</th>
+                    <th rowSpan={3}>Tỷ lệ (%)</th>
+                    <th colSpan={2 + otherShareTypes.length * 2}>Loại cổ phần</th>
+                    <th rowSpan={3}>Loại tài sản, số lượng, giá trị tài sản góp vốn</th>
+                </tr>
+                <tr>
+                    <th rowSpan={2}>Số lượng</th>
+                    <th rowSpan={2}>Giá trị</th>
+                    <th colSpan={2}>Phổ thông</th>
+                    {otherShareTypes.map((ten, index) => (
+                        <th key={index} colSpan={2}>
+                            Khác (ghi rõ): {ten || "........"}
+                        </th>
+                    ))}
+                </tr>
+                <tr>
+                    <th>Số lượng</th>
+                    <th>Giá trị</th>
+                    {otherShareTypes.map((_, index) => (
+                        <React.Fragment key={index}>
+                            <th>Số lượng</th>
+                            <th>Giá trị</th>
+                        </React.Fragment>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {rows?.length ? (
+                    rows.map((row, index) => (
+                        <tr key={index}>
+                            <td style={{ textAlign: "center" }}>{index + 1}</td>
+                            <td>{row.hoTen}</td>
+                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>{formatDate(row.ngaySinh)}</td>
+                            <td style={{ textAlign: "center" }}>{row.gioiTinh}</td>
+                            <td>{row.giaTo}</td>
+                            <td style={{ textAlign: "center" }}>{row.quocTich}</td>
+                            <td style={{ textAlign: "center" }}>{row.danToc}</td>
+                            <td>{row.diaChiLienLac}</td>
+                            <td style={{ textAlign: "center" }}>{row.tongSoCoPhan_soLuong}</td>
+                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tongSoCoPhan_giaTri, "VNĐ")}</td>
+                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLe, "%")}</td>
+                            <td style={{ textAlign: "center" }}>{row.loaiCoPhan_phoThong_soLuong}</td>
+                            <td style={{ textAlign: "center" }}>
+                                {formatUnitValue(row.loaiCoPhan_phoThong_giaTri, "VNĐ")}
+                            </td>
+                            {otherShareTypes.map((_, otherIndex) => {
+                                const soLuongKey =
+                                    otherIndex === 0
+                                        ? "loaiCoPhan_khac_soLuong"
+                                        : `loaiCoPhan_khac_soLuong_${otherIndex}`;
+                                const giaTriKey =
+                                    otherIndex === 0
+                                        ? "loaiCoPhan_khac_giaTri"
+                                        : `loaiCoPhan_khac_giaTri_${otherIndex}`;
+                                return (
+                                    <React.Fragment key={otherIndex}>
+                                        <td style={{ textAlign: "center" }}>{row[soLuongKey]}</td>
+                                        <td style={{ textAlign: "center" }}>
+                                            {formatUnitValue(row[giaTriKey], "VNĐ")}
+                                        </td>
+                                    </React.Fragment>
+                                );
+                            })}
+                            <td>{row.loaiTaiSanGopVon}</td>
+                            <td style={{ textAlign: "center" }}>{row.thoiHanGopVon}</td>
+                            <td>{row.chuKy}</td>
+                            <td>{row.ghiChu}</td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan={colSpan} style={{ textAlign: "center" }}>
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
     );
 }
 
@@ -261,7 +451,7 @@ function ShareInfoTable({ data }) {
                 <strong>Thông tin về cổ phần sau khi thay đổi:</strong>
             </p>
             <Line label="Mệnh giá cổ phần" value={data.menhGiaCoPhan} />
-            <table className={styles.borderTable} style={{ marginTop: 8 }}>
+            <table className={compactPdfTableClassName} style={{ marginTop: 8 }}>
                 <thead>
                     <tr>
                         <th>Loại cổ phần</th>
@@ -284,7 +474,7 @@ function ShareInfoTable({ data }) {
             <p>
                 <strong>Thông tin về cổ phần được quyền chào bán:</strong>
             </p>
-            <table className={styles.borderTable} style={{ marginTop: 8 }}>
+            <table className={compactPdfTableClassName} style={{ marginTop: 8 }}>
                 <thead>
                     <tr>
                         <th>Loại cổ phần được quyền chào bán</th>
@@ -320,6 +510,17 @@ function GiayDeNghiDangKyThayDoiConfirmation({
     const excludedAOptionNamesSet = new Set(excludedAOptionNames);
     const availableAChangeOptions = A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name));
     const selectedAOptions = availableAChangeOptions.filter((option) => isTruthy(data[option.name]));
+    const defaultCompanyNamePrefix = includeCoPhanFields
+        ? DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX
+        : DEFAULT_TNHH_COMPANY_NAME_PREFIX;
+    const companyNamePrefix = getCompanyNamePrefix(data, defaultCompanyNamePrefix);
+    const changedCompanyNamePrefix = data.tenSauThayDoiPrefix || companyNamePrefix;
+    const doiThanhVienRows = data.doiThanhVienList || data.thanhVienList || [];
+    const doiCoDongSangLapRows = data.doiCoDongSangLapList || data.coDongList || [];
+    const doiCoDongLoaiCoPhanKhacList =
+        data.doiCoDongLoaiCoPhanKhacList ||
+        data.loaiCoPhanKhacList ||
+        (data.loaiCoPhanKhac_ten ? [data.loaiCoPhanKhac_ten] : [""]);
 
     return (
         <div className={styles.container}>
@@ -339,7 +540,10 @@ function GiayDeNghiDangKyThayDoiConfirmation({
 
             <div className={styles.content}>
                 <p>Kính gửi: {data.kinhGui}</p>
-                <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={data.tenDoanhNghiep} />
+                <Line
+                    label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
+                    value={withCompanyNamePrefix(data.tenDoanhNghiep, companyNamePrefix)}
+                />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
 
                 {mainOption === "A" && (
@@ -386,7 +590,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                             <Section title="ĐĂNG KÝ THAY ĐỔI TÊN DOANH NGHIỆP">
                                 <Line
                                     label="Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi"
-                                    value={data.tenSauThayDoiVN}
+                                    value={withCompanyNamePrefix(data.tenSauThayDoiVN, changedCompanyNamePrefix)}
                                 />
                                 <Line
                                     label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
@@ -443,12 +647,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiThanhVien") && (
-                            <Section title="ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH/THÀNH VIÊN HỢP DANH">
-                                <p>
-                                    Gửi kèm danh sách thành viên theo mẫu tương ứng:{" "}
-                                    <Checkbox checked={isTruthy(data.doiThanhVien_guiKem)} />
-                                </p>
-                                <Line label="Ghi chú" value={data.doiThanhVien_ghiChu} />
+                            <Section
+                                title="ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH/THÀNH VIÊN HỢP DANH"
+                                className={styles.landscapePage}
+                            >
+                                <MemberChangeTable rows={doiThanhVienRows} />
                             </Section>
                         )}
 
@@ -482,11 +685,9 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                     <strong>Tài sản góp vốn sau khi thay đổi vốn điều lệ:</strong>
                                 </p>
                                 <AssetTable data={data} />
-                                <p>
-                                    Gửi kèm phần vốn góp, tỷ lệ phần vốn góp mới:{" "}
-                                    <Checkbox checked={isTruthy(data.doiVonGop_guiKem)} />
-                                </p>
-                                <Line label="Cam kết sau khi giảm vốn" value={data.camKetSauGiamVon} />
+                                {data.camKetSauGiamVon && (
+                                    <Line label="Cam kết sau khi giảm vốn" value={data.camKetSauGiamVon} />
+                                )}
                             </Section>
                         )}
 
@@ -570,8 +771,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiNguoiDaiDienUyQuyen") && (
-                            <Section title="THÔNG BÁO THAY ĐỔI NGƯỜI ĐẠI DIỆN THEO ỦY QUYỀN">
-                                <table className={styles.borderTable}>
+                            <Section
+                                title="THÔNG BÁO THAY ĐỔI NGƯỜI ĐẠI DIỆN THEO ỦY QUYỀN"
+                                className={styles.landscapePage}
+                            >
+                                <table className={widePdfTableClassName}>
                                     <thead>
                                         <tr>
                                             <th>STT</th>
@@ -619,16 +823,14 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiCoDong") && (
-                            <Section title="THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI">
-                                <p>
-                                    Gửi kèm danh sách cổ đông sáng lập theo Mẫu số 7:{" "}
-                                    <Checkbox checked={isTruthy(data.doiCoDongSangLap_guiKem)} />
-                                </p>
-                                <p>
-                                    Gửi kèm danh sách cổ đông là nhà đầu tư nước ngoài theo Mẫu số 8:{" "}
-                                    <Checkbox checked={isTruthy(data.doiCoDongNuocNgoai_guiKem)} />
-                                </p>
-                                <Line label="Ghi chú" value={data.doiCoDong_ghiChu} />
+                            <Section
+                                title="THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI"
+                                className={styles.landscapePage}
+                            >
+                                <FoundingShareholderChangeTable
+                                    rows={doiCoDongSangLapRows}
+                                    loaiCoPhanKhacList={doiCoDongLoaiCoPhanKhacList}
+                                />
                             </Section>
                         )}
 

@@ -50,13 +50,11 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
             <h3 className={styles.docTitle}>Đăng ký thay đổi người đại diện theo pháp luật</h3>
 
             <div className={styles.content}>
-                <p>
-                    Kính gửi: {data.kinhGui}
-                </p>
+                <p>Kính gửi: {data.kinhGui}</p>
                 <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={data.tenDoanhNghiep} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
                 <Line
-                    label="Số định danh cá nhân của Chủ tịch hội đồng thành viên/Chủ tịch công ty/Chủ tịch hội đồng quản trị"
+                    label="Số định danh cá nhân của Chủ tịch hội đồng thành viên/Chủ tịch công ty/Chủ tịch hội đồng quản trị (chỉ kê khai trong trường hợp ủy quyền thực hiện thủ tục đăng ký doanh nghiệp)"
                     value={data.soDinhDanhChuTich}
                 />
 
@@ -115,8 +113,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                                         CHỦ TỊCH CÔNG TY/CHỦ TỊCH HỘI ĐỒNG THÀNH VIÊN/CHỦ TỊCH HỘI ĐỒNG QUẢN TRỊ/NGƯỜI
                                         ĐƯỢC ỦY QUYỀN/NGƯỜI ĐẠI DIỆN
                                     </strong>
-                                    <br />
-                                    (<em>Ký và ghi họ tên</em>)
+                                    <br />(<em>Ký và ghi họ tên</em>)
                                 </p>
                             </td>
                         </tr>

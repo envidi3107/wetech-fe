@@ -5,11 +5,14 @@ import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import DateInput from "@/components/DateInput/DateInput";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { buildKinhGui } from "@/consts/provinceRoomMap";
+import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import {
     DanTocSelect,
     GioiTinhSelect,
     QuocTichSelect,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import DanhSachThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/DanhSachThanhVienDeclaration";
+import DanhSachCoDongSangLapDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCoDongSangLapDeclaration";
 import nganhNgheStyles from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable.module.css";
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
@@ -24,6 +27,12 @@ import {
     handleUppercaseInput,
     toUppercaseValue,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
+import {
+    CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
+    DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 import {
     A_CHANGE_OPTIONS,
     FOOTNOTES,
@@ -118,6 +127,30 @@ const cshSelectStyles = {
 };
 
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
+const EMBEDDED_LIST_FIELD_NAMES = new Set([
+    "hoTen",
+    "ngaySinh",
+    "gioiTinh",
+    "giaTo",
+    "quocTich",
+    "danToc",
+    "diaChiLienLac",
+    "phanVonGop",
+    "phanVonGopNgoaiTe_GiaTri",
+    "phanVonGopNgoaiTe_Loai",
+    "tyLe",
+    "loaiTaiSan",
+    "thoiHan",
+    "tongSoCoPhan_soLuong",
+    "tongSoCoPhan_giaTri",
+    "loaiCoPhan_phoThong_soLuong",
+    "loaiCoPhan_phoThong_giaTri",
+    "loaiCoPhan_khac_soLuong",
+    "loaiCoPhan_khac_giaTri",
+    "loaiTaiSanGopVon",
+    "thoiHanGopVon",
+    "ghiChu",
+]);
 
 function Field({ label, name, dataJson, required = false, type = "text", children }) {
     const shouldUppercase = label?.toLocaleLowerCase("vi-VN").includes("ghi bằng chữ in hoa");
@@ -316,7 +349,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                                         onChange={(e) => updateRow(index, "ngaySinh", e.target.value)}
                                     />
                                 </td>
-                                <td>
+                                <td className={localStyles.authorizedRepSelectCell}>
                                     <div>
                                         <GioiTinhSelect
                                             name={`nguoiDaiDienUyQuyen_${index}_gioiTinh`}
@@ -336,7 +369,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                                         onChange={(e) => updateRow(index, "giayTo", e.target.value)}
                                     />
                                 </td>
-                                <td>
+                                <td className={localStyles.authorizedRepSelectCell}>
                                     <div>
                                         <QuocTichSelect
                                             name={`nguoiDaiDienUyQuyen_${index}_quocTich`}
@@ -347,7 +380,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                                         />
                                     </div>
                                 </td>
-                                <td>
+                                <td className={localStyles.authorizedRepSelectCell}>
                                     <div>
                                         <DanTocSelect
                                             name={`nguoiDaiDienUyQuyen_${index}_danToc`}
@@ -604,6 +637,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     componentRef,
 ) {
     const normalizedData = normalizeDataJson(dataJson);
+    const companyNamePrefixOptions = includeCoPhanFields
+        ? CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS
+        : TNHH_COMPANY_NAME_PREFIX_OPTIONS;
+    const defaultCompanyNamePrefix = includeCoPhanFields
+        ? DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX
+        : DEFAULT_TNHH_COMPANY_NAME_PREFIX;
     const excludedAOptionNamesSet = useMemo(() => new Set(excludedAOptionNames), [excludedAOptionNames]);
     const availableAChangeOptions = useMemo(
         () => A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name)),
@@ -619,8 +658,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [nganhSuaRows, setNganhSuaRows] = useState([]);
     const [authorizedRepRows, setAuthorizedRepRows] = useState([]);
     const [cshHuongLoiRows, setCshHuongLoiRows] = useState([]);
+    const [doiThanhVienRows, setDoiThanhVienRows] = useState([]);
+    const [doiCoDongSangLapRows, setDoiCoDongSangLapRows] = useState([]);
+    const [doiCoDongLoaiCoPhanKhacList, setDoiCoDongLoaiCoPhanKhacList] = useState([""]);
     const [coSoThayDoi, setCoSoThayDoi] = useState("");
     const [pendingScrollTarget, setPendingScrollTarget] = useState("");
+    const danhSachThanhVienData = useGetFormDataJsonFromName("Danh sách thành viên");
+    const danhSachCoDongSangLapData = useGetFormDataJsonFromName("Danh sách cổ đông sáng lập");
 
     useEffect(() => {
         const parsed = normalizeDataJson(dataJson);
@@ -646,8 +690,22 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setNganhSuaRows(parsed.nganhNgheSuaList || []);
         setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
         setCshHuongLoiRows(parsed.cshHuongLoiList || []);
+        setDoiThanhVienRows(
+            parsed.doiThanhVienList || parsed.thanhVienList || danhSachThanhVienData?.thanhVienList || [],
+        );
+        setDoiCoDongSangLapRows(
+            parsed.doiCoDongSangLapList || parsed.coDongList || danhSachCoDongSangLapData?.coDongList || [],
+        );
+        setDoiCoDongLoaiCoPhanKhacList(
+            parsed.doiCoDongLoaiCoPhanKhacList ||
+                parsed.loaiCoPhanKhacList ||
+                danhSachCoDongSangLapData?.loaiCoPhanKhacList ||
+                (parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten
+                    ? [parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten]
+                    : [""]),
+        );
         setCoSoThayDoi(parsed.coSoThayDoi || "");
-    }, [availableAChangeOptions, dataJson, provinces]);
+    }, [availableAChangeOptions, danhSachCoDongSangLapData, danhSachThanhVienData, dataJson, provinces]);
 
     useEffect(() => {
         if (!pendingScrollTarget || mainOption !== "A" || !aOptions[pendingScrollTarget]) return;
@@ -709,7 +767,15 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         const formData = new FormData(formRef.current);
         const data = Object.fromEntries(formData.entries());
         Object.keys(data).forEach((key) => {
-            if (key.startsWith("cshHuongLoi_") || key.startsWith("nguoiDaiDienUyQuyen_")) delete data[key];
+            if (
+                key.startsWith("cshHuongLoi_") ||
+                key.startsWith("nguoiDaiDienUyQuyen_") ||
+                key.startsWith("doiThanhVienList_") ||
+                key.startsWith("doiCoDongSangLapList_") ||
+                EMBEDDED_LIST_FIELD_NAMES.has(key)
+            ) {
+                delete data[key];
+            }
         });
         data.kinhGui = kinhGuiValue;
         data.kinhGuiProvince = kinhGuiProvince;
@@ -727,6 +793,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         data.nganhNgheSuaList = nganhSuaRows;
         data.nguoiDaiDienUyQuyenList = authorizedRepRows;
         data.cshHuongLoiList = cshHuongLoiRows;
+        data.doiThanhVienList = doiThanhVienRows;
+        data.doiCoDongSangLapList = doiCoDongSangLapRows;
+        data.doiCoDongLoaiCoPhanKhacList = doiCoDongLoaiCoPhanKhacList;
+        data.loaiCoPhanKhacList = doiCoDongLoaiCoPhanKhacList;
+        data.loaiCoPhanKhac_ten = doiCoDongLoaiCoPhanKhacList[0] || "";
         return data;
     };
 
@@ -740,6 +811,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setNganhSuaRows(parsed.nganhNgheSuaList || []);
             setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
             setCshHuongLoiRows(parsed.cshHuongLoiList || []);
+            setDoiThanhVienRows(parsed.doiThanhVienList || parsed.thanhVienList || []);
+            setDoiCoDongSangLapRows(parsed.doiCoDongSangLapList || parsed.coDongList || []);
+            setDoiCoDongLoaiCoPhanKhacList(
+                parsed.doiCoDongLoaiCoPhanKhacList ||
+                    parsed.loaiCoPhanKhacList ||
+                    (parsed.loaiCoPhanKhac_ten ? [parsed.loaiCoPhanKhac_ten] : [""]),
+            );
             setCoSoThayDoi(parsed.coSoThayDoi || "");
         },
     }));
@@ -823,7 +901,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         onProvinceNameChange={handleKinhGuiProvinceChange}
                     />
 
-                    <ThongTinDoanhNghiepSection dataJson={normalizedData} styles={styles} />
+                    <ThongTinDoanhNghiepSection
+                        dataJson={normalizedData}
+                        styles={styles}
+                        companyNamePrefixOptions={companyNamePrefixOptions}
+                        defaultCompanyNamePrefix={defaultCompanyNamePrefix}
+                    />
 
                     {mainOption === "A" && (
                         <>
@@ -843,12 +926,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     ].map(([value, label]) => (
                                         <label key={value} className={styles.radioLabel}>
                                             <input
-                                                type="radio"
-                                                name="coSoThayDoi"
+                                                type="checkbox"
                                                 value={value}
                                                 className={styles.radioInput}
                                                 checked={coSoThayDoi === value}
-                                                onChange={() => setCoSoThayDoi(value)}
+                                                onChange={(event) => setCoSoThayDoi(event.target.checked ? value : "")}
                                             />
                                             {label}
                                         </label>
@@ -888,7 +970,35 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         name="tenSauThayDoiVN"
                                         dataJson={normalizedData}
                                         required
-                                    />
+                                    >
+                                        <div className={styles.inputPrefixWrapper}>
+                                            <select
+                                                className={styles.prefixSelect}
+                                                name="tenSauThayDoiPrefix"
+                                                defaultValue={
+                                                    normalizedData.tenSauThayDoiPrefix ||
+                                                    normalizedData.tenCongTyPrefix ||
+                                                    defaultCompanyNamePrefix
+                                                }
+                                                aria-label="Chọn prefix tên doanh nghiệp sau khi thay đổi"
+                                            >
+                                                {companyNamePrefixOptions.map((option) => (
+                                                    <option key={option} value={option}>
+                                                        {option}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <input
+                                                type="text"
+                                                className={styles.inputNoBorder}
+                                                name="tenSauThayDoiVN"
+                                                defaultValue={toUppercaseValue(normalizedData?.tenSauThayDoiVN)}
+                                                style={{ textTransform: "uppercase" }}
+                                                onInput={handleUppercaseInput}
+                                                required
+                                            />
+                                        </div>
+                                    </Field>
                                     <div className={styles.grid2}>
                                         <Field
                                             label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
@@ -977,20 +1087,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {isASelected("a_doiThanhVien") && (
                                 <div id="a-section-a_doiThanhVien" className={styles.sectionGroup}>
                                     <h3 className={styles.sectionTitle}>ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH</h3>
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="doiThanhVien_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={normalizedData.doiThanhVien_guiKem !== "false"}
-                                        />
-                                        Gửi kèm danh sách thành viên theo mẫu tương ứng.
-                                    </label>
-                                    <TextAreaField
-                                        label="Ghi chú về hồ sơ thành viên gửi kèm"
-                                        name="doiThanhVien_ghiChu"
-                                        dataJson={normalizedData}
+                                    <DanhSachThanhVienDeclaration
+                                        contentOnly
+                                        hideTitle
+                                        rows={doiThanhVienRows}
+                                        onChangeRows={setDoiThanhVienRows}
                                     />
                                 </div>
                             )}
@@ -1191,30 +1292,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     <h3 className={styles.sectionTitle}>
                                         THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI
                                     </h3>
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="doiCoDongSangLap_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={isTruthy(normalizedData.doiCoDongSangLap_guiKem)}
-                                        />
-                                        Gửi kèm danh sách cổ đông sáng lập theo Mẫu số 7.
-                                    </label>
-                                    <label className={styles.radioLabel}>
-                                        <input
-                                            type="checkbox"
-                                            name="doiCoDongNuocNgoai_guiKem"
-                                            value="true"
-                                            className={styles.radioInput}
-                                            defaultChecked={isTruthy(normalizedData.doiCoDongNuocNgoai_guiKem)}
-                                        />
-                                        Gửi kèm danh sách cổ đông là nhà đầu tư nước ngoài theo Mẫu số 8.
-                                    </label>
-                                    <TextAreaField
-                                        label="Ghi chú về thay đổi cổ đông"
-                                        name="doiCoDong_ghiChu"
-                                        dataJson={normalizedData}
+                                    <DanhSachCoDongSangLapDeclaration
+                                        contentOnly
+                                        hideTitle
+                                        rows={doiCoDongSangLapRows}
+                                        onChangeRows={setDoiCoDongSangLapRows}
+                                        loaiCoPhanKhacList={doiCoDongLoaiCoPhanKhacList}
+                                        onChangeLoaiCoPhanKhacList={setDoiCoDongLoaiCoPhanKhacList}
                                     />
                                 </div>
                             )}
