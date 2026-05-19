@@ -446,15 +446,35 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             rows.push(["Điện thoại liên hệ (*)", src.uyQuyen_phone || ""]);
             rows.push(["Email", src.uyQuyen_email || ""]);
 
-            rows.push(["[ĐỊA CHỈ LIÊN LẠC]", ""]);
+            rows.push(["[ĐỊA CHỈ LIÊN LẠC BÊN UỶ QUYỀN]", ""]);
             rows.push(["Tỉnh/Thành phố", src.uyQuyen_tinh || ""]);
             rows.push(["Xã/Phường", src.uyQuyen_xa || ""]);
             rows.push(["Số nhà, đường", src.uyQuyen_soNha || ""]);
 
-            rows.push(["[THÔNG TIN KHÁC]", ""]);
+            rows.push(["[BÊN NHẬN UỶ QUYỀN]", ""]);
+            rows.push(["Họ và tên (*)", src.nhanUyQuyen_hoTen || ""]);
+            rows.push(["Ngày sinh (*) (dd/mm/yyyy)", formatDateExcel(src.nhanUyQuyen_ngaySinh)]);
+            rows.push(["Giới tính (*) (Nam/Nữ)", src.nhanUyQuyen_gioiTinh || ""]);
+            rows.push(["Số định danh cá nhân (*)", src.nhanUyQuyen_cccd || ""]);
+            rows.push(["Dân tộc", src.nhanUyQuyen_danToc || ""]);
+            rows.push(["Quốc tịch", src.nhanUyQuyen_quocTich || ""]);
+            rows.push(["Điện thoại liên hệ (*)", src.nhanUyQuyen_phone || ""]);
+            rows.push(["Email", src.nhanUyQuyen_email || ""]);
+
+            rows.push(["[ĐỊA CHỈ THƯỜNG TRÚ BÊN NHẬN UỶ QUYỀN]", ""]);
+            rows.push(["Tỉnh/Thành phố", src.nhanUyQuyen_thuongTru_tinh || ""]);
+            rows.push(["Xã/Phường", src.nhanUyQuyen_thuongTru_xa || ""]);
+            rows.push(["Số nhà, đường", src.nhanUyQuyen_thuongTru_soNha || ""]);
+
+            rows.push(["[ĐỊA CHỈ LIÊN LẠC BÊN NHẬN UỶ QUYỀN]", ""]);
+            rows.push(["Tỉnh/Thành phố", src.nhanUyQuyen_lienLac_tinh || ""]);
+            rows.push(["Xã/Phường", src.nhanUyQuyen_lienLac_xa || ""]);
+            rows.push(["Số nhà, đường", src.nhanUyQuyen_lienLac_soNha || ""]);
+
+            rows.push(["[THÔNG TIN HỘ KINH DOANH]", ""]);
             rows.push(["Tên chủ hộ", src.chuHo_ten || ""]);
             rows.push(["Phường/Xã chủ hộ", src.chuHo_xa_phuong || ""]);
-            rows.push(["Phòng thực hiện", src.phongThucHien || ""]);
+            rows.push(["Kính gửi - Tiền tố", src.kinhGuiPrefix || ""]);
         } else {
             rows.push(["[THÔNG TIN NGƯỜI ĐẠI DIỆN]", ""]);
             rows.push(["Họ và tên (*)", src.nguoiDaiDien_hoTen || ""]);
@@ -493,7 +513,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             rows.push(["Vốn kinh doanh (bằng chữ)", src.vonKinhDoanh_bangChu || ""]);
 
             rows.push(["[THÔNG TIN KHÁC]", ""]);
-            rows.push(["Kính gửi", `Phòng Kinh tế, Hạ tầng và Đô thị phường ${src.kinhGui}` || ""]);
+            rows.push(["Kính gửi", src.kinhGui || ""]);
             rows.push(["Địa chỉ thuế - Tỉnh/Thành phố", src.thue_tinh || ""]);
             rows.push(["Địa chỉ thuế - Xã/Phường", src.thue_xa || ""]);
             rows.push(["Địa chỉ thuế - Số nhà, đường", src.thue_soNha || ""]);
@@ -663,25 +683,27 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                     }
 
                     const value = row[1] !== undefined && row[1] !== null ? String(row[1]) : "";
-
-                    const sMap = SECTION_MAP[currentSection] || {};
-                    if (sMap && sMap[col0]) {
-                        importedData[sMap[col0]] = value;
-                        continue;
-                    }
-
-                    const key = LABEL_MAP[col0];
-                    if (key) {
-                        let finalValue = value;
+                    const normalizeImportedValue = (key, rawValue) => {
                         if (
                             key.toLowerCase().includes("ngaysinh") ||
                             key.toLowerCase().includes("ngaycap") ||
                             key === "ngayBatDau" ||
                             key === "ngayBatDauHoatDong"
                         ) {
-                            finalValue = parseDateExcel(finalValue);
+                            return parseDateExcel(rawValue);
                         }
-                        importedData[key] = finalValue;
+                        return rawValue;
+                    };
+
+                    const sMap = SECTION_MAP[currentSection] || {};
+                    if (sMap && sMap[col0]) {
+                        importedData[sMap[col0]] = normalizeImportedValue(sMap[col0], value);
+                        continue;
+                    }
+
+                    const key = LABEL_MAP[col0];
+                    if (key) {
+                        importedData[key] = normalizeImportedValue(key, value);
                     }
                 }
             }

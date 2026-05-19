@@ -66,22 +66,56 @@ export const SECTION_FIELD_MAP_DENGHI = {
 // Map label → field key cho Giấy Uỷ Quyền
 // ──────────────────────────────────────────────────────────────────────────────
 export const FIELD_LABEL_MAP_UYQUYEN = {
-    "Họ và tên (*)": "uyQuyen_hoTen",
-    "Ngày sinh (*) (dd/mm/yyyy)": "uyQuyen_ngaySinh",
-    "Giới tính (*) (Nam/Nữ)": "uyQuyen_gioiTinh",
-    "Số định danh cá nhân (*)": "uyQuyen_cccd",
-    "Điện thoại liên hệ (*)": "uyQuyen_phone",
-    Email: "uyQuyen_email",
     "Tên chủ hộ": "chuHo_ten",
     "Phường/Xã chủ hộ": "chuHo_xa_phuong",
+    "Kính gửi - Tiền tố": "kinhGuiPrefix",
     "Phòng thực hiện": "phongThucHien",
 };
 
 export const SECTION_FIELD_MAP_UYQUYEN = {
+    "BÊN UỶ QUYỀN": {
+        "Họ và tên (*)": "uyQuyen_hoTen",
+        "Ngày sinh (*) (dd/mm/yyyy)": "uyQuyen_ngaySinh",
+        "Giới tính (*) (Nam/Nữ)": "uyQuyen_gioiTinh",
+        "Số định danh cá nhân (*)": "uyQuyen_cccd",
+        "Điện thoại liên hệ (*)": "uyQuyen_phone",
+        Email: "uyQuyen_email",
+    },
     "ĐỊA CHỈ LIÊN LẠC": {
         "Tỉnh/Thành phố": "uyQuyen_tinh",
         "Xã/Phường": "uyQuyen_xa",
         "Số nhà, đường": "uyQuyen_soNha",
+    },
+    "ĐỊA CHỈ LIÊN LẠC BÊN UỶ QUYỀN": {
+        "Tỉnh/Thành phố": "uyQuyen_tinh",
+        "Xã/Phường": "uyQuyen_xa",
+        "Số nhà, đường": "uyQuyen_soNha",
+    },
+    "BÊN NHẬN UỶ QUYỀN": {
+        "Họ và tên (*)": "nhanUyQuyen_hoTen",
+        "Ngày sinh (*) (dd/mm/yyyy)": "nhanUyQuyen_ngaySinh",
+        "Giới tính (*) (Nam/Nữ)": "nhanUyQuyen_gioiTinh",
+        "Số định danh cá nhân (*)": "nhanUyQuyen_cccd",
+        "Dân tộc": "nhanUyQuyen_danToc",
+        "Quốc tịch": "nhanUyQuyen_quocTich",
+        "Điện thoại liên hệ (*)": "nhanUyQuyen_phone",
+        Email: "nhanUyQuyen_email",
+    },
+    "ĐỊA CHỈ THƯỜNG TRÚ BÊN NHẬN UỶ QUYỀN": {
+        "Tỉnh/Thành phố": "nhanUyQuyen_thuongTru_tinh",
+        "Xã/Phường": "nhanUyQuyen_thuongTru_xa",
+        "Số nhà, đường": "nhanUyQuyen_thuongTru_soNha",
+    },
+    "ĐỊA CHỈ LIÊN LẠC BÊN NHẬN UỶ QUYỀN": {
+        "Tỉnh/Thành phố": "nhanUyQuyen_lienLac_tinh",
+        "Xã/Phường": "nhanUyQuyen_lienLac_xa",
+        "Số nhà, đường": "nhanUyQuyen_lienLac_soNha",
+    },
+    "THÔNG TIN HỘ KINH DOANH": {
+        "Tên chủ hộ": "chuHo_ten",
+        "Phường/Xã chủ hộ": "chuHo_xa_phuong",
+        "Kính gửi - Tiền tố": "kinhGuiPrefix",
+        "Phòng thực hiện": "phongThucHien",
     },
 };
 

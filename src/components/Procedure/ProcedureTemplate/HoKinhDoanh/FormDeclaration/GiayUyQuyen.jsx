@@ -5,10 +5,18 @@ import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
 import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
-import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import {
+    GioiTinhSelect,
+    DanTocSelect,
+    QuocTichSelect,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import { useAuth } from "@/context/AuthContext";
+import {
+    handleUppercaseInput,
+    toUppercaseValue,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
 const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit, formRef }, componentRef) {
     const { user } = useAuth();
@@ -34,14 +42,31 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
 
     const _initParsed = parseKinhGui(localStorage.getItem("giayDeNghi_kinhGui") || "");
     const [kinhGuiPrefix, setKinhGuiPrefix] = useState(
-        () => _initParsed.prefix || "Phòng Kinh tế, Hạ tầng và Đô thị Phường"
+        () => _initParsed.prefix || "Phòng Kinh tế, Hạ tầng và Đô thị Phường",
     );
     const [kinhGuiName, setKinhGuiName] = useState(() => _initParsed.name);
 
+    useEffect(() => {
+        if (!dataJson) return;
+
+        if (dataJson.kinhGuiPrefix) {
+            setKinhGuiPrefix(dataJson.kinhGuiPrefix);
+        }
+        if (dataJson.chuHo_xa_phuong !== undefined) {
+            setKinhGuiName(dataJson.chuHo_xa_phuong || "");
+        }
+    }, [dataJson]);
+
     // useFetchAddress: provinces cache toàn cục
-    const { provinces, communes: communes_uyQuyen, loadingCommunes: loadingCommunes_uyQuyen } = useFetchAddress(provCode_uyQuyen);
-    const { communes: communes_nhanUyQuyen_thuongTru, loadingCommunes: loadingCommunes_nhanUyQuyen_thuongTru } = useFetchAddress(provCode_nhanUyQuyen_thuongTru);
-    const { communes: communes_nhanUyQuyen_lienLac, loadingCommunes: loadingCommunes_nhanUyQuyen_lienLac } = useFetchAddress(provCode_nhanUyQuyen_lienLac);
+    const {
+        provinces,
+        communes: communes_uyQuyen,
+        loadingCommunes: loadingCommunes_uyQuyen,
+    } = useFetchAddress(provCode_uyQuyen);
+    const { communes: communes_nhanUyQuyen_thuongTru, loadingCommunes: loadingCommunes_nhanUyQuyen_thuongTru } =
+        useFetchAddress(provCode_nhanUyQuyen_thuongTru);
+    const { communes: communes_nhanUyQuyen_lienLac, loadingCommunes: loadingCommunes_nhanUyQuyen_lienLac } =
+        useFetchAddress(provCode_nhanUyQuyen_lienLac);
 
     // Expose API cho DeclarationForms
     useImperativeHandle(componentRef, () => ({
@@ -60,14 +85,29 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
             return Object.fromEntries(formData.entries());
         },
         importData: (importedData) => {
+            const hasKinhGuiData =
+                importedData?.kinhGuiPrefix !== undefined || importedData?.chuHo_xa_phuong !== undefined;
+
+            if (importedData?.kinhGuiPrefix) {
+                setKinhGuiPrefix(importedData.kinhGuiPrefix);
+            }
+            if (importedData?.chuHo_xa_phuong !== undefined) {
+                setKinhGuiName(importedData.chuHo_xa_phuong || "");
+            }
+            if (hasKinhGuiData) {
+                return;
+            }
+
             // Re-read kinhGui from localStorage in case GiayDeNghi just saved it
             const saved = localStorage.getItem("giayDeNghi_kinhGui") || "";
             const parsed = parseKinhGui(saved);
-            setKinhGuiPrefix(parsed.prefix || "Ph\u00f2ng Kinh t\u1ebf, H\u1ea1 t\u1ea7ng v\u00e0 \u0110\u00f4 th\u1ecb ph\u01b0\u1eddng");
+            setKinhGuiPrefix(
+                parsed.prefix ||
+                    "Ph\u00f2ng Kinh t\u1ebf, H\u1ea1 t\u1ea7ng v\u00e0 \u0110\u00f4 th\u1ecb ph\u01b0\u1eddng",
+            );
             setKinhGuiName(parsed.name);
         },
     }));
-
 
     const [localUyQuyen, setLocalUyQuyen] = useState({});
     const [uyQuyenKey, setUyQuyenKey] = useState(0);
@@ -118,7 +158,7 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
             provinces,
         });
 
-        setLocalNhanUyQuyen(prev => ({
+        setLocalNhanUyQuyen((prev) => ({
             ...prev,
             ...cccdData,
         }));
@@ -134,14 +174,16 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
         }
     };
 
-
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
             <input type="hidden" name="kinhGuiPrefix" value={kinhGuiPrefix} />
             <div className={styles.row}>
                 {/* Left side: Form fields */}
                 <div className={styles.colLeft}>
-                    <div key={`uyQuyen-${uyQuyenKey}`}><h3 className={styles.sectionTitle}>Bên uỷ quyền (Bên A): <UserCardDropdown onSelect={handleFillUyQuyenCard} /></h3>
+                    <div key={`uyQuyen-${uyQuyenKey}`}>
+                        <h3 className={styles.sectionTitle}>
+                            Bên uỷ quyền (Bên A): <UserCardDropdown onSelect={handleFillUyQuyenCard} />
+                        </h3>
 
                         <div className={styles.grid2}>
                             <div className={styles.formGroup}>
@@ -152,7 +194,12 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="text"
                                     className={styles.input}
                                     name="uyQuyen_hoTen"
-                                    defaultValue={localUyQuyen.uyQuyen_hoTen ?? (dataJson?.uyQuyen_hoTen || giayDeNghiData?.nguoiDaiDien_hoTen?.toUpperCase() || "")}
+                                    defaultValue={
+                                        localUyQuyen.uyQuyen_hoTen ??
+                                        (dataJson?.uyQuyen_hoTen ||
+                                            giayDeNghiData?.nguoiDaiDien_hoTen?.toUpperCase() ||
+                                            "")
+                                    }
                                     required
                                 />
                             </div>
@@ -163,12 +210,21 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                 <DateInput
                                     className={styles.input}
                                     name="uyQuyen_ngaySinh"
-                                    defaultValue={localUyQuyen.uyQuyen_ngaySinh ?? (dataJson?.uyQuyen_ngaySinh || giayDeNghiData?.nguoiDaiDien_ngaySinh || "")}
+                                    defaultValue={
+                                        localUyQuyen.uyQuyen_ngaySinh ??
+                                        (dataJson?.uyQuyen_ngaySinh || giayDeNghiData?.nguoiDaiDien_ngaySinh || "")
+                                    }
                                     required
                                 />
                             </div>
 
-                            <GioiTinhSelect name="uyQuyen_gioiTinh" defaultValue={localUyQuyen.uyQuyen_gioiTinh ?? (dataJson?.uyQuyen_gioiTinh || giayDeNghiData?.nguoiDaiDien_gioiTinh)} />
+                            <GioiTinhSelect
+                                name="uyQuyen_gioiTinh"
+                                defaultValue={
+                                    localUyQuyen.uyQuyen_gioiTinh ??
+                                    (dataJson?.uyQuyen_gioiTinh || giayDeNghiData?.nguoiDaiDien_gioiTinh)
+                                }
+                            />
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>
                                     Số định danh cá nhân <span className={styles.required}>*</span>
@@ -177,7 +233,10 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="text"
                                     className={styles.input}
                                     name="uyQuyen_cccd"
-                                    defaultValue={localUyQuyen.uyQuyen_cccd ?? (dataJson?.uyQuyen_cccd || giayDeNghiData?.nguoiDaiDien_cccd || "")}
+                                    defaultValue={
+                                        localUyQuyen.uyQuyen_cccd ??
+                                        (dataJson?.uyQuyen_cccd || giayDeNghiData?.nguoiDaiDien_cccd || "")
+                                    }
                                     required
                                     pattern="[0-9]{9,12}"
                                     title="Số CCCD phải có 9–12 chữ số"
@@ -192,7 +251,10 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="tel"
                                     className={styles.input}
                                     name="uyQuyen_phone"
-                                    defaultValue={localUyQuyen.uyQuyen_phone ?? (dataJson?.uyQuyen_phone || giayDeNghiData?.nguoiDaiDien_phone || "")}
+                                    defaultValue={
+                                        localUyQuyen.uyQuyen_phone ??
+                                        (dataJson?.uyQuyen_phone || giayDeNghiData?.nguoiDaiDien_phone || "")
+                                    }
                                     required
                                     pattern="(0|\+84)[0-9]{9,10}"
                                 />
@@ -203,7 +265,10 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="email"
                                     className={styles.input}
                                     name="uyQuyen_email"
-                                    defaultValue={localUyQuyen.uyQuyen_email ?? (dataJson?.uyQuyen_email || giayDeNghiData?.nguoiDaiDien_email || "")}
+                                    defaultValue={
+                                        localUyQuyen.uyQuyen_email ??
+                                        (dataJson?.uyQuyen_email || giayDeNghiData?.nguoiDaiDien_email || "")
+                                    }
                                 />
                             </div>
                         </div>
@@ -218,13 +283,34 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                             provinceName="uyQuyen_tinh"
                             wardName="uyQuyen_xa"
                             houseNumberName="uyQuyen_soNha"
-                            provinceDefault={localUyQuyen.uyQuyen_tinh ?? (dataJson?.uyQuyen_tinh || giayDeNghiData?.hienTai_tinh || giayDeNghiData?.thuongTru_tinh || "")}
-                            wardDefault={localUyQuyen.uyQuyen_xa ?? (dataJson?.uyQuyen_xa || giayDeNghiData?.hienTai_xa || giayDeNghiData?.thuongTru_xa || "")}
-                            houseNumberDefault={localUyQuyen.uyQuyen_soNha ?? (dataJson?.uyQuyen_soNha || giayDeNghiData?.hienTai_soNha || giayDeNghiData?.thuongTru_soNha || "")}
+                            provinceDefault={
+                                localUyQuyen.uyQuyen_tinh ??
+                                (dataJson?.uyQuyen_tinh ||
+                                    giayDeNghiData?.hienTai_tinh ||
+                                    giayDeNghiData?.thuongTru_tinh ||
+                                    "")
+                            }
+                            wardDefault={
+                                localUyQuyen.uyQuyen_xa ??
+                                (dataJson?.uyQuyen_xa ||
+                                    giayDeNghiData?.hienTai_xa ||
+                                    giayDeNghiData?.thuongTru_xa ||
+                                    "")
+                            }
+                            houseNumberDefault={
+                                localUyQuyen.uyQuyen_soNha ??
+                                (dataJson?.uyQuyen_soNha ||
+                                    giayDeNghiData?.hienTai_soNha ||
+                                    giayDeNghiData?.thuongTru_soNha ||
+                                    "")
+                            }
                             isLoadingCommunes={loadingCommunes_uyQuyen}
                         />
-
-                    </div><div key={`nhanUyQuyen-${nhanUyQuyenKey}`}><h3 className={styles.sectionTitle} style={{ marginTop: "40px" }}>Bên nhận uỷ quyền (Bên B): <UserCardDropdown onSelect={handleFillNhanUyQuyenCard} /></h3>
+                    </div>
+                    <div key={`nhanUyQuyen-${nhanUyQuyenKey}`}>
+                        <h3 className={styles.sectionTitle} style={{ marginTop: "40px" }}>
+                            Bên nhận uỷ quyền (Bên B): <UserCardDropdown onSelect={handleFillNhanUyQuyenCard} />
+                        </h3>
 
                         <div className={styles.grid2}>
                             <div className={styles.formGroup}>
@@ -235,10 +321,16 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="text"
                                     className={styles.input}
                                     name="nhanUyQuyen_hoTen"
-                                    defaultValue={localNhanUyQuyen.nhanUyQuyen_hoTen || user?.fullname || (dataJson?.nhanUyQuyen_hoTen || "")}
-                                    onChange={e => {
-                                        e.target.value = e.target.value?.trim().toUpperCase()
-                                    }}
+                                    defaultValue={
+                                        toUppercaseValue(
+                                            localNhanUyQuyen.nhanUyQuyen_hoTen ||
+                                            user?.fullname ||
+                                            dataJson?.nhanUyQuyen_hoTen ||
+                                            ""
+                                        )
+                                    }
+                                    style={{ textTransform: "uppercase" }}
+                                    onInput={handleUppercaseInput}
                                     required
                                 />
                             </div>
@@ -249,11 +341,16 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                 <DateInput
                                     className={styles.input}
                                     name="nhanUyQuyen_ngaySinh"
-                                    defaultValue={localNhanUyQuyen.nhanUyQuyen_ngaySinh ?? (dataJson?.nhanUyQuyen_ngaySinh || "")}
+                                    defaultValue={
+                                        localNhanUyQuyen.nhanUyQuyen_ngaySinh ?? (dataJson?.nhanUyQuyen_ngaySinh || "")
+                                    }
                                     required
                                 />
                             </div>
-                            <GioiTinhSelect name="nhanUyQuyen_gioiTinh" defaultValue={localNhanUyQuyen.nhanUyQuyen_gioiTinh ?? (dataJson?.nhanUyQuyen_gioiTinh)} />
+                            <GioiTinhSelect
+                                name="nhanUyQuyen_gioiTinh"
+                                defaultValue={localNhanUyQuyen.nhanUyQuyen_gioiTinh ?? dataJson?.nhanUyQuyen_gioiTinh}
+                            />
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>
                                     Số định danh cá nhân <span className={styles.required}>*</span>
@@ -262,7 +359,9 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="text"
                                     className={styles.input}
                                     name="nhanUyQuyen_cccd"
-                                    defaultValue={localNhanUyQuyen.nhanUyQuyen_cccd ?? (dataJson?.nhanUyQuyen_cccd || "")}
+                                    defaultValue={
+                                        localNhanUyQuyen.nhanUyQuyen_cccd ?? (dataJson?.nhanUyQuyen_cccd || "")
+                                    }
                                     required
                                     pattern="[0-9]{9,12}"
                                     title="Số CCCD phải có 9–12 chữ số"
@@ -277,7 +376,12 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="tel"
                                     className={styles.input}
                                     name="nhanUyQuyen_phone"
-                                    defaultValue={localNhanUyQuyen.nhanUyQuyen_phone || user?.phone || (dataJson?.nhanUyQuyen_phone || "")}
+                                    defaultValue={
+                                        localNhanUyQuyen.nhanUyQuyen_phone ||
+                                        user?.phone ||
+                                        dataJson?.nhanUyQuyen_phone ||
+                                        ""
+                                    }
                                     required
                                     pattern="(0|\+84)[0-9]{9,10}"
                                 />
@@ -288,14 +392,32 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                                     type="email"
                                     className={styles.input}
                                     name="nhanUyQuyen_email"
-                                    defaultValue={localNhanUyQuyen.nhanUyQuyen_email || user?.email || (dataJson?.nhanUyQuyen_email || "")}
+                                    defaultValue={
+                                        localNhanUyQuyen.nhanUyQuyen_email ||
+                                        user?.email ||
+                                        dataJson?.nhanUyQuyen_email ||
+                                        ""
+                                    }
                                 />
                             </div>
-                            <DanTocSelect name="nhanUyQuyen_danToc" defaultValue={localNhanUyQuyen.nhanUyQuyen_danToc ?? (dataJson?.nhanUyQuyen_danToc)} required={false} />
-                            <QuocTichSelect name="nhanUyQuyen_quocTich" defaultValue={localNhanUyQuyen.nhanUyQuyen_quocTich ?? (dataJson?.nhanUyQuyen_quocTich || "Việt Nam")} required={false} />
+                            <DanTocSelect
+                                name="nhanUyQuyen_danToc"
+                                defaultValue={localNhanUyQuyen.nhanUyQuyen_danToc ?? dataJson?.nhanUyQuyen_danToc}
+                                required={false}
+                            />
+                            <QuocTichSelect
+                                name="nhanUyQuyen_quocTich"
+                                defaultValue={
+                                    localNhanUyQuyen.nhanUyQuyen_quocTich ??
+                                    (dataJson?.nhanUyQuyen_quocTich || "Việt Nam")
+                                }
+                                required={false}
+                            />
                         </div>
 
-                        <h3 className={styles.sectionTitle} style={{ marginTop: "16px" }}>Địa chỉ thường trú của bên nhận uỷ quyền:</h3>
+                        <h3 className={styles.sectionTitle} style={{ marginTop: "16px" }}>
+                            Địa chỉ thường trú của bên nhận uỷ quyền:
+                        </h3>
                         <AddressSelect
                             provinces={provinces}
                             communes={communes_nhanUyQuyen_thuongTru}
@@ -303,13 +425,23 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                             provinceName="nhanUyQuyen_thuongTru_tinh"
                             wardName="nhanUyQuyen_thuongTru_xa"
                             houseNumberName="nhanUyQuyen_thuongTru_soNha"
-                            provinceDefault={localNhanUyQuyen.nhanUyQuyen_thuongTru_tinh ?? (dataJson?.nhanUyQuyen_thuongTru_tinh || "")}
-                            wardDefault={localNhanUyQuyen.nhanUyQuyen_thuongTru_xa ?? (dataJson?.nhanUyQuyen_thuongTru_xa || "")}
-                            houseNumberDefault={localNhanUyQuyen.nhanUyQuyen_thuongTru_soNha ?? (dataJson?.nhanUyQuyen_thuongTru_soNha || "")}
+                            provinceDefault={
+                                localNhanUyQuyen.nhanUyQuyen_thuongTru_tinh ??
+                                (dataJson?.nhanUyQuyen_thuongTru_tinh || "")
+                            }
+                            wardDefault={
+                                localNhanUyQuyen.nhanUyQuyen_thuongTru_xa ?? (dataJson?.nhanUyQuyen_thuongTru_xa || "")
+                            }
+                            houseNumberDefault={
+                                localNhanUyQuyen.nhanUyQuyen_thuongTru_soNha ??
+                                (dataJson?.nhanUyQuyen_thuongTru_soNha || "")
+                            }
                             isLoadingCommunes={loadingCommunes_nhanUyQuyen_thuongTru}
                         />
 
-                        <h3 className={styles.sectionTitle} style={{ marginTop: "16px" }}>Địa chỉ liên lạc của bên nhận uỷ quyền:</h3>
+                        <h3 className={styles.sectionTitle} style={{ marginTop: "16px" }}>
+                            Địa chỉ liên lạc của bên nhận uỷ quyền:
+                        </h3>
                         <AddressSelect
                             provinces={provinces}
                             communes={communes_nhanUyQuyen_lienLac}
@@ -317,14 +449,22 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
                             provinceName="nhanUyQuyen_lienLac_tinh"
                             wardName="nhanUyQuyen_lienLac_xa"
                             houseNumberName="nhanUyQuyen_lienLac_soNha"
-                            provinceDefault={localNhanUyQuyen.nhanUyQuyen_lienLac_tinh ?? (dataJson?.nhanUyQuyen_lienLac_tinh || "")}
-                            wardDefault={localNhanUyQuyen.nhanUyQuyen_lienLac_xa ?? (dataJson?.nhanUyQuyen_lienLac_xa || "")}
-                            houseNumberDefault={localNhanUyQuyen.nhanUyQuyen_lienLac_soNha ?? (dataJson?.nhanUyQuyen_lienLac_soNha || "")}
+                            provinceDefault={
+                                localNhanUyQuyen.nhanUyQuyen_lienLac_tinh ?? (dataJson?.nhanUyQuyen_lienLac_tinh || "")
+                            }
+                            wardDefault={
+                                localNhanUyQuyen.nhanUyQuyen_lienLac_xa ?? (dataJson?.nhanUyQuyen_lienLac_xa || "")
+                            }
+                            houseNumberDefault={
+                                localNhanUyQuyen.nhanUyQuyen_lienLac_soNha ??
+                                (dataJson?.nhanUyQuyen_lienLac_soNha || "")
+                            }
                             isLoadingCommunes={loadingCommunes_nhanUyQuyen_lienLac}
                         />
 
                         {/* The grey text box */}
-                    </div><div className={styles.greyBox}>
+                    </div>
+                    <div className={styles.greyBox}>
                         <div className={styles.greyBoxContent}>
                             <span className={styles.greyText}>
                                 Là chủ hộ kinh doanh đăng ký thành lập <b>HỘ KINH DOANH</b>
