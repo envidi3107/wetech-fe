@@ -47,7 +47,9 @@ const normalizeDate = (value) => {
 };
 
 const normalizeGender = (value) => {
-    const gender = String(value || "").trim().toLowerCase();
+    const gender = String(value || "")
+        .trim()
+        .toLowerCase();
     if (!gender) return "";
     if (gender.includes("nam")) return "Nam";
     if (gender.includes("nữ") || gender.includes("nu")) return "Nữ";
@@ -186,7 +188,7 @@ export default function UploadCCCD({ onComplete }) {
 
         const payload = await response.json();
         if (payload?.job_id) {
-            setExtractMessage("Đã gửi ảnh CCCD, đang chờ AI xử lý...");
+            setExtractMessage("Đã gửi ảnh CCCD, đang chờ xử lý...");
             return pollJobResult(payload.job_id);
         }
 
@@ -198,7 +200,7 @@ export default function UploadCCCD({ onComplete }) {
 
         setIsExtracting(true);
         setExtractError("");
-        setExtractMessage("Đang tải ảnh CCCD lên server AI...");
+        setExtractMessage("Đang tải ảnh CCCD...");
 
         try {
             const result = await extractCCCD(tempFrontFile, tempBackFile);
@@ -336,14 +338,24 @@ export default function UploadCCCD({ onComplete }) {
                                                 src={currentPreview}
                                                 alt="Preview"
                                                 className={styles.popupPreviewImg}
-                                                style={{ width: "100%", maxHeight: "200px", objectFit: "contain", borderRadius: "8px" }}
+                                                style={{
+                                                    width: "100%",
+                                                    maxHeight: "200px",
+                                                    objectFit: "contain",
+                                                    borderRadius: "8px",
+                                                }}
                                             />
                                         ) : (
                                             <>
                                                 <img
                                                     src={imageIcon}
                                                     alt=""
-                                                    style={{ width: 24, height: 24, objectFit: "contain", marginBottom: "8px" }}
+                                                    style={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        objectFit: "contain",
+                                                        marginBottom: "8px",
+                                                    }}
                                                 />
                                                 <span className={styles.boxText}>
                                                     {step === 1 ? "Mặt trước" : "Mặt sau"}
@@ -398,7 +410,16 @@ export default function UploadCCCD({ onComplete }) {
                                             </button>
                                         </>
                                     ) : (
-                                        <div className={styles.actionRow} style={{ marginTop: "20px", width: "320px", display: "flex", gap: "10px", justifyContent: "center" }}>
+                                        <div
+                                            className={styles.actionRow}
+                                            style={{
+                                                marginTop: "20px",
+                                                width: "320px",
+                                                display: "flex",
+                                                gap: "10px",
+                                                justifyContent: "center",
+                                            }}
+                                        >
                                             <button
                                                 type="button"
                                                 className={styles.actionButton}
