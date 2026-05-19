@@ -6,6 +6,7 @@ import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/QuocGiaInput/QuocGiaInput";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import { useEffect } from "react";
 import {
@@ -44,6 +45,21 @@ export default function ThongTinNguoiNopSection({ dataJson, styles, isNote = fal
             nguoiNop_thuongTru_tinh: card.permanentAddress?.province,
             nguoiNop_thuongTru_xa: card.permanentAddress?.ward,
             nguoiNop_thuongTru_soNha: card.permanentAddress?.street,
+        }));
+        setFormKey(k => k + 1);
+    };
+
+    const handleFillCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "nguoiNop",
+            contactPrefix: "lienLac",
+            permanentPrefix: "nguoiNop_thuongTru",
+            provinces,
+        });
+
+        setLocalData(prev => ({
+            ...prev,
+            ...cccdData,
         }));
         setFormKey(k => k + 1);
     };
@@ -174,7 +190,7 @@ export default function ThongTinNguoiNopSection({ dataJson, styles, isNote = fal
                     />
                 </div>
                 <div style={{ width: "320px", flexShrink: 0, marginTop: "22px" }}>
-                    <UploadCCCD />
+                    <UploadCCCD onComplete={handleFillCCCD} />
                 </div>
             </div>
         </div>

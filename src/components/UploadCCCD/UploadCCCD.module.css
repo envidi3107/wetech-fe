@@ -293,3 +293,21 @@
 .actionRow button {
     width: 180px;
 }
+
+.statusText {
+    color: #1b4ea0;
+    font-size: 14px;
+    margin: 0;
+}
+
+.errorText {
+    color: #b42318;
+    font-size: 14px;
+    margin: 0;
+}
+
+.actionButton:disabled,
+.actionButtonPrimary:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}

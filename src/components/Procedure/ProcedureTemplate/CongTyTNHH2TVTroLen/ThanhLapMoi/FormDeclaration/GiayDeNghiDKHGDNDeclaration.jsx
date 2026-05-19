@@ -2,6 +2,7 @@ import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 // Reuse styles from HoKinhDoanh to avoid duplication
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayDeNghi.module.css";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData, splitCCCDAddress } from "@/components/UploadCCCD/cccdFormMapper";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
@@ -78,6 +79,8 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
     const [nganhNgheRows, setNganhNgheRows] = useState([]);
     const [thanhVienRows, setThanhVienRows] = useState([]);
     const [mappedData, setMappedData] = useState({});
+    const [localNguoiDaiDien, setLocalNguoiDaiDien] = useState({});
+    const [nguoiDaiDienKey, setNguoiDaiDienKey] = useState(0);
 
     const [provCode_thuongTru, setProvCode_thuongTru] = useState("");
     const [provCode_hienTai, setProvCode_hienTai] = useState("");
@@ -227,6 +230,9 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
 
     // Helper để lấy giá trị mặc định - ưu tiên dataJson, nếu không có thì lấy mapped
     const getDefaultValue = (fieldName, fallbackValue = "") => {
+        if (localNguoiDaiDien && localNguoiDaiDien[fieldName] !== undefined) {
+            return localNguoiDaiDien[fieldName];
+        }
         if (dataJson && dataJson[fieldName]) {
             return dataJson[fieldName];
         }
@@ -329,6 +335,36 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
         }
     };
 
+    const handleFillNguoiDaiDienCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "nguoiDaiDien",
+            contactPrefix: "hienTai",
+            permanentPrefix: "thuongTru",
+            provinces,
+        });
+        const address = splitCCCDAddress(customer?.address, provinces);
+
+        setLocalNguoiDaiDien(prev => ({
+            ...prev,
+            ...cccdData,
+        }));
+        setThuongTruAddressState({
+            tinh: address.province,
+            xa: address.ward,
+            soNha: address.street,
+        });
+        setHienTaiAddressState({
+            tinh: address.province,
+            xa: address.ward,
+            soNha: address.street,
+        });
+        setProvCode_thuongTru(address.province);
+        setProvCode_hienTai(address.province);
+        setThuongTruKey((prev) => prev + 1);
+        setHienTaiKey((prev) => prev + 1);
+        setNguoiDaiDienKey((prev) => prev + 1);
+    };
+
     // ── Submit ───────────────────────────────────────────────────────────────
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -357,7 +393,7 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={formKey}>
             {/* ── Người đại diện & CCCD ── */}
-            <div className={styles.row}>
+            <div className={styles.row} key={`nguoi-dai-dien-${nguoiDaiDienKey}`}>
                 <div className={styles.colLeft}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "15px" }}>
                         <h3 className={styles.sectionTitle} style={{ marginBottom: 0 }}>Tên người đại diện: <UserCardDropdown onSelect={handleSelectUserCard} /></h3>
@@ -474,7 +510,7 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
                     </div>
                 </div>
                 <div className={styles.colRight}>
-                    <UploadCCCD onComplete={(front, back) => console.log("Extracted", front, back)} />
+                    <UploadCCCD onComplete={handleFillNguoiDaiDienCCCD} />
                 </div>
             </div>
 

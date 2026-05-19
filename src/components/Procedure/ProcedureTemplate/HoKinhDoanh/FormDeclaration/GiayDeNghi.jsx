@@ -2,6 +2,7 @@ import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFor
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import styles from "./GiayDeNghi.module.css";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
@@ -91,6 +92,20 @@ const GiayDeNghi = forwardRef(function GiayDeNghi({ formId, dataJson, onSubmit, 
         setProvCode_thuongTru(newCardData.thuongTru_tinh);
         setProvCode_hienTai(newCardData.hienTai_tinh);
 
+        setLocalNguoiDaiDien(prev => ({ ...prev, ...newCardData }));
+        setNguoiDaiDienKey((prev) => prev + 1);
+    };
+
+    const handleFillNguoiDaiDienCCCD = (customer) => {
+        const newCardData = buildCCCDFormData(customer, {
+            personPrefix: "nguoiDaiDien",
+            contactPrefix: "hienTai",
+            permanentPrefix: "thuongTru",
+            provinces,
+        });
+
+        setProvCode_thuongTru(newCardData.thuongTru_tinh || "");
+        setProvCode_hienTai(newCardData.hienTai_tinh || "");
         setLocalNguoiDaiDien(prev => ({ ...prev, ...newCardData }));
         setNguoiDaiDienKey((prev) => prev + 1);
     };
@@ -389,7 +404,7 @@ const GiayDeNghi = forwardRef(function GiayDeNghi({ formId, dataJson, onSubmit, 
                     />
                 </div>
                 <div className={styles.colRight}>
-                    <UploadCCCD onComplete={(front, back) => console.log("Extracted", front, back)} />
+                    <UploadCCCD onComplete={handleFillNguoiDaiDienCCCD} />
                 </div>
             </div>
 

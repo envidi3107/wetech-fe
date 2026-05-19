@@ -4,6 +4,7 @@ import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayUyQuyen.module.css";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData, splitCCCDAddress } from "@/components/UploadCCCD/cccdFormMapper";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import {
     GioiTinhSelect,
@@ -142,6 +143,28 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
             });
             if (typeof setNhanUyQuyenLienLacKey === 'function') setNhanUyQuyenLienLacKey(prev => prev + 1);
         }
+        setNhanUyQuyenKey((prev) => prev + 1);
+    };
+
+    const handleFillNhanUyQuyenCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "nhanUyQuyen",
+            contactPrefix: "nhanUyQuyen_lienLac",
+            permanentPrefix: "nhanUyQuyen_thuongTru",
+            provinces,
+        });
+        const address = splitCCCDAddress(customer?.address, provinces);
+
+        setLocalNhanUyQuyen(prev => ({
+            ...prev,
+            ...cccdData,
+        }));
+        setNhanUyQuyenLienLacAddressState({
+            tinh: address.province,
+            xa: address.ward,
+            soNha: address.street,
+        });
+        setNhanUyQuyenLienLacKey((prev) => prev + 1);
         setNhanUyQuyenKey((prev) => prev + 1);
     };
 
@@ -289,7 +312,8 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
                                 className={styles.input}
                                 name="nhanUyQuyen_hoTen"
                                 defaultValue={
-                                    dataJson?.nhanUyQuyen_hoTen || giayDeNghiData?.nguoiNop_hoTen?.toUpperCase() || ""
+                                    localNhanUyQuyen.nhanUyQuyen_hoTen ??
+                                    (dataJson?.nhanUyQuyen_hoTen || giayDeNghiData?.nguoiNop_hoTen?.toUpperCase() || "")
                                 }
                                 required
                             />
@@ -354,7 +378,8 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
                         <QuocTichSelect
                             name="nhanUyQuyen_quocTich"
                             defaultValue={
-                                dataJson?.nhanUyQuyen_quocTich || giayDeNghiData?.nguoiNop_quocTich || "Việt Nam"
+                                localNhanUyQuyen.nhanUyQuyen_quocTich ??
+                                (dataJson?.nhanUyQuyen_quocTich || giayDeNghiData?.nguoiNop_quocTich || "Việt Nam")
                             }
                             required={false}
                         />
@@ -371,11 +396,13 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
                         wardName="nhanUyQuyen_thuongTru_xa"
                         houseNumberName="nhanUyQuyen_thuongTru_soNha"
                         provinceDefault={
-                            dataJson?.nhanUyQuyen_thuongTru_tinh || giayDeNghiData?.nguoiNop_thuongTru_tinh || ""
+                            localNhanUyQuyen.nhanUyQuyen_thuongTru_tinh ??
+                            (dataJson?.nhanUyQuyen_thuongTru_tinh || giayDeNghiData?.nguoiNop_thuongTru_tinh || "")
                         }
                         wardDefault={localNhanUyQuyen.nhanUyQuyen_thuongTru_xa ?? (dataJson?.nhanUyQuyen_thuongTru_xa || giayDeNghiData?.nguoiNop_thuongTru_xa || "")}
                         houseNumberDefault={
-                            dataJson?.nhanUyQuyen_thuongTru_soNha || giayDeNghiData?.nguoiNop_thuongTru_soNha || ""
+                            localNhanUyQuyen.nhanUyQuyen_thuongTru_soNha ??
+                            (dataJson?.nhanUyQuyen_thuongTru_soNha || giayDeNghiData?.nguoiNop_thuongTru_soNha || "")
                         }
                         isRequired={false}
                         isLoadingCommunes={loadingCommunes_nhanUyQuyen_thuongTru}
@@ -425,7 +452,7 @@ const GiayUyQuyenDeclaration = forwardRef(function GiayUyQuyenDeclaration(
 
                 {/* Right side: Upload CCCD */}
                 <div className={styles.colRight}>
-                    <UploadCCCD onComplete={(front, back) => console.log("Extracted", front, back)} />
+                    <UploadCCCD onComplete={handleFillNhanUyQuyenCCCD} />
                 </div>
             </div>
         </form>

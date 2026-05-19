@@ -5,6 +5,7 @@ import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Proce
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/QuocGiaInput/QuocGiaInput";
 import {
@@ -71,6 +72,42 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                 if (giamDocPhone) {
                     giamDocPhone.value = card.phone || "";
                     giamDocPhone.dispatchEvent(new Event("input", { bubbles: true }));
+                }
+            }
+        }, 100);
+    };
+
+    const handleFillCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "nguoiDaiDien",
+            contactPrefix: "nguoiDaiDien",
+            permanentPrefix: "nguoiDaiDien_thuongTru",
+            provinces,
+        });
+
+        setLocalData(prev => ({
+            ...prev,
+            ...cccdData,
+        }));
+        setFormKey(k => k + 1);
+
+        setTimeout(() => {
+            const hoTenInput = document.querySelector('input[name="nguoiDaiDien_hoTen"]');
+            const form = hoTenInput?.closest("form");
+            if (form) {
+                ["nguoiDaiDien_hoTen", "nguoiDaiDien_gioiTinh", "nguoiDaiDien_cccd"].forEach(key => {
+                    const el = form.querySelector(`[name="${key}"]`);
+                    if (el) {
+                        el.dispatchEvent(new Event("input", { bubbles: true }));
+                    }
+                });
+
+                const nddNgaySinhHidden = form.querySelector('input[type="hidden"][name="nguoiDaiDien_ngaySinh"]');
+                if (nddNgaySinhHidden) {
+                    const displayInput = nddNgaySinhHidden.closest("div")?.querySelector('input[type="text"]');
+                    if (displayInput) {
+                        displayInput.dispatchEvent(new Event("input", { bubbles: true }));
+                    }
                 }
             }
         }, 100);
@@ -223,7 +260,7 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                     />
                 </div>
                 <div style={{ width: "320px", flexShrink: 0, marginTop: "22px" }}>
-                    <UploadCCCD />
+                    <UploadCCCD onComplete={handleFillCCCD} />
                 </div>
             </div>
         </div>

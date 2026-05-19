@@ -3,6 +3,7 @@ import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import styles from "./GiayUyQuyen.module.css";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
@@ -106,6 +107,21 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
             nhanUyQuyen_lienLac_xa: card.currentAddress?.ward || "",
             nhanUyQuyen_lienLac_soNha: card.currentAddress?.street || "",
         });
+        setNhanUyQuyenKey((prev) => prev + 1);
+    };
+
+    const handleFillNhanUyQuyenCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "nhanUyQuyen",
+            contactPrefix: "nhanUyQuyen_lienLac",
+            permanentPrefix: "nhanUyQuyen_thuongTru",
+            provinces,
+        });
+
+        setLocalNhanUyQuyen(prev => ({
+            ...prev,
+            ...cccdData,
+        }));
         setNhanUyQuyenKey((prev) => prev + 1);
     };
 
@@ -333,7 +349,7 @@ const GiayUyQuyen = forwardRef(function GiayUyQuyen({ formId, dataJson, onSubmit
 
                 {/* Right side: Upload CCCD */}
                 <div className={styles.colRight}>
-                    <UploadCCCD onComplete={(front, back) => console.log("Extracted", front, back)} />
+                    <UploadCCCD onComplete={handleFillNhanUyQuyenCCCD} />
                 </div>
             </div>
         </form>

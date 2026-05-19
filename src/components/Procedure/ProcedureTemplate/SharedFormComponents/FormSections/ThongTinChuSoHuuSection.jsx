@@ -4,6 +4,7 @@ import { useFetchAddress } from "@/hooks/useFetchAddress";
 import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
+import { buildCCCDFormData } from "@/components/UploadCCCD/cccdFormMapper";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import QuocGiaInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/QuocGiaInput/QuocGiaInput";
 import { useEffect } from "react";
@@ -42,6 +43,21 @@ export default function ThongTinChuSoHuuSection({ dataJson, styles }) {
             chuSoHuu_thuongTru_tinh: card.permanentAddress?.province,
             chuSoHuu_thuongTru_xa: card.permanentAddress?.ward,
             chuSoHuu_thuongTru_soNha: card.permanentAddress?.street,
+        }));
+        setFormKey(k => k + 1);
+    };
+
+    const handleFillCCCD = (customer) => {
+        const cccdData = buildCCCDFormData(customer, {
+            personPrefix: "chuSoHuu",
+            contactPrefix: "chuSoHuu",
+            permanentPrefix: "chuSoHuu_thuongTru",
+            provinces,
+        });
+
+        setLocalData(prev => ({
+            ...prev,
+            ...cccdData,
         }));
         setFormKey(k => k + 1);
     };
@@ -162,7 +178,7 @@ export default function ThongTinChuSoHuuSection({ dataJson, styles }) {
                     </div>
                 </div>
                 <div style={{ width: "320px", flexShrink: 0, marginTop: "22px" }}>
-                    <UploadCCCD />
+                    <UploadCCCD onComplete={handleFillCCCD} />
                 </div>
             </div>
         </div>
