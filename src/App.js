@@ -88,7 +88,7 @@ function AppContent() {
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Notification />
-            {!hideChatWidget && <ChatWidget />}
+            <ChatWidget hidden={hideChatWidget} />
         </>
     );
 }

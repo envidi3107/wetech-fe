@@ -1,19 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./ChatWidget.module.css";
 import iconLogoZalo from "@/assets/icon-zalo.png";
 import logoWeTech from "@/assets/logo.png";
 
-export default function ChatWidget() {
+let autoOpenTimeoutId = null;
+let hasAutoOpenRun = false;
+const autoOpenSubscribers = new Set();
+
+function startAutoOpenTimer() {
+    if (autoOpenTimeoutId || hasAutoOpenRun) return;
+
+    autoOpenTimeoutId = setTimeout(() => {
+        hasAutoOpenRun = true;
+        autoOpenTimeoutId = null;
+        autoOpenSubscribers.forEach((openChat) => openChat());
+    }, 30000);
+}
+
+export default function ChatWidget({ hidden = false }) {
     const [isOpen, setIsOpen] = useState(false);
-    const location = window.location.href;
+    const hiddenRef = useRef(hidden);
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            if (location.includes("process-procedure")) return;
+        hiddenRef.current = hidden;
+        if (hidden) {
+            setIsOpen(false);
+        }
+    }, [hidden]);
 
-            setIsOpen(true);
-        }, 30000);
-        return () => clearTimeout(timeoutId);
+    useEffect(() => {
+        const openChat = () => {
+            if (!hiddenRef.current) {
+                setIsOpen(true);
+            }
+        };
+
+        autoOpenSubscribers.add(openChat);
+        startAutoOpenTimer();
+
+        return () => {
+            autoOpenSubscribers.delete(openChat);
+        };
     }, []);
 
     useEffect(() => {
@@ -28,6 +55,8 @@ export default function ChatWidget() {
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isOpen]);
+
+    if (hidden) return null;
 
     return (
         <div className={styles["chat-widget-container"]}>
