@@ -14,7 +14,7 @@ export const PROVINCE_ROOM_MAP = {
     "Tỉnh Cao Bằng": "Phòng Quản lý doanh nghiệp – Đăng ký kinh doanh",
     "Tỉnh Đắk Lắk": "Phòng Quản lý doanh nghiệp",
     "Tỉnh Điện Biên": "Phòng Đăng ký kinh doanh",
-    "Tỉnh Đồng Nai": "Phòng Đăng ký kinh doanh",
+    "Thành phố Đồng Nai": "Phòng Đăng ký kinh doanh",
     "Tỉnh Đồng Tháp": "Phòng Đăng ký kinh doanh",
     "Tỉnh Gia Lai": "Phòng Doanh nghiệp và Kinh tế tập thể",
     "Tỉnh Hà Tĩnh": "Phòng Đăng ký kinh doanh",
