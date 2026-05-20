@@ -126,7 +126,7 @@ const cshSelectStyles = {
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
 };
 
-const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
+const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong"];
 const EMBEDDED_LIST_FIELD_NAMES = new Set([
     "hoTen",
     "ngaySinh",
@@ -151,6 +151,15 @@ const EMBEDDED_LIST_FIELD_NAMES = new Set([
     "thoiHanGopVon",
     "ghiChu",
 ]);
+
+const normalizeSelectedMainOptions = (value) => {
+    if (Array.isArray(value)) {
+        const selectedValues = value.filter((item) => MAIN_CHANGE_OPTIONS.some((option) => option.value === item));
+        return selectedValues.length ? selectedValues : ["A"];
+    }
+
+    return MAIN_CHANGE_OPTIONS.some((option) => option.value === value) ? [value] : ["A"];
+};
 
 function Field({ label, name, dataJson, required = false, type = "text", children }) {
     const shouldUppercase = label?.toLocaleLowerCase("vi-VN").includes("ghi bằng chữ in hoa");
@@ -240,6 +249,33 @@ function YesNoRadio({ name, dataJson, defaultValue = "Không" }) {
                 Không
             </label>
         </div>
+    );
+}
+
+function ForeignCurrencyField({ valueName, unitName, legacyValueName, dataJson }) {
+    return (
+        <Field
+            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có, bằng số)"
+            name={valueName}
+            dataJson={dataJson}
+        >
+            <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(140px, 0.45fr)", gap: 12 }}>
+                <input
+                    type="text"
+                    className={styles.input}
+                    name={valueName}
+                    placeholder="Giá trị bằng số"
+                    defaultValue={dataJson?.[valueName] || dataJson?.[legacyValueName] || ""}
+                />
+                <input
+                    type="text"
+                    className={styles.input}
+                    name={unitName}
+                    placeholder="Loại ngoại tệ"
+                    defaultValue={dataJson?.[unitName] || ""}
+                />
+            </div>
+        </Field>
     );
 }
 
@@ -651,7 +687,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const { provinces } = useFetchAddress();
     const [kinhGuiProvince, setKinhGuiProvince] = useState("");
     const [kinhGuiValue, setKinhGuiValue] = useState("");
-    const [mainOption, setMainOption] = useState("A");
+    const [mainOptions, setMainOptions] = useState(["A"]);
     const [aOptions, setAOptions] = useState(emptyAOptionState());
     const [nganhBoSungRows, setNganhBoSungRows] = useState([]);
     const [nganhBoRows, setNganhBoRows] = useState([]);
@@ -678,7 +714,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
         setKinhGuiProvince(matchedProvince);
         setKinhGuiValue(matchedProvince ? buildKinhGui(matchedProvince) : parsed.kinhGui || "");
-        setMainOption(parsed.noiDungThayDoi || "A");
+        setMainOptions(normalizeSelectedMainOptions(parsed.noiDungThayDoi));
         setAOptions(
             availableAChangeOptions.reduce((acc, option) => {
                 acc[option.name] = isTruthy(parsed[option.name]);
@@ -708,18 +744,24 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     }, [availableAChangeOptions, danhSachCoDongSangLapData, danhSachThanhVienData, dataJson, provinces]);
 
     useEffect(() => {
-        if (!pendingScrollTarget || mainOption !== "A" || !aOptions[pendingScrollTarget]) return;
+        if (!pendingScrollTarget || !mainOptions.includes("A") || !aOptions[pendingScrollTarget]) return;
 
         window.requestAnimationFrame(() => {
             const targetSection = document.getElementById(`a-section-${pendingScrollTarget}`);
             targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
             setPendingScrollTarget("");
         });
-    }, [aOptions, mainOption, pendingScrollTarget]);
+    }, [aOptions, mainOptions, pendingScrollTarget]);
 
     const handleKinhGuiProvinceChange = (provinceName) => {
         setKinhGuiProvince(provinceName);
         setKinhGuiValue(provinceName ? buildKinhGui(provinceName) : "");
+    };
+
+    const toggleMainOption = (value) => {
+        setMainOptions((prev) =>
+            prev.includes(value) ? prev.filter((selectedValue) => selectedValue !== value) : [...prev, value],
+        );
     };
 
     const toggleAOption = (name) => {
@@ -749,7 +791,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             return false;
         }
 
-        if (mainOption === "A" && !availableAChangeOptions.some((option) => !!aOptions[option.name])) {
+        if (!mainOptions.length) {
+            window.alert("Vui lòng chọn ít nhất một nội dung kê khai.");
+            return false;
+        }
+
+        if (mainOptions.includes("A") && !availableAChangeOptions.some((option) => !!aOptions[option.name])) {
             window.alert("Vui lòng chọn ít nhất một nội dung thay đổi trong Mục A.");
             return false;
         }
@@ -779,7 +826,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         });
         data.kinhGui = kinhGuiValue;
         data.kinhGuiProvince = kinhGuiProvince;
-        data.noiDungThayDoi = mainOption;
+        data.noiDungThayDoi = mainOptions;
         data.coSoThayDoi = coSoThayDoi;
         if (coSoThayDoi !== "sap_nhap") {
             data.sapNhap_tenDoanhNghiep = "";
@@ -828,7 +875,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         if (data && onSubmit) onSubmit(data);
     };
 
-    const isASelected = (name) => mainOption === "A" && !!aOptions[name];
+    const isMainSelected = (value) => mainOptions.includes(value);
+    const isASelected = (name) => isMainSelected("A") && !!aOptions[name];
 
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
@@ -840,11 +888,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             {MAIN_CHANGE_OPTIONS.map((option) => (
                                 <label key={option.value} className={localStyles.optionItem}>
                                     <input
-                                        type="radio"
+                                        type="checkbox"
                                         name="noiDungThayDoi"
                                         value={option.value}
-                                        checked={mainOption === option.value}
-                                        onChange={() => setMainOption(option.value)}
+                                        checked={isMainSelected(option.value)}
+                                        onChange={() => toggleMainOption(option.value)}
                                     />
                                     {option.label}
                                 </label>
@@ -852,7 +900,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         </div>
                     </div>
 
-                    {mainOption === "A" && (
+                    {isMainSelected("A") && (
                         <div className={localStyles.stickySection}>
                             <h3 className={localStyles.stickyTitle}>Mục A</h3>
                             <p className={localStyles.stickyNote}>
@@ -908,7 +956,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         defaultCompanyNamePrefix={defaultCompanyNamePrefix}
                     />
 
-                    {mainOption === "A" && (
+                    {isMainSelected("A") && (
                         <>
                             <div className={styles.sectionGroup}>
                                 <h3 className={styles.sectionTitle}>Doanh nghiệp đăng ký thay đổi trên cơ sở:</h3>
@@ -1120,25 +1168,10 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         defaultText={normalizedData.vonDieuLeSauThayDoi_bangChu || ""}
                                     />
                                     <div className={styles.grid2}>
-                                        <Field
-                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có, bằng số)"
-                                            name="vonDieuLe_ngoaiTeBangSo"
-                                            dataJson={normalizedData}
-                                        >
-                                            <input
-                                                type="text"
-                                                className={styles.input}
-                                                name="vonDieuLe_ngoaiTeBangSo"
-                                                defaultValue={
-                                                    normalizedData.vonDieuLe_ngoaiTeBangSo ||
-                                                    normalizedData.vonDieuLe_ngoaiTe ||
-                                                    ""
-                                                }
-                                            />
-                                        </Field>
-                                        <Field
-                                            label="Loại ngoại tệ"
-                                            name="vonDieuLe_ngoaiTeDonVi"
+                                        <ForeignCurrencyField
+                                            valueName="vonDieuLe_ngoaiTeBangSo"
+                                            unitName="vonDieuLe_ngoaiTeDonVi"
+                                            legacyValueName="vonDieuLe_ngoaiTe"
                                             dataJson={normalizedData}
                                         />
                                         <Field
@@ -1224,25 +1257,10 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         defaultText={normalizedData.vonDauTuSauThayDoi_bangChu || ""}
                                     />
                                     <div className={styles.grid2}>
-                                        <Field
-                                            label="Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có, bằng số)"
-                                            name="vonDauTu_ngoaiTeBangSo"
-                                            dataJson={normalizedData}
-                                        >
-                                            <input
-                                                type="text"
-                                                className={styles.input}
-                                                name="vonDauTu_ngoaiTeBangSo"
-                                                defaultValue={
-                                                    normalizedData.vonDauTu_ngoaiTeBangSo ||
-                                                    normalizedData.vonDauTu_ngoaiTe ||
-                                                    ""
-                                                }
-                                            />
-                                        </Field>
-                                        <Field
-                                            label="Loại ngoại tệ"
-                                            name="vonDauTu_ngoaiTeDonVi"
+                                        <ForeignCurrencyField
+                                            valueName="vonDauTu_ngoaiTeBangSo"
+                                            unitName="vonDauTu_ngoaiTeDonVi"
+                                            legacyValueName="vonDauTu_ngoaiTe"
                                             dataJson={normalizedData}
                                         />
                                         <Field
@@ -1268,11 +1286,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                             <YesNoRadio name="vonDauTu_hienThiNgoaiTe" dataJson={normalizedData} />
                                         </div>
                                     </div>
-                                    <TextAreaField
-                                        label="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
-                                        name="vonDauTu_taiSanGopVon"
+                                    <TaiSanGopVonSection
                                         dataJson={normalizedData}
-                                        rows={5}
+                                        styles={styles}
+                                        fieldPrefix="vonDauTu_taiSan"
+                                        title="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
                                     />
                                 </div>
                             )}
@@ -1330,7 +1348,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         </>
                     )}
 
-                    {mainOption === "B" && (
+                    {isMainSelected("B") && (
                         <div className={styles.sectionGroup}>
                             <h3 className={styles.sectionTitle}>
                                 Bổ sung, cập nhật thông tin đăng ký doanh nghiệp
@@ -1346,7 +1364,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                         </div>
                     )}
 
-                    {mainOption === "C" && (
+                    {isMainSelected("C") && (
                         <div className={styles.sectionGroup}>
                             <h3 className={styles.sectionTitle}>Đề nghị hiệu đính thông tin đăng ký doanh nghiệp</h3>
                             <div className={styles.grid2}>

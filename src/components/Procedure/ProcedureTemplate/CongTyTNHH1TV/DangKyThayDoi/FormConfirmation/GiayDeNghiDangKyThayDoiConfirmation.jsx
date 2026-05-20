@@ -93,6 +93,45 @@ function Section({ title, children, className }) {
     );
 }
 
+const REGISTRATION_A_OPTION_NAMES = new Set([
+    "a_doiTen",
+    "a_doiDiaChi",
+    "a_doiThanhVien",
+    "a_doiVonDieuLe",
+    "a_doiVonDauTuDNTN",
+]);
+
+function getDocumentSubtitle(mainOptions, selectedAOptions) {
+    const defaultSubtitle =
+        "Đăng ký thay đổi nội dung Giấy chứng nhận đăng ký doanh nghiệp/Thông báo thay đổi nội dung đăng ký doanh nghiệp";
+
+    if (!mainOptions.includes("A")) return defaultSubtitle;
+
+    const hasRegistrationChange = selectedAOptions.some((option) => REGISTRATION_A_OPTION_NAMES.has(option.name));
+    const hasNotificationChange = selectedAOptions.some((option) => !REGISTRATION_A_OPTION_NAMES.has(option.name));
+
+    if (hasRegistrationChange && !hasNotificationChange) {
+        return "Đăng ký thay đổi nội dung Giấy chứng nhận đăng ký doanh nghiệp";
+    }
+
+    if (!hasRegistrationChange && hasNotificationChange) {
+        return "Thông báo thay đổi nội dung đăng ký doanh nghiệp";
+    }
+
+    return defaultSubtitle;
+}
+
+const normalizeSelectedMainOptions = (value) => {
+    if (Array.isArray(value)) {
+        const selectedValues = value.filter((item) => MAIN_CHANGE_OPTIONS.some((option) => option.value === item));
+        return selectedValues.length ? selectedValues : ["A"];
+    }
+
+    return MAIN_CHANGE_OPTIONS.some((option) => option.value === value) ? [value] : ["A"];
+};
+
+const getMainOptionLabel = (value) => MAIN_CHANGE_OPTIONS.find((option) => option.value === value)?.label || "";
+
 function addressToString(soNha, xa, tinh) {
     return [soNha, xa, tinh].filter(Boolean).join(", ");
 }
@@ -388,19 +427,19 @@ function MoneySourceTable({ data }) {
     );
 }
 
-function AssetTable({ data }) {
+function AssetTable({ data, fieldPrefix = "taiSan" }) {
     const rows = [
-        ["1", "Đồng Việt Nam", "taiSan_dongVN"],
-        ["2", "Ngoại tệ tự do chuyển đổi", "taiSan_ngoaiTe"],
-        ["3", "Vàng", "taiSan_vang"],
-        ["4", "Quyền sử dụng đất", "taiSan_qsdDat"],
-        ["5", "Quyền sở hữu trí tuệ", "taiSan_shtt"],
+        ["1", "Đồng Việt Nam", `${fieldPrefix}_dongVN`],
+        ["2", "Ngoại tệ tự do chuyển đổi", `${fieldPrefix}_ngoaiTe`],
+        ["3", "Vàng", `${fieldPrefix}_vang`],
+        ["4", "Quyền sử dụng đất", `${fieldPrefix}_qsdDat`],
+        ["5", "Quyền sở hữu trí tuệ", `${fieldPrefix}_shtt`],
         [
             "6",
-            `Các tài sản khác (loại tài sản, số lượng và giá trị còn lại của mỗi loại tài sản): ${data.taiSan_khac_loaiTaiSan || ""}, ${data.taiSan_khac_soLuong ? `${data.taiSan_khac_soLuong}` : ""}`,
-            "taiSan_khac",
+            `Các tài sản khác (loại tài sản, số lượng và giá trị còn lại của mỗi loại tài sản): ${data[`${fieldPrefix}_khac_loaiTaiSan`] || ""}, ${data[`${fieldPrefix}_khac_soLuong`] ? `${data[`${fieldPrefix}_khac_soLuong`]}` : ""}`,
+            `${fieldPrefix}_khac`,
         ],
-        ["", "Tổng số", "taiSan_tongSo"],
+        ["", "Tổng số", `${fieldPrefix}_tongSo`],
     ];
 
     return (
@@ -505,11 +544,12 @@ function GiayDeNghiDangKyThayDoiConfirmation({
         return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
     }
 
-    const mainOption = data.noiDungThayDoi || "A";
-    const selectedMainLabel = MAIN_CHANGE_OPTIONS.find((option) => option.value === mainOption)?.label || "";
+    const mainOptions = normalizeSelectedMainOptions(data.noiDungThayDoi);
+    const isMainSelected = (value) => mainOptions.includes(value);
     const excludedAOptionNamesSet = new Set(excludedAOptionNames);
     const availableAChangeOptions = A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name));
     const selectedAOptions = availableAChangeOptions.filter((option) => isTruthy(data[option.name]));
+    const documentSubtitle = getDocumentSubtitle(mainOptions, selectedAOptions);
     const defaultCompanyNamePrefix = includeCoPhanFields
         ? DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX
         : DEFAULT_TNHH_COMPANY_NAME_PREFIX;
@@ -533,10 +573,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
             </div>
 
             <h2 className={styles.docTitle}>GIẤY ĐỀ NGHỊ</h2>
-            <h3 className={styles.docTitle}>
-                Đăng ký thay đổi nội dung Giấy chứng nhận đăng ký doanh nghiệp/Thông báo thay đổi nội dung đăng ký doanh
-                nghiệp
-            </h3>
+            <h3 className={styles.docTitle}>{documentSubtitle}</h3>
 
             <div className={styles.content}>
                 <p>Kính gửi: {data.kinhGui}</p>
@@ -546,7 +583,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                 />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
 
-                {mainOption === "A" && (
+                {isMainSelected("A") && (
                     <>
                         <div>
                             <p>
@@ -763,10 +800,16 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                     value={formatDate(data.vonDauTu_thoiDiemThayDoi)}
                                 />
                                 <Line label="Hình thức tăng, giảm vốn" value={data.vonDauTu_hinhThucTangGiam} />
-                                <Line
-                                    label="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
-                                    value={data.vonDauTu_taiSanGopVon}
-                                />
+                                <p>
+                                    <strong>Tài sản góp vốn sau khi thay đổi vốn đầu tư:</strong>
+                                </p>
+                                <AssetTable data={data} fieldPrefix="vonDauTu_taiSan" />
+                                {data.vonDauTu_taiSanGopVon && (
+                                    <Line
+                                        label="Tài sản góp vốn sau khi thay đổi vốn đầu tư"
+                                        value={data.vonDauTu_taiSanGopVon}
+                                    />
+                                )}
                             </Section>
                         )}
 
@@ -974,8 +1017,8 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     </>
                 )}
 
-                {mainOption === "B" && (
-                    <Section title={selectedMainLabel}>
+                {isMainSelected("B") && (
+                    <Section title={getMainOptionLabel("B")}>
                         <Line
                             label="Nội dung bổ sung, cập nhật thông tin đăng ký doanh nghiệp"
                             value={data.boSungCapNhat_noiDung}
@@ -983,8 +1026,8 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     </Section>
                 )}
 
-                {mainOption === "C" && (
-                    <Section title={selectedMainLabel}>
+                {isMainSelected("C") && (
+                    <Section title={getMainOptionLabel("C")}>
                         <Line
                             label="Thông tin trên Giấy chứng nhận/Giấy xác nhận cấp ngày"
                             value={formatDate(data.hieuDinh_ngayCapGiay)}
@@ -1027,10 +1070,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                             <td style={{ width: "50%" }}></td>
                             <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
                                 <p>
-                                    <strong>
-                                        NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT/CHỦ TỊCH CÔNG TY/NGƯỜI ĐƯỢC ỦY QUYỀN/NGƯỜI ĐẠI
-                                        DIỆN
-                                    </strong>
+                                    <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT</strong>
                                     <br />(<em>Ký và ghi họ tên</em>)
                                 </p>
                                 {data.nguoiKy_thongTin && <p>{data.nguoiKy_thongTin}</p>}

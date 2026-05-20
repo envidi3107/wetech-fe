@@ -1,13 +1,15 @@
 import { useRef } from "react";
 import FormattedNumberInput from "../FormattedNumberInput/FormattedNumberInput";
 
-export default function TaiSanGopVonSection({ dataJson, styles }) {
+export default function TaiSanGopVonSection({ dataJson, styles, fieldPrefix = "taiSan", title = "Tài sản góp vốn:" }) {
     const tableRef = useRef(null);
 
     const handleChange = () => {
         if (!tableRef.current) return;
         const table = tableRef.current;
-        const prefixes = ["taiSan_dongVN", "taiSan_ngoaiTe", "taiSan_vang", "taiSan_qsdDat", "taiSan_shtt", "taiSan_khac"];
+        const prefixes = ["dongVN", "ngoaiTe", "vang", "qsdDat", "shtt", "khac"].map(
+            (suffix) => `${fieldPrefix}_${suffix}`,
+        );
         let totalGiaTri = 0;
         let totalTyLe = 0;
         prefixes.forEach(p => {
@@ -18,15 +20,15 @@ export default function TaiSanGopVonSection({ dataJson, styles }) {
             totalGiaTri += gt;
             totalTyLe += tl;
         });
-        const tongGiaTriInput = table.querySelector('[name="taiSan_tongSo_giaTri"]');
-        const tongTyLeInput = table.querySelector('[name="taiSan_tongSo_tyLe"]');
+        const tongGiaTriInput = table.querySelector(`[name="${fieldPrefix}_tongSo_giaTri"]`);
+        const tongTyLeInput = table.querySelector(`[name="${fieldPrefix}_tongSo_tyLe"]`);
         if (tongGiaTriInput) tongGiaTriInput.value = totalGiaTri ? totalGiaTri.toLocaleString('vi-VN') : "0";
         if (tongTyLeInput) tongTyLeInput.value = totalTyLe ? totalTyLe : "0";
     };
 
     return (
         <div className={styles.sectionGroup}>
-            <h3 className={styles.sectionTitle}>Tài sản góp vốn:</h3>
+            <h3 className={styles.sectionTitle}>{title}</h3>
             <table ref={tableRef} className={styles.table} onChange={handleChange}>
                 <thead>
                     <tr>
@@ -38,18 +40,18 @@ export default function TaiSanGopVonSection({ dataJson, styles }) {
                 </thead>
                 <tbody>
                     {[
-                        { stt: 1, label: "Đồng Việt Nam", namePrefix: "taiSan_dongVN" },
-                        { stt: 2, label: "Ngoại tệ tự do chuyển đổi (ghi rõ loại ngoại tệ, số tiền được góp bằng mỗi loại ngoại tệ)", namePrefix: "taiSan_ngoaiTe" },
-                        { stt: 3, label: "Vàng", namePrefix: "taiSan_vang" },
-                        { stt: 4, label: "Quyền sử dụng đất", namePrefix: "taiSan_qsdDat" },
-                        { stt: 5, label: "Quyền sở hữu trí tuệ", namePrefix: "taiSan_shtt" },
-                        { stt: 6, label: "Các tài sản khác (ghi rõ loại tài sản, số lượng và giá trị còn lại của mỗi loại tài sản, có thể lập thành danh mục riêng kèm theo hồ sơ đăng ký doanh nghiệp)", namePrefix: "taiSan_khac" },
+                        { stt: 1, label: "Đồng Việt Nam", namePrefix: `${fieldPrefix}_dongVN` },
+                        { stt: 2, label: "Ngoại tệ tự do chuyển đổi (ghi rõ loại ngoại tệ, số tiền được góp bằng mỗi loại ngoại tệ)", namePrefix: `${fieldPrefix}_ngoaiTe` },
+                        { stt: 3, label: "Vàng", namePrefix: `${fieldPrefix}_vang` },
+                        { stt: 4, label: "Quyền sử dụng đất", namePrefix: `${fieldPrefix}_qsdDat` },
+                        { stt: 5, label: "Quyền sở hữu trí tuệ", namePrefix: `${fieldPrefix}_shtt` },
+                        { stt: 6, label: "Các tài sản khác (ghi rõ loại tài sản, số lượng và giá trị còn lại của mỗi loại tài sản, có thể lập thành danh mục riêng kèm theo hồ sơ đăng ký doanh nghiệp)", namePrefix: `${fieldPrefix}_khac` },
                     ].map(({ stt, label, namePrefix }) => (
                         <tr key={namePrefix}>
                             <td style={{ textAlign: "center", verticalAlign: "top", paddingTop: "10px" }}>{stt}</td>
                             <td>{label}</td>
                             <td>
-                                {namePrefix === "taiSan_khac" ? (
+                                {namePrefix === `${fieldPrefix}_khac` ? (
                                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                             <span style={{ whiteSpace: "nowrap", width: "90px", fontSize: "0.9em" }}>Loại tài sản:</span>
@@ -97,13 +99,13 @@ export default function TaiSanGopVonSection({ dataJson, styles }) {
                         <td colSpan={2} style={{ textAlign: "center", fontWeight: 600 }}>Tổng số</td>
                         <td>
                             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                <input type="text" className={styles.input} name="taiSan_tongSo_giaTri" defaultValue={dataJson?.taiSan_tongSo_giaTri || "0"} style={{ background: "#f5f5f5" }} readOnly />
+                                <input type="text" className={styles.input} name={`${fieldPrefix}_tongSo_giaTri`} defaultValue={dataJson?.[`${fieldPrefix}_tongSo_giaTri`] || "0"} style={{ background: "#f5f5f5" }} readOnly />
                                 <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>VNĐ</span>
                             </div>
                         </td>
                         <td>
                             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                <input type="text" className={styles.input} name="taiSan_tongSo_tyLe" defaultValue={dataJson?.taiSan_tongSo_tyLe || "0"} style={{ background: "#f5f5f5" }} readOnly />
+                                <input type="text" className={styles.input} name={`${fieldPrefix}_tongSo_tyLe`} defaultValue={dataJson?.[`${fieldPrefix}_tongSo_tyLe`] || "0"} style={{ background: "#f5f5f5" }} readOnly />
                                 <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>%</span>
                             </div>
                         </td>

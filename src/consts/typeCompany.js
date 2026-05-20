@@ -6,6 +6,8 @@ import DanhSachCSHHuongLoiDeclaration from "@/components/Procedure/ProcedureTemp
 import DanhSachCSHHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
 import GiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
 import GiayDeNghiDangKyThayDoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import QuyetDinhHoiDongThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/QuyetDinhHoiDongThanhVienDeclaration";
+import QuyetDinhHoiDongThanhVienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/QuyetDinhHoiDongThanhVienConfirmation";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
 import GiayDeNghiDangKyThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
@@ -187,6 +189,11 @@ const typeCompanyOptions = [
                                 title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
                                 declaration: GiayDeNghiDangKyThayDoiDeclaration,
                                 confirmation: GiayDeNghiDangKyThayDoiConfirmation,
+                            },
+                            {
+                                title: "Quyết định hội đồng thành viên",
+                                declaration: QuyetDinhHoiDongThanhVienDeclaration,
+                                confirmation: QuyetDinhHoiDongThanhVienConfirmation,
                             }
                         ],
                     },
