@@ -67,11 +67,14 @@ function CheckboxList({ items }) {
 function BeneficialOwnerChangeList({ data }) {
     return (
         <div>
-            {BENEFICIAL_OWNER_CHANGE_OPTIONS.map((option) => (
-                <p key={option.name} style={{ margin: "8px 0" }}>
-                    <strong>{option.marker}</strong> {option.label} <Checkbox checked={isTruthy(data[option.name])} />
-                </p>
-            ))}
+            {BENEFICIAL_OWNER_CHANGE_OPTIONS.map(
+                (option) =>
+                    isTruthy(data[option.name]) && (
+                        <p key={option.name} style={{ margin: "8px 0" }}>
+                            <strong>{option.marker}</strong> {option.label}
+                        </p>
+                    )
+            )}
         </div>
     );
 }
@@ -1012,9 +1015,9 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                 )}
 
                 <p style={{ marginTop: 16 }}>
+                    <Checkbox checked={isTruthy(data.deNghiCapGiayXacNhan)} />
                     Đề nghị Quý Cơ quan cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho doanh nghiệp đối
                     với các thông tin thay đổi nêu trên.
-                    <Checkbox checked={isTruthy(data.deNghiCapGiayXacNhan)} />
                 </p>
                 <p>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký

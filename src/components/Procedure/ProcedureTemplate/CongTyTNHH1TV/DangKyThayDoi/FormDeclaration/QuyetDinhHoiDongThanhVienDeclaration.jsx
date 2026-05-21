@@ -90,7 +90,20 @@ function getChangedCompanyName(data) {
 }
 
 function getSourceDefaultContributionRows(data) {
-    const sourceRows = data.qdThanhVienGopVonList || data.doiThanhVienList || data.thanhVienList || [];
+    if (data.doiThanhVienList && data.doiThanhVienList.length > 0) {
+        return data.doiThanhVienList.map((sourceRow, index) => {
+            const qdRow = data.qdThanhVienGopVonList?.[index] || {};
+            return {
+                danhXung: qdRow.danhXung || sourceRow.danhXung || ((sourceRow.gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông"),
+                hoTen: sourceRow.hoTen || sourceRow.chuSoHuu || qdRow.hoTen || "",
+                giaTriTangGiam: qdRow.giaTriTangGiam || sourceRow.giaTriTangGiam || "",
+                phanVonSauThayDoi: sourceRow.phanVonSauThayDoi || sourceRow.phanVonGop || qdRow.phanVonSauThayDoi || "",
+                tyLeSauThayDoi: sourceRow.tyLeSauThayDoi || sourceRow.tyLe || qdRow.tyLeSauThayDoi || "",
+            };
+        });
+    }
+
+    const sourceRows = data.qdThanhVienGopVonList || data.thanhVienList || [];
     if (sourceRows.length) {
         return sourceRows.map((row) => ({
             danhXung: row.danhXung || ((row.gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông"),
@@ -129,7 +142,9 @@ function applyDecisionDefaults(data, contributionRows) {
         nextData.qdVonChenhLechRaw = String(diff);
     }
 
-    if (!nextData.qdHinhThucTangGiamVon) {
+    if (nextData.hinhThucTangGiamVon) {
+        nextData.qdHinhThucTangGiamVon = nextData.hinhThucTangGiamVon;
+    } else if (!nextData.qdHinhThucTangGiamVon) {
         if (diff > 0) nextData.qdHinhThucTangGiamVon = "Tăng vốn";
         if (diff < 0) nextData.qdHinhThucTangGiamVon = "Giảm vốn";
     }
@@ -336,7 +351,7 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
     const mergedData = useMemo(() => {
         const merged = { ...currentData };
         for (const [key, value] of Object.entries(sourceData)) {
-            if (value !== undefined && value !== null && value !== "") {
+            if (value !== undefined && value !== null) {
                 merged[key] = value;
             }
         }

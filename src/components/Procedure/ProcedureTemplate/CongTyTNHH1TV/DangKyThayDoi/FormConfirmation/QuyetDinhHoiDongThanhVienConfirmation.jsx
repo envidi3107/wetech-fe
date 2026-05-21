@@ -80,8 +80,10 @@ function splitDate(value) {
 
 function formatDecisionDate(place, value) {
     const { day, month, year } = splitDate(value);
-    place = place.replace("Tỉnh", "");
-    place = place.replace("Thành phố", "");
+    if (place) {
+        place = place.replace("Tỉnh", "");
+        place = place.replace("Thành phố", "");
+    }
     return `${place || "…"}, ngày ${day} tháng ${month} năm ${year}`;
 }
 
