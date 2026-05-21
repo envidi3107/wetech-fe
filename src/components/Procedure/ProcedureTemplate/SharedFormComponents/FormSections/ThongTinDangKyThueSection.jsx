@@ -412,7 +412,7 @@ export default function ThongTinDangKyThueSection({
                     <tr>
                         <td style={{ textAlign: "center" }}>10.5</td>
                         <td>
-                            <p className={styles.label}>
+                            <div className={styles.label}>
                                 <p style={{ whiteSpace: "nowrap" }}>Hình thức hạch toán</p>
                                 <span style={{ fontStyle: "italic", fontWeight: 400 }}>
                                     (Đánh dấu X vào một trong hai ô "Hạch toán độc lập" hoặc "Hạch toán phụ thuộc".
@@ -421,7 +421,7 @@ export default function ThongTinDangKyThueSection({
                                     tài chính hợp nhất")
                                 </span>
                                 :
-                            </p>
+                            </div>
                             <div
                                 style={{
                                     display: "flex",

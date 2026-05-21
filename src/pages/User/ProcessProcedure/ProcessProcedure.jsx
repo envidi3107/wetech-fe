@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext, useCallback } from "react";
 import "./ProcessProcedure.css";
 import DeclarationForms from "@/components/Procedure/ParentForm/DeclarationForms";
 import FormsConfirmation from "@/components/Procedure/ParentForm/FormsConfirmation";
@@ -14,6 +14,10 @@ import iconCheck from "@/assets/Check_perspective_matte.png";
 import iconCancel from "@/assets/Error_perspective_matte.png";
 import plusIcon from "@/assets/Plus_perspective_matte.png";
 import { useNotification } from "@/hooks/useNotification";
+import {
+    isTruthy,
+    normalizeDataJson,
+} from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 
 const tabs = [
     { id: 0, title: "Kê khai Hồ Sơ" },
@@ -21,6 +25,113 @@ const tabs = [
     { id: 2, title: "Thanh Toán" },
     { id: 3, title: "Nộp hồ sơ" },
 ];
+
+const DANG_KY_THAY_DOI_NOI_DUNG_TYPE =
+    "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+
+const BENEFICIAL_OWNER_DYNAMIC_FORMS = [
+    {
+        name: "Giấy đề nghị đăng ký doanh nghiệp",
+        type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+    },
+    {
+        name: "Danh sách CSH hưởng lợi",
+        type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+    },
+];
+
+const normalizeProcedureText = (value = "") =>
+    String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\u0111/g, "d")
+        .replace(/\u0110/g, "D")
+        .toLowerCase()
+        .trim();
+
+const BENEFICIAL_OWNER_DYNAMIC_FORM_KEYS = new Set(
+    BENEFICIAL_OWNER_DYNAMIC_FORMS.map((form) => normalizeProcedureText(form.name)),
+);
+
+const isBeneficialOwnerDynamicForm = (form) =>
+    form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
+    BENEFICIAL_OWNER_DYNAMIC_FORM_KEYS.has(normalizeProcedureText(form?.name));
+
+const isDangKyThayDoiNoiDungForm = (form) => {
+    const normalizedName = normalizeProcedureText(form?.name);
+    return (
+        form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
+        normalizedName.includes("dang ky thay doi") &&
+        normalizedName.includes("giay chung nhan dang ky doanh nghiep")
+    );
+};
+
+const isBeneficialOwnerChangeEnabled = (data) => {
+    const parsed = normalizeDataJson(data);
+    const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
+        ? parsed.noiDungThayDoi
+        : parsed.noiDungThayDoi
+            ? [parsed.noiDungThayDoi]
+            : [];
+    const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
+    return hasMainA && isTruthy(parsed.a_doiChuSoHuuHuongLoi);
+};
+
+const getMatchedFormType = ({ typeCompany, serviceType, form }) =>
+    typeCompanyOptions
+        .find((item) => item.value === typeCompany)
+        ?.services.find((item) => item.value === serviceType)
+        ?.procedures?.find((p) => (p.value || p.title) === form.type)
+        ?.formsType?.find(
+            (item) => item.title === form.name || normalizeProcedureText(item.title) === normalizeProcedureText(form.name),
+        );
+
+const mapProcedureForms = (rawForms, typeCompany, serviceType) =>
+    (rawForms || []).map((form) => {
+        const matchedFormType = getMatchedFormType({ typeCompany, serviceType, form });
+        return {
+            ...form,
+            declaration: matchedFormType?.declaration,
+            confirmation: matchedFormType?.confirmation,
+        };
+    });
+
+const orderVisibleForms = (mappedForms, showBeneficialOwnerForms) => {
+    const baseForms = showBeneficialOwnerForms
+        ? mappedForms
+        : mappedForms.filter((form) => !isBeneficialOwnerDynamicForm(form));
+
+    if (!showBeneficialOwnerForms) return baseForms;
+
+    const dynamicFormsByKey = new Map(
+        mappedForms
+            .filter(isBeneficialOwnerDynamicForm)
+            .map((form) => [normalizeProcedureText(form.name), form]),
+    );
+    const dynamicForms = BENEFICIAL_OWNER_DYNAMIC_FORMS.map((form) =>
+        dynamicFormsByKey.get(normalizeProcedureText(form.name)),
+    ).filter(Boolean);
+
+    if (!dynamicForms.length) return baseForms;
+
+    const nonDynamicForms = mappedForms.filter((form) => !isBeneficialOwnerDynamicForm(form));
+    const decisionIndex = nonDynamicForms.findIndex((form) =>
+        normalizeProcedureText(form?.name).includes("quyet dinh hoi dong thanh vien"),
+    );
+    const insertIndex = decisionIndex >= 0 ? decisionIndex + 1 : nonDynamicForms.length;
+
+    return [
+        ...nonDynamicForms.slice(0, insertIndex),
+        ...dynamicForms,
+        ...nonDynamicForms.slice(insertIndex),
+    ];
+};
+
+const buildFormDeclarationSteps = (visibleForms) =>
+    visibleForms.map((form, idx) => ({
+        id: idx,
+        label: form.name,
+    }));
 
 const ProcessProcedureContext = createContext(null);
 
@@ -33,6 +144,7 @@ const ProcessProcedure = () => {
     const { showNotification } = useNotification();
 
     const [procedure, setProcedure] = useState(null);
+    const [allForms, setAllForms] = useState([]);
     const [forms, setForms] = useState([]);
     const [formDeclarationSteps, setFormDeclarationSteps] = useState([]);
     const [activeTab, setActiveTab] = useState(tab || 0);
@@ -64,30 +176,87 @@ const ProcessProcedure = () => {
         refreshUserCards();
     }, []);
 
+    const applyVisibleFormsState = useCallback((mappedForms, showBeneficialOwnerForms) => {
+        const visibleForms = orderVisibleForms(mappedForms, showBeneficialOwnerForms);
+        setForms(visibleForms);
+        setFormDeclarationSteps(buildFormDeclarationSteps(visibleForms));
+        setCurrentFormStep((prev) => (visibleForms.length ? Math.min(prev, visibleForms.length - 1) : 0));
+        return visibleForms;
+    }, []);
+
+    const fetchProcedureResponse = useCallback(async () => {
+        const response = await authAxios.get(`/api/procedurer/find-by-id-and-check-status`, {
+            params: {
+                id: id_procedure,
+            },
+        });
+        return response.data.result;
+    }, [id_procedure]);
+
+    const ensureBeneficialOwnerDynamicForms = useCallback(async (mappedForms, currentProcedure) => {
+        const missingForms = BENEFICIAL_OWNER_DYNAMIC_FORMS.filter(
+            (dynamicForm) =>
+                !mappedForms.some(
+                    (form) => normalizeProcedureText(form.name) === normalizeProcedureText(dynamicForm.name),
+                ),
+        );
+
+        if (!missingForms.length) {
+            return { procedureResponse: currentProcedure, mappedForms };
+        }
+
+        await Promise.all(
+            missingForms.map((form) =>
+                authAxios.post(
+                    "/api/procedurer/add-form",
+                    { name: form.name, type: form.type },
+                    { params: { procedureId: id_procedure } },
+                ),
+            ),
+        );
+
+        const nextProcedureResponse = await fetchProcedureResponse();
+        return {
+            procedureResponse: nextProcedureResponse,
+            mappedForms: mapProcedureForms(
+                nextProcedureResponse.forms,
+                nextProcedureResponse.typeCompany,
+                nextProcedureResponse.serviceType,
+            ),
+        };
+    }, [fetchProcedureResponse, id_procedure]);
+
+    const getSavedBeneficialOwnerChangeState = useCallback(async (mappedForms) => {
+        const changeForm = mappedForms.find(isDangKyThayDoiNoiDungForm);
+        if (!changeForm?.formId) return false;
+
+        try {
+            const response = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: changeForm.formId },
+            });
+            return isBeneficialOwnerChangeEnabled(response.data);
+        } catch (error) {
+            return false;
+        }
+    }, []);
+
     useEffect(() => {
         const fetchFormDeclarationSteps = async () => {
             try {
                 setLoading(true);
-                const response = await authAxios.get(`/api/procedurer/find-by-id-and-check-status`, {
-                    params: {
-                        id: id_procedure,
-                    },
-                });
-                const procedureResponse = response.data.result;
-                const serviceType = procedureResponse.serviceType;
-                const typeCompany = procedureResponse.typeCompany;
-                const forms = procedureResponse.forms.map((form) => {
-                    const matchedFormType = typeCompanyOptions
-                        .find((item) => item.value === typeCompany)
-                        ?.services.find((item) => item.value === serviceType)
-                        ?.procedures?.find((p) => (p.value || p.title) === form.type)
-                        ?.formsType?.find((item) => item.title === form.name);
-                    return {
-                        ...form,
-                        declaration: matchedFormType?.declaration,
-                        confirmation: matchedFormType?.confirmation,
-                    };
-                });
+                let procedureResponse = await fetchProcedureResponse();
+                let mappedForms = mapProcedureForms(
+                    procedureResponse.forms,
+                    procedureResponse.typeCompany,
+                    procedureResponse.serviceType,
+                );
+                const showBeneficialOwnerForms = await getSavedBeneficialOwnerChangeState(mappedForms);
+
+                if (showBeneficialOwnerForms) {
+                    const ensured = await ensureBeneficialOwnerDynamicForms(mappedForms, procedureResponse);
+                    procedureResponse = ensured.procedureResponse;
+                    mappedForms = ensured.mappedForms;
+                }
 
                 if (["PENDING", "SUCCESS", "FAILED"].includes(procedureResponse.status)) {
                     if (viewMode !== "see_again") {
@@ -95,15 +264,8 @@ const ProcessProcedure = () => {
                     }
                 }
 
-                const formDeclarationSteps = procedureResponse.forms.map((form, idx) => {
-                    return {
-                        id: idx,
-                        label: form.name,
-                    };
-                });
-
-                setForms(forms);
-                setFormDeclarationSteps(formDeclarationSteps);
+                setAllForms(mappedForms);
+                applyVisibleFormsState(mappedForms, showBeneficialOwnerForms);
                 setProcedure(procedureResponse);
             } catch (error) {
                 console.error("Error fetching form declaration steps:", error);
@@ -112,19 +274,49 @@ const ProcessProcedure = () => {
             }
         };
         fetchFormDeclarationSteps();
-    }, [id_procedure]);
+    }, [
+        applyVisibleFormsState,
+        ensureBeneficialOwnerDynamicForms,
+        fetchProcedureResponse,
+        getSavedBeneficialOwnerChangeState,
+        id_procedure,
+        navigate,
+        viewMode,
+    ]);
 
     // Được gọi sau khi form submit thành công
-    const handleStepSubmitSuccess = () => {
+    const handleStepSubmitSuccess = async (submittedData, submittedForm) => {
+        let visibleForms = forms;
+
+        if (isDangKyThayDoiNoiDungForm(submittedForm)) {
+            const showBeneficialOwnerForms = isBeneficialOwnerChangeEnabled(submittedData);
+            let nextProcedure = procedure;
+            let nextAllForms = allForms.length ? allForms : forms;
+
+            if (showBeneficialOwnerForms) {
+                try {
+                    const ensured = await ensureBeneficialOwnerDynamicForms(nextAllForms, procedure);
+                    nextProcedure = ensured.procedureResponse;
+                    nextAllForms = ensured.mappedForms;
+                } catch (error) {
+                    console.error("Error ensuring dynamic beneficial owner forms:", error);
+                }
+            }
+
+            setAllForms(nextAllForms);
+            visibleForms = applyVisibleFormsState(nextAllForms, showBeneficialOwnerForms);
+            if (nextProcedure) setProcedure(nextProcedure);
+        }
+
         if (editingFromConfirmation !== null) {
             setActiveTab(1);
-            setCurrentFormStep(editingFromConfirmation);
+            setCurrentFormStep(Math.min(editingFromConfirmation, Math.max(visibleForms.length - 1, 0)));
             setEditingFromConfirmation(null);
             window.scrollTo(0, 0);
             return;
         }
 
-        if (currentFormStep < formDeclarationSteps.length - 1) {
+        if (currentFormStep < visibleForms.length - 1) {
             setCurrentFormStep((prev) => prev + 1);
             window.scrollTo(0, 0);
         } else {

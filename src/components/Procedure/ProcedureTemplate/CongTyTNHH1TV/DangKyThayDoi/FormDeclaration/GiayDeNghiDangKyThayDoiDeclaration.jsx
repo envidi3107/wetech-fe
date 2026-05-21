@@ -35,15 +35,14 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 import {
     A_CHANGE_OPTIONS,
+    BENEFICIAL_OWNER_CHANGE_OPTIONS,
     FOOTNOTES,
     MAIN_CHANGE_OPTIONS,
     emptyAOptionState,
+    emptyBeneficialOwnerChangeOptionState,
     isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
-import cshStyles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration.module.css";
-import deleteIcon from "@/assets/delete-icon.png";
-import Select from "react-select";
 
 const EMPTY_AUTHORIZED_REP = {
     chuSoHuu: "",
@@ -59,71 +58,6 @@ const EMPTY_AUTHORIZED_REP = {
     thoiDiemDaiDien: "",
     chuKy: "",
     ghiChu: "",
-};
-
-const EMPTY_CSH_HUONG_LOI_ROW = {
-    hoTen: "",
-    ngaySinh: "",
-    gioiTinh: "",
-    giaTo: "",
-    diaChiLienLac: "",
-    tyLeSoHuuVon: "",
-    tyLeSoHuuBieuQuyet: "",
-    quyenChiPhoi: "",
-    ghiChu: "",
-};
-
-const quyenChiPhoiOptions = [
-    { value: "", label: "Chọn quyền chi phối..." },
-    {
-        value: "Bổ nhiệm, miễn nhiệm hoặc bãi nhiệm đa số hoặc tất cả thành viên hội đồng quản trị, chủ tịch hội đồng quản trị, chủ tịch hội đồng thành viên; người đại diện theo pháp luật, giám đốc hoặc tổng giám đốc của doanh nghiệp;",
-        label: "Bổ nhiệm, miễn nhiệm hoặc bãi nhiệm đa số hoặc tất cả thành viên hội đồng quản trị, chủ tịch hội đồng quản trị, chủ tịch hội đồng thành viên; người đại diện theo pháp luật, giám đốc hoặc tổng giám đốc của doanh nghiệp;",
-    },
-    { value: "Sửa đổi, bổ sung điều lệ của doanh nghiệp;", label: "Sửa đổi, bổ sung điều lệ của doanh nghiệp;" },
-    { value: "Thay đổi cơ cấu tổ chức quản lý công ty;", label: "Thay đổi cơ cấu tổ chức quản lý công ty;" },
-    { value: "Tổ chức lại, giải thể công ty.", label: "Tổ chức lại, giải thể công ty." },
-];
-
-const cshSelectStyles = {
-    control: (base) => ({
-        ...base,
-        border: "none",
-        borderBottom: "1px solid transparent",
-        boxShadow: "none",
-        backgroundColor: "transparent",
-        minHeight: "40px",
-        fontSize: "14px",
-        "&:hover": { borderColor: "transparent" },
-    }),
-    valueContainer: (base) => ({
-        ...base,
-        padding: "0 8px",
-        justifyContent: "center",
-    }),
-    singleValue: (base) => ({
-        ...base,
-        textAlign: "center",
-    }),
-    placeholder: (base) => ({
-        ...base,
-        textAlign: "center",
-        color: "#505050",
-    }),
-    menu: (base) => ({
-        ...base,
-        width: "max-content",
-        maxWidth: "400px",
-        left: "50%",
-        transform: "translateX(-50%)",
-    }),
-    option: (provided, state) => ({
-        ...provided,
-        fontSize: "14px",
-        backgroundColor: state.isSelected ? "#1d126eff" : state.isFocused ? "#f0f0ff" : "#fff",
-        color: state.isSelected ? "#fff" : "#333",
-        cursor: "pointer",
-    }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
 };
 
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong"];
@@ -284,6 +218,25 @@ function AttachmentNote({ children }) {
         <p className={styles.note} style={{ marginTop: 8 }}>
             {children}
         </p>
+    );
+}
+
+function BeneficialOwnerChangeChecklist({ selectedOptions, onToggle }) {
+    return (
+        <div className={localStyles.beneficialOwnerNoticeList}>
+            {BENEFICIAL_OWNER_CHANGE_OPTIONS.map((option) => (
+                <label key={option.name} className={localStyles.beneficialOwnerNoticeItem}>
+                    <input
+                        type="checkbox"
+                        checked={!!selectedOptions[option.name]}
+                        onChange={() => onToggle(option.name)}
+                    />
+                    <span>
+                        <strong>{option.marker}</strong> {option.label}
+                    </span>
+                </label>
+            ))}
+        </div>
     );
 }
 
@@ -478,190 +431,6 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
     );
 }
 
-function BeneficialOwnerTable({ rows, onChangeRows }) {
-    const updateRow = (index, field, value) => {
-        const nextRows = [...rows];
-        nextRows[index] = { ...nextRows[index], [field]: value };
-        onChangeRows(nextRows);
-    };
-
-    const addRow = () => onChangeRows([...rows, { ...EMPTY_CSH_HUONG_LOI_ROW }]);
-    const removeRow = (index) => onChangeRows(rows.filter((_, rowIndex) => rowIndex !== index));
-
-    return (
-        <div className={cshStyles.wrapper}>
-            <div className={cshStyles.actionRow}>
-                <button type="button" className={cshStyles.btnPrimary} onClick={addRow}>
-                    Thêm dòng
-                </button>
-            </div>
-
-            <div className={cshStyles.tableScrollWrapper}>
-                <table className={cshStyles.table}>
-                    <thead>
-                        <tr>
-                            <th rowSpan={2} className={cshStyles.th}>
-                                STT
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 180 }}>
-                                Họ và tên
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
-                                Ngày, tháng, năm sinh
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 60 }}>
-                                Giới tính
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 200 }}>
-                                Số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
-                                Địa chỉ liên lạc
-                            </th>
-                            <th colSpan={3} className={cshStyles.th}>
-                                Chủ sở hữu hưởng lợi của doanh nghiệp
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 150 }}>
-                                Ghi chú
-                            </th>
-                            <th rowSpan={2} className={cshStyles.th} style={{ minWidth: 90 }}>
-                                Thao tác
-                            </th>
-                        </tr>
-                        <tr>
-                            <th className={cshStyles.th} style={{ minWidth: 50 }}>
-                                Tỷ lệ sở hữu vốn điều lệ (%)
-                            </th>
-                            <th className={cshStyles.th} style={{ minWidth: 50 }}>
-                                Tỷ lệ sở hữu cổ phần có quyền biểu quyết (%)
-                            </th>
-                            <th className={cshStyles.th} style={{ minWidth: 100 }}>
-                                Quyền chi phối
-                            </th>
-                        </tr>
-                        <tr className={cshStyles.colNumberRow}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ""].map((number, index) => (
-                                <td key={index} className={cshStyles.colNumber}>
-                                    {number}
-                                </td>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.length === 0 && (
-                            <tr>
-                                <td colSpan={11} className={cshStyles.emptyRow}>
-                                    Chưa có chủ sở hữu hưởng lợi. Nhấn "Thêm dòng" để bắt đầu.
-                                </td>
-                            </tr>
-                        )}
-                        {rows.map((row, index) => (
-                            <tr key={index} className={cshStyles.trEdit}>
-                                <td className={cshStyles.td} style={{ textAlign: "center" }}>
-                                    {index + 1}
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        className={cshStyles.input}
-                                        value={row.hoTen || ""}
-                                        onChange={(event) => updateRow(index, "hoTen", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <DateInput
-                                        className={cshStyles.input}
-                                        name={`cshHuongLoi_${index}_ngaySinh`}
-                                        value={row.ngaySinh || ""}
-                                        onChange={(event) => updateRow(index, "ngaySinh", event.target.value)}
-                                    />
-                                </td>
-                                <td
-                                    className={cshStyles.tdWrapper}
-                                    onChange={(event) => updateRow(index, "gioiTinh", event.target.value)}
-                                >
-                                    <GioiTinhSelect
-                                        name={`cshHuongLoi_${index}_gioiTinh`}
-                                        defaultValue={row.gioiTinh || ""}
-                                        required={false}
-                                        onChange={(value) => updateRow(index, "gioiTinh", value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        type="text"
-                                        className={cshStyles.input}
-                                        value={row.giaTo || ""}
-                                        onChange={(event) => updateRow(index, "giaTo", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        type="text"
-                                        className={cshStyles.input}
-                                        value={row.diaChiLienLac || ""}
-                                        onChange={(event) => updateRow(index, "diaChiLienLac", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        className={cshStyles.input}
-                                        value={row.tyLeSoHuuVon || ""}
-                                        onChange={(event) => updateRow(index, "tyLeSoHuuVon", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        className={cshStyles.input}
-                                        value={row.tyLeSoHuuBieuQuyet || ""}
-                                        onChange={(event) => updateRow(index, "tyLeSoHuuBieuQuyet", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.tdWrapper}>
-                                    <Select
-                                        options={quyenChiPhoiOptions}
-                                        styles={cshSelectStyles}
-                                        value={
-                                            quyenChiPhoiOptions.find((option) => option.value === row.quyenChiPhoi) ||
-                                            quyenChiPhoiOptions[0]
-                                        }
-                                        onChange={(selectedOption) => {
-                                            updateRow(
-                                                index,
-                                                "quyenChiPhoi",
-                                                selectedOption ? selectedOption.value : "",
-                                            );
-                                        }}
-                                        placeholder="Chọn quyền chi phối..."
-                                        menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
-                                        menuPosition="fixed"
-                                    />
-                                </td>
-                                <td className={cshStyles.td}>
-                                    <input
-                                        className={cshStyles.input}
-                                        value={row.ghiChu || ""}
-                                        onChange={(event) => updateRow(index, "ghiChu", event.target.value)}
-                                    />
-                                </td>
-                                <td className={cshStyles.tdAction}>
-                                    <img
-                                        src={deleteIcon}
-                                        alt="xóa"
-                                        onClick={() => removeRow(index)}
-                                        width="18"
-                                        height="18"
-                                        style={{ cursor: "pointer", display: "block", margin: "0 auto" }}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
-
 const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyThayDoiDeclaration(
     {
         dataJson,
@@ -693,7 +462,9 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [nganhBoRows, setNganhBoRows] = useState([]);
     const [nganhSuaRows, setNganhSuaRows] = useState([]);
     const [authorizedRepRows, setAuthorizedRepRows] = useState([]);
-    const [cshHuongLoiRows, setCshHuongLoiRows] = useState([]);
+    const [beneficialOwnerChangeOptions, setBeneficialOwnerChangeOptions] = useState(
+        emptyBeneficialOwnerChangeOptionState(),
+    );
     const [doiThanhVienRows, setDoiThanhVienRows] = useState([]);
     const [doiCoDongSangLapRows, setDoiCoDongSangLapRows] = useState([]);
     const [doiCoDongLoaiCoPhanKhacList, setDoiCoDongLoaiCoPhanKhacList] = useState([""]);
@@ -725,7 +496,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setNganhBoRows(parsed.nganhNgheBoList || []);
         setNganhSuaRows(parsed.nganhNgheSuaList || []);
         setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
-        setCshHuongLoiRows(parsed.cshHuongLoiList || []);
+        setBeneficialOwnerChangeOptions(
+            BENEFICIAL_OWNER_CHANGE_OPTIONS.reduce((acc, option) => {
+                acc[option.name] = isTruthy(parsed[option.name]);
+                return acc;
+            }, {}),
+        );
         setDoiThanhVienRows(
             parsed.doiThanhVienList || parsed.thanhVienList || danhSachThanhVienData?.thanhVienList || [],
         );
@@ -768,6 +544,10 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setAOptions((prev) => ({ ...prev, [name]: !prev[name] }));
     };
 
+    const toggleBeneficialOwnerChangeOption = (name) => {
+        setBeneficialOwnerChangeOptions((prev) => ({ ...prev, [name]: !prev[name] }));
+    };
+
     const scrollToAOption = (name) => {
         setAOptions((prev) => (prev[name] ? prev : { ...prev, [name]: true }));
         setPendingScrollTarget(name);
@@ -798,6 +578,15 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
         if (mainOptions.includes("A") && !availableAChangeOptions.some((option) => !!aOptions[option.name])) {
             window.alert("Vui lòng chọn ít nhất một nội dung thay đổi trong Mục A.");
+            return false;
+        }
+
+        if (
+            mainOptions.includes("A") &&
+            aOptions.a_doiChuSoHuuHuongLoi &&
+            !BENEFICIAL_OWNER_CHANGE_OPTIONS.some((option) => !!beneficialOwnerChangeOptions[option.name])
+        ) {
+            window.alert("Vui lòng chọn ít nhất một trường hợp thay đổi thông tin chủ sở hữu hưởng lợi.");
             return false;
         }
         return true;
@@ -832,14 +621,23 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             data.sapNhap_tenDoanhNghiep = "";
             data.sapNhap_maSoDoanhNghiep = "";
         }
+        const isMainASelected = mainOptions.includes("A");
         A_CHANGE_OPTIONS.forEach((option) => {
-            data[option.name] = !excludedAOptionNamesSet.has(option.name) && aOptions[option.name] ? "true" : "false";
+            data[option.name] =
+                isMainASelected && !excludedAOptionNamesSet.has(option.name) && aOptions[option.name]
+                    ? "true"
+                    : "false";
+        });
+        BENEFICIAL_OWNER_CHANGE_OPTIONS.forEach((option) => {
+            data[option.name] =
+                isMainASelected && aOptions.a_doiChuSoHuuHuongLoi && beneficialOwnerChangeOptions[option.name]
+                    ? "true"
+                    : "false";
         });
         data.nganhNgheBoSungList = nganhBoSungRows;
         data.nganhNgheBoList = nganhBoRows;
         data.nganhNgheSuaList = nganhSuaRows;
         data.nguoiDaiDienUyQuyenList = authorizedRepRows;
-        data.cshHuongLoiList = cshHuongLoiRows;
         data.doiThanhVienList = doiThanhVienRows;
         data.doiCoDongSangLapList = doiCoDongSangLapRows;
         data.doiCoDongLoaiCoPhanKhacList = doiCoDongLoaiCoPhanKhacList;
@@ -857,7 +655,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setNganhBoRows(parsed.nganhNgheBoList || []);
             setNganhSuaRows(parsed.nganhNgheSuaList || []);
             setAuthorizedRepRows(parsed.nguoiDaiDienUyQuyenList || []);
-            setCshHuongLoiRows(parsed.cshHuongLoiList || []);
+            setBeneficialOwnerChangeOptions(
+                BENEFICIAL_OWNER_CHANGE_OPTIONS.reduce((acc, option) => {
+                    acc[option.name] = isTruthy(parsed[option.name]);
+                    return acc;
+                }, {}),
+            );
             setDoiThanhVienRows(parsed.doiThanhVienList || parsed.thanhVienList || []);
             setDoiCoDongSangLapRows(parsed.doiCoDongSangLapList || parsed.coDongList || []);
             setDoiCoDongLoaiCoPhanKhacList(
@@ -1342,7 +1145,10 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         THÔNG BÁO THAY ĐỔI THÔNG TIN VỀ CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP/THÔNG BÁO
                                         THAY ĐỔI THÔNG TIN ĐỂ XÁC ĐỊNH CHỦ SỞ HỮU HƯỞNG LỢI
                                     </h3>
-                                    <BeneficialOwnerTable rows={cshHuongLoiRows} onChangeRows={setCshHuongLoiRows} />
+                                    <BeneficialOwnerChangeChecklist
+                                        selectedOptions={beneficialOwnerChangeOptions}
+                                        onToggle={toggleBeneficialOwnerChangeOption}
+                                    />
                                 </div>
                             )}
                         </>

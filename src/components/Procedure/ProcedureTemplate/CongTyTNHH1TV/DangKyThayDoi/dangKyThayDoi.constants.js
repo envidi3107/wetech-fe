@@ -44,6 +44,33 @@ export const A_CHANGE_OPTIONS = [
     },
 ];
 
+export const BENEFICIAL_OWNER_CHANGE_OPTIONS = [
+    {
+        name: "cshHuongLoi_truongHopA",
+        marker: "a)",
+        label:
+            "Trường hợp doanh nghiệp có sự thay đổi chủ sở hữu hưởng lợi của doanh nghiệp, tỷ lệ sở hữu đã kê khai với Cơ quan đăng ký kinh doanh cấp tỉnh theo quy định tại khoản 1 Điều 52 Nghị định số 168/2025/NĐ-CP (kê khai theo Mẫu số 10 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm.",
+    },
+    {
+        name: "cshHuongLoi_truongHopB",
+        marker: "b)",
+        label:
+            "Trường hợp công ty cổ phần có sự thay đổi cổ đông là tổ chức sở hữu từ 25% tổng số cổ phần có quyền biểu quyết trở lên hoặc thay đổi tỷ lệ sở hữu tổng số cổ phần có quyền biểu quyết theo quy định tại khoản 2 Điều 52 Nghị định số 168/2025/NĐ-CP (kê khai theo Mẫu số 11 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm.",
+    },
+    {
+        name: "cshHuongLoi_truongHopC",
+        marker: "c)",
+        label:
+            "Đối với doanh nghiệp được thành lập trước ngày 01/7/2025, trường hợp doanh nghiệp có thông tin về chủ sở hữu hưởng lợi của doanh nghiệp theo quy định tại khoản 1, khoản 2 Điều 18 Nghị định số 168/2025/NĐ-CP, doanh nghiệp bổ sung thông tin về chủ sở hữu hưởng lợi của doanh nghiệp theo quy định tại khoản 1 Điều 3 Luật số 76/2025/QH15 ngày 17/6/2025 sửa đổi, bổ sung một số điều của Luật Doanh nghiệp (kê khai theo Mẫu số 10 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm.",
+    },
+    {
+        name: "cshHuongLoi_truongHopD",
+        marker: "d)",
+        label:
+            "Đối với công ty cổ phần được đăng ký thành lập trước ngày 01/7/2025, trường hợp công ty cổ phần có thông tin để xác định chủ sở hữu hưởng lợi của doanh nghiệp theo quy định tại khoản 3 Điều 18 Nghị định số 168/2025/NĐ-CP, công ty cổ phần bổ sung thông tin để xác định chủ sở hữu hưởng lợi của doanh nghiệp theo quy định tại khoản 1 Điều 3 Luật số 76/2025/QH15 ngày 17/6/2025 sửa đổi, bổ sung một số điều của Luật Doanh nghiệp (kê khai theo Mẫu số 11 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm.",
+    },
+];
+
 export const FOOTNOTES = {
     nganhNghe:
         "Doanh nghiệp có quyền tự do kinh doanh trong những ngành, nghề mà luật không cấm. Đối với ngành, nghề đầu tư kinh doanh có điều kiện, doanh nghiệp chỉ được kinh doanh khi có đủ điều kiện theo quy định.",
@@ -65,6 +92,12 @@ export const FOOTNOTES = {
 
 export const emptyAOptionState = () =>
     A_CHANGE_OPTIONS.reduce((acc, option) => {
+        acc[option.name] = false;
+        return acc;
+    }, {});
+
+export const emptyBeneficialOwnerChangeOptionState = () =>
+    BENEFICIAL_OWNER_CHANGE_OPTIONS.reduce((acc, option) => {
         acc[option.name] = false;
         return acc;
     }, {});

@@ -286,16 +286,6 @@ table img {
     cursor: pointer;
 }
 
-/* ── Table cell styles ── */
-.tableInput {
-    min-height: 32px;
-    padding: 4px 6px;
-    font-size: 12px;
-    border: 1px solid #d9d9d9;
-    width: 100%;
-    box-sizing: border-box;
-}
-
 .tdLeft {
     text-align: left !important;
     word-break: break-word;

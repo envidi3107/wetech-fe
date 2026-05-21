@@ -4,6 +4,7 @@ import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComp
 import { formatDate } from "@/utils/dateTimeUtils";
 import {
     A_CHANGE_OPTIONS,
+    BENEFICIAL_OWNER_CHANGE_OPTIONS,
     MAIN_CHANGE_OPTIONS,
     isTruthy,
     normalizeDataJson,
@@ -60,6 +61,18 @@ function CheckboxList({ items }) {
                 </li>
             ))}
         </ul>
+    );
+}
+
+function BeneficialOwnerChangeList({ data }) {
+    return (
+        <div>
+            {BENEFICIAL_OWNER_CHANGE_OPTIONS.map((option) => (
+                <p key={option.name} style={{ margin: "8px 0" }}>
+                    <strong>{option.marker}</strong> {option.label} <Checkbox checked={isTruthy(data[option.name])} />
+                </p>
+            ))}
+        </div>
     );
 }
 
@@ -339,54 +352,6 @@ function FoundingShareholderChangeTable({ rows, loaiCoPhanKhacList }) {
                 ) : (
                     <tr>
                         <td colSpan={colSpan} style={{ textAlign: "center" }}>
-                            Không có dữ liệu
-                        </td>
-                    </tr>
-                )}
-            </tbody>
-        </table>
-    );
-}
-
-function BeneficialOwnerInfoTable({ rows }) {
-    return (
-        <table className={styles.borderTable} style={{ marginTop: 8 }}>
-            <thead>
-                <tr>
-                    <th rowSpan={2}>STT</th>
-                    <th rowSpan={2}>Họ và tên</th>
-                    <th rowSpan={2}>Ngày, tháng, năm sinh</th>
-                    <th rowSpan={2}>Giới tính</th>
-                    <th rowSpan={2}>Số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân</th>
-                    <th rowSpan={2}>Địa chỉ liên lạc</th>
-                    <th colSpan={3}>Chủ sở hữu hưởng lợi của doanh nghiệp</th>
-                    <th rowSpan={2}>Ghi chú</th>
-                </tr>
-                <tr>
-                    <th>Tỷ lệ sở hữu vốn điều lệ (%)</th>
-                    <th>Tỷ lệ sở hữu cổ phần có quyền biểu quyết (%)</th>
-                    <th>Quyền chi phối</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows?.length ? (
-                    rows.map((row, index) => (
-                        <tr key={index}>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{row.hoTen}</td>
-                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>{formatDate(row.ngaySinh)}</td>
-                            <td style={{ textAlign: "center" }}>{row.gioiTinh}</td>
-                            <td>{row.giaTo}</td>
-                            <td>{row.diaChiLienLac}</td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLeSoHuuVon, "%")}</td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLeSoHuuBieuQuyet, "%")}</td>
-                            <td>{row.quyenChiPhoi}</td>
-                            <td>{row.ghiChu}</td>
-                        </tr>
-                    ))
-                ) : (
-                    <tr>
-                        <td colSpan={10} style={{ textAlign: "center" }}>
                             Không có dữ liệu
                         </td>
                     </tr>
@@ -1011,7 +976,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
 
                         {selectedAOptions.some((option) => option.name === "a_doiChuSoHuuHuongLoi") && (
                             <Section title="THÔNG BÁO THAY ĐỔI THÔNG TIN VỀ CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP/THÔNG BÁO THAY ĐỔI THÔNG TIN ĐỂ XÁC ĐỊNH CHỦ SỞ HỮU HƯỞNG LỢI">
-                                <BeneficialOwnerInfoTable rows={data.cshHuongLoiList} />
+                                <BeneficialOwnerChangeList data={data} />
                             </Section>
                         )}
                     </>

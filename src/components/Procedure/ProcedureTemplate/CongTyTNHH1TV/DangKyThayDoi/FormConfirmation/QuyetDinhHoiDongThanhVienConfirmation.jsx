@@ -80,6 +80,8 @@ function splitDate(value) {
 
 function formatDecisionDate(place, value) {
     const { day, month, year } = splitDate(value);
+    place = place.replace("Tỉnh", "");
+    place = place.replace("Thành phố", "");
     return `${place || "…"}, ngày ${day} tháng ${month} năm ${year}`;
 }
 
@@ -161,7 +163,9 @@ function AssetTable({ data }) {
                         <td style={{ textAlign: "center" }}>{stt}</td>
                         <td>
                             {label}
-                            {prefix === "taiSan_khac" && data.taiSan_khac_loaiTaiSan ? `: ${data.taiSan_khac_loaiTaiSan}` : ""}
+                            {prefix === "taiSan_khac" && data.taiSan_khac_loaiTaiSan
+                                ? `: ${data.taiSan_khac_loaiTaiSan}`
+                                : ""}
                         </td>
                         <td>{formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}</td>
                         <td style={{ textAlign: "center" }}>{formatUnitValue(data[`${prefix}_tyLe`], "%")}</td>
@@ -184,7 +188,11 @@ function BusinessTable({ title, rows, removed = false }) {
                 <thead>
                     <tr>
                         <th style={{ width: 45 }}>STT</th>
-                        <th>{removed ? "Tên ngành, nghề kinh doanh được bỏ khỏi danh sách đã đăng ký" : "Tên ngành, nghề kinh doanh"}</th>
+                        <th>
+                            {removed
+                                ? "Tên ngành, nghề kinh doanh được bỏ khỏi danh sách đã đăng ký"
+                                : "Tên ngành, nghề kinh doanh"}
+                        </th>
                         <th style={{ width: 100 }}>Mã ngành</th>
                         {!removed && <th style={{ width: 125 }}>Ngành nghề chính</th>}
                     </tr>
@@ -224,7 +232,8 @@ function CapitalChangeSection({ data }) {
                     <p>Trong đó:</p>
                     {contributionRows.map((row, index) => (
                         <p key={index}>
-                            Ông/Bà {row.hoTen || "…"} {verb} {formatUnitValue(row.giaTriTangGiam || data.qdVonChenhLech, "VNĐ")}
+                            {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} {verb}{" "}
+                            {formatUnitValue(row.giaTriTangGiam || data.qdVonChenhLech, "VNĐ")}
                         </p>
                     ))}
                 </>
@@ -241,7 +250,7 @@ function CapitalChangeSection({ data }) {
                     <p>Cơ cấu góp vốn khi thay đổi vốn điều lệ:</p>
                     {contributionRows.map((row, index) => (
                         <p key={index}>
-                            Ông/Bà {row.hoTen || "…"} góp {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
+                            {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} góp {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
                             {formatUnitValue(row.tyLeSauThayDoi, "%")} vốn điều lệ.
                         </p>
                     ))}
@@ -292,28 +301,35 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                             <p>
                                 <strong>{upperCompanyName || "CÔNG TY TNHH …"}</strong>
                             </p>
-                            <p>-------</p>
-                            <p>Số: {data.qdSoQuyetDinh || "…"}</p>
+                            <p style={{ margin: 0, lineHeight: 0.5, marginTop: "-10px" }}>-------</p>
                         </td>
                         <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
                             <p>
-                                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
-                            </p>
-                            <p>
+                                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong> <br />
                                 <strong>Độc lập - Tự do - Hạnh phúc</strong>
                             </p>
-                            <p>---------------</p>
-                            <p style={{ fontStyle: "italic" }}>{formatDecisionDate(data.qdDiaDiemLap, data.qdNgayQuyetDinh)}</p>
+                            <p style={{ margin: 0, lineHeight: 0.5, marginTop: "-10px" }}>---------------</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={styles.textCenter} style={{ verticalAlign: "bottom" }}>
+                            <p>Số: 01/2026/QĐ</p>
+                        </td>
+                        <td className={styles.textCenter} style={{ verticalAlign: "bottom" }}>
+                            <p style={{ fontStyle: "italic" }}>
+                                {formatDecisionDate(data.qdDiaDiemLap, data.qdNgayQuyetDinh)}
+                            </p>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
             <h2 className={styles.docTitle}>QUYẾT ĐỊNH HỘI ĐỒNG THÀNH VIÊN</h2>
-            <h3 className={styles.docTitle}>{upperCompanyName || "CÔNG TY TNHH …"}</h3>
-            <p className={styles.textCenter} style={{ fontStyle: "italic" }}>
+            <h2 className={styles.docTitle}>{upperCompanyName || "CÔNG TY TNHH …"}</h2>
+            <p className={styles.textCenter} style={{ fontStyle: "italic", marginBottom: 2 }}>
                 (Về việc thay đổi nội dung đăng ký doanh nghiệp)
             </p>
+            <hr style={{ border: "none", borderTop: "1px solid #000", margin: "2px auto", width: "15%" }} />
 
             <div className={styles.content}>
                 <p>
@@ -322,8 +338,9 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                 </p>
                 <p>- Căn cứ Nghị định 168/2025/NĐ-CP về đăng ký doanh nghiệp ban hành ngày 30/06/2025;</p>
                 <p>
-                    - Căn cứ Biên bản họp số: {data.qdSoBienBanHop || "…"} của Hội đồng thành viên {upperCompanyName || "…"}{" "}
-                    ngày {formatDate(data.qdNgayBienBanHop) || "…/…/…"} về việc thay đổi nội dung đăng ký doanh nghiệp;
+                    - Căn cứ Biên bản họp số: {data.qdSoBienBanHop || "…"} của Hội đồng thành viên{" "}
+                    {upperCompanyName || "…"} ngày {formatDate(data.qdNgayBienBanHop) || "…/…/…"} về việc thay đổi nội
+                    dung đăng ký doanh nghiệp;
                 </p>
                 <p>- Căn cứ Điều lệ {upperCompanyName || "…"}.</p>
 
@@ -342,7 +359,10 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                         <SectionTitle>Thay đổi ngành, nghề kinh doanh</SectionTitle>
                         <BusinessTable title="Bổ sung ngành, nghề kinh doanh sau:" rows={data.nganhNgheBoSungList} />
                         <BusinessTable title="Bỏ ngành, nghề kinh doanh sau:" rows={data.nganhNgheBoList} removed />
-                        <BusinessTable title="Sửa đổi chi tiết ngành, nghề kinh doanh sau:" rows={data.nganhNgheSuaList} />
+                        <BusinessTable
+                            title="Sửa đổi chi tiết ngành, nghề kinh doanh sau:"
+                            rows={data.nganhNgheSuaList}
+                        />
                     </>
                 )}
 
@@ -350,8 +370,13 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                     <>
                         <SectionTitle>Thay đổi tên doanh nghiệp</SectionTitle>
                         <p>Tên doanh nghiệp sau khi thay đổi</p>
-                        <p>Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi: {changedCompanyName.toLocaleUpperCase("vi-VN") || "…"}</p>
-                        <p>Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi: {data.tenSauThayDoiEN || "…"}</p>
+                        <p>
+                            Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi:{" "}
+                            {changedCompanyName.toLocaleUpperCase("vi-VN") || "…"}
+                        </p>
+                        <p>
+                            Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi: {data.tenSauThayDoiEN || "…"}
+                        </p>
                         <p>Tên doanh nghiệp viết tắt sau khi thay đổi: {data.tenSauThayDoiVietTat || "…"}</p>
                     </>
                 )}
@@ -360,7 +385,10 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                     <>
                         <SectionTitle>Thay đổi địa chỉ trụ sở chính</SectionTitle>
                         <p>Địa chỉ trụ sở chính sau khi thay đổi:</p>
-                        <p>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {data.truSo_soNha || "…"}</p>
+                        <p>
+                            Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:{" "}
+                            {data.truSo_soNha || "…"}
+                        </p>
                         <p>Xã/Phường/Đặc khu: {data.truSo_xa || "…"}</p>
                         <p>Tỉnh/Thành phố trực thuộc trung ương: {data.truSo_tinh || "…"}</p>
                         <p>
@@ -374,13 +402,12 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
 
                 <RepresentativeChangeSection data={data} />
 
-                {isTruthy(data.qdSuaDoiDieuLe) && (
-                    <p>
-                        <strong>Điều 2: </strong>Sửa đổi điều lệ công ty tương ứng với các mục đã nêu tại điều 1.
-                    </p>
-                )}
                 <p>
-                    <strong>Điều 3: </strong>Giao cho Ông/Bà {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục
+                    <strong>Điều 2: </strong>Sửa đổi điều lệ công ty tương ứng với các mục đã nêu tại điều 1.
+                </p>
+                <p>
+                    <strong>Điều 3: </strong>Giao cho {data.qdNguoiThucHienThuTuc_danhXung || "Ông/Bà"}{" "}
+                    {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục
                     cần thiết theo quy định của pháp luật.
                 </p>
                 <p>
@@ -412,8 +439,6 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                                 <p>
                                     <em>(ký, ghi rõ họ tên)</em>
                                 </p>
-                                <div style={{ height: 72 }}></div>
-                                <p>{data.qdChuTichHoiDongThanhVien || "…………………………………"}</p>
                             </td>
                         </tr>
                     </tbody>

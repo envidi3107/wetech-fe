@@ -37,11 +37,15 @@ import {
     buildExportRowsDanhSachCoDongSangLap,
     parseImportRowsDanhSachCoDongSangLap,
 } from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ExcelConstants/DanhSachCoDongSangLap.excelConstants";
+import { isTruthy } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 
 const TNHH_1TV_TYPE_COMPANY = "cong_ty_tnhh_mot_thanh_vien";
 const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
 const CO_PHAN_TYPE_COMPANY = "cong_ty_co_phan";
 const THANH_LAP_CONG_TY_SERVICE = "thanh_lap_cong_ty";
+const DANG_KY_THAY_DOI_SERVICE = "dang_ky_thay_doi";
+const DANG_KY_THAY_DOI_NOI_DUNG_TYPE =
+    "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
 const DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES = new Set([
     TNHH_1TV_TYPE_COMPANY,
     TNHH_2TV_TYPE_COMPANY,
@@ -160,6 +164,113 @@ const mergePrefillData = (prefillData, currentData) => {
     return mergedData;
 };
 
+const isDangKyThayDoiNoiDungForm = (form) => {
+    const normalizedName = normalizeFormName(form?.name);
+    return (
+        form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
+        normalizedName.includes("dang ky thay doi") &&
+        normalizedName.includes("giay chung nhan dang ky doanh nghiep")
+    );
+};
+
+const hasValue = (value) => {
+    if (Array.isArray(value)) return value.length > 0;
+    return value !== undefined && value !== null && value !== "";
+};
+
+const copyKeysByPrefix = (target, source, prefixes) => {
+    Object.entries(source || {}).forEach(([key, value]) => {
+        if (hasValue(value) && prefixes.some((prefix) => key.startsWith(prefix))) {
+            target[key] = value;
+        }
+    });
+};
+
+const mergeBusinessLines = (currentRows = [], changeData = {}) => {
+    const rowsByKey = new Map();
+    const getKey = (row) => row?.maNganh || row?.tenNganh || JSON.stringify(row);
+
+    currentRows.forEach((row) => {
+        const key = getKey(row);
+        if (key) rowsByKey.set(key, row);
+    });
+
+    (changeData.nganhNgheBoList || []).forEach((row) => {
+        const key = getKey(row);
+        if (key) rowsByKey.delete(key);
+    });
+
+    [...(changeData.nganhNgheSuaList || []), ...(changeData.nganhNgheBoSungList || [])].forEach((row) => {
+        const key = getKey(row);
+        if (key) rowsByKey.set(key, row);
+    });
+
+    return Array.from(rowsByKey.values());
+};
+
+const getSelectedBusinessLocationType = (data) =>
+    [
+        ["truSo_loaiKhu_Khu_công_nghiệp", "Khu công nghiệp"],
+        ["truSo_loaiKhu_Khu_chế_xuất", "Khu chế xuất"],
+        ["truSo_loaiKhu_Khu_kinh_tế", "Khu kinh tế"],
+        ["truSo_loaiKhu_Khu_công_nghệ_cao", "Khu công nghệ cao"],
+    ].find(([key]) => isTruthy(data?.[key]))?.[1] || data?.truSo_loaiKhu || "";
+
+const applyDangKyThayDoiOverrides = (baseData, changeData) => {
+    const merged = { ...(baseData || {}) };
+    const change = changeData || {};
+
+    if (isTruthy(change.a_doiTen)) {
+        if (hasValue(change.tenSauThayDoiPrefix)) merged.tenCongTyPrefix = change.tenSauThayDoiPrefix;
+        if (hasValue(change.tenSauThayDoiVN)) merged.tenCongTyVN = change.tenSauThayDoiVN;
+        if (hasValue(change.tenSauThayDoiEN)) merged.tenCongTyEN = change.tenSauThayDoiEN;
+        if (hasValue(change.tenSauThayDoiVietTat)) merged.tenCongTyVietTat = change.tenSauThayDoiVietTat;
+    }
+
+    if (isTruthy(change.a_doiDiaChi)) {
+        copyKeysByPrefix(merged, change, ["truSo_"]);
+        if (hasValue(change.anNinhQuocPhong)) merged.truSo_anNinhQuocPhong = change.anNinhQuocPhong;
+        const selectedLocationType = getSelectedBusinessLocationType(change);
+        if (selectedLocationType) merged.truSo_loaiKhu = selectedLocationType;
+    }
+
+    if (isTruthy(change.a_doiVonDieuLe)) {
+        if (hasValue(change.vonDieuLeSauThayDoi)) merged.vonDieuLe = change.vonDieuLeSauThayDoi;
+        if (hasValue(change.vonDieuLeSauThayDoi_bangChu)) {
+            merged.vonDieuLe_bangChu = change.vonDieuLeSauThayDoi_bangChu;
+        }
+        copyKeysByPrefix(merged, change, ["nguonVon_", "taiSan_", "vonDieuLe_"]);
+        if (hasValue(change.hienThiNgoaiTe)) merged.hienThiNgoaiTe = change.hienThiNgoaiTe === "Có" ? "co" : "khong";
+    }
+
+    if (isTruthy(change.a_doiNganhNghe)) {
+        merged.nganhNgheList = mergeBusinessLines(merged.nganhNgheList || [], change);
+    }
+
+    if (isTruthy(change.a_doiThongTinThue)) {
+        copyKeysByPrefix(merged, change, ["giamDoc_", "keToan_", "thongBaoThue_", "namTaiChinh_"]);
+        [
+            "ngayBatDauHoatDong",
+            "hinhThucHachToan",
+            "baoCaoTaiChinhHopNhat",
+            "tongSoLaoDong",
+            "hoatDongDuAn",
+            "phuongPhapTinhThueGTGT",
+        ].forEach((key) => {
+            if (hasValue(change[key])) merged[key] = change[key];
+        });
+    }
+
+    if (isTruthy(change.a_doiChuSoHuuHuongLoi)) {
+        merged.doanhNghiepCoCSHHuongLoi = "co";
+        if (change.cshHuongLoiList?.length) {
+            merged.cshHuongLoiList = change.cshHuongLoiList;
+        }
+    }
+
+    return merged;
+};
+
 
 const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess, setIsSubmittingForm }, ref) => {
     const [dataJson, setDataJson] = useState(null);
@@ -208,13 +319,26 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     const isDanhSachCoDongSangLap = formComponentName === "DanhSachCoDongSangLapDeclaration" ||
         formNameLower.includes("cổ đông sáng lập");
 
+    const isDangKyThayDoiDynamicBeneficialOwnerForm =
+        procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
+        currentForm?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
+        (isGiayDKDN || isCSHHuongLoi);
 
+    const fetchDangKyThayDoiNoiDungData = useCallback(async () => {
+        const changeForm = forms?.find(isDangKyThayDoiNoiDungForm);
+        if (!changeForm?.formId) return null;
+
+        const response = await authAxios.get(`/api/form-submission/get/data-json`, {
+            params: { formId: changeForm.formId },
+        });
+        return parseFormDataJson(response.data);
+    }, [forms]);
 
     const fetchInitialDangKyThayDoiData = useCallback(async () => {
         const sourceTypeCompany = procedure?.typeCompany;
         if (
             !DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES.has(sourceTypeCompany) ||
-            !isDangKyThayDoiPrefillForm
+            !(isDangKyThayDoiPrefillForm || isDangKyThayDoiDynamicBeneficialOwnerForm)
         ) {
             return null;
         }
@@ -268,6 +392,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         return fallbackSource;
     }, [
         isDangKyThayDoiChuSoHuu,
+        isDangKyThayDoiDynamicBeneficialOwnerForm,
         isDangKyThayDoiNguoiDaiDienPhapLuat,
         isDangKyThayDoiPrefillForm,
         procedure?.procedureId,
@@ -323,13 +448,22 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             setDataJson(null);
             setHasServerData(false);
             try {
+                const applyDynamicOverrides = async (sourceData) => {
+                    if (!isDangKyThayDoiDynamicBeneficialOwnerForm || !sourceData) {
+                        return sourceData;
+                    }
+                    const changeData = await fetchDangKyThayDoiNoiDungData();
+                    return changeData ? applyDangKyThayDoiOverrides(sourceData, changeData) : sourceData;
+                };
+
                 const response = await authAxios.get(`/api/form-submission/get/data-json`, {
                     params: { formId: currentForm.formId },
                 });
                 const parsed = parseFormDataJson(response.data);
                 if (parsed) {
                     const prefillData = await fetchDangKyThayDoiPrefillData();
-                    setDataJson(prefillData ? mergePrefillData(prefillData, parsed) : parsed);
+                    const mergedData = prefillData ? mergePrefillData(prefillData, parsed) : parsed;
+                    setDataJson(await applyDynamicOverrides(mergedData));
                     setHasServerData(true);
                     return;
                 }
@@ -341,7 +475,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                     return;
                 }
 
-                setDataJson(prefillData);
+                setDataJson(await applyDynamicOverrides(prefillData));
                 setHasServerData(false);
             } catch (error) {
                 setDataJson(null);
@@ -350,7 +484,12 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             }
         }
         fetchFormSubmission();
-    }, [currentForm?.formId, fetchDangKyThayDoiPrefillData]);
+    }, [
+        currentForm?.formId,
+        fetchDangKyThayDoiNoiDungData,
+        fetchDangKyThayDoiPrefillData,
+        isDangKyThayDoiDynamicBeneficialOwnerForm,
+    ]);
 
     const saveMissingUserCards = async (data) => {
         const prefixes = ["nguoiDaiDien", "chuSoHuu", "nguoiNop", "uyQuyen", "nhanUyQuyen"];
@@ -408,7 +547,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 setHasServerData(true);
             }
             setDataJson(data);
-            if (onStepSubmitSuccess) onStepSubmitSuccess();
+            if (onStepSubmitSuccess) await onStepSubmitSuccess(data, currentForm);
         } catch (err) {
             console.error("Error submitting form:", err);
         } finally {

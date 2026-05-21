@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
-import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import { GioiTinhSelect, DanTocSelect, QuocTichSelect, ChucDanhSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
@@ -115,30 +115,6 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
 
     const tooltipNguoiDaiDien = "Ghi thông tin của tất cả người đại diện theo pháp luật trong trường hợp công ty có nhiều hơn 01 người đại diện theo pháp luật.";
 
-    const predefinedChucDanh = ["Giám đốc", "Tổng giám đốc"];
-
-    const defaultChucDanh = localData?.nguoiDaiDien_chucDanh || "";
-    const isPredefined = predefinedChucDanh.includes(defaultChucDanh);
-    const initialChucDanhType = defaultChucDanh ? (isPredefined ? defaultChucDanh : "Khác") : "";
-    const initialChucDanhOther = isPredefined ? "" : defaultChucDanh;
-
-    const [chucDanhType, setChucDanhType] = useState(initialChucDanhType);
-    const [chucDanhOther, setChucDanhOther] = useState(initialChucDanhOther);
-    const [hasUserEditedChucDanh, setHasUserEditedChucDanh] = useState(false);
-
-    // Keep select/input in sync when parent dataJson changes (ex: Giấy đề nghị cập nhật -> Điều lệ).
-    useEffect(() => {
-        if (hasUserEditedChucDanh) return;
-
-        const nextChucDanh = localData?.nguoiDaiDien_chucDanh || "";
-        const nextIsPredefined = predefinedChucDanh.includes(nextChucDanh);
-        const nextType = nextChucDanh ? (nextIsPredefined ? nextChucDanh : "Khác") : "";
-        const nextOther = nextIsPredefined ? "" : nextChucDanh;
-
-        setChucDanhType(nextType);
-        setChucDanhOther(nextOther);
-    }, [localData?.nguoiDaiDien_chucDanh, hasUserEditedChucDanh]);
-
     return (
         <div className={styles.sectionGroup} key={formKey}>
             <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
@@ -164,41 +140,7 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                             <label className={styles.label}>Số định danh cá nhân: <span className={styles.required}>*</span></label>
                             <input type="text" className={styles.input} name="nguoiDaiDien_cccd" defaultValue={localData?.nguoiDaiDien_cccd || ""} required pattern="[0-9]{9,12}" />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Chức danh:<span className={styles.required}>*</span></label>
-                            <select
-                                className={styles.input}
-                                value={chucDanhType}
-                                onChange={(e) => {
-                                    setHasUserEditedChucDanh(true);
-                                    const nextType = e.target.value;
-                                    setChucDanhType(nextType);
-                                    if (nextType !== "Khác") setChucDanhOther("");
-                                }}
-                                name={chucDanhType === "Khác" ? undefined : "nguoiDaiDien_chucDanh"}
-                                required={chucDanhType !== "Khác"}
-                            >
-                                <option value="" disabled>-- Chọn chức danh --</option>
-                                <option value="Giám đốc">Giám đốc</option>
-                                <option value="Tổng giám đốc">Tổng giám đốc</option>
-                                <option value="Khác">Khác</option>
-                            </select>
-                            {chucDanhType === "Khác" && (
-                                <input
-                                    type="text"
-                                    className={styles.input}
-                                    style={{ marginTop: "8px" }}
-                                    name="nguoiDaiDien_chucDanh"
-                                    value={chucDanhOther}
-                                    onChange={(e) => {
-                                        setHasUserEditedChucDanh(true);
-                                        setChucDanhOther(e.target.value);
-                                    }}
-                                    placeholder="Nhập chức danh khác"
-                                    required
-                                />
-                            )}
-                        </div>
+                        <ChucDanhSelect name="nguoiDaiDien_chucDanh" defaultValue={localData?.nguoiDaiDien_chucDanh} required />
                     </div>
                     <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>Địa chỉ liên lạc của người đại diện:</h3>
                     <AddressSelect

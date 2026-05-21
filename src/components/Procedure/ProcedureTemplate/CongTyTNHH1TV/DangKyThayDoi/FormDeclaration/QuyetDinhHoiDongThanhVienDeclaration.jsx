@@ -11,10 +11,16 @@ import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     TNHH_COMPANY_NAME_PREFIX_OPTIONS,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
+import { formatDate } from "@/utils/dateTimeUtils";
+import { GioiTinhSelect, ChucDanhSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import AddressSelect from "@/components/AddressSelect/AddressSelect";
+import { useFetchAddress } from "@/hooks/useFetchAddress";
+import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 
 const SOURCE_FORM_NAME = "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";
 
 const emptyContributionRow = {
+    danhXung: "Ông",
     hoTen: "",
     giaTriTangGiam: "",
     phanVonSauThayDoi: "",
@@ -57,19 +63,6 @@ function getCapitalDifference(data) {
     return before === null || after === null ? null : after - before;
 }
 
-function getCapitalChangeVerb(data) {
-    const text = data.hinhThucTangGiamVon || data.qdHinhThucTangGiamVon || "";
-    const lowered = text.toLocaleLowerCase("vi-VN");
-    if (lowered.includes("giảm")) return "giảm";
-    if (lowered.includes("tăng")) return "tăng";
-
-    const diff = getCapitalDifference(data);
-    if (diff === null) return "tăng/giảm";
-    if (diff < 0) return "giảm";
-    if (diff > 0) return "tăng";
-    return "tăng/giảm";
-}
-
 function getFullCompanyName(value, prefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX) {
     if (!value) return "";
 
@@ -100,17 +93,20 @@ function getSourceDefaultContributionRows(data) {
     const sourceRows = data.qdThanhVienGopVonList || data.doiThanhVienList || data.thanhVienList || [];
     if (sourceRows.length) {
         return sourceRows.map((row) => ({
+            danhXung: row.danhXung || ((row.gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông"),
             hoTen: row.hoTen || row.chuSoHuu || "",
             giaTriTangGiam: row.giaTriTangGiam || "",
-            phanVonSauThayDoi: row.phanVonSauThayDoi || row.phanVonGop || data.vonDieuLeSauThayDoi || "",
+            phanVonSauThayDoi: row.phanVonSauThayDoi || row.phanVonGop || "",
             tyLeSauThayDoi: row.tyLeSauThayDoi || row.tyLe || "",
         }));
     }
 
     const ownerName = data.chuSoHuu_hoTen || data.nguoiDaiDien_hoTen || data.qdChuTichHoiDongThanhVien || "";
     const diff = getCapitalDifference(data);
+    const gioiTinh = data.chuSoHuu_gioiTinh || data.nguoiDaiDien_gioiTinh || "";
     return [
         {
+            danhXung: gioiTinh.toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông",
             hoTen: ownerName,
             giaTriTangGiam: diff === null ? "" : formatNumber(Math.abs(diff)),
             phanVonSauThayDoi: data.vonDieuLeSauThayDoi || "",
@@ -158,9 +154,9 @@ function applyDecisionDefaults(data, contributionRows) {
     if (!nextData.qdNguoiDaiDien_email) nextData.qdNguoiDaiDien_email = nextData.nguoiDaiDien_email || "";
     if (!nextData.qdNguoiDaiDien_diaChi) {
         nextData.qdNguoiDaiDien_diaChi = [
-            nextData.nguoiDaiDien_soNha,
-            nextData.nguoiDaiDien_xa,
-            nextData.nguoiDaiDien_tinh,
+            nextData.qdNguoiDaiDien_soNha || nextData.nguoiDaiDien_soNha,
+            nextData.qdNguoiDaiDien_xa || nextData.nguoiDaiDien_xa,
+            nextData.qdNguoiDaiDien_tinh || nextData.nguoiDaiDien_tinh,
         ]
             .filter(Boolean)
             .join(", ");
@@ -176,7 +172,9 @@ function Field({ label, name, data, required = false, children }) {
             <label className={styles.label}>
                 {label} {required && <span className={styles.required}>*</span>}
             </label>
-            {children || <input className={styles.input} name={name} defaultValue={data?.[name] || ""} required={required} />}
+            {children || (
+                <input className={styles.input} name={name} defaultValue={data?.[name] || ""} required={required} />
+            )}
         </div>
     );
 }
@@ -223,11 +221,29 @@ function BusinessRowsPreview({ title, rows, removed = false }) {
     );
 }
 
-function ContributionRowsTable({ rows, onChangeRows }) {
+function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
     const updateRow = (index, field, value) => {
         const nextRows = [...rows];
-        nextRows[index] = { ...nextRows[index], [field]: value };
+        const updatedRow = { ...nextRows[index], [field]: value };
+
+        if (field === "phanVonSauThayDoi") {
+            const pVal = parseNumber(value);
+            const tVal = parseNumber(totalCapital);
+            if (pVal !== null && tVal !== null && tVal > 0) {
+                const percent = (pVal / tVal) * 100;
+                updatedRow.tyLeSauThayDoi = Number.isInteger(percent) ? percent.toString() : percent.toFixed(4).replace(/\.?0+$/, "");
+            } else if (value === "") {
+                updatedRow.tyLeSauThayDoi = "";
+            }
+        }
+
+        nextRows[index] = updatedRow;
         onChangeRows(nextRows);
+    };
+
+    const handleNumberChange = (index, field, value) => {
+        const raw = String(value).replace(/[^\d]/g, "");
+        updateRow(index, field, raw ? formatNumber(raw) : "");
     };
 
     return (
@@ -235,9 +251,9 @@ function ContributionRowsTable({ rows, onChangeRows }) {
             <thead>
                 <tr>
                     <th style={{ width: 60 }}>STT</th>
-                    <th>Ông/Bà/Thành viên</th>
+                    <th>Tên Ông/Bà/Thành viên</th>
                     <th>Giá trị tăng/giảm vốn</th>
-                    <th>Phần vốn góp sau thay đổi</th>
+                    <th>Giá trị vốn góp sau thay đổi</th>
                     <th style={{ width: 120 }}>Tỷ lệ (%)</th>
                     <th style={{ width: 90 }}></th>
                 </tr>
@@ -247,38 +263,58 @@ function ContributionRowsTable({ rows, onChangeRows }) {
                     <tr key={index}>
                         <td style={{ textAlign: "center" }}>{index + 1}</td>
                         <td>
-                            <input
-                                className={styles.tableInput}
-                                value={row.hoTen || ""}
-                                onChange={(event) => updateRow(index, "hoTen", event.target.value)}
-                            />
+                            <div className={styles.inputPrefixWrapper}>
+                                <select
+                                    className={styles.prefixSelect}
+                                    value={row.danhXung || "Ông"}
+                                    onChange={(e) => updateRow(index, "danhXung", e.target.value)}
+                                >
+                                    <option value="Ông">Ông</option>
+                                    <option value="Bà">Bà</option>
+                                    <option value="Tổ chức">Tổ chức</option>
+                                </select>
+                                <input
+                                    className={styles.inputNoBorder}
+                                    value={row.hoTen || ""}
+                                    onChange={(event) => updateRow(index, "hoTen", event.target.value)}
+                                    required
+                                />
+                            </div>
                         </td>
                         <td>
                             <input
-                                className={styles.tableInput}
+                                className={styles.input}
                                 value={row.giaTriTangGiam || ""}
-                                onChange={(event) => updateRow(index, "giaTriTangGiam", event.target.value)}
+                                onChange={(event) => handleNumberChange(index, "giaTriTangGiam", event.target.value)}
+                                required
                             />
                         </td>
                         <td>
                             <input
-                                className={styles.tableInput}
+                                className={styles.input}
                                 value={row.phanVonSauThayDoi || ""}
-                                onChange={(event) => updateRow(index, "phanVonSauThayDoi", event.target.value)}
+                                onChange={(event) => handleNumberChange(index, "phanVonSauThayDoi", event.target.value)}
+                                required
                             />
                         </td>
                         <td>
                             <input
-                                className={styles.tableInput}
+                                className={styles.input}
                                 value={row.tyLeSauThayDoi || ""}
                                 onChange={(event) => updateRow(index, "tyLeSauThayDoi", event.target.value)}
+                                required
                             />
                         </td>
                         <td style={{ textAlign: "center" }}>
                             <button
                                 type="button"
                                 onClick={() => onChangeRows(rows.filter((_, rowIndex) => rowIndex !== index))}
-                                style={{ border: "none", background: "transparent", color: "#c0392b", cursor: "pointer" }}
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    color: "#c0392b",
+                                    cursor: "pointer",
+                                }}
                             >
                                 Xóa
                             </button>
@@ -297,16 +333,60 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
     const sourceFormData = useGetFormDataJsonFromName(SOURCE_FORM_NAME);
     const currentData = useMemo(() => normalizeDataJson(dataJson), [dataJson]);
     const sourceData = useMemo(() => normalizeDataJson(sourceFormData), [sourceFormData]);
-    const mergedData = useMemo(() => ({ ...sourceData, ...currentData }), [currentData, sourceData]);
+    const mergedData = useMemo(() => {
+        const merged = { ...currentData };
+        for (const [key, value] of Object.entries(sourceData)) {
+            if (value !== undefined && value !== null && value !== "") {
+                merged[key] = value;
+            }
+        }
+        return merged;
+    }, [currentData, sourceData]);
     const [contributionRows, setContributionRows] = useState([emptyContributionRow]);
+    const [showRepresentative, setShowRepresentative] = useState(false);
+
+    const [qdNguoiDaiDienProv, setQdNguoiDaiDienProv] = useState("");
+    const { provinces: nddProvinces, communes: nddCommunes, loadingCommunes: nddLoadingCommunes } = useFetchAddress(qdNguoiDaiDienProv);
+
+    const [localRepCard, setLocalRepCard] = useState({});
+    const [repKey, setRepKey] = useState(0);
+
+    const handleFillRepCard = (card) => {
+        const nextRepCard = {
+            qdNguoiDaiDien_hoTen: card.fullName || "",
+            qdNguoiDaiDien_gioiTinh: card.gender || "",
+            qdNguoiDaiDien_ngaySinh: card.dob || "",
+            qdNguoiDaiDien_cccd: card.cccd || "",
+            qdNguoiDaiDien_chucDanh: card.position || card.chucVu || "",
+            qdNguoiDaiDien_tinh: card.currentAddress?.province || "",
+            qdNguoiDaiDien_xa: card.currentAddress?.ward || "",
+            qdNguoiDaiDien_soNha: card.currentAddress?.street || "",
+            qdNguoiDaiDien_phone: card.phone || "",
+            qdNguoiDaiDien_email: card.email || "",
+        };
+        setLocalRepCard(nextRepCard);
+        if (card.currentAddress?.province) {
+            setQdNguoiDaiDienProv(card.currentAddress.province);
+        }
+        setRepKey((prev) => prev + 1);
+    };
 
     useEffect(() => {
         setContributionRows(getSourceDefaultContributionRows(mergedData));
     }, [mergedData]);
 
-    const decisionData = applyDecisionDefaults(mergedData, contributionRows);
+    useEffect(() => {
+        setShowRepresentative(isTruthy(mergedData.qdDoiNguoiDaiDienPhapLuat));
+    }, [mergedData.qdDoiNguoiDaiDienPhapLuat]);
+
+    const baseDecisionData = applyDecisionDefaults(mergedData, contributionRows);
+    const decisionData = useMemo(() => {
+        return {
+            ...baseDecisionData,
+            ...localRepCard
+        };
+    }, [baseDecisionData, localRepCard]);
     const capitalDiff = getCapitalDifference(decisionData);
-    const changeVerb = getCapitalChangeVerb(decisionData);
     const selectedChangeOptions = A_CHANGE_OPTIONS.filter((option) => isTruthy(decisionData[option.name]));
     const hasSourceData = Object.keys(sourceData).length > 0;
     const formKey = `${hasSourceData ? "source" : "no-source"}-${dataJson ? "saved" : "new"}`;
@@ -329,7 +409,7 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
     useImperativeHandle(componentRef, () => ({
         getDraftData: collectData,
         getExportData: collectData,
-        importData: () => {},
+        importData: () => { },
     }));
 
     const handleSubmit = (event) => {
@@ -350,12 +430,6 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
             <div className={styles.sectionGroup}>
                 <h3 className={styles.sectionTitle}>Thông tin quyết định</h3>
                 <div className={styles.grid2}>
-                    <Field
-                        label="Số quyết định"
-                        name="qdSoQuyetDinh"
-                        data={{ qdSoQuyetDinh: decisionData.qdSoQuyetDinh || `01/${new Date().getFullYear()}/QĐ` }}
-                        required
-                    />
                     <Field label="Địa điểm lập quyết định" name="qdDiaDiemLap" data={decisionData} required />
                     <Field label="Ngày quyết định" name="qdNgayQuyetDinh" data={decisionData} required>
                         <DateInput
@@ -369,58 +443,57 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                         label="Số biên bản họp HĐTV"
                         name="qdSoBienBanHop"
                         data={{ qdSoBienBanHop: decisionData.qdSoBienBanHop || `01/${new Date().getFullYear()}/BBH` }}
+                        required
                     />
-                    <Field label="Ngày biên bản họp HĐTV" name="qdNgayBienBanHop" data={decisionData}>
+                    <Field label="Ngày biên bản họp HĐTV" name="qdNgayBienBanHop" data={decisionData} required>
                         <DateInput
                             name="qdNgayBienBanHop"
                             className={styles.input}
-                            defaultValue={decisionData.qdNgayBienBanHop || decisionData.qdNgayQuyetDinh || getTodayInputValue()}
+                            defaultValue={
+                                decisionData.qdNgayBienBanHop || decisionData.qdNgayQuyetDinh || getTodayInputValue()
+                            }
+                            required
                         />
                     </Field>
-                    <Field
-                        label="Người được giao thực hiện thủ tục"
-                        name="qdNguoiThucHienThuTuc"
-                        data={{
-                            qdNguoiThucHienThuTuc:
-                                decisionData.qdNguoiThucHienThuTuc ||
-                                decisionData.nguoiDaiDien_hoTen ||
-                                decisionData.chuSoHuu_hoTen ||
-                                "",
-                        }}
-                    />
-                    <Field
-                        label="Chủ tịch Hội đồng thành viên ký quyết định"
-                        name="qdChuTichHoiDongThanhVien"
-                        data={{
-                            qdChuTichHoiDongThanhVien:
-                                decisionData.qdChuTichHoiDongThanhVien ||
-                                decisionData.nguoiDaiDien_hoTen ||
-                                decisionData.chuSoHuu_hoTen ||
-                                "",
-                        }}
-                    />
+                    <Field label="Người được giao tiến hành các thủ tục cần thiết" required>
+                        <div className={styles.inputPrefixWrapper}>
+                            <select
+                                name="qdNguoiThucHienThuTuc_danhXung"
+                                className={styles.prefixSelect}
+                                defaultValue={
+                                    decisionData.qdNguoiThucHienThuTuc_danhXung ||
+                                    ((decisionData.nguoiDaiDien_gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ"
+                                        ? "Bà"
+                                        : "Ông")
+                                }
+                            >
+                                <option value="Ông">Ông</option>
+                                <option value="Bà">Bà</option>
+                            </select>
+                            <input
+                                className={styles.inputNoBorder}
+                                name="qdNguoiThucHienThuTuc"
+                                defaultValue={
+                                    decisionData.qdNguoiThucHienThuTuc ||
+                                    decisionData.nguoiDaiDien_hoTen ||
+                                    decisionData.chuSoHuu_hoTen ||
+                                    ""
+                                }
+                                required
+                            />
+                        </div>
+                    </Field>
                 </div>
-                <label className={styles.radioLabel}>
-                    <input
-                        type="checkbox"
-                        name="qdSuaDoiDieuLe"
-                        value="true"
-                        className={styles.radioInput}
-                        defaultChecked={decisionData.qdSuaDoiDieuLe !== "false"}
-                    />
-                    Tự động đưa nội dung sửa đổi điều lệ công ty tương ứng với Điều 1 vào quyết định.
-                </label>
             </div>
 
             <div className={styles.sectionGroup}>
-                <h3 className={styles.sectionTitle}>Thông tin lấy từ Giấy đề nghị đăng ký thay đổi</h3>
-                <div className={styles.grid2}>
-                    <ReadOnlyField label="Tên doanh nghiệp" value={getDecisionCompanyName(decisionData)} />
-                    <ReadOnlyField label="Mã số doanh nghiệp/Mã số thuế" value={decisionData.maSoDoanhNghiep} />
-                </div>
+                <h3 className={styles.sectionTitle}>Thông tin thay đổi</h3>
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Nội dung thay đổi đã chọn</label>
-                    <div className={styles.radioGroup} style={{ alignItems: "flex-start", flexDirection: "column", gap: 4 }}>
+                    <div
+                        className={styles.radioGroup}
+                        style={{ alignItems: "flex-start", flexDirection: "column", gap: 4 }}
+                    >
                         {selectedChangeOptions.length ? (
                             selectedChangeOptions.map((option) => (
                                 <label key={option.name} className={styles.radioLabel}>
@@ -433,6 +506,10 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                         )}
                     </div>
                 </div>
+                <div className={styles.grid2}>
+                    <ReadOnlyField label="Tên doanh nghiệp" value={getDecisionCompanyName(decisionData)} />
+                    <ReadOnlyField label="Mã số doanh nghiệp/Mã số thuế" value={decisionData.maSoDoanhNghiep} />
+                </div>
             </div>
 
             {isTruthy(decisionData.a_doiVonDieuLe) && (
@@ -441,16 +518,14 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                     <div className={styles.grid2}>
                         <ReadOnlyField label="Vốn điều lệ đã đăng ký" value={decisionData.vonDieuLeDaDangKy} />
                         <ReadOnlyField label="Vốn điều lệ sau khi thay đổi" value={decisionData.vonDieuLeSauThayDoi} />
-                        <ReadOnlyField label="Chênh lệch vốn tự động tính" value={formatSignedNumber(capitalDiff)} />
-                        <ReadOnlyField label="Hình thức tăng/giảm tự động xác định" value={decisionData.qdHinhThucTangGiamVon} />
-                        <ReadOnlyField label="Thời điểm tăng/giảm vốn" value={decisionData.thoiDiemThayDoiVon} />
-                        <ReadOnlyField label="Diễn đạt trong quyết định" value={changeVerb} />
+                        <ReadOnlyField
+                            label="Hình thức tăng/giảm vốn điều lệ"
+                            value={decisionData.qdHinhThucTangGiamVon}
+                        />
+                        <ReadOnlyField label="Thời điểm tăng/giảm vốn" value={formatDate(decisionData.thoiDiemThayDoiVon)} />
                     </div>
                     <h4 className={styles.sectionTitle}>Trong đó và cơ cấu góp vốn sau thay đổi</h4>
-                    <ContributionRowsTable
-                        rows={contributionRows}
-                        onChangeRows={setContributionRows}
-                    />
+                    <ContributionRowsTable rows={contributionRows} onChangeRows={setContributionRows} totalCapital={decisionData.vonDieuLeSauThayDoi} />
                     <button
                         type="button"
                         onClick={() => setContributionRows([...contributionRows, { ...emptyContributionRow }])}
@@ -472,9 +547,19 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
             {isTruthy(decisionData.a_doiNganhNghe) && (
                 <div className={styles.sectionGroup}>
                     <h3 className={styles.sectionTitle}>Ngành, nghề kinh doanh lấy từ Giấy đề nghị</h3>
-                    <BusinessRowsPreview title="Bổ sung ngành, nghề kinh doanh sau" rows={decisionData.nganhNgheBoSungList} />
-                    <BusinessRowsPreview title="Bỏ ngành, nghề kinh doanh sau" rows={decisionData.nganhNgheBoList} removed />
-                    <BusinessRowsPreview title="Sửa đổi chi tiết ngành, nghề kinh doanh" rows={decisionData.nganhNgheSuaList} />
+                    <BusinessRowsPreview
+                        title="Bổ sung ngành, nghề kinh doanh sau"
+                        rows={decisionData.nganhNgheBoSungList}
+                    />
+                    <BusinessRowsPreview
+                        title="Bỏ ngành, nghề kinh doanh sau"
+                        rows={decisionData.nganhNgheBoList}
+                        removed
+                    />
+                    <BusinessRowsPreview
+                        title="Sửa đổi chi tiết ngành, nghề kinh doanh"
+                        rows={decisionData.nganhNgheSuaList}
+                    />
                 </div>
             )}
 
@@ -511,26 +596,68 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                         name="qdDoiNguoiDaiDienPhapLuat"
                         value="true"
                         className={styles.radioInput}
-                        defaultChecked={isTruthy(decisionData.qdDoiNguoiDaiDienPhapLuat)}
+                        checked={showRepresentative}
+                        onChange={(e) => setShowRepresentative(e.target.checked)}
                     />
                     Bổ sung mục thay đổi người đại diện theo pháp luật trong quyết định.
                 </label>
-                <div className={styles.grid2}>
-                    <Field label="Họ, chữ đệm và tên" name="qdNguoiDaiDien_hoTen" data={decisionData} />
-                    <Field label="Ngày sinh" name="qdNguoiDaiDien_ngaySinh" data={decisionData}>
-                        <DateInput
-                            name="qdNguoiDaiDien_ngaySinh"
-                            className={styles.input}
-                            defaultValue={decisionData.qdNguoiDaiDien_ngaySinh || decisionData.nguoiDaiDien_ngaySinh || ""}
-                        />
-                    </Field>
-                    <Field label="Giới tính" name="qdNguoiDaiDien_gioiTinh" data={decisionData} />
-                    <Field label="Số định danh cá nhân" name="qdNguoiDaiDien_cccd" data={decisionData} />
-                    <Field label="Chức danh" name="qdNguoiDaiDien_chucDanh" data={decisionData} />
-                    <Field label="Địa chỉ liên lạc" name="qdNguoiDaiDien_diaChi" data={decisionData} />
-                    <Field label="Điện thoại" name="qdNguoiDaiDien_phone" data={decisionData} />
-                    <Field label="Thư điện tử" name="qdNguoiDaiDien_email" data={decisionData} />
-                </div>
+                {showRepresentative && (
+                    <>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+                            <h3 className={styles.sectionTitle} style={{ margin: 0 }}>
+                                Thông tin người đại diện theo pháp luật sau khi thay đổi:
+                            </h3>
+                            <UserCardDropdown onSelect={handleFillRepCard} />
+                        </div>
+                        <div key={`rep-${repKey}`}>
+                            <div className={styles.grid2}>
+                                <Field label="Họ, chữ đệm và tên (ghi bằng chữ in hoa)" name="qdNguoiDaiDien_hoTen" data={decisionData} required>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        name="qdNguoiDaiDien_hoTen"
+                                        defaultValue={(decisionData.qdNguoiDaiDien_hoTen || "").toUpperCase()}
+                                        style={{ textTransform: "uppercase" }}
+                                        onInput={(e) => {
+                                            e.target.value = e.target.value.toUpperCase();
+                                        }}
+                                        required
+                                    />
+                                </Field>
+                                <Field label="Ngày sinh" name="qdNguoiDaiDien_ngaySinh" data={decisionData} required>
+                                    <DateInput
+                                        name="qdNguoiDaiDien_ngaySinh"
+                                        className={styles.input}
+                                        defaultValue={
+                                            decisionData.qdNguoiDaiDien_ngaySinh || decisionData.nguoiDaiDien_ngaySinh || ""
+                                        }
+                                        required
+                                    />
+                                </Field>
+                                <GioiTinhSelect name="qdNguoiDaiDien_gioiTinh" defaultValue={decisionData.qdNguoiDaiDien_gioiTinh} required />
+                                <Field label="Số định danh cá nhân" name="qdNguoiDaiDien_cccd" data={decisionData} required />
+                                <ChucDanhSelect name="qdNguoiDaiDien_chucDanh" defaultValue={decisionData.qdNguoiDaiDien_chucDanh} required />
+                            </div>
+                            <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>Địa chỉ liên lạc:</h3>
+                            <AddressSelect
+                                provinces={nddProvinces}
+                                communes={nddCommunes}
+                                onProvinceChange={setQdNguoiDaiDienProv}
+                                provinceName="qdNguoiDaiDien_tinh"
+                                wardName="qdNguoiDaiDien_xa"
+                                houseNumberName="qdNguoiDaiDien_soNha"
+                                provinceDefault={decisionData.qdNguoiDaiDien_tinh || decisionData.nguoiDaiDien_tinh || ""}
+                                wardDefault={decisionData.qdNguoiDaiDien_xa || decisionData.nguoiDaiDien_xa || ""}
+                                houseNumberDefault={decisionData.qdNguoiDaiDien_soNha || decisionData.nguoiDaiDien_soNha || ""}
+                                isLoadingCommunes={nddLoadingCommunes}
+                            />
+                            <div className={styles.grid2} style={{ marginTop: "8px" }}>
+                                <Field label="Điện thoại (nếu có)" name="qdNguoiDaiDien_phone" data={decisionData} />
+                                <Field label="Thư điện tử (nếu có)" name="qdNguoiDaiDien_email" data={decisionData} />
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </form>
     );

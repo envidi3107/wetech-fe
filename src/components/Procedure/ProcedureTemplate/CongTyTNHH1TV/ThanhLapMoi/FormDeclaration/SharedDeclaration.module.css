@@ -136,20 +136,6 @@
     font-size: 14px;
 }
 
-.tableInput {
-    width: 100%;
-    border: none;
-    background: transparent;
-    padding: 4px;
-    font-size: 14px;
-    outline: none;
-}
-
-.tableInput:focus {
-    background: #f0f5ff;
-    border-radius: 4px;
-}
-
 .note {
     font-style: italic;
     color: var(--secondary-content);
