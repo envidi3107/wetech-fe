@@ -281,7 +281,7 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Chủ sở hữu/Thành viên/Cổ đông là tổ chức</th>
+                            <th>Chủ sở hữu/Thành viên công ty TNHH/Cổ đông là nhà đầu tư nước ngoài là tổ chức</th>
                             <th>Tên người đại diện theo ủy quyền</th>
                             <th>Ngày sinh</th>
                             <th>Giới tính</th>
@@ -510,11 +510,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         );
         setDoiCoDongLoaiCoPhanKhacList(
             parsed.doiCoDongLoaiCoPhanKhacList ||
-                parsed.loaiCoPhanKhacList ||
-                danhSachCoDongSangLapData?.loaiCoPhanKhacList ||
-                (parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten
-                    ? [parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten]
-                    : [""]),
+            parsed.loaiCoPhanKhacList ||
+            danhSachCoDongSangLapData?.loaiCoPhanKhacList ||
+            (parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten
+                ? [parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten]
+                : [""]),
         );
         setCoSoThayDoi(parsed.coSoThayDoi || "");
     }, [availableAChangeOptions, danhSachCoDongSangLapData, danhSachThanhVienData, dataJson, provinces]);
@@ -528,6 +528,78 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setPendingScrollTarget("");
         });
     }, [aOptions, mainOptions, pendingScrollTarget]);
+
+    useEffect(() => {
+        const form = formRef?.current;
+        if (!form) return;
+
+        const handleInput = () => {
+            const daDangKyInput = form.querySelector('input[name="vonDieuLeDaDangKy"]');
+            const sauThayDoiInput = form.querySelector('input[name="vonDieuLeSauThayDoi"]');
+            const targetInput = form.querySelector('input[name="hinhThucTangGiamVon"]');
+            const camKetTextarea = form.querySelector('textarea[name="camKetSauGiamVon"]');
+
+            if (daDangKyInput && sauThayDoiInput) {
+                const daDangKy = parseFloat(daDangKyInput.value.replace(/[^0-9]/g, ""));
+                const sauThayDoi = parseFloat(sauThayDoiInput.value.replace(/[^0-9]/g, ""));
+
+                let isGiam = false;
+                if (!isNaN(daDangKy) && !isNaN(sauThayDoi)) {
+                    if (targetInput) {
+                        if (sauThayDoi > daDangKy) targetInput.value = "Tăng";
+                        else if (sauThayDoi < daDangKy) {
+                            targetInput.value = "Giảm";
+                            isGiam = true;
+                        }
+                        else targetInput.value = "";
+                    } else if (sauThayDoi < daDangKy) {
+                        isGiam = true;
+                    }
+                } else if (targetInput) {
+                    targetInput.value = "";
+                }
+
+                if (camKetTextarea) {
+                    const formGroup = camKetTextarea.parentElement;
+                    if (formGroup) {
+                        formGroup.style.display = isGiam ? "block" : "none";
+                        if (!isGiam) camKetTextarea.value = "";
+                    }
+                }
+            }
+            
+            // Logic for Vốn Đầu Tư của Chủ doanh nghiệp tư nhân
+            const vonDauTuDaDangKyInput = form.querySelector('input[name="vonDauTuDaDangKy"]');
+            const vonDauTuSauThayDoiInput = form.querySelector('input[name="vonDauTuSauThayDoi"]');
+            const vonDauTuTargetInput = form.querySelector('input[name="vonDauTu_hinhThucTangGiam"]');
+            
+            if (vonDauTuDaDangKyInput && vonDauTuSauThayDoiInput && vonDauTuTargetInput) {
+                const daDangKyDT = parseFloat(vonDauTuDaDangKyInput.value.replace(/[^0-9]/g, ""));
+                const sauThayDoiDT = parseFloat(vonDauTuSauThayDoiInput.value.replace(/[^0-9]/g, ""));
+                
+                if (!isNaN(daDangKyDT) && !isNaN(sauThayDoiDT)) {
+                    if (sauThayDoiDT > daDangKyDT) vonDauTuTargetInput.value = "Tăng";
+                    else if (sauThayDoiDT < daDangKyDT) vonDauTuTargetInput.value = "Giảm";
+                    else vonDauTuTargetInput.value = "";
+                } else {
+                    vonDauTuTargetInput.value = "";
+                }
+            }
+        };
+
+        const onInputWrapper = (e) => {
+            const names = ["vonDieuLeDaDangKy", "vonDieuLeSauThayDoi", "vonDauTuDaDangKy", "vonDauTuSauThayDoi"];
+            if (names.includes(e.target.name)) {
+                handleInput();
+            }
+        };
+
+        // Run once on mount or when form ref is available
+        handleInput();
+
+        form.addEventListener("input", onInputWrapper);
+        return () => form.removeEventListener("input", onInputWrapper);
+    }, [formRef]);
 
     const handleKinhGuiProvinceChange = (provinceName) => {
         setKinhGuiProvince(provinceName);
@@ -665,8 +737,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             setDoiCoDongSangLapRows(parsed.doiCoDongSangLapList || parsed.coDongList || []);
             setDoiCoDongLoaiCoPhanKhacList(
                 parsed.doiCoDongLoaiCoPhanKhacList ||
-                    parsed.loaiCoPhanKhacList ||
-                    (parsed.loaiCoPhanKhac_ten ? [parsed.loaiCoPhanKhac_ten] : [""]),
+                parsed.loaiCoPhanKhacList ||
+                (parsed.loaiCoPhanKhac_ten ? [parsed.loaiCoPhanKhac_ten] : [""]),
             );
             setCoSoThayDoi(parsed.coSoThayDoi || "");
         },
@@ -850,18 +922,16 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                             />
                                         </div>
                                     </Field>
-                                    <div className={styles.grid2}>
-                                        <Field
-                                            label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
-                                            name="tenSauThayDoiEN"
-                                            dataJson={normalizedData}
-                                        />
-                                        <Field
-                                            label="Tên doanh nghiệp viết tắt sau khi thay đổi"
-                                            name="tenSauThayDoiVietTat"
-                                            dataJson={normalizedData}
-                                        />
-                                    </div>
+                                    <Field
+                                        label="Tên doanh nghiệp viết bằng tiếng nước ngoài sau khi thay đổi"
+                                        name="tenSauThayDoiEN"
+                                        dataJson={normalizedData}
+                                    />
+                                    <Field
+                                        label="Tên doanh nghiệp viết tắt sau khi thay đổi"
+                                        name="tenSauThayDoiVietTat"
+                                        dataJson={normalizedData}
+                                    />
                                 </div>
                             )}
 
@@ -919,7 +989,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                                         className={styles.radioInput}
                                                         defaultChecked={isTruthy(
                                                             normalizedData[
-                                                                `truSo_loaiKhu_${item.replace(/\s+/g, "_")}`
+                                                            `truSo_loaiKhu_${item.replace(/\s+/g, "_")}`
                                                             ],
                                                         )}
                                                     />
