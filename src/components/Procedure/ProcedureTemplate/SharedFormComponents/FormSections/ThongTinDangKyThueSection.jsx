@@ -194,7 +194,7 @@ export default function ThongTinDangKyThueSection({
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th style={{ width: "80px" }}>STT</th>
+                        <th style={{ width: "40px" }}>STT</th>
                         <th>Các chỉ tiêu thông tin đăng ký thuế</th>
                     </tr>
                 </thead>

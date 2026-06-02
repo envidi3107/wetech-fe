@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/SharedDeclaration.module.css";
 import localStyles from "./GiayDeNghiDangKyThayDoiDeclaration.module.css";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
@@ -23,6 +23,7 @@ import TaiSanGopVonSection from "@/components/Procedure/ProcedureTemplate/Shared
 import ThongTinDangKyThueSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDangKyThueSection";
 import ThongTinCoPhanSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinCoPhanSection";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
+import FormattedNumberInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
 import {
     handleUppercaseInput,
     toUppercaseValue,
@@ -54,6 +55,8 @@ const EMPTY_AUTHORIZED_REP = {
     danToc: "",
     diaChiLienLac: "",
     tongVonDaiDien: "",
+    tongVonDaiDienNgoaiTe_GiaTri: "",
+    tongVonDaiDienNgoaiTe_Loai: "",
     tyLe: "",
     thoiDiemDaiDien: "",
     chuKy: "",
@@ -272,34 +275,37 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                         <col className={localStyles.colNationality} />
                         <col className={localStyles.colEthnicity} />
                         <col className={localStyles.colAddress} />
-                        <col className={localStyles.colCapital} />
+                        <col className={localStyles.colCapital} style={{ width: "420px" }} />
                         <col className={localStyles.colRatio} />
-                        <col className={localStyles.colRepresentedAt} />
-                        <col className={localStyles.colNote} />
+                        <col className={localStyles.colRepresentedAt} style={{ width: "100px" }} />
+                        <col className={localStyles.colNote} style={{ width: "240px" }} />
                         <col className={localStyles.colAction} />
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>STT</th>
-                            <th>Chủ sở hữu/Thành viên công ty TNHH/Cổ đông là nhà đầu tư nước ngoài là tổ chức</th>
-                            <th>Tên người đại diện theo ủy quyền</th>
-                            <th>Ngày sinh</th>
-                            <th>Giới tính</th>
-                            <th>
+                            <th rowSpan={2}>STT</th>
+                            <th rowSpan={2}>Chủ sở hữu/Thành viên công ty TNHH/Cổ đông là nhà đầu tư nước ngoài là tổ chức</th>
+                            <th rowSpan={2}>Tên người đại diện theo ủy quyền</th>
+                            <th rowSpan={2}>Ngày sinh</th>
+                            <th rowSpan={2}>Giới tính</th>
+                            <th rowSpan={2}>
                                 Số, ngày cấp, cơ quan cấp giấy tờ pháp lý
                                 <InfoTooltip content={FOOTNOTES.giayToNguoiDaiDienUyQuyen} />
                             </th>
-                            <th>Quốc tịch</th>
-                            <th>Dân tộc</th>
-                            <th>Địa chỉ liên lạc</th>
+                            <th rowSpan={2}>Quốc tịch</th>
+                            <th rowSpan={2}>Dân tộc</th>
+                            <th rowSpan={2}>Địa chỉ liên lạc</th>
+                            <th colSpan={3}>Vốn được uỷ quyền</th>
+                            <th rowSpan={2}>Ghi chú</th>
+                            <th rowSpan={2}></th>
+                        </tr>
+                        <tr>
                             <th>
-                                Tổng giá trị vốn được đại diện
+                                Tổng giá trị vốn được đại diện (bằng số; VNĐ và giá trị tương đương theo đơn vị tiền nước ngoài: bằng số, loại ngoại tệ, nếu có)
                                 <InfoTooltip content={FOOTNOTES.tyLeUyQuyen} />
                             </th>
                             <th>Tỷ lệ (%)</th>
                             <th>Thời điểm đại diện phần vốn</th>
-                            <th>Ghi chú</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -380,45 +386,104 @@ function AuthorizedRepTable({ rows, onChangeRows }) {
                                         />
                                     </div>
                                 </td>
-                                {[
-                                    ["chuSoHuu", "Tên tổ chức"],
-                                    ["hoTen", "Họ tên"],
-                                    ["ngaySinh", "dd/mm/yyyy"],
-                                    ["gioiTinh", "Giới tính"],
-                                    ["giayTo", "Số, ngày cấp, cơ quan cấp"],
-                                    ["quocTich", "Quốc tịch"],
-                                    ["danToc", "Dân tộc"],
-                                    ["diaChiLienLac", "Địa chỉ"],
-                                    ["tongVonDaiDien", "VNĐ/ngoại tệ"],
-                                    ["tyLe", "%"],
-                                    ["thoiDiemDaiDien", "Thời điểm"],
-                                    ["ghiChu", "Ghi chú"],
-                                ]
-                                    .filter(
-                                        ([field]) =>
-                                            ![
-                                                "chuSoHuu",
-                                                "hoTen",
-                                                "ngaySinh",
-                                                "gioiTinh",
-                                                "giayTo",
-                                                "quocTich",
-                                                "danToc",
-                                            ].includes(field),
-                                    )
-                                    .map(([field, placeholder]) => (
-                                        <td key={field}>
-                                            <input
-                                                type="text"
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.diaChiLienLac || ""}
+                                        placeholder="Địa chỉ"
+                                        onChange={(e) => updateRow(index, "diaChiLienLac", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                                            <FormattedNumberInput
                                                 className={styles.input}
-                                                value={row[field] || ""}
-                                                placeholder={placeholder}
-                                                onChange={(e) => updateRow(index, field, e.target.value)}
+                                                value={row.tongVonDaiDien}
+                                                onChange={(e) => updateRow(index, "tongVonDaiDien", e.target.value)}
+                                                placeholder="0"
+                                                style={{ textAlign: "right", paddingRight: "46px", width: "100%" }}
                                             />
-                                        </td>
-                                    ))}
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "12px",
+                                                    color: "#444",
+                                                    fontSize: "14px",
+                                                    pointerEvents: "none",
+                                                    fontWeight: 500,
+                                                }}
+                                            >
+                                                VNĐ
+                                            </span>
+                                        </div>
+                                        <div
+                                            style={{
+                                                fontSize: "12px",
+                                                color: "#555",
+                                                textAlign: "left",
+                                                marginTop: "4px",
+                                            }}
+                                        >
+                                            Giá trị tương đương theo đơn vị tiền nước ngoài (nếu có; bằng số, loại ngoại
+                                            tệ):
+                                        </div>
+                                        <div style={{ display: "flex", gap: "4px" }}>
+                                            <FormattedNumberInput
+                                                className={styles.input}
+                                                value={row.tongVonDaiDienNgoaiTe_GiaTri || ""}
+                                                onChange={(e) => updateRow(index, "tongVonDaiDienNgoaiTe_GiaTri", e.target.value)}
+                                                placeholder="Tiền bằng số"
+                                                style={{ width: "65%" }}
+                                            />
+                                            <input
+                                                className={styles.input}
+                                                value={row.tongVonDaiDienNgoaiTe_Loai || ""}
+                                                onChange={(e) => updateRow(index, "tongVonDaiDienNgoaiTe_Loai", e.target.value)}
+                                                placeholder="Loại ngoại tệ"
+                                                style={{ width: "35%" }}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.tyLe || ""}
+                                        placeholder="%"
+                                        onChange={(e) => updateRow(index, "tyLe", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.thoiDiemDaiDien || ""}
+                                        placeholder="Thời điểm"
+                                        onChange={(e) => updateRow(index, "thoiDiemDaiDien", e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={row.ghiChu || ""}
+                                        placeholder="Ghi chú"
+                                        onChange={(e) => updateRow(index, "ghiChu", e.target.value)}
+                                    />
+                                </td>
                                 <td style={{ textAlign: "center" }}>
-                                    <button type="button" onClick={() => removeRow(index)}>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeRow(index)}
+                                        style={{
+                                            padding: "4px 8px",
+                                            borderRadius: "4px",
+                                            cursor: "pointer"
+                                        }}
+                                    >
                                         Xóa
                                     </button>
                                 </td>
@@ -472,6 +537,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [pendingScrollTarget, setPendingScrollTarget] = useState("");
     const danhSachThanhVienData = useGetFormDataJsonFromName("Danh sách thành viên");
     const danhSachCoDongSangLapData = useGetFormDataJsonFromName("Danh sách cổ đông sáng lập");
+    const internalFormRef = useRef(null);
+    const resolvedFormRef = formRef || internalFormRef;
 
     useEffect(() => {
         const parsed = normalizeDataJson(dataJson);
@@ -530,7 +597,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     }, [aOptions, mainOptions, pendingScrollTarget]);
 
     useEffect(() => {
-        const form = formRef?.current;
+        const form = resolvedFormRef.current;
         if (!form) return;
 
         const handleInput = () => {
@@ -567,16 +634,16 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                     }
                 }
             }
-            
+
             // Logic for Vốn Đầu Tư của Chủ doanh nghiệp tư nhân
             const vonDauTuDaDangKyInput = form.querySelector('input[name="vonDauTuDaDangKy"]');
             const vonDauTuSauThayDoiInput = form.querySelector('input[name="vonDauTuSauThayDoi"]');
             const vonDauTuTargetInput = form.querySelector('input[name="vonDauTu_hinhThucTangGiam"]');
-            
+
             if (vonDauTuDaDangKyInput && vonDauTuSauThayDoiInput && vonDauTuTargetInput) {
                 const daDangKyDT = parseFloat(vonDauTuDaDangKyInput.value.replace(/[^0-9]/g, ""));
                 const sauThayDoiDT = parseFloat(vonDauTuSauThayDoiInput.value.replace(/[^0-9]/g, ""));
-                
+
                 if (!isNaN(daDangKyDT) && !isNaN(sauThayDoiDT)) {
                     if (sauThayDoiDT > daDangKyDT) vonDauTuTargetInput.value = "Tăng";
                     else if (sauThayDoiDT < daDangKyDT) vonDauTuTargetInput.value = "Giảm";
@@ -599,7 +666,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
         form.addEventListener("input", onInputWrapper);
         return () => form.removeEventListener("input", onInputWrapper);
-    }, [formRef]);
+    }, [formRef, dataJson]);
 
     const handleKinhGuiProvinceChange = (provinceName) => {
         setKinhGuiProvince(provinceName);
@@ -665,14 +732,14 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     };
 
     const collectData = () => {
-        if (!formRef?.current) return null;
-        if (!formRef.current.checkValidity()) {
-            formRef.current.reportValidity();
+        if (!resolvedFormRef.current) return null;
+        if (!resolvedFormRef.current.checkValidity()) {
+            resolvedFormRef.current.reportValidity();
             return null;
         }
         if (!validateSelection()) return null;
 
-        const formData = new FormData(formRef.current);
+        const formData = new FormData(resolvedFormRef.current);
         const data = Object.fromEntries(formData.entries());
         Object.keys(data).forEach((key) => {
             if (
@@ -754,7 +821,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const isASelected = (name) => isMainSelected("A") && !!aOptions[name];
 
     return (
-        <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
+        <form onSubmit={handleSubmit} ref={resolvedFormRef} key={dataJson ? "loaded" : "empty"}>
             <div className={localStyles.formLayout}>
                 <aside className={localStyles.stickyPanel}>
                     <div className={localStyles.stickySection}>
@@ -1140,11 +1207,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                             label="Hình thức tăng, giảm vốn"
                                             name="vonDauTu_hinhThucTangGiam"
                                             dataJson={normalizedData}
+                                            required
                                         />
                                         <Field
                                             label="Thời điểm thay đổi vốn"
                                             name="vonDauTu_thoiDiemThayDoi"
                                             dataJson={normalizedData}
+                                            required
                                         >
                                             <DateInput
                                                 name="vonDauTu_thoiDiemThayDoi"
@@ -1245,7 +1314,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             <h3 className={styles.sectionTitle}>Đề nghị hiệu đính thông tin đăng ký doanh nghiệp</h3>
                             <div className={styles.grid2}>
                                 <Field
-                                    label="Ngày cấp Giấy chứng nhận/Giấy xác nhận"
+                                    label="Ngày cấp Giấy chứng nhận/Giấy xác nhận đăng ký doanh nghiệp:"
                                     name="hieuDinh_ngayCapGiay"
                                     dataJson={normalizedData}
                                     required
@@ -1258,11 +1327,12 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     />
                                 </Field>
                                 <Field
-                                    label="Ngày nộp hồ sơ đăng ký doanh nghiệp"
+                                    label="Ngày nộp hồ sơ đăng ký doanh nghiệp:"
                                     name="hieuDinh_ngayNopHoSo"
                                     dataJson={normalizedData}
                                     required
                                 >
+                                    <div style={{ marginBottom: "23px" }}></div>
                                     <DateInput
                                         name="hieuDinh_ngayNopHoSo"
                                         className={styles.input}
@@ -1272,7 +1342,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                 </Field>
                             </div>
                             <TextAreaField
-                                label="Thông tin trên Giấy chứng nhận/Giấy xác nhận là"
+                                label="Thông tin trên Giấy chứng nhận/Giấy xác nhận đăng ký doanh nghiệp là"
                                 name="hieuDinh_thongTinTrenGiay"
                                 dataJson={normalizedData}
                                 required

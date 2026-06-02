@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/SharedDeclaration.module.css";
+import nganhNgheStyles from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable.module.css";
 import DateInput from "@/components/DateInput/DateInput";
 import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import {
@@ -539,23 +540,17 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                         />
                         <ReadOnlyField label="Thời điểm tăng/giảm vốn" value={formatDate(decisionData.thoiDiemThayDoiVon)} />
                     </div>
-                    <h4 className={styles.sectionTitle}>Trong đó và cơ cấu góp vốn sau thay đổi</h4>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
+                        <h4 className={styles.sectionTitle}>Trong đó cơ cấu góp vốn sau thay đổi vốn điều lệ:</h4>
+                        <button
+                            type="button"
+                            onClick={() => setContributionRows([...contributionRows, { ...emptyContributionRow }])}
+                            className={nganhNgheStyles.btnPrimary}
+                        >
+                            Thêm dòng góp vốn
+                        </button>
+                    </div>
                     <ContributionRowsTable rows={contributionRows} onChangeRows={setContributionRows} totalCapital={decisionData.vonDieuLeSauThayDoi} />
-                    <button
-                        type="button"
-                        onClick={() => setContributionRows([...contributionRows, { ...emptyContributionRow }])}
-                        style={{
-                            marginTop: 10,
-                            border: "1px solid #1b154b",
-                            background: "#fff",
-                            color: "#1b154b",
-                            borderRadius: 4,
-                            padding: "8px 12px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Thêm dòng góp vốn
-                    </button>
                 </div>
             )}
 

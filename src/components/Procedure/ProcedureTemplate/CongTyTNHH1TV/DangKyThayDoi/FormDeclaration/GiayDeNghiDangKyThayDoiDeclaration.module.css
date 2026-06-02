@@ -17,7 +17,7 @@
     box-shadow: 0 8px 24px rgba(27, 21, 75, 0.08);
 }
 
-.stickySection + .stickySection {
+.stickySection+.stickySection {
     margin-top: 18px;
     padding-top: 16px;
     border-top: 1px solid #ececf4;
@@ -187,13 +187,13 @@
     vertical-align: middle;
 }
 
-.authorizedRepSelectCell > div {
+.authorizedRepSelectCell>div {
     display: flex;
     align-items: center;
     min-height: 40px;
 }
 
-.authorizedRepSelectCell > div > div {
+.authorizedRepSelectCell>div>div {
     width: 100%;
     margin-bottom: 0;
 }

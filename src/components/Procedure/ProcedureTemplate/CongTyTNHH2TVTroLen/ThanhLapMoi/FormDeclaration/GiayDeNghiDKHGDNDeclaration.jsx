@@ -231,11 +231,14 @@ const GiayDeNghiDKHGDNDeclaration = forwardRef(function GiayDeNghiDKHGDNDeclarat
     // Helper để lấy giá trị mặc định - ưu tiên dataJson, nếu không có thì lấy mapped
     const getDefaultValue = (fieldName, fallbackValue = "") => {
         if (localNguoiDaiDien && localNguoiDaiDien[fieldName] !== undefined) {
+            console.log('localNguoiDaiDien[fieldName]', localNguoiDaiDien[fieldName]);
             return localNguoiDaiDien[fieldName];
         }
         if (dataJson && dataJson[fieldName]) {
+            console.log('dataJson[fieldName]', dataJson[fieldName]);
             return dataJson[fieldName];
         }
+        console.log('mappedData[fieldName]', mappedData[fieldName]);
         return mappedData[fieldName] || fallbackValue;
     };
     useEffect(() => {

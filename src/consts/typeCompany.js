@@ -303,6 +303,21 @@ const typeCompanyOptions = [
                                 title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
                                 declaration: GiayDeNghiDangKyThayDoiDeclaration2TV,
                                 confirmation: GiayDeNghiDangKyThayDoiConfirmation2TV,
+                            },
+                            {
+                                title: "Quyết định hội đồng thành viên",
+                                declaration: QuyetDinhHoiDongThanhVienDeclaration,
+                                confirmation: QuyetDinhHoiDongThanhVienConfirmation,
+                            },
+                            {
+                                title: "Giấy đề nghị đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDKDNDeclaration2TV,
+                                confirmation: GiayDeNghiDKDNConfirmation2TV,
+                            },
+                            {
+                                title: "Danh sách CSH hưởng lợi",
+                                declaration: DanhSachCSHHuongLoiDeclaration,
+                                confirmation: DanhSachCSHHuongLoiConfirmation,
                             }
                         ],
                     },
