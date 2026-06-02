@@ -49,6 +49,8 @@ import GiayDeNghiDangKyThayDoiDeclaration_CP from "@/components/Procedure/Proced
 import GiayDeNghiDangKyThayDoiConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
+import QuyetDinhDaiHoiDongCoDongDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormDeclaration/QuyetDinhDaiHoiDongCoDongDeclaration";
+import QuyetDinhDaiHoiDongCoDongConfirmation_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/DangKyThayDoi/FormConfirmation/QuyetDinhDaiHoiDongCoDongConfirmation";
 
 const typeCompanyOptions = [
     {
@@ -417,6 +419,21 @@ const typeCompanyOptions = [
                                 title: "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
                                 declaration: GiayDeNghiDangKyThayDoiDeclaration_CP,
                                 confirmation: GiayDeNghiDangKyThayDoiConfirmation_CP,
+                            },
+                            {
+                                title: "Mẫu quyết định đại hội đồng cổ đông",
+                                declaration: QuyetDinhDaiHoiDongCoDongDeclaration_CP,
+                                confirmation: QuyetDinhDaiHoiDongCoDongConfirmation_CP,
+                            },
+                            {
+                                title: "Giấy đề nghị đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDKDNDeclaration_CP,
+                                confirmation: GiayDeNghiDKDNConfirmation_CP,
+                            },
+                            {
+                                title: "Danh sách CSH hưởng lợi",
+                                declaration: DanhSachCSHHuongLoiDeclaration_CP,
+                                confirmation: DanhSachCSHHuongLoiConfirmation_CP,
                             }
                         ],
                     },

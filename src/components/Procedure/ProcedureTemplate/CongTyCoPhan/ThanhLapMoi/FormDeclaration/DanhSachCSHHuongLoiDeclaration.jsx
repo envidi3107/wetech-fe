@@ -4,7 +4,6 @@ import {
     GioiTinhSelect,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
-import Signature from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/Signature/Signature";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import deleteIcon from "@/assets/delete-icon.png";
 import Select from "react-select";
