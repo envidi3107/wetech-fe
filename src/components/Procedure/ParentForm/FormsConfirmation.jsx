@@ -44,6 +44,7 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     title: currentForm.code || "Biểu mẫu",
                     landscape,
                 });
+                console.log("html string:", htmlString);
 
                 const htmlBlob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
                 const htmlFile = new File([htmlBlob], filename, { type: "text/html" });
@@ -51,7 +52,9 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                 // Tạo DOCX từ HTML hiển thị tốt hơn trên Word
                 const docxBlob = htmlDocx.asBlob(htmlString);
                 const docxFilename = `${currentForm.code || "form"}.docx`;
-                const docxFile = new File([docxBlob], docxFilename, { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+                const docxFile = new File([docxBlob], docxFilename, {
+                    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                });
 
                 // Gửi FormData lên server
                 const formData = new FormData();
@@ -68,7 +71,10 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     onStepSubmitSuccess();
                 }
             } catch (err) {
-                showNotification(err?.response?.data?.message || "Xác nhận biểu mẫu thất bại! Vui lòng thử lại", "error");
+                showNotification(
+                    err?.response?.data?.message || "Xác nhận biểu mẫu thất bại! Vui lòng thử lại",
+                    "error",
+                );
             }
         },
     }));

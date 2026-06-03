@@ -33,8 +33,7 @@ function formatNumber(value) {
 }
 
 function formatUnitValue(value, unit) {
-    if (isEmptyValue(value)) return "";
-
+    if (isEmptyValue(value) || value === "0") return value;
     const displayValue = formatNumber(value);
     if (unit === "%" && String(displayValue).includes("%")) return displayValue;
     if (unit !== "%" && /(VNĐ|VND)/i.test(String(displayValue))) return displayValue;
@@ -267,8 +266,8 @@ function CapitalChangeSection({ data }) {
     return (
         <>
             <SectionTitle>Thay đổi vốn điều lệ</SectionTitle>
-            <p>Vốn điều lệ đã đăng ký: {formatUnitValue(data.vonDieuLeDaDangKy, "VNĐ")}</p>
-            <p>Vốn điều lệ sau khi thay đổi: {formatUnitValue(data.vonDieuLeSauThayDoi, "VNĐ")}</p>
+            <p>Vốn điều lệ đã đăng ký: {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}</p>
+            <p>Vốn điều lệ sau khi thay đổi: {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}</p>
             <p>Hình thức tăng/giảm vốn: {data.qdHinhThucTangGiamVon || data.hinhThucTangGiamVon || "…"}</p>
             <p>Thời điểm tăng/giảm vốn: {formatDate(data.thoiDiemThayDoiVon) || "…/…/…"}</p>
 
@@ -286,7 +285,7 @@ function CapitalChangeSection({ data }) {
 
             {data.qdUnpaidShareholdersList?.length > 0 && (
                 <>
-                    <p>Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là {formatUnitValue(data.qdTongVonChuaThanhToan, "VNĐ")} tương đương {formatNumber(data.qdTongCoPhanChuaThanhToan)} cổ phần, trong đó:</p>
+                    <p>1. Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là {formatUnitValue(data.qdTongVonChuaThanhToan, "VNĐ")}{data.qdTongVonChuaThanhToanBangChu ? ` (${data.qdTongVonChuaThanhToanBangChu} VNĐ)` : ""} tương đương {formatNumber(data.qdTongCoPhanChuaThanhToan)} cổ phần, trong đó:</p>
                     {data.qdUnpaidShareholdersList.map((row, index) => (
                         <p key={index}>
                             + {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} chưa thanh toán {formatUnitValue(row.soTienChuaThanhToan, "VNĐ")} tương đương {formatNumber(row.soCoPhanTuongDuong)} cổ phần
@@ -295,7 +294,7 @@ function CapitalChangeSection({ data }) {
                 </>
             )}
 
-            <p>Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ:</p>
+            <p>{data.qdUnpaidShareholdersList?.length > 0 ? "2. " : ""}Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ:</p>
             <MoneySourceTable data={data} />
 
             <p>Tài sản góp vốn sau khi thay đổi vốn điều lệ:</p>

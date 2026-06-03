@@ -654,15 +654,85 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             }
         };
 
+        const handleThongTinCoPhan = () => {
+            window.requestAnimationFrame(() => {
+                const capInput = form.querySelector('input[name="vonDieuLeSauThayDoi"]');
+                const menhGiaInput = form.querySelector('input[name="menhGiaCoPhan"]');
+                
+                if (capInput) {
+                    const capValue = parseFloat(capInput.value.replace(/[^0-9]/g, "")) || 0;
+                    const menhGiaValue = menhGiaInput ? (parseFloat(menhGiaInput.value.replace(/[^0-9]/g, "")) || 0) : 0;
+                    
+                    const keys = ["cptt", "cpudbq", "cpudct", "cpudhl", "cpudk"];
+                    let totalTiLe = 0;
+                    
+                    keys.forEach(k => {
+                        const slInput = form.querySelector(`input[name="cp_${k}_soLuong"]`);
+                        const gtInput = form.querySelector(`input[name="cp_${k}_giaTri"]`);
+                        const tlInput = form.querySelector(`input[name="cp_${k}_tiLe"]`);
+                        
+                        if (slInput && gtInput && tlInput) {
+                            const sl = parseFloat(slInput.value.replace(/[^0-9]/g, "")) || 0;
+                            
+                            // Calculate giaTri
+                            const gt = sl * menhGiaValue;
+                            const formattedGt = gt > 0 ? gt.toLocaleString('vi-VN') : "";
+                            
+                            if (gtInput.value !== formattedGt) {
+                                gtInput.value = formattedGt;
+                                gtInput.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+
+                            // Calculate tiLe
+                            if (capValue > 0) {
+                                const tl = (gt / capValue) * 100;
+                                const roundedTl = Math.round(tl * 10000) / 10000;
+                                
+                                if (parseFloat(tlInput.value) !== roundedTl) {
+                                    tlInput.value = roundedTl;
+                                    tlInput.dispatchEvent(new Event('change', { bubbles: true }));
+                                }
+                                totalTiLe += roundedTl;
+                            } else {
+                                if (tlInput.value !== "0") {
+                                    tlInput.value = "0";
+                                    tlInput.dispatchEvent(new Event('change', { bubbles: true }));
+                                }
+                            }
+                        }
+                    });
+                    
+                    const tongTiLeInput = form.querySelector(`input[name="cp_tongTiLe"]`);
+                    if (tongTiLeInput) {
+                        if (capValue > 0) {
+                            const roundedTotal = Math.round(totalTiLe * 10000) / 10000;
+                            if (parseFloat(tongTiLeInput.value) !== roundedTotal) {
+                                tongTiLeInput.value = roundedTotal;
+                            }
+                        } else {
+                            if (tongTiLeInput.value !== "0") {
+                                tongTiLeInput.value = "0";
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
         const onInputWrapper = (e) => {
             const names = ["vonDieuLeDaDangKy", "vonDieuLeSauThayDoi", "vonDauTuDaDangKy", "vonDauTuSauThayDoi"];
             if (names.includes(e.target.name)) {
                 handleInput();
             }
+            if (names.includes(e.target.name) || 
+               (e.target.name && (e.target.name.includes("_giaTri") || e.target.name.includes("_soLuong") || e.target.name === "menhGiaCoPhan"))) {
+                handleThongTinCoPhan();
+            }
         };
 
         // Run once on mount or when form ref is available
         handleInput();
+        handleThongTinCoPhan();
 
         form.addEventListener("input", onInputWrapper);
         return () => form.removeEventListener("input", onInputWrapper);
@@ -1140,11 +1210,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                             <YesNoRadio name="hienThiNgoaiTe" dataJson={normalizedData} />
                                         </div>
                                     </div>
-                                    <NguonVonDieuLeSection dataJson={normalizedData} styles={styles} isNote />
+                                    <NguonVonDieuLeSection title='Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ' dataJson={normalizedData} styles={styles} isNote />
+                                    <TaiSanGopVonSection title='Tài sản góp vốn sau khi thay đổi vốn điều lệ' dataJson={normalizedData} styles={styles} />
                                     {includeCoPhanFields && (
-                                        <ThongTinCoPhanSection dataJson={normalizedData} styles={styles} />
+                                        <ThongTinCoPhanSection dataJson={normalizedData} hideCoPhanChaoBan={true} styles={styles} />
                                     )}
-                                    <TaiSanGopVonSection dataJson={normalizedData} styles={styles} />
                                     <TextAreaField
                                         label="Cam kết sau khi giảm vốn (chỉ ghi cam kết trong trường hợp đăng ký giảm vốn điều lệ)"
                                         name="camKetSauGiamVon"

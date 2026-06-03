@@ -478,25 +478,6 @@ function ShareInfoTable({ data }) {
                     ))}
                 </tbody>
             </table>
-            <p>
-                <strong>Thông tin về cổ phần được quyền chào bán:</strong>
-            </p>
-            <table className={compactPdfTableClassName} style={{ marginTop: 8 }}>
-                <thead>
-                    <tr>
-                        <th>Loại cổ phần được quyền chào bán</th>
-                        <th>Số lượng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {offerRows.map(([label, soLuongKey]) => (
-                        <tr key={soLuongKey}>
-                            <td>{label}</td>
-                            <td>{data[soLuongKey] || ""}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
         </>
     );
 }
@@ -664,11 +645,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                             <Section title="ĐĂNG KÝ THAY ĐỔI VỐN ĐIỀU LỆ, PHẦN VỐN GÓP, TỶ LỆ PHẦN VỐN GÓP">
                                 <Line
                                     label="Vốn điều lệ đã đăng ký"
-                                    value={`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`}
+                                    value={`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}
                                 />
                                 <Line
                                     label="Vốn điều lệ sau khi thay đổi"
-                                    value={`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`}
+                                    value={`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}
                                 />
                                 <Line
                                     label="Giá trị tương đương theo đơn vị tiền nước ngoài (bằng số)"
@@ -747,11 +728,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                             <Section title="ĐĂNG KÝ THAY ĐỔI VỐN ĐẦU TƯ CỦA CHỦ DOANH NGHIỆP TƯ NHÂN">
                                 <Line
                                     label="Vốn đầu tư đã đăng ký"
-                                    value={`${data.vonDauTuDaDangKy || ""} ${data.vonDauTuDaDangKy_bangChu ? `(${data.vonDauTuDaDangKy_bangChu})` : ""}`}
+                                    value={`${data.vonDauTuDaDangKy || ""} ${data.vonDauTuDaDangKy_bangChu ? `(${data.vonDauTuDaDangKy_bangChu})` : ""}`.trim()}
                                 />
                                 <Line
                                     label="Vốn đầu tư sau khi thay đổi"
-                                    value={`${data.vonDauTuSauThayDoi || ""} ${data.vonDauTuSauThayDoi_bangChu ? `(${data.vonDauTuSauThayDoi_bangChu})` : ""}`}
+                                    value={`${data.vonDauTuSauThayDoi || ""} ${data.vonDauTuSauThayDoi_bangChu ? `(${data.vonDauTuSauThayDoi_bangChu})` : ""}`.trim()}
                                 />
                                 <Line
                                     label="Giá trị tương đương theo đơn vị tiền nước ngoài (bằng số)"

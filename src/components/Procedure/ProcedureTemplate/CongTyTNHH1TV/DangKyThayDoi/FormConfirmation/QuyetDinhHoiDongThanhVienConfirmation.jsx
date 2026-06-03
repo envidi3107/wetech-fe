@@ -224,8 +224,8 @@ function CapitalChangeSection({ data }) {
     return (
         <>
             <SectionTitle>Thay đổi vốn điều lệ</SectionTitle>
-            <p>Vốn điều lệ đã đăng ký: {formatUnitValue(data.vonDieuLeDaDangKy, "VNĐ")}</p>
-            <p>Vốn điều lệ sau khi thay đổi: {formatUnitValue(data.vonDieuLeSauThayDoi, "VNĐ")}</p>
+            <p>Vốn điều lệ đã đăng ký: {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}</p>
+            <p>Vốn điều lệ sau khi thay đổi: {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}</p>
             <p>Hình thức tăng/giảm vốn: {data.qdHinhThucTangGiamVon || data.hinhThucTangGiamVon || "…"}</p>
             <p>Thời điểm tăng/giảm vốn: {formatDate(data.thoiDiemThayDoiVon) || "…/…/…"}</p>
 

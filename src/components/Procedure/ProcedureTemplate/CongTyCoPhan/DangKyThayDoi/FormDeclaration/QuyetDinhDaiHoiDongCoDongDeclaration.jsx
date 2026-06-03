@@ -17,6 +17,11 @@ import { GioiTinhSelect, ChucDanhSelect } from "@/components/Procedure/Procedure
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
+import NguonVonDieuLeSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/NguonVonDieuLeSection";
+import TaiSanGopVonSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/TaiSanGopVonSection";
+import numberToVietnameseText from "@/utils/numberToVietnameseText";
+import { useAuth } from "@/context/AuthContext";
+import { toUppercaseValue } from "../../../SharedFormComponents/uppercaseInput";
 
 const SOURCE_FORM_NAME = "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";
 
@@ -106,12 +111,30 @@ function getChangedCompanyName(data) {
     );
 }
 
+function genderToDanhXung(gioiTinh) {
+    return (gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông";
+}
+
 function getSourceDefaultContributionRows(data) {
+    if (data.doiCoDongSangLapList && data.doiCoDongSangLapList.length > 0) {
+        return data.doiCoDongSangLapList.map((sourceRow, index) => {
+            const qdRow = data.qdThanhVienGopVonList?.[index] || {};
+            return {
+                danhXung: qdRow.danhXung || sourceRow.danhXung || genderToDanhXung(sourceRow.gioiTinh),
+                hoTen: sourceRow.hoTen || sourceRow.chuSoHuu || qdRow.hoTen || "",
+                giaTriTangGiam: qdRow.giaTriTangGiam || sourceRow.giaTriTangGiam || "",
+                phanVonSauThayDoi: sourceRow.phanVonSauThayDoi || sourceRow.tongSoCoPhan_giaTri || sourceRow.phanVonGop || qdRow.phanVonSauThayDoi || "",
+                soCoPhanSauThayDoi: qdRow.soCoPhanSauThayDoi || sourceRow.tongSoCoPhan_soLuong || sourceRow.soCoPhan || "",
+                tyLeSauThayDoi: sourceRow.tyLeSauThayDoi || sourceRow.tyLe || qdRow.tyLeSauThayDoi || "",
+            };
+        });
+    }
+
     if (data.doiThanhVienList && data.doiThanhVienList.length > 0) {
         return data.doiThanhVienList.map((sourceRow, index) => {
             const qdRow = data.qdThanhVienGopVonList?.[index] || {};
             return {
-                danhXung: qdRow.danhXung || sourceRow.danhXung || ((sourceRow.gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông"),
+                danhXung: qdRow.danhXung || sourceRow.danhXung || genderToDanhXung(sourceRow.gioiTinh),
                 hoTen: sourceRow.hoTen || sourceRow.chuSoHuu || qdRow.hoTen || "",
                 giaTriTangGiam: qdRow.giaTriTangGiam || sourceRow.giaTriTangGiam || "",
                 phanVonSauThayDoi: sourceRow.phanVonSauThayDoi || sourceRow.phanVonGop || qdRow.phanVonSauThayDoi || "",
@@ -123,7 +146,7 @@ function getSourceDefaultContributionRows(data) {
     const sourceRows = data.qdThanhVienGopVonList || data.thanhVienList || data.coDongList || [];
     if (sourceRows.length) {
         return sourceRows.map((row) => ({
-            danhXung: row.danhXung || ((row.gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông"),
+            danhXung: row.danhXung || genderToDanhXung(row.gioiTinh),
             hoTen: row.hoTen || row.chuSoHuu || "",
             giaTriTangGiam: row.giaTriTangGiam || "",
             phanVonSauThayDoi: row.phanVonSauThayDoi || row.phanVonGop || "",
@@ -137,13 +160,43 @@ function getSourceDefaultContributionRows(data) {
     const gioiTinh = data.chuSoHuu_gioiTinh || data.nguoiDaiDien_gioiTinh || "";
     return [
         {
-            danhXung: gioiTinh.toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông",
+            danhXung: genderToDanhXung(gioiTinh),
             hoTen: ownerName,
             giaTriTangGiam: diff === null ? "" : formatNumber(Math.abs(diff)),
             phanVonSauThayDoi: data.vonDieuLeSauThayDoi || "",
             soCoPhanSauThayDoi: "",
             tyLeSauThayDoi: data.vonDieuLeSauThayDoi ? "100" : "",
         },
+    ];
+}
+
+function getSourceDefaultUnpaidRows(data) {
+    if (data.qdUnpaidShareholdersList && data.qdUnpaidShareholdersList.length > 0) {
+        return data.qdUnpaidShareholdersList;
+    }
+    const coDongList = data.doiCoDongSangLapList || data.coDongList || [];
+    if (coDongList.length > 0) {
+        return coDongList.map((row) => ({
+            danhXung: row.danhXung || genderToDanhXung(row.gioiTinh),
+            hoTen: row.hoTen || "",
+            soTienChuaThanhToan: "",
+            soCoPhanTuongDuong: "",
+        }));
+    }
+    return [];
+}
+
+function getSourceDefaultShareTypesRows(data) {
+    if (data.qdShareTypesList && data.qdShareTypesList.length > 0) {
+        return data.qdShareTypesList;
+    }
+
+    return [
+        { tenLoai: "Cổ phần phổ thông", soLuong: data.cp_cptt_soLuong || "", giaTri: data.cp_cptt_giaTri || "", tyLe: data.cp_cptt_tiLe || "" },
+        { tenLoai: "Cổ phần ưu đãi biểu quyết", soLuong: data.cp_cpudbq_soLuong || "", giaTri: data.cp_cpudbq_giaTri || "", tyLe: data.cp_cpudbq_tiLe || "" },
+        { tenLoai: "Cổ phần ưu đãi cổ tức", soLuong: data.cp_cpudct_soLuong || "", giaTri: data.cp_cpudct_giaTri || "", tyLe: data.cp_cpudct_tiLe || "" },
+        { tenLoai: "Cổ phần ưu đãi hoàn lại", soLuong: data.cp_cpudhl_soLuong || "", giaTri: data.cp_cpudhl_giaTri || "", tyLe: data.cp_cpudhl_tiLe || "" },
+        { tenLoai: "Các cổ phần ưu đãi khác", soLuong: data.cp_cpudk_soLuong || "", giaTri: data.cp_cpudk_giaTri || "", tyLe: data.cp_cpudk_tiLe || "" },
     ];
 }
 
@@ -235,7 +288,7 @@ function BusinessRowsPreview({ title, rows, removed = false }) {
 
     return (
         <div className={styles.formGroup}>
-            <h4 className={styles.sectionTitle}>{title}</h4>
+            <h4 className={styles.label}>{title}</h4>
             <table className={styles.table}>
                 <thead>
                     <tr>
@@ -294,9 +347,8 @@ function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
                 <tr>
                     <th style={{ width: 60 }}>STT</th>
                     <th>Tên Ông/Bà/Cổ đông</th>
-                    <th>Giá trị tăng/giảm vốn</th>
-                    <th>Giá trị vốn góp sau thay đổi</th>
                     <th>Số cổ phần sở hữu</th>
+                    <th>Giá trị vốn góp sau thay đổi</th>
                     <th style={{ width: 120 }}>Tỷ lệ (%)</th>
                     <th style={{ width: 90 }}></th>
                 </tr>
@@ -327,8 +379,8 @@ function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
                         <td>
                             <input
                                 className={styles.input}
-                                value={row.giaTriTangGiam || ""}
-                                onChange={(event) => handleNumberChange(index, "giaTriTangGiam", event.target.value)}
+                                value={row.soCoPhanSauThayDoi || ""}
+                                onChange={(event) => handleNumberChange(index, "soCoPhanSauThayDoi", event.target.value)}
                                 required
                             />
                         </td>
@@ -337,14 +389,6 @@ function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
                                 className={styles.input}
                                 value={row.phanVonSauThayDoi || ""}
                                 onChange={(event) => handleNumberChange(index, "phanVonSauThayDoi", event.target.value)}
-                                required
-                            />
-                        </td>
-                        <td>
-                            <input
-                                className={styles.input}
-                                value={row.soCoPhanSauThayDoi || ""}
-                                onChange={(event) => handleNumberChange(index, "soCoPhanSauThayDoi", event.target.value)}
                                 required
                             />
                         </td>
@@ -433,7 +477,7 @@ function ShareTypesTable({ rows, onChangeRows }) {
     );
 }
 
-function UnpaidShareholdersTable({ rows, onChangeRows }) {
+function UnpaidShareholdersTable({ rows, onChangeRows, menhGiaCoPhan }) {
     const updateRow = (index, field, value) => {
         const nextRows = [...rows];
         nextRows[index] = { ...nextRows[index], [field]: value };
@@ -442,7 +486,23 @@ function UnpaidShareholdersTable({ rows, onChangeRows }) {
 
     const handleNumberChange = (index, field, value) => {
         const raw = String(value).replace(/[^\d]/g, "");
-        updateRow(index, field, raw ? formatNumber(raw) : "");
+        const formatted = raw ? formatNumber(raw) : "";
+
+        if (field === "soTienChuaThanhToan") {
+            const nextRows = [...rows];
+            nextRows[index] = { ...nextRows[index], [field]: formatted };
+
+            const menhGia = parseInt(String(menhGiaCoPhan || "10000").replace(/[^\d]/g, ""), 10);
+            if (raw && menhGia) {
+                const coPhan = parseInt(raw, 10) / menhGia;
+                nextRows[index].soCoPhanTuongDuong = formatNumber(coPhan);
+            } else {
+                nextRows[index].soCoPhanTuongDuong = "";
+            }
+            onChangeRows(nextRows);
+        } else {
+            updateRow(index, field, formatted);
+        }
     };
 
     if (!rows || rows.length === 0) return null;
@@ -522,6 +582,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     { dataJson, onSubmit, formRef },
     componentRef,
 ) {
+    const { user } = useAuth()
     const sourceFormData = useGetFormDataJsonFromName(SOURCE_FORM_NAME);
     const currentData = useMemo(() => normalizeDataJson(dataJson), [dataJson]);
     const sourceData = useMemo(() => normalizeDataJson(sourceFormData), [sourceFormData]);
@@ -537,7 +598,6 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     const [contributionRows, setContributionRows] = useState([emptyContributionRow]);
     const [shareTypesRows, setShareTypesRows] = useState(defaultShareTypes);
     const [unpaidRows, setUnpaidRows] = useState([]);
-    const [hasUnpaidShareholders, setHasUnpaidShareholders] = useState(false);
     const [showRepresentative, setShowRepresentative] = useState(false);
 
     const [qdNguoiDaiDienProv, setQdNguoiDaiDienProv] = useState("");
@@ -568,12 +628,11 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
 
     useEffect(() => {
         setContributionRows(getSourceDefaultContributionRows(mergedData));
-        if (mergedData.qdShareTypesList) {
-            setShareTypesRows(mergedData.qdShareTypesList);
-        }
+        setShareTypesRows(getSourceDefaultShareTypesRows(mergedData));
         if (mergedData.qdUnpaidShareholdersList && mergedData.qdUnpaidShareholdersList.length > 0) {
             setUnpaidRows(mergedData.qdUnpaidShareholdersList);
-            setHasUnpaidShareholders(true);
+        } else {
+            setUnpaidRows(getSourceDefaultUnpaidRows(mergedData));
         }
     }, [mergedData]);
 
@@ -609,7 +668,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
             ...decisionData,
             ...formValues,
             qdShareTypesList: shareTypesRows,
-            qdUnpaidShareholdersList: hasUnpaidShareholders ? unpaidRows : []
+            qdUnpaidShareholdersList: unpaidRows
         }, contributionRows);
     };
 
@@ -675,10 +734,13 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                 className={styles.inputNoBorder}
                                 name="qdNguoiThucHienThuTuc"
                                 defaultValue={
-                                    decisionData.qdNguoiThucHienThuTuc ||
-                                    decisionData.nguoiDaiDien_hoTen ||
-                                    decisionData.chuSoHuu_hoTen ||
-                                    ""
+                                    toUppercaseValue(
+                                        user?.fullname ||
+                                        decisionData.qdNguoiThucHienThuTuc ||
+                                        decisionData.nguoiDaiDien_hoTen ||
+                                        decisionData.chuSoHuu_hoTen ||
+                                        ""
+                                    )
                                 }
                                 required
                             />
@@ -724,15 +786,79 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                             value={decisionData.qdHinhThucTangGiamVon}
                         />
                         <ReadOnlyField label="Thời điểm tăng/giảm vốn" value={formatDate(decisionData.thoiDiemThayDoiVon)} />
-                        <Field label="Mệnh giá cổ phần (đồng/1 cổ phần)" name="qdMenhGiaCoPhan" data={{ qdMenhGiaCoPhan: decisionData.qdMenhGiaCoPhan || "10.000" }} required />
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
+
+                    <div style={{ marginTop: 16 }}>
+                        <div style={{ marginBottom: 12, color: "#505050", fontSize: "14px", fontWeight: 500, lineHeight: "34px" }}>
+                            Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là{" "}
+                            <input
+                                className={styles.input}
+                                style={{ display: "inline-block", width: "150px", padding: "0 8px", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                name="qdTongVonChuaThanhToan"
+                                defaultValue={decisionData.qdTongVonChuaThanhToan || ""}
+                                onChange={(e) => {
+                                    const raw = String(e.target.value).replace(/[^\d]/g, "");
+                                    e.target.value = raw ? formatNumber(raw) : "";
+
+                                    const inputBangChu = document.querySelector('input[name="qdTongVonChuaThanhToanBangChu"]');
+                                    if (inputBangChu) {
+                                        inputBangChu.value = raw ? numberToVietnameseText(raw) : "";
+                                    }
+
+                                    const menhGia = parseNumber(decisionData.qdMenhGiaCoPhan || "10000");
+                                    const inputCoPhan = document.querySelector('input[name="qdTongCoPhanChuaThanhToan"]');
+                                    if (inputCoPhan && raw && menhGia) {
+                                        const coPhan = parseInt(raw) / menhGia;
+                                        inputCoPhan.value = formatNumber(coPhan);
+                                    } else if (inputCoPhan) {
+                                        inputCoPhan.value = "";
+                                    }
+                                }}
+                            />
+                            VNĐ (
+                            <input
+                                className={styles.input}
+                                style={{ display: "inline-block", width: "220px", padding: "0 8px", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                name="qdTongVonChuaThanhToanBangChu"
+                                defaultValue={decisionData.qdTongVonChuaThanhToanBangChu || (decisionData.qdTongVonChuaThanhToan ? numberToVietnameseText(String(decisionData.qdTongVonChuaThanhToan).replace(/[^\d]/g, "")) : "")}
+                            />
+                            ) tương đương{" "}
+                            <input
+                                className={styles.input}
+                                style={{ display: "inline-block", width: "100px", padding: "0 8px", background: "#f5f5f5", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                name="qdTongCoPhanChuaThanhToan"
+                                defaultValue={decisionData.qdTongCoPhanChuaThanhToan || ""}
+                                readOnly
+                            />
+                            cổ phần, trong đó:
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
+                            <h3 className={styles.sectionTitle}>Danh sách cổ đông chưa thanh toán:</h3>
+                            <button
+                                type="button"
+                                onClick={() => setUnpaidRows([...unpaidRows, { ...emptyUnpaidShareholderRow }])}
+                                className={nganhNgheStyles.btnPrimary}
+                            >
+                                Thêm cổ đông
+                            </button>
+                        </div>
+                        <UnpaidShareholdersTable rows={unpaidRows} onChangeRows={setUnpaidRows} menhGiaCoPhan={decisionData.qdMenhGiaCoPhan} />
+
+                        <div style={{ marginTop: 24, pointerEvents: "none", opacity: 0.9 }}>
+                            <NguonVonDieuLeSection title="Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ" dataJson={decisionData} styles={styles} isNote />
+                            <TaiSanGopVonSection title="Tài sản góp vốn sau khi thay đổi vốn điều lệ" dataJson={decisionData} styles={styles} fieldPrefix="taiSan" />
+                        </div>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <h4 className={styles.sectionTitle}>Thông tin về cổ phần:</h4>
                     </div>
-                    <ShareTypesTable rows={shareTypesRows} onChangeRows={setShareTypesRows} />
+                    <div>
+                        <Field label="Mệnh giá cổ phần (đồng/1 cổ phần)" name="qdMenhGiaCoPhan" data={{ qdMenhGiaCoPhan: decisionData.qdMenhGiaCoPhan || "10.000" }} required />
+                        <ShareTypesTable rows={shareTypesRows} onChangeRows={setShareTypesRows} />
+                    </div>
 
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center", marginTop: 20 }}>
-                        <h4 className={styles.sectionTitle}>Trong đó cơ cấu góp vốn (danh sách cổ đông) sau thay đổi:</h4>
+                        <h3 className={styles.sectionTitle}>Trong đó cơ cấu góp vốn (danh sách cổ đông) sau thay đổi vốn điều lệ:</h3>
                         <button
                             type="button"
                             onClick={() => setContributionRows([...contributionRows, { ...emptyContributionRow }])}
@@ -742,65 +868,12 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                         </button>
                     </div>
                     <ContributionRowsTable rows={contributionRows} onChangeRows={setContributionRows} totalCapital={decisionData.vonDieuLeSauThayDoi} />
-
-                    <div style={{ marginTop: 20 }}>
-                        <label className={styles.radioLabel}>
-                            <input
-                                type="checkbox"
-                                name="qdCoDongChuaThanhToan"
-                                value="true"
-                                className={styles.radioInput}
-                                checked={hasUnpaidShareholders}
-                                onChange={(e) => setHasUnpaidShareholders(e.target.checked)}
-                            />
-                            Bổ sung danh sách cổ đông chưa thanh toán đầy đủ và đúng hạn.
-                        </label>
-                        {hasUnpaidShareholders && (
-                            <div style={{ marginTop: 16 }}>
-                                <div className={styles.grid2}>
-                                    <Field label="Tổng số vốn các cổ đông chưa thanh toán (VNĐ)" name="qdTongVonChuaThanhToan" data={decisionData}>
-                                        <input
-                                            className={styles.input}
-                                            name="qdTongVonChuaThanhToan"
-                                            defaultValue={decisionData.qdTongVonChuaThanhToan || ""}
-                                            onChange={(e) => {
-                                                const raw = String(e.target.value).replace(/[^\d]/g, "");
-                                                e.target.value = raw ? formatNumber(raw) : "";
-                                            }}
-                                        />
-                                    </Field>
-                                    <Field label="Tương đương số cổ phần" name="qdTongCoPhanChuaThanhToan" data={decisionData}>
-                                        <input
-                                            className={styles.input}
-                                            name="qdTongCoPhanChuaThanhToan"
-                                            defaultValue={decisionData.qdTongCoPhanChuaThanhToan || ""}
-                                            onChange={(e) => {
-                                                const raw = String(e.target.value).replace(/[^\d]/g, "");
-                                                e.target.value = raw ? formatNumber(raw) : "";
-                                            }}
-                                        />
-                                    </Field>
-                                </div>
-                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
-                                    <h4 className={styles.sectionTitle}>Danh sách cổ đông chưa thanh toán:</h4>
-                                    <button
-                                        type="button"
-                                        onClick={() => setUnpaidRows([...unpaidRows, { ...emptyUnpaidShareholderRow }])}
-                                        className={nganhNgheStyles.btnPrimary}
-                                    >
-                                        Thêm cổ đông
-                                    </button>
-                                </div>
-                                <UnpaidShareholdersTable rows={unpaidRows} onChangeRows={setUnpaidRows} />
-                            </div>
-                        )}
-                    </div>
                 </div>
             )}
 
             {isTruthy(decisionData.a_doiNganhNghe) && (
                 <div className={styles.sectionGroup}>
-                    <h3 className={styles.sectionTitle}>Ngành, nghề kinh doanh lấy từ Giấy đề nghị</h3>
+                    <h3 className={styles.sectionTitle}>Thay đổi ngành, nghề kinh doanh</h3>
                     <BusinessRowsPreview
                         title="Bổ sung ngành, nghề kinh doanh sau"
                         rows={decisionData.nganhNgheBoSungList}

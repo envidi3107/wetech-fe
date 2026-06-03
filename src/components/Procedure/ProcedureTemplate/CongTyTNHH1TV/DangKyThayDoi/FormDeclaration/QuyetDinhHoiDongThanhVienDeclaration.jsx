@@ -17,6 +17,8 @@ import { GioiTinhSelect, ChucDanhSelect } from "@/components/Procedure/Procedure
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
+import { toUppercaseValue } from "../../../SharedFormComponents/uppercaseInput";
+import { useAuth } from "@/context/AuthContext";
 
 const SOURCE_FORM_NAME = "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";
 
@@ -346,6 +348,7 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
     { dataJson, onSubmit, formRef },
     componentRef,
 ) {
+    const { user } = useAuth();
     const sourceFormData = useGetFormDataJsonFromName(SOURCE_FORM_NAME);
     const currentData = useMemo(() => normalizeDataJson(dataJson), [dataJson]);
     const sourceData = useMemo(() => normalizeDataJson(sourceFormData), [sourceFormData]);
@@ -490,10 +493,13 @@ const QuyetDinhHoiDongThanhVienDeclaration = forwardRef(function QuyetDinhHoiDon
                                 className={styles.inputNoBorder}
                                 name="qdNguoiThucHienThuTuc"
                                 defaultValue={
-                                    decisionData.qdNguoiThucHienThuTuc ||
-                                    decisionData.nguoiDaiDien_hoTen ||
-                                    decisionData.chuSoHuu_hoTen ||
-                                    ""
+                                    toUppercaseValue(
+                                        user?.fullname ||
+                                        decisionData.qdNguoiThucHienThuTuc ||
+                                        decisionData.nguoiDaiDien_hoTen ||
+                                        decisionData.chuSoHuu_hoTen ||
+                                        ""
+                                    )
                                 }
                                 required
                             />

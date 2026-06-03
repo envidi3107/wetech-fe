@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import FormattedNumberInput, { formatNumber } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
 
-export default function NguonVonDieuLeSection({ dataJson, styles, isNote = false }) {
+export default function NguonVonDieuLeSection({ title = 'Nguồn vốn điều lệ', dataJson, styles, isNote = false }) {
     const tableRef = useRef(null);
     const tooltipVonNuocNgoai = "Kê khai trong trường hợp có nhà đầu tư nước ngoài góp vốn, mua cổ phần, phần vốn góp vào doanh nghiệp dẫn đến thay đổi nội dung đăng ký doanh nghiệp.";
 
@@ -35,7 +35,7 @@ export default function NguonVonDieuLeSection({ dataJson, styles, isNote = false
 
     return (
         <div className={styles.sectionGroup}>
-            <h3 className={styles.sectionTitle} style={{ marginTop: "12px" }}>Nguồn vốn điều lệ:</h3>
+            <h3 className={styles.sectionTitle} style={{ marginTop: "12px" }}>{title}:</h3>
             <table ref={tableRef} className={styles.table} onChange={handleChange}>
                 <thead>
                     <tr>

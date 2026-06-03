@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import FormattedNumberInput, { formatNumber } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
 
-export default function ThongTinCoPhanSection({ dataJson, styles }) {
+export default function ThongTinCoPhanSection({ dataJson, styles, hideCoPhanChaoBan = false }) {
     const sectionRef = useRef(null);
 
     const table1Rows = [
@@ -66,7 +66,7 @@ export default function ThongTinCoPhanSection({ dataJson, styles }) {
     // Calculate on initial render if data exists
     useEffect(() => {
         handleChange({ target: {} });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -158,45 +158,49 @@ export default function ThongTinCoPhanSection({ dataJson, styles }) {
                 </table>
             </div>
 
-            <p className={styles.sectionTitle} style={{ fontWeight: "500", marginBottom: "8px" }}>Thông tin về cổ phần được quyền chào bán:</p>
-            <div className={styles.tableScrollWrapper}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th style={{ width: "60px" }}>STT</th>
-                            <th>Loại cổ phần được quyền chào bán</th>
-                            <th>Số lượng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {table2Rows.map((row, idx) => (
-                            <tr key={idx}>
-                                <td style={{ textAlign: "center" }}>{idx + 1}</td>
-                                <td>{row.label}</td>
-                                <td>
-                                    <FormattedNumberInput
-                                        className={styles.input}
-                                        name={`cp_${row.key}_soLuong`}
-                                        defaultValue={dataJson?.[`cp_${row.key}_soLuong`] || ""}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                        <tr>
-                            <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>Tổng số</td>
-                            <td>
-                                <FormattedNumberInput
-                                    className={styles.input}
-                                    name="cp_cb_tongSoLuong"
-                                    defaultValue={dataJson?.cp_cb_tongSoLuong || ""}
-                                    style={{ fontWeight: "bold", background: "#f5f5f5" }}
-                                    readOnly={true}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {!hideCoPhanChaoBan && (
+                <>
+                    <p className={styles.sectionTitle} style={{ fontWeight: "500", marginBottom: "8px" }}>Thông tin về cổ phần được quyền chào bán:</p>
+                    <div className={styles.tableScrollWrapper}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: "60px" }}>STT</th>
+                                    <th>Loại cổ phần được quyền chào bán</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {table2Rows.map((row, idx) => (
+                                    <tr key={idx}>
+                                        <td style={{ textAlign: "center" }}>{idx + 1}</td>
+                                        <td>{row.label}</td>
+                                        <td>
+                                            <FormattedNumberInput
+                                                className={styles.input}
+                                                name={`cp_${row.key}_soLuong`}
+                                                defaultValue={dataJson?.[`cp_${row.key}_soLuong`] || ""}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                                <tr>
+                                    <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>Tổng số</td>
+                                    <td>
+                                        <FormattedNumberInput
+                                            className={styles.input}
+                                            name="cp_cb_tongSoLuong"
+                                            defaultValue={dataJson?.cp_cb_tongSoLuong || ""}
+                                            style={{ fontWeight: "bold", background: "#f5f5f5" }}
+                                            readOnly={true}
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

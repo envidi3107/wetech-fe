@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import FormattedNumberInput from "../FormattedNumberInput/FormattedNumberInput";
 
-export default function TaiSanGopVonSection({ dataJson, styles, fieldPrefix = "taiSan", title = "Tài sản góp vốn:" }) {
+export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', dataJson, styles, fieldPrefix = "taiSan" }) {
     const tableRef = useRef(null);
 
     const handleChange = () => {
@@ -28,7 +28,7 @@ export default function TaiSanGopVonSection({ dataJson, styles, fieldPrefix = "t
 
     return (
         <div className={styles.sectionGroup}>
-            <h3 className={styles.sectionTitle}>{title}</h3>
+            <h3 className={styles.sectionTitle}>{title}:</h3>
             <table ref={tableRef} className={styles.table} onChange={handleChange}>
                 <thead>
                     <tr>
