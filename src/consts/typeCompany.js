@@ -31,6 +31,8 @@ import GiayDeNghiDangKyThayDoiDeclaration2TV from "@/components/Procedure/Proced
 import GiayDeNghiDangKyThayDoiConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
+import BienBanHopHoiDongThanhVienDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormDeclaration/BienBanHopHoiDongThanhVienDeclaration";
+import BienBanHopHoiDongThanhVienConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/DangKyThayDoi/FormConfirmation/BienBanHopHoiDongThanhVienConfirmation";
 
 import DanhSachCoDongSangLapDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCoDongSangLapDeclaration";
 import DanhSachCSHHuongLoiDeclaration_CP from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
@@ -198,11 +200,6 @@ const typeCompanyOptions = [
                                 confirmation: QuyetDinhHoiDongThanhVienConfirmation,
                             },
                             {
-                                title: "Giấy đề nghị đăng ký doanh nghiệp",
-                                declaration: GiayDeNghiDKDNDeclaration,
-                                confirmation: GiayDeNghiDKDNConfirmation,
-                            },
-                            {
                                 title: "Danh sách CSH hưởng lợi",
                                 declaration: DanhSachCSHHuongLoiDeclaration,
                                 confirmation: DanhSachCSHHuongLoiConfirmation,
@@ -312,9 +309,9 @@ const typeCompanyOptions = [
                                 confirmation: QuyetDinhHoiDongThanhVienConfirmation,
                             },
                             {
-                                title: "Giấy đề nghị đăng ký doanh nghiệp",
-                                declaration: GiayDeNghiDKDNDeclaration2TV,
-                                confirmation: GiayDeNghiDKDNConfirmation2TV,
+                                title: "Mẫu biên bản họp Hội đồng thành viên",
+                                declaration: BienBanHopHoiDongThanhVienDeclaration2TV,
+                                confirmation: BienBanHopHoiDongThanhVienConfirmation2TV,
                             },
                             {
                                 title: "Danh sách CSH hưởng lợi",
@@ -426,14 +423,14 @@ const typeCompanyOptions = [
                                 confirmation: QuyetDinhDaiHoiDongCoDongConfirmation_CP,
                             },
                             {
-                                title: "Giấy đề nghị đăng ký doanh nghiệp",
-                                declaration: GiayDeNghiDKDNDeclaration_CP,
-                                confirmation: GiayDeNghiDKDNConfirmation_CP,
-                            },
-                            {
                                 title: "Danh sách CSH hưởng lợi",
                                 declaration: DanhSachCSHHuongLoiDeclaration_CP,
                                 confirmation: DanhSachCSHHuongLoiConfirmation_CP,
+                            },
+                            {
+                                title: "Danh sách cổ đông sáng lập",
+                                declaration: DanhSachCoDongSangLapDeclaration_CP,
+                                confirmation: DanhSachCoDongSangLapConfirmation_CP,
                             }
                         ],
                     },

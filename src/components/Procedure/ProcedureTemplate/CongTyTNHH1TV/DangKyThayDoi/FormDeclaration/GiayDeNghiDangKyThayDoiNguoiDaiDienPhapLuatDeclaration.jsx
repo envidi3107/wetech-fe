@@ -6,6 +6,10 @@ import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormC
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
 import NguoiDaiDienPhapLuatSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/NguoiDaiDienPhapLuatSection";
 import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+import {
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 function Field({ label, name, dataJson, required = false, type = "text" }) {
     return (
@@ -26,7 +30,13 @@ function Field({ label, name, dataJson, required = false, type = "text" }) {
 
 const GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration = forwardRef(
     function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration(
-        { dataJson, onSubmit, formRef },
+        {
+            dataJson,
+            onSubmit,
+            formRef,
+            companyNamePrefixOptions = TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+            defaultCompanyNamePrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+        },
         componentRef,
     ) {
         const { provinces } = useFetchAddress();
@@ -110,6 +120,8 @@ const GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration = forwardRef(
                     dataJson={normalizedData}
                     styles={styles}
                     includeChairPersonalId
+                    companyNamePrefixOptions={companyNamePrefixOptions}
+                    defaultCompanyNamePrefix={defaultCompanyNamePrefix}
                 />
 
                 <div className={styles.sectionGroup}>

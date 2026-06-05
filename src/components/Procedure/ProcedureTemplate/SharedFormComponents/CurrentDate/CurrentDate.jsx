@@ -16,9 +16,18 @@ const processProvince = (province) => {
 
 export default function CurrentDate({ prefix, style, className }) {
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
-    const defaultProvince = giayDeNghiData?.truSo_tinh || "";
+    const giayDeNghiThayDoiData = useGetFormDataJsonFromName(
+        "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp",
+    );
+    const defaultProvince =
+        giayDeNghiData?.kinhGuiProvince ||
+        giayDeNghiData?.truSo_tinh ||
+        giayDeNghiThayDoiData?.kinhGuiProvince ||
+        giayDeNghiThayDoiData?.truSo_tinh ||
+        "";
 
-    const displayPrefix = prefix !== undefined ? processProvince(prefix) : (processProvince(defaultProvince) || "………");
+    const explicitPrefix = processProvince(prefix);
+    const displayPrefix = explicitPrefix || processProvince(defaultProvince) || "………";
 
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');

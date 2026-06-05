@@ -112,6 +112,15 @@
     margin-top: 10px;
 }
 
+.tableScrollWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tableScrollWrapper .table {
+    min-width: 1180px;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;

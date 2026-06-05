@@ -9,6 +9,7 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x" : ""}</div>;
+const InlineField = ({ children }) => <span className={styles.inlineField}>{children}</span>;
 
 function GiayDeNghiDKDNConfirmation({ dataJson }) {
     if (!dataJson) {
@@ -185,6 +186,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         return `${value}%`;
     };
 
+    const isBlank = (value) =>
+        value === null || value === undefined || (typeof value === "string" && value.trim() === "");
+
+    const displayValue = (value) => (isBlank(value) ? "........" : value);
+
+    const displayDate = (value) => displayValue(formatDate(value));
+
+    const displayAddress = (...parts) => displayValue(addressToString(...parts));
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -199,19 +209,21 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
             <h3 className={styles.docTitle}>CÔNG TY TRÁCH NHIỆM HỮU HẠN MỘT THÀNH VIÊN</h3>
 
             <div className={styles.content}>
-                <p>Kính gửi: {kinhGui}</p>
+                <p>Kính gửi: {displayValue(kinhGui)}</p>
 
                 <p>
                     Tôi là (<em>ghi họ tên bằng chữ in hoa</em>):{" "}
-                    <span style={{ textTransform: "uppercase" }}>{nguoiNop_hoTen?.toUpperCase()}</span>
+                    <span style={{ textTransform: "uppercase" }}>{displayValue(nguoiNop_hoTen)}</span>
                 </p>
-                <p>Ngày, tháng, năm sinh: {formatDate(nguoiNop_ngaySinh)}</p>
-                <p>Giới tính: {nguoiNop_gioiTinh}</p>
-                <p>Số định danh cá nhân: {nguoiNop_cccd}</p>
-                <p>Địa chỉ liên lạc: {addressToString(lienLac_soNha, lienLac_xa, lienLac_tinh)}</p>
+                <p>Ngày, tháng, năm sinh: {displayDate(nguoiNop_ngaySinh)}</p>
+                <p>Giới tính: {displayValue(nguoiNop_gioiTinh)}</p>
+                <p>Số định danh cá nhân: {displayValue(nguoiNop_cccd)}</p>
+                <p>Địa chỉ liên lạc: {displayAddress(lienLac_soNha, lienLac_xa, lienLac_tinh)}</p>
                 <p>
-                    Điện thoại<em> (nếu có)</em>: {nguoiNop_phone} &nbsp; &nbsp; Thư điện tử<em> (nếu có)</em>:{" "}
-                    {nguoiNop_email}
+                    Điện thoại<em> (nếu có)</em>: {displayValue(nguoiNop_phone)}
+                    <InlineField>
+                        Thư điện tử<em> (nếu có)</em>: {displayValue(nguoiNop_email)}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
@@ -219,12 +231,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiNop_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiNop_quocTich}
+                                    Dân tộc: {nguoiNop_danToc}
+                                    <InlineField>Quốc tịch: {nguoiNop_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -232,8 +245,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiNop_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiNop_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {nguoiNop_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -310,27 +323,32 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
-                    <span style={{ textTransform: "uppercase" }}>{tenCongTyVN}</span>
+                    <span style={{ textTransform: "uppercase" }}>{displayValue(tenCongTyVN)}</span>
                 </p>
                 <p>
-                    Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>): {tenCongTyEN}
+                    Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>): {displayValue(tenCongTyEN)}
                 </p>
                 <p>
-                    Tên công ty viết tắt (<em>nếu có</em>): {tenCongTyVietTat}
+                    Tên công ty viết tắt (<em>nếu có</em>): {displayValue(tenCongTyVietTat)}
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>3. Địa chỉ trụ sở chính:</strong>
                 </p>
-                <p>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {truSo_soNha}</p>
-                <p>Xã/Phường/Đặc khu: {truSo_xa}</p>
-                <p>Tỉnh/Thành phố trực thuộc trung ương: {truSo_tinh}</p>
+                <p>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {displayValue(truSo_soNha)}</p>
+                <p>Xã/Phường/Đặc khu: {displayValue(truSo_xa)}</p>
+                <p>Tỉnh/Thành phố trực thuộc trung ương: {displayValue(truSo_tinh)}</p>
                 <p>
-                    Điện thoại: {truSo_phone} &nbsp; &nbsp; Số fax (<em>nếu có</em>): {truSo_fax}
+                    Điện thoại: {displayValue(truSo_phone)}
+                    <InlineField>
+                        Số fax (<em>nếu có</em>): {displayValue(truSo_fax)}
+                    </InlineField>
                 </p>
                 <p>
-                    Thư điện tử (<em>nếu có</em>): {truSo_email} &nbsp; &nbsp; Website (<em>nếu có</em>):{" "}
-                    {truSo_website}
+                    Thư điện tử (<em>nếu có</em>): {displayValue(truSo_email)}
+                    <InlineField>
+                        Website (<em>nếu có</em>): {displayValue(truSo_website)}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "8px" }}>
@@ -446,15 +464,17 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>- Thông tin về chủ sở hữu:</p>
                 <p>
                     Họ, chữ đệm và tên (<em>ghi bằng chữ in hoa</em>):{" "}
-                    <span style={{ textTransform: "uppercase" }}>{chuSoHuu_hoTen?.toUpperCase()}</span>
+                    <span style={{ textTransform: "uppercase" }}>{displayValue(chuSoHuu_hoTen)}</span>
                 </p>
-                <p>Ngày, tháng, năm sinh: {formatDate(chuSoHuu_ngaySinh)}</p>
-                <p>Giới tính: {chuSoHuu_gioiTinh}</p>
-                <p>Số định danh cá nhân: {chuSoHuu_cccd}</p>
-                <p>Địa chỉ liên lạc: {addressToString(chuSoHuu_soNha, chuSoHuu_xa, chuSoHuu_tinh)}</p>
+                <p>Ngày, tháng, năm sinh: {displayDate(chuSoHuu_ngaySinh)}</p>
+                <p>Giới tính: {displayValue(chuSoHuu_gioiTinh)}</p>
+                <p>Số định danh cá nhân: {displayValue(chuSoHuu_cccd)}</p>
+                <p>Địa chỉ liên lạc: {displayAddress(chuSoHuu_soNha, chuSoHuu_xa, chuSoHuu_tinh)}</p>
                 <p>
-                    Điện thoại<em> (nếu có)</em>: {chuSoHuu_phone} &nbsp; &nbsp; Thư điện tử<em> (nếu có)</em>:{" "}
-                    {chuSoHuu_email}
+                    Điện thoại<em> (nếu có)</em>: {displayValue(chuSoHuu_phone)}
+                    <InlineField>
+                        Thư điện tử<em> (nếu có)</em>: {displayValue(chuSoHuu_email)}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
@@ -462,12 +482,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {chuSoHuu_danToc} &nbsp; &nbsp; Quốc tịch: {chuSoHuu_quocTich}
+                                    Dân tộc: {chuSoHuu_danToc}
+                                    <InlineField>Quốc tịch: {chuSoHuu_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -475,8 +496,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {chuSoHuu_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(chuSoHuu_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {chuSoHuu_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(chuSoHuu_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {chuSoHuu_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -495,24 +516,25 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     - Thông tin về Giấy chứng nhận đăng ký đầu tư (
                     <em>chỉ kê khai nếu chủ sở hữu là nhà đầu tư nước ngoài</em>):
                 </p>
-                <p>Mã số dự án: {chuSoHuu_maSoDuAn}</p>
+                <p>Mã số dự án: {displayValue(chuSoHuu_maSoDuAn)}</p>
                 <p>
-                    Ngày cấp: {formatDate(chuSoHuu_ngayCapDuAn)} &nbsp; &nbsp; Cơ quan cấp: {chuSoHuu_coQuanCapDuAn}
+                    Ngày cấp: {displayDate(chuSoHuu_ngayCapDuAn)}
+                    <InlineField>Cơ quan cấp: {displayValue(chuSoHuu_coQuanCapDuAn)}</InlineField>
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>6. Vốn điều lệ:</strong>
                 </p>
                 <p>
-                    Vốn điều lệ (<em>bằng số; VNĐ</em>): {vonDieuLe} VNĐ
+                    Vốn điều lệ (<em>bằng số; VNĐ</em>): {displayValue(vonDieuLe)} VNĐ
                 </p>
                 <p>
                     Vốn điều lệ (<em>bằng chữ; VNĐ</em>):{" "}
-                    <span style={{ fontStyle: "italic" }}>{vonDieuLe_bangChu}</span>
+                    <span style={{ fontStyle: "italic" }}>{displayValue(vonDieuLe_bangChu)}</span>
                 </p>
                 <p>
                     Giá trị tương đương theo đơn vị tiền nước ngoài (<em>nếu có, bằng số, loại ngoại tệ</em>):{" "}
-                    {vonDieuLe_ngoaiTe}
+                    {displayValue(vonDieuLe_ngoaiTe)}
                 </p>
                 <div>
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
@@ -664,25 +686,26 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Họ, chữ đệm và tên (<em>ghi bằng chữ in hoa</em>):{" "}
-                    <span style={{ textTransform: "uppercase" }}>{nguoiDaiDien_hoTen?.toUpperCase()}</span>
+                    <span style={{ textTransform: "uppercase" }}>{displayValue(nguoiDaiDien_hoTen)}</span>
                 </p>
-                <p>Ngày, tháng, năm sinh: {formatDate(nguoiDaiDien_ngaySinh)}</p>
-                <p>Giới tính: {nguoiDaiDien_gioiTinh}</p>
-                <p>Số định danh cá nhân: {nguoiDaiDien_cccd}</p>
-                <p>Chức danh: {nguoiDaiDien_chucDanh}</p>
-                <p>Địa chỉ liên lạc: {addressToString(nguoiDaiDien_soNha, nguoiDaiDien_xa, nguoiDaiDien_tinh)}</p>
+                <p>Ngày, tháng, năm sinh: {displayDate(nguoiDaiDien_ngaySinh)}</p>
+                <p>Giới tính: {displayValue(nguoiDaiDien_gioiTinh)}</p>
+                <p>Số định danh cá nhân: {displayValue(nguoiDaiDien_cccd)}</p>
+                <p>Chức danh: {displayValue(nguoiDaiDien_chucDanh)}</p>
+                <p>Địa chỉ liên lạc: {displayAddress(nguoiDaiDien_soNha, nguoiDaiDien_xa, nguoiDaiDien_tinh)}</p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
                     Trường hợp không có số định danh cá nhân hoặc việc kết nối giữa Cơ sở dữ liệu quốc gia về đăng ký
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiDaiDien_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiDaiDien_quocTich}
+                                    Dân tộc: {nguoiDaiDien_danToc}
+                                    <InlineField>Quốc tịch: {nguoiDaiDien_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -690,8 +713,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiDaiDien_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {nguoiDaiDien_ngayCapHoChieu} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiDaiDien_noiCapHoChieu}
+                                    Ngày cấp: {nguoiDaiDien_ngayCapHoChieu}
+                                    <InlineField>Nơi cấp: {nguoiDaiDien_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -759,8 +782,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>Xã/Phường/Đặc khu: {thongBaoThue_xa}</p>
                                 <p>Tỉnh/Thành phố trực thuộc trung ương: {thongBaoThue_tinh}</p>
                                 <p>
-                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone} &nbsp; &nbsp; Số fax (
-                                    <em>nếu có</em>): {thongBaoThue_fax}
+                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone}
+                                    <InlineField>
+                                        Số fax (<em>nếu có</em>): {thongBaoThue_fax}
+                                    </InlineField>
                                 </p>
                                 <p>
                                     Thư điện tử (<em>nếu có</em>): {thongBaoThue_email}
@@ -796,11 +821,11 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "200px" }}>Hạch toán độc lập</td>
+                                            <td style={{ width: "150px" }}>Hạch toán độc lập</td>
                                             <td style={{ width: "40px", textAlign: "center" }}>
                                                 <Checkbox checked={hinhThucHachToan === "doc_lap"} />
                                             </td>
-                                            <td style={{ width: "30px" }}></td>
+                                            <td style={{ width: "40px" }}></td>
                                             <td>
                                                 Có báo cáo tài chính hợp nhất{" "}
                                                 <Checkbox checked={baoCaoTaiChinhHopNhat === "co"} />

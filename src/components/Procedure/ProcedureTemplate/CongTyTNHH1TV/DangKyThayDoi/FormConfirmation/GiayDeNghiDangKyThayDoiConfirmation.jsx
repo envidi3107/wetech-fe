@@ -6,6 +6,7 @@ import {
     A_CHANGE_OPTIONS,
     BENEFICIAL_OWNER_CHANGE_OPTIONS,
     MAIN_CHANGE_OPTIONS,
+    SHAREHOLDER_CHANGE_OPTIONS,
     isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
@@ -73,7 +74,22 @@ function BeneficialOwnerChangeList({ data }) {
                         <p key={option.name} style={{ margin: "8px 0" }}>
                             <strong>{option.marker}</strong> {option.label}
                         </p>
-                    )
+                    ),
+            )}
+        </div>
+    );
+}
+
+function ShareholderChangeList({ data }) {
+    return (
+        <div>
+            {SHAREHOLDER_CHANGE_OPTIONS.map(
+                (option) =>
+                    isTruthy(data[option.name]) && (
+                        <p key={option.name} style={{ margin: "8px 0" }}>
+                            {option.label}
+                        </p>
+                    ),
             )}
         </div>
     );
@@ -103,7 +119,16 @@ function withCompanyNamePrefix(value, prefix) {
 function Section({ title, children, className }) {
     return (
         <div className={className} style={{ marginTop: 16 }}>
-            <p style={{ textAlign: "center" }}>{title}</p>
+            <h3 style={{ textAlign: "center", fontSize: "16px" }}>{title}</h3>
+            {children}
+        </div>
+    );
+}
+
+function SubSection({ title, children, className }) {
+    return (
+        <div className={className} style={{ marginTop: 16 }}>
+            <p style={{ textAlign: "center", fontSize: "16px" }}>{title}</p>
             {children}
         </div>
     );
@@ -261,109 +286,6 @@ function MemberChangeTable({ rows }) {
     );
 }
 
-function FoundingShareholderChangeTable({ rows, loaiCoPhanKhacList }) {
-    const otherShareTypes = loaiCoPhanKhacList?.length ? loaiCoPhanKhacList : [""];
-    const colSpan = 17 + otherShareTypes.length * 2;
-
-    return (
-        <table className={widePdfTableClassName} style={{ marginTop: 8 }}>
-            <thead>
-                <tr>
-                    <th rowSpan={4}>STT</th>
-                    <th rowSpan={4}>Tên cổ đông sáng lập</th>
-                    <th rowSpan={4}>Ngày, tháng, năm sinh</th>
-                    <th rowSpan={4}>Giới tính</th>
-                    <th rowSpan={4}>Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân</th>
-                    <th rowSpan={4}>Quốc tịch</th>
-                    <th rowSpan={4}>Dân tộc</th>
-                    <th rowSpan={4}>Địa chỉ liên lạc</th>
-                    <th colSpan={8 + (otherShareTypes.length - 1) * 2}>Vốn góp</th>
-                    <th rowSpan={4}>Thời hạn góp vốn</th>
-                    <th rowSpan={4}>Chữ ký của cổ đông sáng lập</th>
-                    <th rowSpan={4}>Ghi chú</th>
-                </tr>
-                <tr>
-                    <th colSpan={2}>Tổng số cổ phần</th>
-                    <th rowSpan={3}>Tỷ lệ (%)</th>
-                    <th colSpan={2 + otherShareTypes.length * 2}>Loại cổ phần</th>
-                    <th rowSpan={3}>Loại tài sản, số lượng, giá trị tài sản góp vốn</th>
-                </tr>
-                <tr>
-                    <th rowSpan={2}>Số lượng</th>
-                    <th rowSpan={2}>Giá trị</th>
-                    <th colSpan={2}>Phổ thông</th>
-                    {otherShareTypes.map((ten, index) => (
-                        <th key={index} colSpan={2}>
-                            Khác (ghi rõ): {ten || "........"}
-                        </th>
-                    ))}
-                </tr>
-                <tr>
-                    <th>Số lượng</th>
-                    <th>Giá trị</th>
-                    {otherShareTypes.map((_, index) => (
-                        <React.Fragment key={index}>
-                            <th>Số lượng</th>
-                            <th>Giá trị</th>
-                        </React.Fragment>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {rows?.length ? (
-                    rows.map((row, index) => (
-                        <tr key={index}>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{row.hoTen}</td>
-                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>{formatDate(row.ngaySinh)}</td>
-                            <td style={{ textAlign: "center" }}>{row.gioiTinh}</td>
-                            <td>{row.giaTo}</td>
-                            <td style={{ textAlign: "center" }}>{row.quocTich}</td>
-                            <td style={{ textAlign: "center" }}>{row.danToc}</td>
-                            <td>{row.diaChiLienLac}</td>
-                            <td style={{ textAlign: "center" }}>{row.tongSoCoPhan_soLuong}</td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tongSoCoPhan_giaTri, "VNĐ")}</td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLe, "%")}</td>
-                            <td style={{ textAlign: "center" }}>{row.loaiCoPhan_phoThong_soLuong}</td>
-                            <td style={{ textAlign: "center" }}>
-                                {formatUnitValue(row.loaiCoPhan_phoThong_giaTri, "VNĐ")}
-                            </td>
-                            {otherShareTypes.map((_, otherIndex) => {
-                                const soLuongKey =
-                                    otherIndex === 0
-                                        ? "loaiCoPhan_khac_soLuong"
-                                        : `loaiCoPhan_khac_soLuong_${otherIndex}`;
-                                const giaTriKey =
-                                    otherIndex === 0
-                                        ? "loaiCoPhan_khac_giaTri"
-                                        : `loaiCoPhan_khac_giaTri_${otherIndex}`;
-                                return (
-                                    <React.Fragment key={otherIndex}>
-                                        <td style={{ textAlign: "center" }}>{row[soLuongKey]}</td>
-                                        <td style={{ textAlign: "center" }}>
-                                            {formatUnitValue(row[giaTriKey], "VNĐ")}
-                                        </td>
-                                    </React.Fragment>
-                                );
-                            })}
-                            <td>{row.loaiTaiSanGopVon}</td>
-                            <td style={{ textAlign: "center" }}>{row.thoiHanGopVon}</td>
-                            <td>{row.chuKy}</td>
-                            <td>{row.ghiChu}</td>
-                        </tr>
-                    ))
-                ) : (
-                    <tr>
-                        <td colSpan={colSpan} style={{ textAlign: "center" }}>
-                            Không có dữ liệu
-                        </td>
-                    </tr>
-                )}
-            </tbody>
-        </table>
-    );
-}
-
 function MoneySourceTable({ data }) {
     const rows = [
         ["Vốn ngân sách nhà nước", "nguonVon_nganSach"],
@@ -443,14 +365,6 @@ function ShareInfoTable({ data }) {
         ["Các cổ phần ưu đãi khác", "cp_cpudk_soLuong", "cp_cpudk_giaTri", "cp_cpudk_tiLe"],
         ["Tổng số", "cp_tongSoLuong", "cp_tongGiaTri", "cp_tongTiLe"],
     ];
-    const offerRows = [
-        ["Cổ phần phổ thông", "cp_cb_cptt_soLuong"],
-        ["Cổ phần ưu đãi biểu quyết", "cp_cb_cpudbq_soLuong"],
-        ["Cổ phần ưu đãi cổ tức", "cp_cb_cpudct_soLuong"],
-        ["Cổ phần ưu đãi hoàn lại", "cp_cb_cpudhl_soLuong"],
-        ["Cổ phần ưu đãi khác", "cp_cb_cpudk_soLuong"],
-        ["Tổng số", "cp_cb_tongSoLuong"],
-    ];
 
     return (
         <>
@@ -505,11 +419,6 @@ function GiayDeNghiDangKyThayDoiConfirmation({
     const companyNamePrefix = getCompanyNamePrefix(data, defaultCompanyNamePrefix);
     const changedCompanyNamePrefix = data.tenSauThayDoiPrefix || companyNamePrefix;
     const doiThanhVienRows = data.doiThanhVienList || data.thanhVienList || [];
-    const doiCoDongSangLapRows = data.doiCoDongSangLapList || data.coDongList || [];
-    const doiCoDongLoaiCoPhanKhacList =
-        data.doiCoDongLoaiCoPhanKhacList ||
-        data.loaiCoPhanKhacList ||
-        (data.loaiCoPhanKhac_ten ? [data.loaiCoPhanKhac_ten] : [""]);
 
     return (
         <div className={styles.container}>
@@ -534,46 +443,51 @@ function GiayDeNghiDangKyThayDoiConfirmation({
 
                 {isMainSelected("A") && (
                     <>
-                        <div>
-                            <p>
-                                Doanh nghiệp đăng ký thay đổi trên cơ sở (chỉ kê khai trong trường hợp doanh nghiệp đăng
-                                ký thay đổi trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X vào ô
-                                thích hợp):
-                            </p>
-                            <ul style={{ margin: "4px 0 4px 22px", paddingLeft: 18, listStyleType: "none" }}>
-                                <li>
-                                    - Đăng ký thay đổi trên cơ sở tách doanh nghiệp{" "}
-                                    <Checkbox checked={data.coSoThayDoi === "tach"} />
-                                </li>
-                                <li>
-                                    - Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp{" "}
-                                    <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
-                                </li>
-                            </ul>
-                            {data.coSoThayDoi === "sap_nhap" && (
-                                <>
-                                    <Line label="Tên doanh nghiệp bị sáp nhập" value={data.sapNhap_tenDoanhNghiep} />
-                                    <Line
-                                        label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
-                                        value={data.sapNhap_maSoDoanhNghiep}
-                                    />
-                                    <p>
-                                        Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập
-                                        và các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp
-                                        nhập.
-                                    </p>
-                                </>
-                            )}
-                            <p>
-                                Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
-                                xã/phường ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh: &nbsp; Có{" "}
-                                <Checkbox checked={data.anNinhQuocPhong === "Có"} />
-                                &nbsp; Không <Checkbox checked={data.anNinhQuocPhong !== "Có"} />
-                            </p>
-                        </div>
+                        <Section title={`A. ${documentSubtitle?.toUpperCase()}`}>
+                            <div>
+                                <p>
+                                    Doanh nghiệp đăng ký thay đổi trên cơ sở (chỉ kê khai trong trường hợp doanh nghiệp
+                                    đăng ký thay đổi trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X
+                                    vào ô thích hợp):
+                                </p>
+                                <ul style={{ margin: "4px 0 4px 22px", paddingLeft: 18, listStyleType: "none" }}>
+                                    <li>
+                                        - Đăng ký thay đổi trên cơ sở tách doanh nghiệp{" "}
+                                        <Checkbox checked={data.coSoThayDoi === "tach"} />
+                                    </li>
+                                    <li>
+                                        - Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp{" "}
+                                        <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
+                                    </li>
+                                </ul>
+                                {data.coSoThayDoi === "sap_nhap" && (
+                                    <>
+                                        <Line
+                                            label="Tên doanh nghiệp bị sáp nhập"
+                                            value={data.sapNhap_tenDoanhNghiep}
+                                        />
+                                        <Line
+                                            label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
+                                            value={data.sapNhap_maSoDoanhNghiep}
+                                        />
+                                        <p>
+                                            Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp
+                                            nhập và các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh
+                                            nghiệp bị sáp nhập.
+                                        </p>
+                                    </>
+                                )}
+                                <p>
+                                    Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
+                                    xã/phường ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh: &nbsp; Có{" "}
+                                    <Checkbox checked={data.anNinhQuocPhong === "Có"} />
+                                    &nbsp; Không <Checkbox checked={data.anNinhQuocPhong !== "Có"} />
+                                </p>
+                            </div>
+                        </Section>
 
                         {selectedAOptions.some((option) => option.name === "a_doiTen") && (
-                            <Section title="ĐĂNG KÝ THAY ĐỔI TÊN DOANH NGHIỆP">
+                            <SubSection title="ĐĂNG KÝ THAY ĐỔI TÊN DOANH NGHIỆP">
                                 <Line
                                     label="Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi"
                                     value={withCompanyNamePrefix(data.tenSauThayDoiVN, changedCompanyNamePrefix)}
@@ -586,11 +500,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                     label="Tên doanh nghiệp viết tắt sau khi thay đổi"
                                     value={data.tenSauThayDoiVietTat}
                                 />
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiDiaChi") && (
-                            <Section title="ĐĂNG KÝ THAY ĐỔI ĐỊA CHỈ TRỤ SỞ CHÍNH">
+                            <SubSection title="ĐĂNG KÝ THAY ĐỔI ĐỊA CHỈ TRỤ SỞ CHÍNH">
                                 <p>Địa chỉ trụ sở chính sau khi thay đổi:</p>
                                 <Line
                                     label="Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn"
@@ -629,20 +543,20 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                         },
                                     ]}
                                 />
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiThanhVien") && (
-                            <Section
-                                title="ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH/THÀNH VIÊN HỢP DANH"
+                            <SubSection
+                                title="ĐĂNG KÝ THAY ĐỔI THÀNH VIÊN CÔNG TY TNHH"
                                 className={styles.landscapePage}
                             >
                                 <MemberChangeTable rows={doiThanhVienRows} />
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiVonDieuLe") && (
-                            <Section title="ĐĂNG KÝ THAY ĐỔI VỐN ĐIỀU LỆ, PHẦN VỐN GÓP, TỶ LỆ PHẦN VỐN GÓP">
+                            <SubSection title="ĐĂNG KÝ THAY ĐỔI VỐN ĐIỀU LỆ, PHẦN VỐN GÓP, TỶ LỆ PHẦN VỐN GÓP">
                                 <Line
                                     label="Vốn điều lệ đã đăng ký"
                                     value={`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}
@@ -674,7 +588,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 {data.camKetSauGiamVon && (
                                     <Line label="Cam kết sau khi giảm vốn" value={data.camKetSauGiamVon} />
                                 )}
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiNganhNghe") &&
@@ -710,7 +624,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 if (!businessSections.length) return null;
 
                                 return (
-                                    <Section title="THÔNG BÁO THAY ĐỔI NGÀNH, NGHỀ KINH DOANH">
+                                    <SubSection title="THÔNG BÁO THAY ĐỔI NGÀNH, NGHỀ KINH DOANH">
                                         {businessSections.map((section, index) => (
                                             <BusinessChangeTable
                                                 key={section.title}
@@ -720,12 +634,12 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                                 headers={section.headers}
                                             />
                                         ))}
-                                    </Section>
+                                    </SubSection>
                                 );
                             })()}
 
                         {selectedAOptions.some((option) => option.name === "a_doiVonDauTuDNTN") && (
-                            <Section title="ĐĂNG KÝ THAY ĐỔI VỐN ĐẦU TƯ CỦA CHỦ DOANH NGHIỆP TƯ NHÂN">
+                            <SubSection title="ĐĂNG KÝ THAY ĐỔI VỐN ĐẦU TƯ CỦA CHỦ DOANH NGHIỆP TƯ NHÂN">
                                 <Line
                                     label="Vốn đầu tư đã đăng ký"
                                     value={`${data.vonDauTuDaDangKy || ""} ${data.vonDauTuDaDangKy_bangChu ? `(${data.vonDauTuDaDangKy_bangChu})` : ""}`.trim()}
@@ -759,11 +673,11 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                         value={data.vonDauTu_taiSanGopVon}
                                     />
                                 )}
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiNguoiDaiDienUyQuyen") && (
-                            <Section
+                            <SubSection
                                 title="THÔNG BÁO THAY ĐỔI NGƯỜI ĐẠI DIỆN THEO ỦY QUYỀN"
                                 className={styles.landscapePage}
                             >
@@ -811,23 +725,17 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                         )}
                                     </tbody>
                                 </table>
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiCoDong") && (
-                            <Section
-                                title="THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI"
-                                className={styles.landscapePage}
-                            >
-                                <FoundingShareholderChangeTable
-                                    rows={doiCoDongSangLapRows}
-                                    loaiCoPhanKhacList={doiCoDongLoaiCoPhanKhacList}
-                                />
-                            </Section>
+                            <SubSection title="THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI">
+                                <ShareholderChangeList data={data} />
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiThongTinThue") && (
-                            <Section title="THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ">
+                            <SubSection title="THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ">
                                 <table className={styles.borderTable}>
                                     <tbody>
                                         <tr>
@@ -955,13 +863,13 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                         </tr>
                                     </tbody>
                                 </table>
-                            </Section>
+                            </SubSection>
                         )}
 
                         {selectedAOptions.some((option) => option.name === "a_doiChuSoHuuHuongLoi") && (
-                            <Section title="THÔNG BÁO THAY ĐỔI THÔNG TIN VỀ CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP/THÔNG BÁO THAY ĐỔI THÔNG TIN ĐỂ XÁC ĐỊNH CHỦ SỞ HỮU HƯỞNG LỢI">
+                            <SubSection title="THÔNG BÁO THAY ĐỔI THÔNG TIN VỀ CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP/THÔNG BÁO THAY ĐỔI THÔNG TIN ĐỂ XÁC ĐỊNH CHỦ SỞ HỮU HƯỞNG LỢI">
                                 <BeneficialOwnerChangeList data={data} />
-                            </Section>
+                            </SubSection>
                         )}
                     </>
                 )}
@@ -977,20 +885,21 @@ function GiayDeNghiDangKyThayDoiConfirmation({
 
                 {isMainSelected("C") && (
                     <Section title={getMainOptionLabel("C")}>
-                        <Line
-                            label="Thông tin trên Giấy chứng nhận/Giấy xác nhận cấp ngày"
-                            value={formatDate(data.hieuDinh_ngayCapGiay)}
-                        />
-                        <Line label="Là" value={data.hieuDinh_thongTinTrenGiay} />
-                        <Line
-                            label="Thông tin đã đăng ký trong hồ sơ nộp ngày"
-                            value={formatDate(data.hieuDinh_ngayNopHoSo)}
-                        />
-                        <Line label="Là" value={data.hieuDinh_thongTinHoSo} />
                         <p>
-                            Do vậy, đề nghị Quý Cơ quan hiệu đính thông tin trên Giấy chứng nhận đăng ký doanh nghiệp,
-                            Giấy xác nhận về việc thay đổi nội dung đăng ký doanh nghiệp theo đúng thông tin trong hồ sơ
-                            đăng ký doanh nghiệp mà doanh nghiệp đã đăng ký.
+                            <p>
+                                - Thông tin trên Giấy chứng nhận đăng ký doanh nghiệp/Giấy xác nhận về việc thay đổi nội
+                                dung đăng ký doanh nghiệp cấp ngày {formatDate(data.hieuDinh_ngayCapGiay) || ""} là{" "}
+                                {data.hieuDinh_thongTinTrenGiay || ""}.
+                            </p>
+                            <p>
+                                - Thông tin đã đăng ký trong hồ sơ đăng ký doanh nghiệp nộp ngày{" "}
+                                {formatDate(data.hieuDinh_ngayNopHoSo) || ""} là {data.hieuDinh_thongTinHoSo || ""}.
+                            </p>
+                            <p>
+                                Do vậy, đề nghị Quý Cơ quan hiệu đính thông tin trên Giấy chứng nhận đăng ký doanh
+                                nghiệp, Giấy xác nhận về việc thay đổi nội dung đăng ký doanh nghiệp theo đúng thông tin
+                                trong hồ sơ đăng ký doanh nghiệp mà doanh nghiệp đã đăng ký.
+                            </p>
                         </p>
                     </Section>
                 )}

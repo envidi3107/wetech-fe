@@ -242,7 +242,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -829,7 +829,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -1102,7 +1102,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </tbody>
                 </table>
 
-                <p style={{ marginTop: "16px" }}>
+                <p style={{ width: "100%", marginTop: "16px" }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>

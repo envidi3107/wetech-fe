@@ -223,9 +223,15 @@ function CapitalChangeSection({ data }) {
 
     return (
         <>
-            <SectionTitle>Thay đổi vốn điều lệ</SectionTitle>
-            <p>Vốn điều lệ đã đăng ký: {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}</p>
-            <p>Vốn điều lệ sau khi thay đổi: {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}</p>
+            <SectionTitle>1. Thay đổi vốn điều lệ</SectionTitle>
+            <p>
+                Vốn điều lệ đã đăng ký:{" "}
+                {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}
+            </p>
+            <p>
+                Vốn điều lệ sau khi thay đổi:{" "}
+                {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}
+            </p>
             <p>Hình thức tăng/giảm vốn: {data.qdHinhThucTangGiamVon || data.hinhThucTangGiamVon || "…"}</p>
             <p>Thời điểm tăng/giảm vốn: {formatDate(data.thoiDiemThayDoiVon) || "…/…/…"}</p>
 
@@ -252,7 +258,8 @@ function CapitalChangeSection({ data }) {
                     <p>Cơ cấu góp vốn khi thay đổi vốn điều lệ:</p>
                     {contributionRows.map((row, index) => (
                         <p key={index}>
-                            {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} góp {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
+                            {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} góp{" "}
+                            {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
                             {formatUnitValue(row.tyLeSauThayDoi, "%")} vốn điều lệ.
                         </p>
                     ))}
@@ -267,7 +274,7 @@ function RepresentativeChangeSection({ data }) {
 
     return (
         <>
-            <SectionTitle>Thay đổi Người đại diện pháp luật</SectionTitle>
+            <SectionTitle>5. Thay đổi Người đại diện pháp luật</SectionTitle>
             <p>Người đại diện theo pháp luật sau khi thay đổi:</p>
             <p>Họ, chữ đệm và tên: {(data.qdNguoiDaiDien_hoTen || "").toLocaleUpperCase("vi-VN") || "…"}</p>
             <p>Ngày, tháng, năm sinh: {formatDate(data.qdNguoiDaiDien_ngaySinh) || "…"}</p>
@@ -358,7 +365,7 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
 
                 {isTruthy(data.a_doiNganhNghe) && (
                     <>
-                        <SectionTitle>Thay đổi ngành, nghề kinh doanh</SectionTitle>
+                        <SectionTitle>2. Thay đổi ngành, nghề kinh doanh</SectionTitle>
                         <BusinessTable title="Bổ sung ngành, nghề kinh doanh sau:" rows={data.nganhNgheBoSungList} />
                         <BusinessTable title="Bỏ ngành, nghề kinh doanh sau:" rows={data.nganhNgheBoList} removed />
                         <BusinessTable
@@ -370,7 +377,7 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
 
                 {isTruthy(data.a_doiTen) && (
                     <>
-                        <SectionTitle>Thay đổi tên doanh nghiệp</SectionTitle>
+                        <SectionTitle>3. Thay đổi tên doanh nghiệp</SectionTitle>
                         <p>Tên doanh nghiệp sau khi thay đổi</p>
                         <p>
                             Tên doanh nghiệp viết bằng tiếng Việt sau khi thay đổi:{" "}
@@ -385,7 +392,7 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
 
                 {isTruthy(data.a_doiDiaChi) && (
                     <>
-                        <SectionTitle>Thay đổi địa chỉ trụ sở chính</SectionTitle>
+                        <SectionTitle>4. Thay đổi địa chỉ trụ sở chính</SectionTitle>
                         <p>Địa chỉ trụ sở chính sau khi thay đổi:</p>
                         <p>
                             Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:{" "}
@@ -409,8 +416,7 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                 </p>
                 <p>
                     <strong>Điều 3: </strong>Giao cho {data.qdNguoiThucHienThuTuc_danhXung || "Ông/Bà"}{" "}
-                    {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục
-                    cần thiết theo quy định của pháp luật.
+                    {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục cần thiết theo quy định của pháp luật.
                 </p>
                 <p>
                     <strong>Điều 4: </strong>Người đại diện theo pháp luật của công ty, các thành viên công ty có trách

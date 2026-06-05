@@ -2,10 +2,9 @@ import React, { useState, useMemo } from 'react';
 import styles from './NganhNgheModal.module.css';
 import maNganhNgheData from '@/assets/maNganhNghe.json';
 
-const flattenedOptions = maNganhNgheData;
-
-export default function NganhNgheModal({ isOpen, onClose, onSelect }) {
+export default function NganhNgheModal({ isOpen, onClose, onSelect, options = maNganhNgheData }) {
     const [searchTerm, setSearchTerm] = useState("");
+    const flattenedOptions = Array.isArray(options) ? options : maNganhNgheData;
 
     const filteredOptions = useMemo(() => {
         if (!searchTerm) return flattenedOptions;
@@ -15,7 +14,7 @@ export default function NganhNgheModal({ isOpen, onClose, onSelect }) {
                 (o.title || "").toLowerCase().includes(lowerTerm) ||
                 (o.maNganh && o.maNganh.toLowerCase().includes(lowerTerm))
         );
-    }, [searchTerm]);
+    }, [searchTerm, flattenedOptions]);
 
     const handleSelect = (opt) => {
         // Lấy mã cấp 4. Nếu dài hơn 4 ký tự thì cắt 4 ký tự đầu, ngắn hơn thì thêm số 0 ở đầu.

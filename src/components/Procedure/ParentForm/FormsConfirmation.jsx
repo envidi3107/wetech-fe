@@ -5,6 +5,44 @@ import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
 import { useNotification } from "@/hooks/useNotification";
 
+const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const DOCX_MARGINS = {
+    top: 850,
+    right: 850,
+    bottom: 1134,
+    left: 850,
+    header: 0,
+    footer: 0,
+    gutter: 0,
+};
+
+function getServerErrorMessage(error) {
+    const responseData = error?.response?.data;
+
+    if (typeof responseData === "string") {
+        return responseData;
+    }
+
+    return responseData?.message;
+}
+
+function getConfirmErrorMessage(error, submitStage) {
+    const serverMessage = getServerErrorMessage(error);
+    if (serverMessage) {
+        return serverMessage;
+    }
+
+    if (error?.response?.status) {
+        return `Xác nhận biểu mẫu thất bại ở bước ${submitStage} (HTTP ${error.response.status})`;
+    }
+
+    if (error?.message) {
+        return `Xác nhận biểu mẫu thất bại ở bước ${submitStage}: ${error.message}`;
+    }
+
+    return "Xác nhận biểu mẫu thất bại! Vui lòng thử lại";
+}
+
 const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess }, ref) => {
     const [dataJson, setDataJson] = useState(null);
     const pdfContentRef = useRef(null);
@@ -35,26 +73,42 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
         submitCurrentForm: async (landscape = false) => {
             if (!pdfContentRef.current) return;
 
+            let submitStage = "khởi tạo";
+
             try {
                 const element = pdfContentRef.current;
                 const filename = `${currentForm.code || "form"}.html`;
+
+                submitStage = "tạo HTML";
 
                 // Chuyển toàn bộ nội dung form đã render thành file HTML chuẩn.
                 const htmlString = generateHtmlString(element, {
                     title: currentForm.code || "Biểu mẫu",
                     landscape,
                 });
-                console.log("html string:", htmlString);
+                const docxHtmlString = generateHtmlString(element, {
+                    title: currentForm.code || "Biểu mẫu",
+                    landscape,
+                    normalizeForWord: true,
+                });
 
                 const htmlBlob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
                 const htmlFile = new File([htmlBlob], filename, { type: "text/html" });
 
+                submitStage = "tạo DOCX";
+
                 // Tạo DOCX từ HTML hiển thị tốt hơn trên Word
-                const docxBlob = htmlDocx.asBlob(htmlString);
+                const orientation = landscape ? "landscape" : "portrait";
+                const docxBlob = htmlDocx.asBlob(docxHtmlString, {
+                    orientation,
+                    margins: DOCX_MARGINS,
+                });
                 const docxFilename = `${currentForm.code || "form"}.docx`;
                 const docxFile = new File([docxBlob], docxFilename, {
-                    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    type: DOCX_MIME_TYPE,
                 });
+
+                submitStage = "gửi API xác nhận";
 
                 // Gửi FormData lên server
                 const formData = new FormData();
@@ -71,10 +125,14 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     onStepSubmitSuccess();
                 }
             } catch (err) {
-                showNotification(
-                    err?.response?.data?.message || "Xác nhận biểu mẫu thất bại! Vui lòng thử lại",
-                    "error",
-                );
+                console.error("[FormsConfirmation] submitCurrentForm failed", {
+                    submitStage,
+                    message: err?.message,
+                    status: err?.response?.status,
+                    response: err?.response?.data,
+                    error: err,
+                });
+                showNotification(getConfirmErrorMessage(err, submitStage), "error");
             }
         },
     }));

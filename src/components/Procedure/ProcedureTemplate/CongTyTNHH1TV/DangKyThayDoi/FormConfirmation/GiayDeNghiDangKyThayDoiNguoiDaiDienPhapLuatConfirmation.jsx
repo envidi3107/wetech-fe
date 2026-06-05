@@ -3,6 +3,12 @@ import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/Thanh
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import { formatDate } from "@/utils/dateTimeUtils";
 import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+import {
+    CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
+    DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+    TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+    getCompanyNamePrefix,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 function Line({ label, value }) {
     return (
@@ -12,29 +18,46 @@ function Line({ label, value }) {
     );
 }
 
-function addressToString(...parts) {
-    return parts.filter(Boolean).join(", ");
+function isEmptyValue(value) {
+    return value === undefined || value === null || String(value).trim() === "";
 }
 
-function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
+function withCompanyNamePrefix(value, prefix) {
+    if (isEmptyValue(value)) return "";
+
+    const displayValue = String(value).trim();
+    const upperDisplayValue = displayValue.toLocaleUpperCase("vi-VN");
+    const knownPrefixes = [...TNHH_COMPANY_NAME_PREFIX_OPTIONS, ...CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS];
+    const alreadyHasPrefix = knownPrefixes.some((knownPrefix) =>
+        upperDisplayValue.startsWith(knownPrefix.toLocaleUpperCase("vi-VN")),
+    );
+
+    return alreadyHasPrefix ? displayValue : `${prefix} ${displayValue}`;
+}
+
+function AddressFields({ soNha, xa, tinh }) {
+    return (
+        <>
+            <Line label="Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn" value={soNha} />
+            <Line label="Xã/Phường/Đặc khu" value={xa} />
+            <Line label="Tỉnh/Thành phố trực thuộc trung ương" value={tinh} />
+        </>
+    );
+}
+
+function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
+    dataJson,
+    companyNamePrefixOptions = TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+    defaultCompanyNamePrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+}) {
     const data = normalizeDataJson(dataJson);
 
     if (!Object.keys(data).length) {
         return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
     }
 
-    const diaChiLienLac = addressToString(
-        data.nguoiDaiDien_soNha,
-        data.nguoiDaiDien_xa,
-        data.nguoiDaiDien_tinh,
-        data.nguoiDaiDien_lienLac_quocGia,
-    );
-    const noiThuongTru = addressToString(
-        data.nguoiDaiDien_thuongTru_soNha,
-        data.nguoiDaiDien_thuongTru_xa,
-        data.nguoiDaiDien_thuongTru_tinh,
-        data.nguoiDaiDien_thuongTru_quocGia,
-    );
+    const companyNamePrefix = getCompanyNamePrefix(data, defaultCompanyNamePrefix, companyNamePrefixOptions);
+    const companyName = withCompanyNamePrefix(data.tenDoanhNghiep || data.tenCongTyVN, companyNamePrefix);
 
     return (
         <div className={styles.container}>
@@ -51,7 +74,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
 
             <div className={styles.content}>
                 <p>Kính gửi: {data.kinhGui}</p>
-                <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={data.tenDoanhNghiep} />
+                <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={companyName} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
                 <Line
                     label="Số định danh cá nhân của Chủ tịch hội đồng thành viên/Chủ tịch công ty/Chủ tịch hội đồng quản trị (chỉ kê khai trong trường hợp ủy quyền thực hiện thủ tục đăng ký doanh nghiệp)"
@@ -69,10 +92,15 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                 <Line label="Giới tính" value={data.nguoiDaiDien_gioiTinh} />
                 <Line label="Số định danh cá nhân" value={data.nguoiDaiDien_cccd} />
                 <Line label="Chức danh" value={data.nguoiDaiDien_chucDanh} />
-                <Line label="Địa chỉ liên lạc" value={diaChiLienLac} />
+                <p>Địa chỉ liên lạc:</p>
+                <AddressFields
+                    soNha={data.nguoiDaiDien_soNha}
+                    xa={data.nguoiDaiDien_xa}
+                    tinh={data.nguoiDaiDien_tinh}
+                />
                 <p>
                     Điện thoại: {data.nguoiDaiDien_phone || ""}
-                    &nbsp;&nbsp; Thư điện tử: {data.nguoiDaiDien_email || ""}
+                    &nbsp;&nbsp;&nbsp;&nbsp; Thư điện tử: {data.nguoiDaiDien_email || ""}
                 </p>
 
                 <p style={{ marginTop: 16, fontStyle: "italic" }}>
@@ -80,21 +108,35 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì kê khai các thông tin cá nhân
                     dưới đây:
                 </p>
-                <p>
-                    Dân tộc: {data.nguoiDaiDien_danToc || ""}
-                    &nbsp;&nbsp; Quốc tịch: {data.nguoiDaiDien_quocTich || ""}
-                </p>
-                <Line
-                    label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
-                    value={data.nguoiDaiDien_soHoChieu}
-                />
-                <p>
-                    Ngày cấp: {formatDate(data.nguoiDaiDien_ngayCapHoChieu)}
-                    &nbsp;&nbsp; Nơi cấp: {data.nguoiDaiDien_noiCapHoChieu || ""}
-                </p>
-                <Line label="Nơi thường trú" value={noiThuongTru} />
 
-                <p style={{ marginTop: 16 }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p>
+                                    Dân tộc: {data.nguoiDaiDien_danToc || ""}
+                                    &nbsp;&nbsp; Quốc tịch: {data.nguoiDaiDien_quocTich || ""}
+                                </p>
+                                <Line
+                                    label="Số Hộ chiếu (đối với cá nhân Việt Nam không có số định danh cá nhân)/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế hộ chiếu nước ngoài (đối với cá nhân là người nước ngoài)"
+                                    value={data.nguoiDaiDien_soHoChieu}
+                                />
+                                <p>
+                                    Ngày cấp: {formatDate(data.nguoiDaiDien_ngayCapHoChieu)}
+                                    &nbsp;&nbsp; Nơi cấp: {data.nguoiDaiDien_noiCapHoChieu || ""}
+                                </p>
+                                <p>Nơi thường trú:</p>
+                                <AddressFields
+                                    soNha={data.nguoiDaiDien_thuongTru_soNha}
+                                    xa={data.nguoiDaiDien_thuongTru_xa}
+                                    tinh={data.nguoiDaiDien_thuongTru_tinh}
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style={{ width: "100%", marginTop: 16 }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>

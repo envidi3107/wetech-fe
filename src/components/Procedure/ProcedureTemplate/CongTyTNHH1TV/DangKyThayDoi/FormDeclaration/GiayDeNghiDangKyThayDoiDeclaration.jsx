@@ -12,7 +12,6 @@ import {
     QuocTichSelect,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DanhSachThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/DanhSachThanhVienDeclaration";
-import DanhSachCoDongSangLapDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyCoPhan/ThanhLapMoi/FormDeclaration/DanhSachCoDongSangLapDeclaration";
 import nganhNgheStyles from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable.module.css";
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
@@ -24,6 +23,7 @@ import ThongTinDangKyThueSection from "@/components/Procedure/ProcedureTemplate/
 import ThongTinCoPhanSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinCoPhanSection";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import FormattedNumberInput from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
+import maNganhNgheThayDoiData from "@/assets/maNganhNgheThayDoi.json";
 import {
     handleUppercaseInput,
     toUppercaseValue,
@@ -39,8 +39,10 @@ import {
     BENEFICIAL_OWNER_CHANGE_OPTIONS,
     FOOTNOTES,
     MAIN_CHANGE_OPTIONS,
+    SHAREHOLDER_CHANGE_OPTIONS,
     emptyAOptionState,
     emptyBeneficialOwnerChangeOptionState,
+    emptyShareholderChangeOptionState,
     isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
@@ -237,6 +239,23 @@ function BeneficialOwnerChangeChecklist({ selectedOptions, onToggle }) {
                     <span>
                         <strong>{option.marker}</strong> {option.label}
                     </span>
+                </label>
+            ))}
+        </div>
+    );
+}
+
+function ShareholderChangeChecklist({ selectedOptions, onToggle }) {
+    return (
+        <div className={localStyles.beneficialOwnerNoticeList}>
+            {SHAREHOLDER_CHANGE_OPTIONS.map((option) => (
+                <label key={option.name} className={localStyles.beneficialOwnerNoticeItem}>
+                    <input
+                        type="checkbox"
+                        checked={!!selectedOptions[option.name]}
+                        onChange={() => onToggle(option.name)}
+                    />
+                    <span>{option.label}</span>
                 </label>
             ))}
         </div>
@@ -530,13 +549,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     const [beneficialOwnerChangeOptions, setBeneficialOwnerChangeOptions] = useState(
         emptyBeneficialOwnerChangeOptionState(),
     );
+    const [shareholderChangeOptions, setShareholderChangeOptions] = useState(emptyShareholderChangeOptionState());
     const [doiThanhVienRows, setDoiThanhVienRows] = useState([]);
-    const [doiCoDongSangLapRows, setDoiCoDongSangLapRows] = useState([]);
-    const [doiCoDongLoaiCoPhanKhacList, setDoiCoDongLoaiCoPhanKhacList] = useState([""]);
     const [coSoThayDoi, setCoSoThayDoi] = useState("");
     const [pendingScrollTarget, setPendingScrollTarget] = useState("");
     const danhSachThanhVienData = useGetFormDataJsonFromName("Danh sách thành viên");
-    const danhSachCoDongSangLapData = useGetFormDataJsonFromName("Danh sách cổ đông sáng lập");
     const internalFormRef = useRef(null);
     const resolvedFormRef = formRef || internalFormRef;
 
@@ -569,22 +586,17 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                 return acc;
             }, {}),
         );
+        setShareholderChangeOptions(
+            SHAREHOLDER_CHANGE_OPTIONS.reduce((acc, option) => {
+                acc[option.name] = isTruthy(parsed[option.name]);
+                return acc;
+            }, {}),
+        );
         setDoiThanhVienRows(
             parsed.doiThanhVienList || parsed.thanhVienList || danhSachThanhVienData?.thanhVienList || [],
         );
-        setDoiCoDongSangLapRows(
-            parsed.doiCoDongSangLapList || parsed.coDongList || danhSachCoDongSangLapData?.coDongList || [],
-        );
-        setDoiCoDongLoaiCoPhanKhacList(
-            parsed.doiCoDongLoaiCoPhanKhacList ||
-            parsed.loaiCoPhanKhacList ||
-            danhSachCoDongSangLapData?.loaiCoPhanKhacList ||
-            (parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten
-                ? [parsed.loaiCoPhanKhac_ten || danhSachCoDongSangLapData?.loaiCoPhanKhac_ten]
-                : [""]),
-        );
         setCoSoThayDoi(parsed.coSoThayDoi || "");
-    }, [availableAChangeOptions, danhSachCoDongSangLapData, danhSachThanhVienData, dataJson, provinces]);
+    }, [availableAChangeOptions, danhSachThanhVienData, dataJson, provinces]);
 
     useEffect(() => {
         if (!pendingScrollTarget || !mainOptions.includes("A") || !aOptions[pendingScrollTarget]) return;
@@ -757,6 +769,10 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         setBeneficialOwnerChangeOptions((prev) => ({ ...prev, [name]: !prev[name] }));
     };
 
+    const toggleShareholderChangeOption = (name) => {
+        setShareholderChangeOptions((prev) => ({ ...prev, [name]: !prev[name] }));
+    };
+
     const scrollToAOption = (name) => {
         setAOptions((prev) => (prev[name] ? prev : { ...prev, [name]: true }));
         setPendingScrollTarget(name);
@@ -796,6 +812,15 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             !BENEFICIAL_OWNER_CHANGE_OPTIONS.some((option) => !!beneficialOwnerChangeOptions[option.name])
         ) {
             window.alert("Vui lòng chọn ít nhất một trường hợp thay đổi thông tin chủ sở hữu hưởng lợi.");
+            return false;
+        }
+
+        if (
+            mainOptions.includes("A") &&
+            aOptions.a_doiCoDong &&
+            !SHAREHOLDER_CHANGE_OPTIONS.some((option) => !!shareholderChangeOptions[option.name])
+        ) {
+            window.alert("Vui lòng chọn ít nhất một trường hợp thay đổi cổ đông.");
             return false;
         }
         return true;
@@ -843,15 +868,17 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                     ? "true"
                     : "false";
         });
+        SHAREHOLDER_CHANGE_OPTIONS.forEach((option) => {
+            data[option.name] =
+                isMainASelected && aOptions.a_doiCoDong && shareholderChangeOptions[option.name]
+                    ? "true"
+                    : "false";
+        });
         data.nganhNgheBoSungList = nganhBoSungRows;
         data.nganhNgheBoList = nganhBoRows;
         data.nganhNgheSuaList = nganhSuaRows;
         data.nguoiDaiDienUyQuyenList = authorizedRepRows;
         data.doiThanhVienList = doiThanhVienRows;
-        data.doiCoDongSangLapList = doiCoDongSangLapRows;
-        data.doiCoDongLoaiCoPhanKhacList = doiCoDongLoaiCoPhanKhacList;
-        data.loaiCoPhanKhacList = doiCoDongLoaiCoPhanKhacList;
-        data.loaiCoPhanKhac_ten = doiCoDongLoaiCoPhanKhacList[0] || "";
         return data;
     };
 
@@ -870,13 +897,13 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                     return acc;
                 }, {}),
             );
-            setDoiThanhVienRows(parsed.doiThanhVienList || parsed.thanhVienList || []);
-            setDoiCoDongSangLapRows(parsed.doiCoDongSangLapList || parsed.coDongList || []);
-            setDoiCoDongLoaiCoPhanKhacList(
-                parsed.doiCoDongLoaiCoPhanKhacList ||
-                parsed.loaiCoPhanKhacList ||
-                (parsed.loaiCoPhanKhac_ten ? [parsed.loaiCoPhanKhac_ten] : [""]),
+            setShareholderChangeOptions(
+                SHAREHOLDER_CHANGE_OPTIONS.reduce((acc, option) => {
+                    acc[option.name] = isTruthy(parsed[option.name]);
+                    return acc;
+                }, {}),
             );
+            setDoiThanhVienRows(parsed.doiThanhVienList || parsed.thanhVienList || []);
             setCoSoThayDoi(parsed.coSoThayDoi || "");
         },
     }));
@@ -1233,7 +1260,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     <h4 className={styles.sectionTitle}>1. BỔ SUNG NGÀNH, NGHỀ KINH DOANH</h4>
                                     <NganhNgheTable rows={nganhBoSungRows} onChangeRows={setNganhBoSungRows} />
                                     <h4 className={styles.sectionTitle}>2. BỎ NGÀNH, NGHỀ KINH DOANH</h4>
-                                    <NganhNgheTable rows={nganhBoRows} onChangeRows={setNganhBoRows} />
+                                    <NganhNgheTable rows={nganhBoRows} onChangeRows={setNganhBoRows} options={maNganhNgheThayDoiData} />
                                     <h4 className={styles.sectionTitle}>3. SỬA ĐỔI CHI TIẾT NGÀNH, NGHỀ KINH DOANH</h4>
                                     <NganhNgheTable rows={nganhSuaRows} onChangeRows={setNganhSuaRows} />
                                     <AttachmentNote>
@@ -1322,13 +1349,9 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                     <h3 className={styles.sectionTitle}>
                                         THÔNG BÁO THAY ĐỔI CỔ ĐÔNG SÁNG LẬP/CỔ ĐÔNG LÀ NHÀ ĐẦU TƯ NƯỚC NGOÀI
                                     </h3>
-                                    <DanhSachCoDongSangLapDeclaration
-                                        contentOnly
-                                        hideTitle
-                                        rows={doiCoDongSangLapRows}
-                                        onChangeRows={setDoiCoDongSangLapRows}
-                                        loaiCoPhanKhacList={doiCoDongLoaiCoPhanKhacList}
-                                        onChangeLoaiCoPhanKhacList={setDoiCoDongLoaiCoPhanKhacList}
+                                    <ShareholderChangeChecklist
+                                        selectedOptions={shareholderChangeOptions}
+                                        onToggle={toggleShareholderChangeOption}
                                     />
                                 </div>
                             )}

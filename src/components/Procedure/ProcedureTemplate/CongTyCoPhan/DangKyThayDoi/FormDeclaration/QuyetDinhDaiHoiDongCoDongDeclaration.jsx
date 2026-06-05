@@ -13,7 +13,10 @@ import {
     CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 import { formatDate } from "@/utils/dateTimeUtils";
-import { GioiTinhSelect, ChucDanhSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import {
+    GioiTinhSelect,
+    ChucDanhSelect,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
@@ -123,8 +126,14 @@ function getSourceDefaultContributionRows(data) {
                 danhXung: qdRow.danhXung || sourceRow.danhXung || genderToDanhXung(sourceRow.gioiTinh),
                 hoTen: sourceRow.hoTen || sourceRow.chuSoHuu || qdRow.hoTen || "",
                 giaTriTangGiam: qdRow.giaTriTangGiam || sourceRow.giaTriTangGiam || "",
-                phanVonSauThayDoi: sourceRow.phanVonSauThayDoi || sourceRow.tongSoCoPhan_giaTri || sourceRow.phanVonGop || qdRow.phanVonSauThayDoi || "",
-                soCoPhanSauThayDoi: qdRow.soCoPhanSauThayDoi || sourceRow.tongSoCoPhan_soLuong || sourceRow.soCoPhan || "",
+                phanVonSauThayDoi:
+                    sourceRow.phanVonSauThayDoi ||
+                    sourceRow.tongSoCoPhan_giaTri ||
+                    sourceRow.phanVonGop ||
+                    qdRow.phanVonSauThayDoi ||
+                    "",
+                soCoPhanSauThayDoi:
+                    qdRow.soCoPhanSauThayDoi || sourceRow.tongSoCoPhan_soLuong || sourceRow.soCoPhan || "",
                 tyLeSauThayDoi: sourceRow.tyLeSauThayDoi || sourceRow.tyLe || qdRow.tyLeSauThayDoi || "",
             };
         });
@@ -192,11 +201,36 @@ function getSourceDefaultShareTypesRows(data) {
     }
 
     return [
-        { tenLoai: "Cổ phần phổ thông", soLuong: data.cp_cptt_soLuong || "", giaTri: data.cp_cptt_giaTri || "", tyLe: data.cp_cptt_tiLe || "" },
-        { tenLoai: "Cổ phần ưu đãi biểu quyết", soLuong: data.cp_cpudbq_soLuong || "", giaTri: data.cp_cpudbq_giaTri || "", tyLe: data.cp_cpudbq_tiLe || "" },
-        { tenLoai: "Cổ phần ưu đãi cổ tức", soLuong: data.cp_cpudct_soLuong || "", giaTri: data.cp_cpudct_giaTri || "", tyLe: data.cp_cpudct_tiLe || "" },
-        { tenLoai: "Cổ phần ưu đãi hoàn lại", soLuong: data.cp_cpudhl_soLuong || "", giaTri: data.cp_cpudhl_giaTri || "", tyLe: data.cp_cpudhl_tiLe || "" },
-        { tenLoai: "Các cổ phần ưu đãi khác", soLuong: data.cp_cpudk_soLuong || "", giaTri: data.cp_cpudk_giaTri || "", tyLe: data.cp_cpudk_tiLe || "" },
+        {
+            tenLoai: "Cổ phần phổ thông",
+            soLuong: data.cp_cptt_soLuong || "",
+            giaTri: data.cp_cptt_giaTri || "",
+            tyLe: data.cp_cptt_tiLe || "",
+        },
+        {
+            tenLoai: "Cổ phần ưu đãi biểu quyết",
+            soLuong: data.cp_cpudbq_soLuong || "",
+            giaTri: data.cp_cpudbq_giaTri || "",
+            tyLe: data.cp_cpudbq_tiLe || "",
+        },
+        {
+            tenLoai: "Cổ phần ưu đãi cổ tức",
+            soLuong: data.cp_cpudct_soLuong || "",
+            giaTri: data.cp_cpudct_giaTri || "",
+            tyLe: data.cp_cpudct_tiLe || "",
+        },
+        {
+            tenLoai: "Cổ phần ưu đãi hoàn lại",
+            soLuong: data.cp_cpudhl_soLuong || "",
+            giaTri: data.cp_cpudhl_giaTri || "",
+            tyLe: data.cp_cpudhl_tiLe || "",
+        },
+        {
+            tenLoai: "Các cổ phần ưu đãi khác",
+            soLuong: data.cp_cpudk_soLuong || "",
+            giaTri: data.cp_cpudk_giaTri || "",
+            tyLe: data.cp_cpudk_tiLe || "",
+        },
     ];
 }
 
@@ -326,7 +360,9 @@ function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
             const tVal = parseNumber(totalCapital);
             if (pVal !== null && tVal !== null && tVal > 0) {
                 const percent = (pVal / tVal) * 100;
-                updatedRow.tyLeSauThayDoi = Number.isInteger(percent) ? percent.toString() : percent.toFixed(4).replace(/\.?0+$/, "");
+                updatedRow.tyLeSauThayDoi = Number.isInteger(percent)
+                    ? percent.toString()
+                    : percent.toFixed(4).replace(/\.?0+$/, "");
             } else if (value === "") {
                 updatedRow.tyLeSauThayDoi = "";
             }
@@ -380,7 +416,9 @@ function ContributionRowsTable({ rows, onChangeRows, totalCapital }) {
                             <input
                                 className={styles.input}
                                 value={row.soCoPhanSauThayDoi || ""}
-                                onChange={(event) => handleNumberChange(index, "soCoPhanSauThayDoi", event.target.value)}
+                                onChange={(event) =>
+                                    handleNumberChange(index, "soCoPhanSauThayDoi", event.target.value)
+                                }
                                 required
                             />
                         </td>
@@ -545,7 +583,9 @@ function UnpaidShareholdersTable({ rows, onChangeRows, menhGiaCoPhan }) {
                             <input
                                 className={styles.input}
                                 value={row.soTienChuaThanhToan || ""}
-                                onChange={(event) => handleNumberChange(index, "soTienChuaThanhToan", event.target.value)}
+                                onChange={(event) =>
+                                    handleNumberChange(index, "soTienChuaThanhToan", event.target.value)
+                                }
                                 required
                             />
                         </td>
@@ -553,7 +593,9 @@ function UnpaidShareholdersTable({ rows, onChangeRows, menhGiaCoPhan }) {
                             <input
                                 className={styles.input}
                                 value={row.soCoPhanTuongDuong || ""}
-                                onChange={(event) => handleNumberChange(index, "soCoPhanTuongDuong", event.target.value)}
+                                onChange={(event) =>
+                                    handleNumberChange(index, "soCoPhanTuongDuong", event.target.value)
+                                }
                                 required
                             />
                         </td>
@@ -582,7 +624,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     { dataJson, onSubmit, formRef },
     componentRef,
 ) {
-    const { user } = useAuth()
+    const { user } = useAuth();
     const sourceFormData = useGetFormDataJsonFromName(SOURCE_FORM_NAME);
     const currentData = useMemo(() => normalizeDataJson(dataJson), [dataJson]);
     const sourceData = useMemo(() => normalizeDataJson(sourceFormData), [sourceFormData]);
@@ -601,7 +643,11 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     const [showRepresentative, setShowRepresentative] = useState(false);
 
     const [qdNguoiDaiDienProv, setQdNguoiDaiDienProv] = useState("");
-    const { provinces: nddProvinces, communes: nddCommunes, loadingCommunes: nddLoadingCommunes } = useFetchAddress(qdNguoiDaiDienProv);
+    const {
+        provinces: nddProvinces,
+        communes: nddCommunes,
+        loadingCommunes: nddLoadingCommunes,
+    } = useFetchAddress(qdNguoiDaiDienProv);
 
     const [localRepCard, setLocalRepCard] = useState({});
     const [repKey, setRepKey] = useState(0);
@@ -644,7 +690,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     const decisionData = useMemo(() => {
         return {
             ...baseDecisionData,
-            ...localRepCard
+            ...localRepCard,
         };
     }, [baseDecisionData, localRepCard]);
     const capitalDiff = getCapitalDifference(decisionData);
@@ -664,18 +710,21 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
         formValues.qdSuaDoiDieuLe = formData.get("qdSuaDoiDieuLe") ? "true" : "false";
         formValues.qdDoiNguoiDaiDienPhapLuat = formData.get("qdDoiNguoiDaiDienPhapLuat") ? "true" : "false";
 
-        return applyDecisionDefaults({
-            ...decisionData,
-            ...formValues,
-            qdShareTypesList: shareTypesRows,
-            qdUnpaidShareholdersList: unpaidRows
-        }, contributionRows);
+        return applyDecisionDefaults(
+            {
+                ...decisionData,
+                ...formValues,
+                qdShareTypesList: shareTypesRows,
+                qdUnpaidShareholdersList: unpaidRows,
+            },
+            contributionRows,
+        );
     };
 
     useImperativeHandle(componentRef, () => ({
         getDraftData: collectData,
         getExportData: collectData,
-        importData: () => { },
+        importData: () => {},
     }));
 
     const handleSubmit = (event) => {
@@ -733,15 +782,13 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                             <input
                                 className={styles.inputNoBorder}
                                 name="qdNguoiThucHienThuTuc"
-                                defaultValue={
-                                    toUppercaseValue(
-                                        user?.fullname ||
+                                defaultValue={toUppercaseValue(
+                                    user?.fullname ||
                                         decisionData.qdNguoiThucHienThuTuc ||
                                         decisionData.nguoiDaiDien_hoTen ||
                                         decisionData.chuSoHuu_hoTen ||
-                                        ""
-                                    )
-                                }
+                                        "",
+                                )}
                                 required
                             />
                         </div>
@@ -769,6 +816,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                         )}
                     </div>
                 </div>
+                <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp</h3>
                 <div className={styles.grid2}>
                     <ReadOnlyField label="Tên doanh nghiệp" value={getDecisionCompanyName(decisionData)} />
                     <ReadOnlyField label="Mã số doanh nghiệp/Mã số thuế" value={decisionData.maSoDoanhNghiep} />
@@ -785,28 +833,50 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                             label="Hình thức tăng/giảm vốn điều lệ"
                             value={decisionData.qdHinhThucTangGiamVon}
                         />
-                        <ReadOnlyField label="Thời điểm tăng/giảm vốn" value={formatDate(decisionData.thoiDiemThayDoiVon)} />
+                        <ReadOnlyField
+                            label="Thời điểm tăng/giảm vốn"
+                            value={formatDate(decisionData.thoiDiemThayDoiVon)}
+                        />
                     </div>
 
                     <div style={{ marginTop: 16 }}>
-                        <div style={{ marginBottom: 12, color: "#505050", fontSize: "14px", fontWeight: 500, lineHeight: "34px" }}>
+                        <div
+                            style={{
+                                marginBottom: 12,
+                                color: "#505050",
+                                fontSize: "14px",
+                                fontWeight: 500,
+                                lineHeight: "34px",
+                            }}
+                        >
                             Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là{" "}
                             <input
                                 className={styles.input}
-                                style={{ display: "inline-block", width: "150px", padding: "0 8px", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                style={{
+                                    display: "inline-block",
+                                    width: "150px",
+                                    padding: "0 8px",
+                                    minHeight: "32px",
+                                    height: "32px",
+                                    margin: "0 4px",
+                                }}
                                 name="qdTongVonChuaThanhToan"
                                 defaultValue={decisionData.qdTongVonChuaThanhToan || ""}
                                 onChange={(e) => {
                                     const raw = String(e.target.value).replace(/[^\d]/g, "");
                                     e.target.value = raw ? formatNumber(raw) : "";
 
-                                    const inputBangChu = document.querySelector('input[name="qdTongVonChuaThanhToanBangChu"]');
+                                    const inputBangChu = document.querySelector(
+                                        'input[name="qdTongVonChuaThanhToanBangChu"]',
+                                    );
                                     if (inputBangChu) {
                                         inputBangChu.value = raw ? numberToVietnameseText(raw) : "";
                                     }
 
                                     const menhGia = parseNumber(decisionData.qdMenhGiaCoPhan || "10000");
-                                    const inputCoPhan = document.querySelector('input[name="qdTongCoPhanChuaThanhToan"]');
+                                    const inputCoPhan = document.querySelector(
+                                        'input[name="qdTongCoPhanChuaThanhToan"]',
+                                    );
                                     if (inputCoPhan && raw && menhGia) {
                                         const coPhan = parseInt(raw) / menhGia;
                                         inputCoPhan.value = formatNumber(coPhan);
@@ -818,21 +888,50 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                             VNĐ (
                             <input
                                 className={styles.input}
-                                style={{ display: "inline-block", width: "220px", padding: "0 8px", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                style={{
+                                    display: "inline-block",
+                                    width: "220px",
+                                    padding: "0 8px",
+                                    minHeight: "32px",
+                                    height: "32px",
+                                    margin: "0 4px",
+                                }}
                                 name="qdTongVonChuaThanhToanBangChu"
-                                defaultValue={decisionData.qdTongVonChuaThanhToanBangChu || (decisionData.qdTongVonChuaThanhToan ? numberToVietnameseText(String(decisionData.qdTongVonChuaThanhToan).replace(/[^\d]/g, "")) : "")}
+                                defaultValue={
+                                    decisionData.qdTongVonChuaThanhToanBangChu ||
+                                    (decisionData.qdTongVonChuaThanhToan
+                                        ? numberToVietnameseText(
+                                              String(decisionData.qdTongVonChuaThanhToan).replace(/[^\d]/g, ""),
+                                          )
+                                        : "")
+                                }
                             />
                             ) tương đương{" "}
                             <input
                                 className={styles.input}
-                                style={{ display: "inline-block", width: "100px", padding: "0 8px", background: "#f5f5f5", minHeight: "32px", height: "32px", margin: "0 4px" }}
+                                style={{
+                                    display: "inline-block",
+                                    width: "100px",
+                                    padding: "0 8px",
+                                    background: "#f5f5f5",
+                                    minHeight: "32px",
+                                    height: "32px",
+                                    margin: "0 4px",
+                                }}
                                 name="qdTongCoPhanChuaThanhToan"
                                 defaultValue={decisionData.qdTongCoPhanChuaThanhToan || ""}
                                 readOnly
                             />
                             cổ phần, trong đó:
                         </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                marginBottom: 10,
+                                alignItems: "center",
+                            }}
+                        >
                             <h3 className={styles.sectionTitle}>Danh sách cổ đông chưa thanh toán:</h3>
                             <button
                                 type="button"
@@ -842,23 +941,52 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                 Thêm cổ đông
                             </button>
                         </div>
-                        <UnpaidShareholdersTable rows={unpaidRows} onChangeRows={setUnpaidRows} menhGiaCoPhan={decisionData.qdMenhGiaCoPhan} />
+                        <UnpaidShareholdersTable
+                            rows={unpaidRows}
+                            onChangeRows={setUnpaidRows}
+                            menhGiaCoPhan={decisionData.qdMenhGiaCoPhan}
+                        />
 
                         <div style={{ marginTop: 24, pointerEvents: "none", opacity: 0.9 }}>
-                            <NguonVonDieuLeSection title="Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ" dataJson={decisionData} styles={styles} isNote />
-                            <TaiSanGopVonSection title="Tài sản góp vốn sau khi thay đổi vốn điều lệ" dataJson={decisionData} styles={styles} fieldPrefix="taiSan" />
+                            <NguonVonDieuLeSection
+                                title="Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ"
+                                dataJson={decisionData}
+                                styles={styles}
+                                isNote
+                            />
+                            <TaiSanGopVonSection
+                                title="Tài sản góp vốn sau khi thay đổi vốn điều lệ"
+                                dataJson={decisionData}
+                                styles={styles}
+                                fieldPrefix="taiSan"
+                            />
                         </div>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <h4 className={styles.sectionTitle}>Thông tin về cổ phần:</h4>
                     </div>
                     <div>
-                        <Field label="Mệnh giá cổ phần (đồng/1 cổ phần)" name="qdMenhGiaCoPhan" data={{ qdMenhGiaCoPhan: decisionData.qdMenhGiaCoPhan || "10.000" }} required />
+                        <Field
+                            label="Mệnh giá cổ phần (đồng/1 cổ phần)"
+                            name="qdMenhGiaCoPhan"
+                            data={{ qdMenhGiaCoPhan: decisionData.qdMenhGiaCoPhan || "10.000" }}
+                            required
+                        />
                         <ShareTypesTable rows={shareTypesRows} onChangeRows={setShareTypesRows} />
                     </div>
 
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center", marginTop: 20 }}>
-                        <h3 className={styles.sectionTitle}>Trong đó cơ cấu góp vốn (danh sách cổ đông) sau thay đổi vốn điều lệ:</h3>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: 10,
+                            alignItems: "center",
+                            marginTop: 20,
+                        }}
+                    >
+                        <h3 className={styles.sectionTitle}>
+                            Trong đó cơ cấu góp vốn (danh sách cổ đông) sau thay đổi vốn điều lệ:
+                        </h3>
                         <button
                             type="button"
                             onClick={() => setContributionRows([...contributionRows, { ...emptyContributionRow }])}
@@ -867,7 +995,11 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                             Thêm dòng góp vốn
                         </button>
                     </div>
-                    <ContributionRowsTable rows={contributionRows} onChangeRows={setContributionRows} totalCapital={decisionData.vonDieuLeSauThayDoi} />
+                    <ContributionRowsTable
+                        rows={contributionRows}
+                        onChangeRows={setContributionRows}
+                        totalCapital={decisionData.vonDieuLeSauThayDoi}
+                    />
                 </div>
             )}
 
@@ -938,7 +1070,12 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                         </div>
                         <div key={`rep-${repKey}`}>
                             <div className={styles.grid2}>
-                                <Field label="Họ, chữ đệm và tên (ghi bằng chữ in hoa)" name="qdNguoiDaiDien_hoTen" data={decisionData} required>
+                                <Field
+                                    label="Họ, chữ đệm và tên (ghi bằng chữ in hoa)"
+                                    name="qdNguoiDaiDien_hoTen"
+                                    data={decisionData}
+                                    required
+                                >
                                     <input
                                         type="text"
                                         className={styles.input}
@@ -956,16 +1093,33 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                         name="qdNguoiDaiDien_ngaySinh"
                                         className={styles.input}
                                         defaultValue={
-                                            decisionData.qdNguoiDaiDien_ngaySinh || decisionData.nguoiDaiDien_ngaySinh || ""
+                                            decisionData.qdNguoiDaiDien_ngaySinh ||
+                                            decisionData.nguoiDaiDien_ngaySinh ||
+                                            ""
                                         }
                                         required
                                     />
                                 </Field>
-                                <GioiTinhSelect name="qdNguoiDaiDien_gioiTinh" defaultValue={decisionData.qdNguoiDaiDien_gioiTinh} required />
-                                <Field label="Số định danh cá nhân" name="qdNguoiDaiDien_cccd" data={decisionData} required />
-                                <ChucDanhSelect name="qdNguoiDaiDien_chucDanh" defaultValue={decisionData.qdNguoiDaiDien_chucDanh} required />
+                                <GioiTinhSelect
+                                    name="qdNguoiDaiDien_gioiTinh"
+                                    defaultValue={decisionData.qdNguoiDaiDien_gioiTinh}
+                                    required
+                                />
+                                <Field
+                                    label="Số định danh cá nhân"
+                                    name="qdNguoiDaiDien_cccd"
+                                    data={decisionData}
+                                    required
+                                />
+                                <ChucDanhSelect
+                                    name="qdNguoiDaiDien_chucDanh"
+                                    defaultValue={decisionData.qdNguoiDaiDien_chucDanh}
+                                    required
+                                />
                             </div>
-                            <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>Địa chỉ liên lạc:</h3>
+                            <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>
+                                Địa chỉ liên lạc:
+                            </h3>
                             <AddressSelect
                                 provinces={nddProvinces}
                                 communes={nddCommunes}
@@ -973,9 +1127,13 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                 provinceName="qdNguoiDaiDien_tinh"
                                 wardName="qdNguoiDaiDien_xa"
                                 houseNumberName="qdNguoiDaiDien_soNha"
-                                provinceDefault={decisionData.qdNguoiDaiDien_tinh || decisionData.nguoiDaiDien_tinh || ""}
+                                provinceDefault={
+                                    decisionData.qdNguoiDaiDien_tinh || decisionData.nguoiDaiDien_tinh || ""
+                                }
                                 wardDefault={decisionData.qdNguoiDaiDien_xa || decisionData.nguoiDaiDien_xa || ""}
-                                houseNumberDefault={decisionData.qdNguoiDaiDien_soNha || decisionData.nguoiDaiDien_soNha || ""}
+                                houseNumberDefault={
+                                    decisionData.qdNguoiDaiDien_soNha || decisionData.nguoiDaiDien_soNha || ""
+                                }
                                 isLoadingCommunes={nddLoadingCommunes}
                             />
                             <div className={styles.grid2} style={{ marginTop: "8px" }}>

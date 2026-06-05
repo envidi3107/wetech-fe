@@ -193,7 +193,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -232,7 +232,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>1. Tình trạng thành lập </strong>(<em>đánh dấu X vào ô thích hợp</em>):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>Thành lập mới</td>
@@ -315,7 +315,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </em>
                     ):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>Khu công nghiệp</td>
@@ -552,7 +552,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.noBorderTable} style={{ marginLeft: "20px", width: "calc(100% - 20px)" }}>
+                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -584,7 +584,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>9. Thông tin đăng ký thuế:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>STT</th>
@@ -820,8 +820,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </tr>
                     </tbody>
                 </table>
-
-                <p style={{ marginTop: "16px" }}>
+                <p style={{ width: "100%", marginTop: "16px" }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>

@@ -1,6 +1,6 @@
 /* Document Paper Styles */
 .page {
-    font-family: 'Times New Roman', serif;
+    font-family: "Times New Roman", serif;
     font-size: var(--procedure-confirmation-font-size);
     color: #000;
     padding: 40px 60px;
@@ -61,6 +61,11 @@
 
 .heading1 {
     font-weight: 700;
+}
+
+.infoBorder {
+    border: 1px solid black;
+    padding: 4px 8px;
 }
 
 /* Info Row */
@@ -219,7 +224,6 @@
     height: 16px;
     border: 1px solid #333;
 }
-
 
 .input,
 .select {

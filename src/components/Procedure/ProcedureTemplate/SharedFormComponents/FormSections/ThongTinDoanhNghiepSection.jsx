@@ -6,6 +6,7 @@ import {
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     TNHH_COMPANY_NAME_PREFIX_OPTIONS,
+    getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 export default function ThongTinDoanhNghiepSection({
@@ -42,12 +43,14 @@ export default function ThongTinDoanhNghiepSection({
     };
 
     const [selectedCompanyNamePrefix, setSelectedCompanyNamePrefix] = useState(
-        dataJson?.tenCongTyPrefix || defaultCompanyNamePrefix,
+        getCompanyNamePrefix(dataJson, defaultCompanyNamePrefix, companyNamePrefixOptions),
     );
 
     useEffect(() => {
-        setSelectedCompanyNamePrefix(dataJson?.tenCongTyPrefix || defaultCompanyNamePrefix);
-    }, [dataJson?.tenCongTyPrefix, defaultCompanyNamePrefix]);
+        setSelectedCompanyNamePrefix(
+            getCompanyNamePrefix(dataJson, defaultCompanyNamePrefix, companyNamePrefixOptions),
+        );
+    }, [dataJson, defaultCompanyNamePrefix, companyNamePrefixOptions]);
 
     return (
         <div className={styles.sectionGroup}>

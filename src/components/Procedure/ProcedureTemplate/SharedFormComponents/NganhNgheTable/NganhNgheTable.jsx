@@ -5,7 +5,7 @@ import NganhNgheModal from "./NganhNgheModal";
 
 const EMPTY_NGANH_NGHE = { tenNganh: "", chiTiet: "", maNganh: "", laNganhChinh: false };
 
-export default function NganhNgheTable({ rows, data, onChangeRows, disabled = false, readOnly = false }) {
+export default function NganhNgheTable({ rows, data, onChangeRows, disabled = false, readOnly = false, options }) {
     const activeRows = rows || data || [];
     const [selectingRowIdx, setSelectingRowIdx] = useState(null);
 
@@ -177,6 +177,7 @@ export default function NganhNgheTable({ rows, data, onChangeRows, disabled = fa
                 isOpen={selectingRowIdx !== null}
                 onClose={() => setSelectingRowIdx(null)}
                 onSelect={(item) => handleSelectNganh(item)}
+                options={options}
             />
         </div>
     );

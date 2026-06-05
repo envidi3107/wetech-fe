@@ -1,0 +1,1858 @@
+[
+  {
+    "maNganh": "0111",
+    "title": "Trồng lúa"
+  },
+  {
+    "maNganh": "0112",
+    "title": "Trồng ngô và cây lương thực có hạt khác"
+  },
+  {
+    "maNganh": "0113",
+    "title": "Trồng cây lấy củ có chất bột"
+  },
+  {
+    "maNganh": "0114",
+    "title": "Trồng cây mía"
+  },
+  {
+    "maNganh": "0115",
+    "title": "Trồng cây thuốc lá, thuốc lào"
+  },
+  {
+    "maNganh": "0116",
+    "title": "Trồng cây lấy sợi"
+  },
+  {
+    "maNganh": "0117",
+    "title": "Trồng cây có hạt chứa dầu"
+  },
+  {
+    "maNganh": "0118",
+    "title": "Trồng rau, đậu các loại và trồng hoa"
+  },
+  {
+    "maNganh": "0119",
+    "title": "Trồng cây hàng năm khác"
+  },
+  {
+    "maNganh": "0121",
+    "title": "Trồng cây ăn quả"
+  },
+  {
+    "maNganh": "0122",
+    "title": "Trồng cây lấy quả chứa dầu"
+  },
+  {
+    "maNganh": "0123",
+    "title": "Trồng cây điều"
+  },
+  {
+    "maNganh": "0124",
+    "title": "Trồng cây hồ tiêu"
+  },
+  {
+    "maNganh": "0125",
+    "title": "Trồng cây cao su"
+  },
+  {
+    "maNganh": "0126",
+    "title": "Trồng cây cà phê"
+  },
+  {
+    "maNganh": "0127",
+    "title": "Trồng cây chè"
+  },
+  {
+    "maNganh": "0128",
+    "title": "Trồng cây gia vị, cây dược liệu, cây hương liệu lâu năm"
+  },
+  {
+    "maNganh": "0129",
+    "title": "Trồng cây lâu năm khác"
+  },
+  {
+    "maNganh": "0131",
+    "title": "Nhân và chăm sóc cây giống hàng năm"
+  },
+  {
+    "maNganh": "0132",
+    "title": "Nhân và chăm sóc cây giống lâu năm"
+  },
+  {
+    "maNganh": "0141",
+    "title": "Chăn nuôi trâu, bò và sản xuất giống trâu, bò"
+  },
+  {
+    "maNganh": "0142",
+    "title": "Chăn nuôi ngựa, lừa, la và sản xuất giống ngựa, lừa"
+  },
+  {
+    "maNganh": "0144",
+    "title": "Chăn nuôi dê, cừu và sản xuất giống dê, cừu, hươu, nai"
+  },
+  {
+    "maNganh": "0145",
+    "title": "Chăn nuôi lợn và sản xuất giống lợn"
+  },
+  {
+    "maNganh": "0146",
+    "title": "Chăn nuôi gia cầm"
+  },
+  {
+    "maNganh": "0149",
+    "title": "Chăn nuôi khác"
+  },
+  {
+    "maNganh": "0150",
+    "title": "Trồng trọt, chăn nuôi hỗn hợp"
+  },
+  {
+    "maNganh": "0161",
+    "title": "Hoạt động dịch vụ trồng trọt"
+  },
+  {
+    "maNganh": "0162",
+    "title": "Hoạt động dịch vụ chăn nuôi"
+  },
+  {
+    "maNganh": "0163",
+    "title": "Hoạt động dịch vụ sau thu hoạch"
+  },
+  {
+    "maNganh": "0164",
+    "title": "Xử lý hạt giống để nhân giống"
+  },
+  {
+    "maNganh": "0170",
+    "title": "Săn bắt, đánh bẫy và hoạt động dịch vụ có liên quan"
+  },
+  {
+    "maNganh": "0210",
+    "title": "Trồng rừng, chăm sóc rừng và ươm giống cây lâm nghiệp"
+  },
+  {
+    "maNganh": "0220",
+    "title": "Khai thác gỗ"
+  },
+  {
+    "maNganh": "0231",
+    "title": "Khai thác lâm sản khác trừ gỗ"
+  },
+  {
+    "maNganh": "0232",
+    "title": "Thu nhặt lâm sản khác trừ gỗ"
+  },
+  {
+    "maNganh": "0240",
+    "title": "Hoạt động dịch vụ lâm nghiệp"
+  },
+  {
+    "maNganh": "0311",
+    "title": "Khai thác thủy sản biển"
+  },
+  {
+    "maNganh": "0312",
+    "title": "Khai thác thủy sản nội địa"
+  },
+  {
+    "maNganh": "0321",
+    "title": "Nuôi trồng thủy sản biển"
+  },
+  {
+    "maNganh": "0322",
+    "title": "Nuôi trồng thủy sản nội địa"
+  },
+  {
+    "maNganh": "0510",
+    "title": "Khai thác và thu gom than cứng"
+  },
+  {
+    "maNganh": "0520",
+    "title": "Khai thác và thu gom than non"
+  },
+  {
+    "maNganh": "0610",
+    "title": "Khai thác dầu thô"
+  },
+  {
+    "maNganh": "0620",
+    "title": "Khai thác khí đốt tự nhiên"
+  },
+  {
+    "maNganh": "0710",
+    "title": "Khai thác quặng sắt"
+  },
+  {
+    "maNganh": "0721",
+    "title": "Khai thác quặng uranium và quặng thorium"
+  },
+  {
+    "maNganh": "0722",
+    "title": "Khai thác quặng kim loại khác không chứa sắt"
+  },
+  {
+    "maNganh": "0730",
+    "title": "Khai thác quặng kim loại quý hiếm"
+  },
+  {
+    "maNganh": "0810",
+    "title": "Khai thác đá, cát, sỏi, đất sét"
+  },
+  {
+    "maNganh": "0891",
+    "title": "Khai thác khoáng hoá chất và khoáng phân bón"
+  },
+  {
+    "maNganh": "0892",
+    "title": "Khai thác và thu gom than bùn"
+  },
+  {
+    "maNganh": "0893",
+    "title": "Khai thác muối"
+  },
+  {
+    "maNganh": "0899",
+    "title": "Khai khoáng khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "0910",
+    "title": "Hoạt động dịch vụ hỗ trợ khai thác dầu thô và khí tự nhiên"
+  },
+  {
+    "maNganh": "0990",
+    "title": "Hoạt động dịch vụ hỗ trợ khai khoáng khác"
+  },
+  {
+    "maNganh": "1010",
+    "title": "Chế biến, bảo quản thịt và các sản phẩm từ thịt"
+  },
+  {
+    "maNganh": "1020",
+    "title": "Chế biến, bảo quản thuỷ sản và các sản phẩm từ thuỷ sản"
+  },
+  {
+    "maNganh": "1030",
+    "title": "Chế biến và bảo quản rau quả"
+  },
+  {
+    "maNganh": "1040",
+    "title": "Sản xuất dầu, mỡ động, thực vật"
+  },
+  {
+    "maNganh": "1050",
+    "title": "Chế biến sữa và các sản phẩm từ sữa"
+  },
+  {
+    "maNganh": "1061",
+    "title": "Xay xát và sản xuất bột thô"
+  },
+  {
+    "maNganh": "1062",
+    "title": "Sản xuất tinh bột và các sản phẩm từ tinh bột"
+  },
+  {
+    "maNganh": "1071",
+    "title": "Sản xuất các loại bánh từ bột"
+  },
+  {
+    "maNganh": "1072",
+    "title": "Sản xuất đường"
+  },
+  {
+    "maNganh": "1073",
+    "title": "Sản xuất ca cao, sôcôla và bánh kẹo"
+  },
+  {
+    "maNganh": "1074",
+    "title": "Sản xuất mì ống, mỳ sợi và sản phẩm tương tự"
+  },
+  {
+    "maNganh": "1075",
+    "title": "Sản xuất món ăn, thức ăn chế biến sẵn"
+  },
+  {
+    "maNganh": "1076",
+    "title": "Sản xuất chè"
+  },
+  {
+    "maNganh": "1077",
+    "title": "Sản xuất cà phê"
+  },
+  {
+    "maNganh": "1079",
+    "title": "Sản xuất thực phẩm khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "1080",
+    "title": "Sản xuất thức ăn gia súc, gia cầm và thuỷ sản"
+  },
+  {
+    "maNganh": "1101",
+    "title": "Chưng, tinh cất và pha chế các loại rượu mạnh"
+  },
+  {
+    "maNganh": "1102",
+    "title": "Sản xuất rượu vang"
+  },
+  {
+    "maNganh": "1103",
+    "title": "Sản xuất bia và mạch nha ủ men bia"
+  },
+  {
+    "maNganh": "1104",
+    "title": "Sản xuất đồ uống không cồn, nước khoáng"
+  },
+  {
+    "maNganh": "1200",
+    "title": "Sản xuất sản phẩm thuốc lá"
+  },
+  {
+    "maNganh": "1311",
+    "title": "Sản xuất sợi"
+  },
+  {
+    "maNganh": "1312",
+    "title": "Sản xuất vải dệt thoi"
+  },
+  {
+    "maNganh": "1313",
+    "title": "Hoàn thiện sản phẩm dệt"
+  },
+  {
+    "maNganh": "1391",
+    "title": "Sản xuất vải dệt kim, vải đan móc và vải không dệt khác"
+  },
+  {
+    "maNganh": "1392",
+    "title": "Sản xuất hàng dệt sẵn (trừ trang phục)"
+  },
+  {
+    "maNganh": "1393",
+    "title": "Sản xuất thảm, chăn, đệm"
+  },
+  {
+    "maNganh": "1394",
+    "title": "Sản xuất các loại dây bện và lưới"
+  },
+  {
+    "maNganh": "1399",
+    "title": "Sản xuất các loại hàng dệt khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "1410",
+    "title": "May trang phục (trừ trang phục từ da lông thú)"
+  },
+  {
+    "maNganh": "1420",
+    "title": "Sản xuất sản phẩm từ da lông thú"
+  },
+  {
+    "maNganh": "1430",
+    "title": "Sản xuất trang phục dệt kim, đan móc"
+  },
+  {
+    "maNganh": "1511",
+    "title": "Thuộc, sơ chế da; sơ chế và nhuộm da lông thú"
+  },
+  {
+    "maNganh": "1512",
+    "title": "Sản xuất vali, túi xách và các loại tương tự, sản xuất yên đệm"
+  },
+  {
+    "maNganh": "1520",
+    "title": "Sản xuất giày, dép"
+  },
+  {
+    "maNganh": "1610",
+    "title": "Cưa, xẻ, bào gỗ và bảo quản gỗ"
+  },
+  {
+    "maNganh": "1621",
+    "title": "Sản xuất gỗ dán, gỗ lạng, ván ép và ván mỏng khác"
+  },
+  {
+    "maNganh": "1622",
+    "title": "Sản xuất đồ gỗ xây dựng"
+  },
+  {
+    "maNganh": "1623",
+    "title": "Sản xuất bao bì bằng gỗ"
+  },
+  {
+    "maNganh": "1629",
+    "title": "Sản xuất sản phẩm khác từ gỗ; sản xuất sản phẩm từ tre, nứa, rơm, rạ và vật liệu tết bện"
+  },
+  {
+    "maNganh": "1701",
+    "title": "Sản xuất bột giấy, giấy và bìa"
+  },
+  {
+    "maNganh": "1702",
+    "title": "Sản xuất giấy nhăn, bìa nhăn, bao bì từ giấy và bìa"
+  },
+  {
+    "maNganh": "1709",
+    "title": "Sản xuất các sản phẩm khác từ giấy và bìa chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "1811",
+    "title": "In ấn"
+  },
+  {
+    "maNganh": "1812",
+    "title": "Dịch vụ liên quan đến in"
+  },
+  {
+    "maNganh": "1820",
+    "title": "Sao chép bản ghi các loại"
+  },
+  {
+    "maNganh": "1910",
+    "title": "Sản xuất than cốc"
+  },
+  {
+    "maNganh": "1920",
+    "title": "Sản xuất sản phẩm dầu mỏ tinh chế"
+  },
+  {
+    "maNganh": "2011",
+    "title": "Sản xuất hoá chất cơ bản"
+  },
+  {
+    "maNganh": "2012",
+    "title": "Sản xuất phân bón và hợp chất ni tơ"
+  },
+  {
+    "maNganh": "2013",
+    "title": "Sản xuất plastic và cao su tổng hợp dạng nguyên sinh"
+  },
+  {
+    "maNganh": "2021",
+    "title": "Sản xuất thuốc trừ sâu và sản phẩm hoá chất khác dùng trong nông nghiệp"
+  },
+  {
+    "maNganh": "2022",
+    "title": "Sản xuất sơn, véc ni và các chất sơn, quét tương tự; sản xuất mực in và ma tít"
+  },
+  {
+    "maNganh": "2023",
+    "title": "Sản xuất mỹ phẩm, xà phòng, chất tẩy rửa, làm bóng và chế phẩm vệ sinh"
+  },
+  {
+    "maNganh": "2029",
+    "title": "Sản xuất sản phẩm hoá chất khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "2030",
+    "title": "Sản xuất sợi nhân tạo"
+  },
+  {
+    "maNganh": "2100",
+    "title": "Sản xuất thuốc, hoá dược và dược liệu"
+  },
+  {
+    "maNganh": "2211",
+    "title": "Sản xuất săm, lốp cao su; đắp và tái chế lốp cao su"
+  },
+  {
+    "maNganh": "2219",
+    "title": "Sản xuất sản phẩm khác từ cao su"
+  },
+  {
+    "maNganh": "2220",
+    "title": "Sản xuất sản phẩm từ plastic"
+  },
+  {
+    "maNganh": "2310",
+    "title": "Sản xuất thủy tinh và sản phẩm từ thủy tinh"
+  },
+  {
+    "maNganh": "2391",
+    "title": "Sản xuất sản phẩm chịu lửa"
+  },
+  {
+    "maNganh": "2392",
+    "title": "Sản xuất vật liệu xây dựng từ đất sét"
+  },
+  {
+    "maNganh": "2393",
+    "title": "Sản xuất sản phẩm gốm sứ khác"
+  },
+  {
+    "maNganh": "2394",
+    "title": "Sản xuất xi măng, vôi và thạch cao"
+  },
+  {
+    "maNganh": "2395",
+    "title": "Sản xuất bê tông và các sản phẩm từ bê tông, xi măng và thạch cao"
+  },
+  {
+    "maNganh": "2396",
+    "title": "Cắt tạo dáng và hoàn thiện đá"
+  },
+  {
+    "maNganh": "2399",
+    "title": "Sản xuất sản phẩm từ chất khoáng phi kim loại khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "2410",
+    "title": "Sản xuất sắt, thép, gang"
+  },
+  {
+    "maNganh": "2420",
+    "title": "Sản xuất kim loại quý và kim loại màu"
+  },
+  {
+    "maNganh": "2431",
+    "title": "Đúc sắt, thép"
+  },
+  {
+    "maNganh": "2432",
+    "title": "Đúc kim loại màu"
+  },
+  {
+    "maNganh": "2511",
+    "title": "Sản xuất các cấu kiện kim loại"
+  },
+  {
+    "maNganh": "2512",
+    "title": "Sản xuất thùng, bể chứa và dụng cụ chứa đựng bằng kim loại"
+  },
+  {
+    "maNganh": "2513",
+    "title": "Sản xuất nồi hơi (trừ nồi hơi trung tâm)"
+  },
+  {
+    "maNganh": "2520",
+    "title": "Sản xuất vũ khí và đạn dược"
+  },
+  {
+    "maNganh": "2591",
+    "title": "Rèn, dập, ép và cán kim loại; luyện bột kim loại"
+  },
+  {
+    "maNganh": "2592",
+    "title": "Gia công cơ khí; xử lý và tráng phủ kim loại"
+  },
+  {
+    "maNganh": "2593",
+    "title": "Sản xuất dao kéo, dụng cụ cầm tay và đồ kim loại thông dụng"
+  },
+  {
+    "maNganh": "2599",
+    "title": "Sản xuất sản phẩm khác bằng kim loại chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "2610",
+    "title": "Sản xuất linh kiện điện tử"
+  },
+  {
+    "maNganh": "2620",
+    "title": "Sản xuất máy vi tính và thiết bị ngoại vi của máy vi tính"
+  },
+  {
+    "maNganh": "2630",
+    "title": "Sản xuất thiết bị truyền thông"
+  },
+  {
+    "maNganh": "2640",
+    "title": "Sản xuất sản phẩm điện tử dân dụng"
+  },
+  {
+    "maNganh": "2651",
+    "title": "Sản xuất thiết bị đo lường, kiểm tra, định hướng và điều khiển"
+  },
+  {
+    "maNganh": "2652",
+    "title": "Sản xuất đồng hồ"
+  },
+  {
+    "maNganh": "2660",
+    "title": "Sản xuất thiết bị bức xạ, thiết bị điện tử trong y học, điện liệu pháp"
+  },
+  {
+    "maNganh": "2670",
+    "title": "Sản xuất thiết bị và dụng cụ quang học"
+  },
+  {
+    "maNganh": "2680",
+    "title": "Sản xuất băng, đĩa từ tính và quang học"
+  },
+  {
+    "maNganh": "2710",
+    "title": "Sản xuất mô tơ, máy phát, biến thế điện, thiết bị phân phối và điều khiển điện"
+  },
+  {
+    "maNganh": "2720",
+    "title": "Sản xuất pin và ắc quy"
+  },
+  {
+    "maNganh": "2731",
+    "title": "Sản xuất dây cáp, sợi cáp quang học"
+  },
+  {
+    "maNganh": "2732",
+    "title": "Sản xuất dây, cáp điện và điện tử khác"
+  },
+  {
+    "maNganh": "2733",
+    "title": "Sản xuất thiết bị dây dẫn điện các loại"
+  },
+  {
+    "maNganh": "2740",
+    "title": "Sản xuất thiết bị điện chiếu sáng"
+  },
+  {
+    "maNganh": "2750",
+    "title": "Sản xuất đồ điện dân dụng"
+  },
+  {
+    "maNganh": "2790",
+    "title": "Sản xuất thiết bị điện khác"
+  },
+  {
+    "maNganh": "2811",
+    "title": "Sản xuất động cơ, tua bin (trừ động cơ máy bay, ô tô, mô tô và xe máy)"
+  },
+  {
+    "maNganh": "2812",
+    "title": "Sản xuất thiết bị sử dụng năng lượng chiết lưu"
+  },
+  {
+    "maNganh": "2813",
+    "title": "Sản xuất máy bơm, máy nén, vòi và van khác"
+  },
+  {
+    "maNganh": "2814",
+    "title": "Sản xuất bi, bánh răng, hộp số, các bộ phận điều khiển và truyền chuyển động"
+  },
+  {
+    "maNganh": "2815",
+    "title": "Sản xuất lò nướng, lò luyện và lò nung"
+  },
+  {
+    "maNganh": "2816",
+    "title": "Sản xuất các thiết bị nâng, hạ và bốc xếp"
+  },
+  {
+    "maNganh": "2817",
+    "title": "Sản xuất máy móc và thiết bị văn phòng (trừ máy vi tính và thiết bị ngoại vi của máy vi tính)"
+  },
+  {
+    "maNganh": "2818",
+    "title": "Sản xuất dụng cụ cầm tay chạy bằng mô tơ hoặc khí nén"
+  },
+  {
+    "maNganh": "2819",
+    "title": "Sản xuất máy thông dụng khác"
+  },
+  {
+    "maNganh": "2821",
+    "title": "Sản xuất máy nông nghiệp và lâm nghiệp"
+  },
+  {
+    "maNganh": "2822",
+    "title": "Sản xuất máy công cụ và máy tạo hình kim loại"
+  },
+  {
+    "maNganh": "2823",
+    "title": "Sản xuất máy luyện kim"
+  },
+  {
+    "maNganh": "2824",
+    "title": "Sản xuất máy khai thác mỏ và xây dựng"
+  },
+  {
+    "maNganh": "2825",
+    "title": "Sản xuất máy chế biến thực phẩm, đồ uống và thuốc lá"
+  },
+  {
+    "maNganh": "2826",
+    "title": "Sản xuất máy cho ngành dệt, may và da"
+  },
+  {
+    "maNganh": "2829",
+    "title": "Sản xuất máy chuyên dụng khác"
+  },
+  {
+    "maNganh": "2910",
+    "title": "Sản xuất ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "2920",
+    "title": "Sản xuất thân xe ô tô và xe có động cơ khác, rơ moóc và bán rơ moóc"
+  },
+  {
+    "maNganh": "2930",
+    "title": "Sản xuất phụ tùng và bộ phận phụ trợ cho xe ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "3011",
+    "title": "Đóng tàu và cấu kiện nổi"
+  },
+  {
+    "maNganh": "3012",
+    "title": "Đóng thuyền, xuồng thể thao và giải trí"
+  },
+  {
+    "maNganh": "3020",
+    "title": "Sản xuất đầu máy xe lửa, xe điện và toa xe"
+  },
+  {
+    "maNganh": "3030",
+    "title": "Sản xuất máy bay, tàu vũ trụ và máy móc liên quan"
+  },
+  {
+    "maNganh": "3040",
+    "title": "Sản xuất xe cơ giới chiến đấu dùng trong quân đội"
+  },
+  {
+    "maNganh": "3091",
+    "title": "Sản xuất mô tô, xe máy"
+  },
+  {
+    "maNganh": "3092",
+    "title": "Sản xuất xe đạp và xe cho người khuyết tật"
+  },
+  {
+    "maNganh": "3099",
+    "title": "Sản xuất phương tiện và thiết bị vận tải khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "3100",
+    "title": "Sản xuất giường, tủ, bàn, ghế"
+  },
+  {
+    "maNganh": "3211",
+    "title": "Sản xuất đồ kim hoàn và chi tiết liên quan"
+  },
+  {
+    "maNganh": "3212",
+    "title": "Sản xuất đồ giả kim hoàn và chi tiết liên quan"
+  },
+  {
+    "maNganh": "3220",
+    "title": "Sản xuất nhạc cụ"
+  },
+  {
+    "maNganh": "3230",
+    "title": "Sản xuất dụng cụ thể dục, thể thao"
+  },
+  {
+    "maNganh": "3240",
+    "title": "Sản xuất đồ chơi, trò chơi"
+  },
+  {
+    "maNganh": "3250",
+    "title": "Sản xuất thiết bị, dụng cụ y tế, nha khoa, chỉnh hình và phục hồi chức năng"
+  },
+  {
+    "maNganh": "3290",
+    "title": "Sản xuất khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "3311",
+    "title": "Sửa chữa các sản phẩm kim loại đúc sẵn"
+  },
+  {
+    "maNganh": "3312",
+    "title": "Sửa chữa máy móc, thiết bị"
+  },
+  {
+    "maNganh": "3313",
+    "title": "Sửa chữa thiết bị điện tử và quang học"
+  },
+  {
+    "maNganh": "3314",
+    "title": "Sửa chữa thiết bị điện"
+  },
+  {
+    "maNganh": "3315",
+    "title": "Sửa chữa và bảo dưỡng phương tiện vận tải (trừ ô tô, mô tô, xe máy và xe có động cơ khác)"
+  },
+  {
+    "maNganh": "3319",
+    "title": "Sửa chữa thiết bị khác"
+  },
+  {
+    "maNganh": "3320",
+    "title": "Lắp đặt máy móc và thiết bị công nghiệp"
+  },
+  {
+    "maNganh": "3511",
+    "title": "Sản xuất điện"
+  },
+  {
+    "maNganh": "3512",
+    "title": "Truyền tải và phân phối điện"
+  },
+  {
+    "maNganh": "3520",
+    "title": "Sản xuất khí đốt, phân phối nhiên liệu khí bằng đường ống"
+  },
+  {
+    "maNganh": "3530",
+    "title": "Sản xuất, phân phối hơi nước, nước nóng, điều hoà không khí và sản xuất nước đá"
+  },
+  {
+    "maNganh": "3600",
+    "title": "Khai thác, xử lý và cung cấp nước"
+  },
+  {
+    "maNganh": "3700",
+    "title": "Thoát nước và xử lý nước thải"
+  },
+  {
+    "maNganh": "3811",
+    "title": "Thu gom rác thải không độc hại"
+  },
+  {
+    "maNganh": "3812",
+    "title": "Thu gom rác thải độc hại"
+  },
+  {
+    "maNganh": "3821",
+    "title": "Xử lý và tiêu hủy rác thải không độc hại"
+  },
+  {
+    "maNganh": "3822",
+    "title": "Xử lý và tiêu hủy rác thải độc hại"
+  },
+  {
+    "maNganh": "3830",
+    "title": "Tái chế phế liệu"
+  },
+  {
+    "maNganh": "3900",
+    "title": "Xử lý ô nhiễm và hoạt động quản lý chất thải khác"
+  },
+  {
+    "maNganh": "4101",
+    "title": "Xây dựng nhà để ở"
+  },
+  {
+    "maNganh": "4102",
+    "title": "Xây dựng nhà không để ở"
+  },
+  {
+    "maNganh": "4211",
+    "title": "Xây dựng công trình đường sắt"
+  },
+  {
+    "maNganh": "4212",
+    "title": "Xây dựng công trình đường bộ"
+  },
+  {
+    "maNganh": "4221",
+    "title": "Xây dựng công trình điện"
+  },
+  {
+    "maNganh": "4222",
+    "title": "Xây dựng công trình cấp, thoát nước"
+  },
+  {
+    "maNganh": "4223",
+    "title": "Xây dựng công trình viễn thông, thông tin liên lạc"
+  },
+  {
+    "maNganh": "4229",
+    "title": "Xây dựng công trình công ích khác"
+  },
+  {
+    "maNganh": "4291",
+    "title": "Xây dựng công trình thủy"
+  },
+  {
+    "maNganh": "4292",
+    "title": "Xây dựng công trình khai khoáng"
+  },
+  {
+    "maNganh": "4293",
+    "title": "Xây dựng công trình chế biến, chế tạo"
+  },
+  {
+    "maNganh": "4299",
+    "title": "Xây dựng công trình kỹ thuật dân dụng khác"
+  },
+  {
+    "maNganh": "4311",
+    "title": "Phá dỡ"
+  },
+  {
+    "maNganh": "4312",
+    "title": "Chuẩn bị mặt bằng"
+  },
+  {
+    "maNganh": "4321",
+    "title": "Lắp đặt hệ thống điện"
+  },
+  {
+    "maNganh": "4322",
+    "title": "Lắp đặt hệ thống cấp, thoát nước, hệ thống sưởi và điều hoà không khí"
+  },
+  {
+    "maNganh": "4329",
+    "title": "Lắp đặt hệ thống xây dựng khác"
+  },
+  {
+    "maNganh": "4330",
+    "title": "Hoàn thiện công trình xây dựng"
+  },
+  {
+    "maNganh": "4390",
+    "title": "Hoạt động xây dựng chuyên dụng khác"
+  },
+  {
+    "maNganh": "4511",
+    "title": "Bán buôn ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "4512",
+    "title": "Bán lẻ ô tô con (loại 9 chỗ ngồi trở xuống)"
+  },
+  {
+    "maNganh": "4513",
+    "title": "Đại lý ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "4520",
+    "title": "Bảo dưỡng, sửa chữa ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "4530",
+    "title": "Bán phụ tùng và các bộ phận phụ trợ của ô tô và xe có động cơ khác"
+  },
+  {
+    "maNganh": "4541",
+    "title": "Bán mô tô, xe máy"
+  },
+  {
+    "maNganh": "4542",
+    "title": "Bảo dưỡng và sửa chữa mô tô, xe máy"
+  },
+  {
+    "maNganh": "4543",
+    "title": "Bán phụ tùng và các bộ phận phụ trợ của mô tô, xe máy"
+  },
+  {
+    "maNganh": "4610",
+    "title": "Đại lý, môi giới, đấu giá hàng hóa"
+  },
+  {
+    "maNganh": "4620",
+    "title": "Bán buôn nông, lâm sản nguyên liệu (trừ gỗ, tre, nứa) và động vật sống"
+  },
+  {
+    "maNganh": "4631",
+    "title": "Bán buôn gạo, lúa mỳ, hạt ngũ cốc khác, bột mỳ"
+  },
+  {
+    "maNganh": "4632",
+    "title": "Bán buôn thực phẩm"
+  },
+  {
+    "maNganh": "4633",
+    "title": "Bán buôn đồ uống"
+  },
+  {
+    "maNganh": "4634",
+    "title": "Bán buôn sản phẩm thuốc lá, thuốc lào"
+  },
+  {
+    "maNganh": "4641",
+    "title": "Bán buôn vải, hàng may mặc, giày dép"
+  },
+  {
+    "maNganh": "4649",
+    "title": "Bán buôn đồ dùng khác cho gia đình"
+  },
+  {
+    "maNganh": "4651",
+    "title": "Bán buôn máy vi tính, thiết bị ngoại vi và phần mềm"
+  },
+  {
+    "maNganh": "4652",
+    "title": "Bán buôn thiết bị và linh kiện điện tử, viễn thông"
+  },
+  {
+    "maNganh": "4653",
+    "title": "Bán buôn máy móc, thiết bị và phụ tùng máy nông nghiệp"
+  },
+  {
+    "maNganh": "4659",
+    "title": "Bán buôn máy móc, thiết bị và phụ tùng máy khác"
+  },
+  {
+    "maNganh": "4661",
+    "title": "Bán buôn nhiên liệu rắn, lỏng, khí và các sản phẩm liên quan"
+  },
+  {
+    "maNganh": "4662",
+    "title": "Bán buôn kim loại và quặng kim loại"
+  },
+  {
+    "maNganh": "4663",
+    "title": "Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng"
+  },
+  {
+    "maNganh": "4669",
+    "title": "Bán buôn chuyên doanh khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "4690",
+    "title": "Bán buôn tổng hợp"
+  },
+  {
+    "maNganh": "4711",
+    "title": "Bán lẻ lương thực, thực phẩm, đồ uống, thuốc lá, thuốc lào chiếm tỷ trọng lớn trong các cửa hàng kinh doanh tổng hợp"
+  },
+  {
+    "maNganh": "4719",
+    "title": "Bán lẻ khác trong các cửa hàng kinh doanh tổng hợp"
+  },
+  {
+    "maNganh": "4721",
+    "title": "Bán lẻ lương thực trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4722",
+    "title": "Bán lẻ thực phẩm trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4723",
+    "title": "Bán lẻ đồ uống trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4724",
+    "title": "Bán lẻ sản phẩm thuốc lá, thuốc lào trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4730",
+    "title": "Bán lẻ nhiên liệu động cơ trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4741",
+    "title": "Bán lẻ máy vi tính, thiết bị ngoại vi, phần mềm và thiết bị viễn thông trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4742",
+    "title": "Bán lẻ thiết bị nghe nhìn trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4751",
+    "title": "Bán lẻ vải, len, sợi, chỉ khâu và hàng dệt khác trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4752",
+    "title": "Bán lẻ đồ ngũ kim, sơn, kính và thiết bị lắp đặt khác trong xây dựng trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4753",
+    "title": "Bán lẻ thảm, đệm, chăn, màn, rèm, vật liệu phủ tường và sàn trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4759",
+    "title": "Bán lẻ đồ điện gia dụng, giường, tủ, bàn, ghế và đồ nội thất tương tự, đèn và bộ đèn điện, đồ dùng gia đình khác chưa được phân vào đâu trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4761",
+    "title": "Bán lẻ sách, báo, tạp chí văn phòng phẩm trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4762",
+    "title": "Bán lẻ băng đĩa âm thanh, hình ảnh (kể cả băng, đĩa trắng) trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4763",
+    "title": "Bán lẻ thiết bị, dụng cụ thể dục, thể thao trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4764",
+    "title": "Bán lẻ trò chơi, đồ chơi trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4771",
+    "title": "Bán lẻ hàng may mặc, giày dép, hàng da và giả da trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4772",
+    "title": "Bán lẻ thuốc, dụng cụ y tế, mỹ phẩm và vật phẩm vệ sinh trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4773",
+    "title": "Bán lẻ hàng hóa khác mới trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4774",
+    "title": "Bán lẻ hàng hóa đã qua sử dụng trong các cửa hàng chuyên doanh"
+  },
+  {
+    "maNganh": "4781",
+    "title": "Bán lẻ lương thực, thực phẩm, đồ uống, thuốc lá, thuốc lào lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4782",
+    "title": "Bán lẻ hàng dệt, may sẵn, giày dép lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4783",
+    "title": "Bán lẻ thiết bị công nghệ thông tin liên lạc lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4784",
+    "title": "Bán lẻ thiết bị gia đình khác lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4785",
+    "title": "Bán lẻ hàng văn hóa, giải trí lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4789",
+    "title": "Bán lẻ hàng hóa khác lưu động hoặc tại chợ"
+  },
+  {
+    "maNganh": "4791",
+    "title": "Bán lẻ theo yêu cầu đặt hàng qua bưu điện hoặc internet"
+  },
+  {
+    "maNganh": "4799",
+    "title": "Bán lẻ hình thức khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "4911",
+    "title": "Vận tải hành khách đường sắt"
+  },
+  {
+    "maNganh": "4912",
+    "title": "Vận tải hàng hóa đường sắt"
+  },
+  {
+    "maNganh": "4921",
+    "title": "Vận tải hành khách bằng xe buýt trong nội thành"
+  },
+  {
+    "maNganh": "4922",
+    "title": "Vận tải hành khách bằng xe buýt giữa nội thành và ngoại thành, liên tỉnh"
+  },
+  {
+    "maNganh": "4929",
+    "title": "Vận tải hành khách bằng xe buýt loại khác"
+  },
+  {
+    "maNganh": "4931",
+    "title": "Vận tải hành khách đường bộ trong nội thành, ngoại thành (trừ vận tải bằng xe buýt)"
+  },
+  {
+    "maNganh": "4932",
+    "title": "Vận tải hành khách đường bộ khác"
+  },
+  {
+    "maNganh": "4933",
+    "title": "Vận tải hàng hóa bằng đường bộ"
+  },
+  {
+    "maNganh": "4940",
+    "title": "Vận tải đường ống"
+  },
+  {
+    "maNganh": "5011",
+    "title": "Vận tải hành khách ven biển và viễn dương"
+  },
+  {
+    "maNganh": "5012",
+    "title": "Vận tải hàng hóa ven biển và viễn dương"
+  },
+  {
+    "maNganh": "5021",
+    "title": "Vận tải hành khách đường thủy nội địa"
+  },
+  {
+    "maNganh": "5022",
+    "title": "Vận tải hàng hóa đường thủy nội địa"
+  },
+  {
+    "maNganh": "5110",
+    "title": "Vận tải hành khách hàng không"
+  },
+  {
+    "maNganh": "5120",
+    "title": "Vận tải hàng hóa hàng không"
+  },
+  {
+    "maNganh": "5210",
+    "title": "Kho bãi và lưu giữ hàng hóa"
+  },
+  {
+    "maNganh": "5221",
+    "title": "Hoạt động dịch vụ hỗ trợ trực tiếp cho vận tải đường sắt"
+  },
+  {
+    "maNganh": "5222",
+    "title": "Hoạt động dịch vụ hỗ trợ trực tiếp cho vận tải đường thủy"
+  },
+  {
+    "maNganh": "5223",
+    "title": "Hoạt động dịch vụ hỗ trợ trực tiếp cho vận tải hàng không"
+  },
+  {
+    "maNganh": "5224",
+    "title": "Bốc xếp hàng hóa"
+  },
+  {
+    "maNganh": "5225",
+    "title": "Hoạt động dịch vụ hỗ trợ trực tiếp cho vận tải đường bộ"
+  },
+  {
+    "maNganh": "5229",
+    "title": "Hoạt động dịch vụ hỗ trợ khác liên quan đến vận tải"
+  },
+  {
+    "maNganh": "5310",
+    "title": "Bưu chính"
+  },
+  {
+    "maNganh": "5320",
+    "title": "Chuyển phát"
+  },
+  {
+    "maNganh": "5510",
+    "title": "Dịch vụ lưu trú ngắn ngày"
+  },
+  {
+    "maNganh": "5590",
+    "title": "Cơ sở lưu trú khác"
+  },
+  {
+    "maNganh": "5610",
+    "title": "Nhà hàng và các dịch vụ ăn uống phục vụ lưu động"
+  },
+  {
+    "maNganh": "5621",
+    "title": "Cung cấp dịch vụ ăn uống theo hợp đồng không thường xuyên với khách hàng"
+  },
+  {
+    "maNganh": "5629",
+    "title": "Dịch vụ ăn uống khác"
+  },
+  {
+    "maNganh": "5630",
+    "title": "Dịch vụ phục vụ đồ uống"
+  },
+  {
+    "maNganh": "5811",
+    "title": "Xuất bản sách"
+  },
+  {
+    "maNganh": "5812",
+    "title": "Xuất bản các danh mục chỉ dẫn và địa chỉ"
+  },
+  {
+    "maNganh": "5813",
+    "title": "Xuất bản báo, tạp chí và các ấn phẩm định kỳ"
+  },
+  {
+    "maNganh": "5819",
+    "title": "Hoạt động xuất bản khác"
+  },
+  {
+    "maNganh": "5820",
+    "title": "Xuất bản phần mềm"
+  },
+  {
+    "maNganh": "5911",
+    "title": "Hoạt động sản xuất phim điện ảnh, phim video và chương trình truyền hình"
+  },
+  {
+    "maNganh": "5912",
+    "title": "Hoạt động hậu kỳ"
+  },
+  {
+    "maNganh": "5913",
+    "title": "Hoạt động phát hành phim điện ảnh, phim video và chương trình truyền hình"
+  },
+  {
+    "maNganh": "5914",
+    "title": "Hoạt động chiếu phim"
+  },
+  {
+    "maNganh": "5920",
+    "title": "Hoạt động ghi âm và xuất bản âm nhạc"
+  },
+  {
+    "maNganh": "6010",
+    "title": "Hoạt động phát thanh"
+  },
+  {
+    "maNganh": "6021",
+    "title": "Hoạt động truyền hình"
+  },
+  {
+    "maNganh": "6022",
+    "title": "Chương trình cáp, vệ tinh và các chương trình thuê bao khác"
+  },
+  {
+    "maNganh": "6110",
+    "title": "Hoạt động viễn thông có dây"
+  },
+  {
+    "maNganh": "6120",
+    "title": "Hoạt động viễn thông không dây"
+  },
+  {
+    "maNganh": "6130",
+    "title": "Hoạt động viễn thông vệ tinh"
+  },
+  {
+    "maNganh": "6190",
+    "title": "Hoạt động viễn thông khác"
+  },
+  {
+    "maNganh": "6201",
+    "title": "Lập trình máy vi tính"
+  },
+  {
+    "maNganh": "6202",
+    "title": "Tư vấn máy vi tính và quản trị hệ thống máy vi tính"
+  },
+  {
+    "maNganh": "6209",
+    "title": "Hoạt động dịch vụ công nghệ thông tin và dịch vụ khác liên quan đến máy vi tính"
+  },
+  {
+    "maNganh": "6311",
+    "title": "Xử lý dữ liệu, cho thuê và các hoạt động liên quan"
+  },
+  {
+    "maNganh": "6312",
+    "title": "Cổng thông tin"
+  },
+  {
+    "maNganh": "6391",
+    "title": "Hoạt động thông tấn"
+  },
+  {
+    "maNganh": "6399",
+    "title": "Dịch vụ thông tin khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "6411",
+    "title": "Hoạt động ngân hàng trung ương"
+  },
+  {
+    "maNganh": "6419",
+    "title": "Hoạt động trung gian tiền tệ khác"
+  },
+  {
+    "maNganh": "6420",
+    "title": "Hoạt động công ty nắm giữ tài sản"
+  },
+  {
+    "maNganh": "6430",
+    "title": "Hoạt động quỹ tín thác, các quỹ và các tổ chức tài chính khác"
+  },
+  {
+    "maNganh": "6491",
+    "title": "Hoạt động cho thuê tài chính"
+  },
+  {
+    "maNganh": "6492",
+    "title": "Hoạt động cấp tín dụng khác"
+  },
+  {
+    "maNganh": "6499",
+    "title": "Hoạt động dịch vụ tài chính khác chưa được phân vào đâu (trừ bảo hiểm và bảo hiểm xã hội)"
+  },
+  {
+    "maNganh": "6511",
+    "title": "Bảo hiểm nhân thọ"
+  },
+  {
+    "maNganh": "6512",
+    "title": "Bảo hiểm phi nhân thọ"
+  },
+  {
+    "maNganh": "6513",
+    "title": "Bảo hiểm sức khỏe"
+  },
+  {
+    "maNganh": "6520",
+    "title": "Tái bảo hiểm"
+  },
+  {
+    "maNganh": "6530",
+    "title": "Bảo hiểm xã hội"
+  },
+  {
+    "maNganh": "6611",
+    "title": "Quản lý thị trường tài chính"
+  },
+  {
+    "maNganh": "6612",
+    "title": "Môi giới hợp đồng hàng hóa và chứng khoán"
+  },
+  {
+    "maNganh": "6619",
+    "title": "Hoạt động hỗ trợ dịch vụ tài chính chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "6621",
+    "title": "Đánh giá rủi ro và thiệt hại"
+  },
+  {
+    "maNganh": "6622",
+    "title": "Hoạt động của đại lý và môi giới bảo hiểm"
+  },
+  {
+    "maNganh": "6629",
+    "title": "Hoạt động hỗ trợ khác cho bảo hiểm và bảo hiểm xã hội"
+  },
+  {
+    "maNganh": "6630",
+    "title": "Hoạt động quản lý quỹ"
+  },
+  {
+    "maNganh": "6810",
+    "title": "Kinh doanh bất động sản, quyền sử dụng đất thuộc chủ sở hữu, chủ sử dụng hoặc đi thuê"
+  },
+  {
+    "maNganh": "6820",
+    "title": "Tư vấn, môi giới, đấu giá bất động sản, đấu giá quyền sử dụng đất"
+  },
+  {
+    "maNganh": "6910",
+    "title": "Hoạt động pháp luật"
+  },
+  {
+    "maNganh": "6920",
+    "title": "Hoạt động liên quan đến kế toán, kiểm toán và tư vấn về thuế"
+  },
+  {
+    "maNganh": "7010",
+    "title": "Hoạt động của trụ sở văn phòng"
+  },
+  {
+    "maNganh": "7020",
+    "title": "Hoạt động tư vấn quản lý"
+  },
+  {
+    "maNganh": "7110",
+    "title": "Hoạt động kiến trúc và tư vấn kỹ thuật có liên quan"
+  },
+  {
+    "maNganh": "7120",
+    "title": "Kiểm tra và phân tích kỹ thuật"
+  },
+  {
+    "maNganh": "7211",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học tự nhiên"
+  },
+  {
+    "maNganh": "7212",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học kỹ thuật và công nghệ"
+  },
+  {
+    "maNganh": "7213",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học y, dược"
+  },
+  {
+    "maNganh": "7214",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học nông nghiệp"
+  },
+  {
+    "maNganh": "7221",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học xã hội"
+  },
+  {
+    "maNganh": "7222",
+    "title": "Nghiên cứu khoa học và phát triển công nghệ trong lĩnh vực khoa học nhân văn"
+  },
+  {
+    "maNganh": "7310",
+    "title": "Quảng cáo"
+  },
+  {
+    "maNganh": "7320",
+    "title": "Nghiên cứu thị trường và thăm dò dư luận"
+  },
+  {
+    "maNganh": "7410",
+    "title": "Hoạt động thiết kế chuyên dụng"
+  },
+  {
+    "maNganh": "7420",
+    "title": "Hoạt động nhiếp ảnh"
+  },
+  {
+    "maNganh": "7490",
+    "title": "Hoạt động chuyên môn, khoa học và công nghệ khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "7500",
+    "title": "Hoạt động thú y"
+  },
+  {
+    "maNganh": "7710",
+    "title": "Cho thuê xe có động cơ"
+  },
+  {
+    "maNganh": "7721",
+    "title": "Cho thuê thiết bị thể thao, vui chơi giải trí"
+  },
+  {
+    "maNganh": "7722",
+    "title": "Cho thuê băng, đĩa video"
+  },
+  {
+    "maNganh": "7729",
+    "title": "Cho thuê đồ dùng cá nhân và gia đình khác"
+  },
+  {
+    "maNganh": "7730",
+    "title": "Cho thuê máy móc, thiết bị và đồ dùng hữu hình khác không kèm người điều khiển"
+  },
+  {
+    "maNganh": "7740",
+    "title": "Cho thuê tài sản vô hình phi tài chính"
+  },
+  {
+    "maNganh": "7810",
+    "title": "Hoạt động của các trung tâm, đại lý tư vấn, giới thiệu và môi giới lao động, việc làm"
+  },
+  {
+    "maNganh": "7820",
+    "title": "Cung ứng lao động tạm thời"
+  },
+  {
+    "maNganh": "7830",
+    "title": "Cung ứng và quản lý nguồn lao động"
+  },
+  {
+    "maNganh": "7911",
+    "title": "Đại lý du lịch"
+  },
+  {
+    "maNganh": "7912",
+    "title": "Điều hành tua du lịch"
+  },
+  {
+    "maNganh": "7990",
+    "title": "Dịch vụ đặt chỗ và các dịch vụ hỗ trợ liên quan đến quảng bá và tổ chức tua du lịch"
+  },
+  {
+    "maNganh": "8010",
+    "title": "Hoạt động bảo vệ tư nhân"
+  },
+  {
+    "maNganh": "8020",
+    "title": "Dịch vụ hệ thống bảo đảm an toàn"
+  },
+  {
+    "maNganh": "8030",
+    "title": "Dịch vụ điều tra"
+  },
+  {
+    "maNganh": "8110",
+    "title": "Dịch vụ hỗ trợ tổng hợp"
+  },
+  {
+    "maNganh": "8121",
+    "title": "Vệ sinh chung nhà cửa"
+  },
+  {
+    "maNganh": "8129",
+    "title": "Vệ sinh công nghiệp và các công trình chuyên biệt"
+  },
+  {
+    "maNganh": "8130",
+    "title": "Dịch vụ chăm sóc và duy trì cảnh quan"
+  },
+  {
+    "maNganh": "8211",
+    "title": "Dịch vụ hành chính văn phòng tổng hợp"
+  },
+  {
+    "maNganh": "8219",
+    "title": "Photo, chuẩn bị tài liệu và các hoạt động hỗ trợ văn phòng đặc biệt khác"
+  },
+  {
+    "maNganh": "8220",
+    "title": "Hoạt động dịch vụ liên quan đến các cuộc gọi"
+  },
+  {
+    "maNganh": "8230",
+    "title": "Tổ chức giới thiệu và xúc tiến thương mại"
+  },
+  {
+    "maNganh": "8291",
+    "title": "Hoạt động dịch vụ hỗ trợ thanh toán, tín dụng"
+  },
+  {
+    "maNganh": "8292",
+    "title": "Dịch vụ đóng gói"
+  },
+  {
+    "maNganh": "8299",
+    "title": "Hoạt động dịch vụ hỗ trợ kinh doanh khác còn lại chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "8411",
+    "title": "Hoạt động của Đảng cộng sản, tổ chức chính trị - xã hội, hoạt động quản lý nhà nước nói chung và kinh tế tổng hợp"
+  },
+  {
+    "maNganh": "8412",
+    "title": "Hoạt động quản lý nhà nước trong các lĩnh vực y tế, giáo dục, văn hóa và các dịch vụ xã hội khác (trừ bảo đảm xã hội bắt buộc)"
+  },
+  {
+    "maNganh": "8413",
+    "title": "Hoạt động quản lý nhà nước trong các lĩnh vực kinh tế chuyên ngành"
+  },
+  {
+    "maNganh": "8421",
+    "title": "Hoạt động đối ngoại"
+  },
+  {
+    "maNganh": "8422",
+    "title": "Hoạt động quốc phòng"
+  },
+  {
+    "maNganh": "8423",
+    "title": "Hoạt động an ninh, trật tự an toàn xã hội"
+  },
+  {
+    "maNganh": "8430",
+    "title": "Hoạt động bảo đảm xã hội bắt buộc"
+  },
+  {
+    "maNganh": "8511",
+    "title": "Giáo dục nhà trẻ"
+  },
+  {
+    "maNganh": "8512",
+    "title": "Giáo dục mẫu giáo"
+  },
+  {
+    "maNganh": "8521",
+    "title": "Giáo dục tiểu học"
+  },
+  {
+    "maNganh": "8522",
+    "title": "Giáo dục trung học cơ sở"
+  },
+  {
+    "maNganh": "8523",
+    "title": "Giáo dục trung học phổ thông"
+  },
+  {
+    "maNganh": "8531",
+    "title": "Đào tạo sơ cấp"
+  },
+  {
+    "maNganh": "8532",
+    "title": "Đào tạo trung cấp"
+  },
+  {
+    "maNganh": "8533",
+    "title": "Đào tạo cao đẳng"
+  },
+  {
+    "maNganh": "8541",
+    "title": "Đào tạo đại học"
+  },
+  {
+    "maNganh": "8542",
+    "title": "Đào tạo thạc sỹ"
+  },
+  {
+    "maNganh": "8543",
+    "title": "Đào tạo tiến sỹ"
+  },
+  {
+    "maNganh": "8551",
+    "title": "Giáo dục thể thao và giải trí"
+  },
+  {
+    "maNganh": "8552",
+    "title": "Giáo dục văn hóa nghệ thuật"
+  },
+  {
+    "maNganh": "8559",
+    "title": "Giáo dục khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "8560",
+    "title": "Dịch vụ hỗ trợ giáo dục"
+  },
+  {
+    "maNganh": "8610",
+    "title": "Hoạt động của các bệnh viện, trạm y tế"
+  },
+  {
+    "maNganh": "8620",
+    "title": "Hoạt động của các phòng khám đa khoa, chuyên khoa và nha khoa"
+  },
+  {
+    "maNganh": "8691",
+    "title": "Hoạt động y tế dự phòng"
+  },
+  {
+    "maNganh": "8692",
+    "title": "Hoạt động của hệ thống cơ sở chỉnh hình, phục hồi chức năng"
+  },
+  {
+    "maNganh": "8699",
+    "title": "Hoạt động y tế khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "8710",
+    "title": "Hoạt động của các cơ sở nuôi dưỡng, điều dưỡng"
+  },
+  {
+    "maNganh": "8720",
+    "title": "Hoạt động chăm sóc sức khoẻ người bị thiểu năng, tâm thần và người nghiện"
+  },
+  {
+    "maNganh": "8730",
+    "title": "Hoạt động chăm sóc sức khoẻ người có công, người già và người khuyết tật không có khả năng tự chăm sóc"
+  },
+  {
+    "maNganh": "8790",
+    "title": "Hoạt động chăm sóc tập trung khác"
+  },
+  {
+    "maNganh": "8810",
+    "title": "Hoạt động trợ giúp xã hội không tập trung đối với người có công, thương bệnh binh, người già và người khuyết tật"
+  },
+  {
+    "maNganh": "8890",
+    "title": "Hoạt động trợ giúp xã hội không tập trung khác"
+  },
+  {
+    "maNganh": "9000",
+    "title": "Hoạt động sáng tác, nghệ thuật và giải trí"
+  },
+  {
+    "maNganh": "9101",
+    "title": "Hoạt động thư viện và lưu trữ"
+  },
+  {
+    "maNganh": "9102",
+    "title": "Hoạt động bảo tồn, bảo tàng"
+  },
+  {
+    "maNganh": "9103",
+    "title": "Hoạt động của các vườn bách thảo, bách thú và khu bảo tồn tự nhiên"
+  },
+  {
+    "maNganh": "9200",
+    "title": "Hoạt động xổ số, cá cược và đánh bạc"
+  },
+  {
+    "maNganh": "9311",
+    "title": "Hoạt động của các cơ sở thể thao"
+  },
+  {
+    "maNganh": "9312",
+    "title": "Hoạt động của các câu lạc bộ thể thao"
+  },
+  {
+    "maNganh": "9319",
+    "title": "Hoạt động thể thao khác"
+  },
+  {
+    "maNganh": "9321",
+    "title": "Hoạt động của các công viên vui chơi và công viên theo chủ đề"
+  },
+  {
+    "maNganh": "9329",
+    "title": "Hoạt động vui chơi giải trí khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "9411",
+    "title": "Hoạt động của các hiệp hội kinh doanh và nghiệp chủ"
+  },
+  {
+    "maNganh": "9412",
+    "title": "Hoạt động của các hội nghề nghiệp"
+  },
+  {
+    "maNganh": "9420",
+    "title": "Hoạt động của công đoàn"
+  },
+  {
+    "maNganh": "9491",
+    "title": "Hoạt động của các tổ chức tôn giáo"
+  },
+  {
+    "maNganh": "9499",
+    "title": "Hoạt động của các tổ chức khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "9511",
+    "title": "Sửa chữa máy vi tính và thiết bị ngoại vi"
+  },
+  {
+    "maNganh": "9512",
+    "title": "Sửa chữa thiết bị liên lạc"
+  },
+  {
+    "maNganh": "9521",
+    "title": "Sửa chữa thiết bị nghe nhìn điện tử gia dụng"
+  },
+  {
+    "maNganh": "9522",
+    "title": "Sửa chữa thiết bị, đồ dùng gia đình"
+  },
+  {
+    "maNganh": "9523",
+    "title": "Sửa chữa giày, dép, hàng da và giả da"
+  },
+  {
+    "maNganh": "9524",
+    "title": "Sửa chữa giường, tủ, bàn, ghế và đồ nội thất tương tư"
+  },
+  {
+    "maNganh": "9529",
+    "title": "Sửa chữa xe đạp, đồng hồ, đồ dùng cá nhân và gia đình khác chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "9610",
+    "title": "Dịch vụ tắm hơi, massage và các dịch vụ tăng cường sức khoẻ tương tự (trừ hoạt động thể thao)"
+  },
+  {
+    "maNganh": "9620",
+    "title": "Giặt là, làm sạch các sản phẩm dệt và lông thú"
+  },
+  {
+    "maNganh": "9631",
+    "title": "Cắt tóc, làm đầu, gội đầu"
+  },
+  {
+    "maNganh": "9632",
+    "title": "Hoạt động dịch vụ phục vụ tang lễ"
+  },
+  {
+    "maNganh": "9633",
+    "title": "Hoạt động dịch vụ phục vụ hôn lễ"
+  },
+  {
+    "maNganh": "9639",
+    "title": "Hoạt động dịch vụ phục vụ cá nhân khác còn lại chưa được phân vào đâu"
+  },
+  {
+    "maNganh": "9700",
+    "title": "Hoạt động làm thuê công việc gia đình trong các hộ gia đình"
+  },
+  {
+    "maNganh": "9810",
+    "title": "Hoạt động sản xuất các sản phẩm vật chất tự tiêu dùng của hộ gia đình"
+  },
+  {
+    "maNganh": "9820",
+    "title": "Hoạt động sản xuất các sản phẩm dịch vụ tự tiêu dùng của hộ gia đình"
+  },
+  {
+    "maNganh": "9900",
+    "title": "Hoạt động của các tổ chức và cơ quan quốc tế"
+  }
+]

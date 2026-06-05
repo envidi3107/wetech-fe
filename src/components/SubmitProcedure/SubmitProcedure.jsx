@@ -21,6 +21,7 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
     // Step 1 states
     const [downloadFormat, setDownloadFormat] = useState("pdf"); // "pdf" | "docx"
     const [fetchedDocx, setFetchedDocx] = useState(false);
+    const [downloadingFileUrl, setDownloadingFileUrl] = useState(null);
 
     const baseZipFileName = procedure?.title ? procedure.title : "ho_so";
 
@@ -40,9 +41,20 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
         fileUrls: pdfUrls,
         loadingFiles: loadingPdfs,
         downloadingAll,
-        downloadFile: handleDownload,
+        downloadFile,
         downloadAllAsZip: handleDownloadAll,
     } = activeHook;
+
+    const handleDownload = async (url, name) => {
+        if (downloadingFileUrl || !url) return;
+
+        setDownloadingFileUrl(url);
+        try {
+            await downloadFile(url, name);
+        } finally {
+            setDownloadingFileUrl(null);
+        }
+    };
 
     const handleFormatChange = (format) => {
         if (format !== downloadFormat) {
@@ -201,36 +213,50 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
                 ) : (
                     <div className={styles.pdfList}>
                         {pdfUrls.length > 0 ? (
-                            pdfUrls.map((item, index) => (
-                                <div key={index} className={styles.pdfItem}>
-                                    <div
-                                        className={styles.pdfIconBox}
-                                        onClick={() => handleDownload(item.url || item, item.name)}
-                                    >
-                                        <img src={downloadFormat === "docx" ? docxIcon : pdfIcon} alt="" />
-                                    </div>
-                                    <span
-                                        className={styles.downloadBtn}
-                                        onClick={() => handleDownload(item.url || item, item.name)}
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="15"
-                                            height="18"
-                                            viewBox="0 0 15 18"
-                                            fill="none"
+                            pdfUrls.map((item, index) => {
+                                const fileUrl = item.url || item;
+                                const isDownloadingFile = downloadingFileUrl === fileUrl;
+
+                                return (
+                                    <div key={index} className={styles.pdfItem}>
+                                        <div
+                                            className={`${styles.pdfIconBox} ${isDownloadingFile ? styles.downloadDisabled : ""}`}
+                                            onClick={() => handleDownload(fileUrl, item.name)}
                                         >
-                                            <path
-                                                d="M15 6.35156H10.7156V0H4.28437V6.35156H0L7.5 13.7625L15 6.35156ZM0 15.8812V18H15V15.8812H0Z"
-                                                fill="#1B154B"
-                                            />
-                                        </svg>
-                                        {item.name || "Tải file"}
-                                    </span>
-                                </div>
-                            ))
+                                            <img src={downloadFormat === "docx" ? docxIcon : pdfIcon} alt="" />
+                                        </div>
+                                        <div
+                                            className={`${styles.downloadBtn} ${isDownloadingFile ? styles.downloadBtnLoading : ""}`}
+                                            onClick={() => handleDownload(fileUrl, item.name)}
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="15"
+                                                height="18"
+                                                viewBox="0 0 15 18"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M15 6.35156H10.7156V0H4.28437V6.35156H0L7.5 13.7625L15 6.35156ZM0 15.8812V18H15V15.8812H0Z"
+                                                    fill="#1B154B"
+                                                />
+                                            </svg>
+                                            <span className={styles.downloadText}>
+                                                {isDownloadingFile ? "Đang tải..." : item.name || "Tải file"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })
                         ) : (
-                            <div style={{ textAlign: "center", color: "var(--secondary-content)", fontSize: "16px", gridColumn: "1 / -1" }}>
+                            <div
+                                style={{
+                                    textAlign: "center",
+                                    color: "var(--secondary-content)",
+                                    fontSize: "16px",
+                                    gridColumn: "1 / -1",
+                                }}
+                            >
                                 Không có file {downloadFormat.toUpperCase()} nào
                             </div>
                         )}
@@ -240,7 +266,6 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
 
             <div className={styles.step1Actions}>
                 <div>
-
                     <button
                         className={styles.btnAction}
                         onClick={() => handleDownloadAll()}
@@ -251,7 +276,15 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
                         {downloadingAll ? "ĐANG TẢI..." : `TẢI XUỐNG TẤT CẢ DẠNG ${downloadFormat.toUpperCase()}`}
                     </button>
                 </div>
-                <div style={{ flex: 1, display: "flex", justifyContent: "space-between", gap: "20px", margin: "10px 100px" }}>
+                <div
+                    style={{
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "20px",
+                        margin: "10px 100px",
+                    }}
+                >
                     <button
                         className={styles.btnAction}
                         onClick={() => navigate(`/list-procedures/${procedure?.typeCompany}`)}
@@ -264,11 +297,7 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
                         <img src={loadIcon} alt="" />
                         LẤY LẠI DỮ LIỆU
                     </button>
-                    <button
-                        className={styles.btnAction}
-                        onClick={() => setSubmitStep(2)}
-                        style={{ flex: 1 }}
-                    >
+                    <button className={styles.btnAction} onClick={() => setSubmitStep(2)} style={{ flex: 1 }}>
                         <img src={checkIcon} alt="" />
                         Nộp hồ sơ trực tuyến
                     </button>
@@ -645,7 +674,7 @@ export default function SubmitProcedure({ procedure, setActiveTab }) {
                         <button className={styles.btnAgree} onClick={() => setSubmitStep(2)}>
                             Quay lại
                         </button>
-                        <button className={styles.btnAgree} onClick={() => { }}>
+                        <button className={styles.btnAgree} onClick={() => {}}>
                             Đồng ý
                         </button>
                     </div>

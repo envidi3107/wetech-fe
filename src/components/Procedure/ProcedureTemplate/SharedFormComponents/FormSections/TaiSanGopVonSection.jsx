@@ -1,8 +1,15 @@
 import { useRef } from "react";
 import FormattedNumberInput from "../FormattedNumberInput/FormattedNumberInput";
 
-export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', dataJson, styles, fieldPrefix = "taiSan" }) {
+export default function TaiSanGopVonSection({
+    title = 'Tài sản góp vốn',
+    dataJson,
+    styles,
+    fieldPrefix = "taiSan",
+    readOnly = false,
+}) {
     const tableRef = useRef(null);
+    const readOnlyStyle = readOnly ? { background: "#f5f5f5", fontWeight: 600 } : {};
 
     const handleChange = () => {
         if (!tableRef.current) return;
@@ -55,11 +62,11 @@ export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', d
                                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                             <span style={{ whiteSpace: "nowrap", width: "90px", fontSize: "0.9em" }}>Loại tài sản:</span>
-                                            <input type="text" className={styles.input} name={`${namePrefix}_loaiTaiSan`} defaultValue={dataJson?.[`${namePrefix}_loaiTaiSan`] || ""} style={{ flex: 1 }} />
+                                            <input type="text" className={styles.input} name={`${namePrefix}_loaiTaiSan`} defaultValue={dataJson?.[`${namePrefix}_loaiTaiSan`] || ""} readOnly={readOnly} style={{ flex: 1, ...readOnlyStyle }} />
                                         </div>
                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                             <span style={{ whiteSpace: "nowrap", width: "90px", fontSize: "0.9em" }}>Số lượng:</span>
-                                            <input type="text" className={styles.input} name={`${namePrefix}_soLuong`} defaultValue={dataJson?.[`${namePrefix}_soLuong`] || ""} style={{ flex: 1 }} />
+                                            <input type="text" className={styles.input} name={`${namePrefix}_soLuong`} defaultValue={dataJson?.[`${namePrefix}_soLuong`] || ""} readOnly={readOnly} style={{ flex: 1, ...readOnlyStyle }} />
                                         </div>
                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                             <span style={{ whiteSpace: "nowrap", width: "90px", fontSize: "0.9em" }}>Giá trị còn lại:</span>
@@ -69,7 +76,8 @@ export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', d
                                                     defaultValue={dataJson?.[`${namePrefix}_giaTri`] || "0"}
                                                     onChange={handleChange}
                                                     className={styles.input}
-                                                    style={{ flex: 1 }}
+                                                    readOnly={readOnly}
+                                                    style={{ flex: 1, ...readOnlyStyle }}
                                                 />
                                                 <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>VNĐ</span>
                                             </div>
@@ -82,6 +90,8 @@ export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', d
                                             defaultValue={dataJson?.[`${namePrefix}_giaTri`] || "0"}
                                             onChange={handleChange}
                                             className={styles.input}
+                                            readOnly={readOnly}
+                                            style={readOnlyStyle}
                                         />
                                         <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>VNĐ</span>
                                     </div>
@@ -89,7 +99,7 @@ export default function TaiSanGopVonSection({ title = 'Tài sản góp vốn', d
                             </td>
                             <td>
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                    <input type="number" className={styles.input} name={`${namePrefix}_tyLe`} defaultValue={dataJson?.[`${namePrefix}_tyLe`] || "0"} />
+                                    <input type="number" className={styles.input} name={`${namePrefix}_tyLe`} defaultValue={dataJson?.[`${namePrefix}_tyLe`] || "0"} readOnly={readOnly} style={readOnlyStyle} />
                                     <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>%</span>
                                 </div>
                             </td>

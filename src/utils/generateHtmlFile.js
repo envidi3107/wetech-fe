@@ -12,11 +12,51 @@
  * @param {boolean} [options.landscape=false]   - Orientation PDF (true = landscape, false = portrait)
  * @returns {string} Chuỗi HTML đầy đủ (<!DOCTYPE html> ... </html>)
  */
+const WORD_EXPORT_FONT_FAMILY = "'Times New Roman', Times, serif";
+const WORD_EXPORT_FONT_INLINE_STYLE = [
+  `font-family: ${WORD_EXPORT_FONT_FAMILY} !important`,
+  "mso-ascii-font-family: 'Times New Roman'",
+  "mso-hansi-font-family: 'Times New Roman'",
+  "mso-bidi-font-family: 'Times New Roman'",
+  "mso-fareast-font-family: 'Times New Roman'",
+].join("; ");
+
+function appendWordExportFontStyle(node) {
+  const currentStyle = node.getAttribute("style") || "";
+  const separator = currentStyle.trim() && !currentStyle.trim().endsWith(";") ? "; " : "";
+  node.setAttribute("style", `${currentStyle}${separator}${WORD_EXPORT_FONT_INLINE_STYLE};`);
+}
+
+function convertTableHeadersToBodyRows(root) {
+  root.querySelectorAll("thead").forEach((thead) => {
+    const tbody = document.createElement("tbody");
+
+    Array.from(thead.attributes).forEach((attribute) => {
+      tbody.setAttribute(attribute.name, attribute.value);
+    });
+
+    while (thead.firstChild) {
+      tbody.appendChild(thead.firstChild);
+    }
+
+    thead.replaceWith(tbody);
+  });
+}
+
+function normalizeWordExportMarkup(element) {
+  const exportElement = element.cloneNode(true);
+
+  convertTableHeadersToBodyRows(exportElement);
+  [exportElement, ...exportElement.querySelectorAll("*")].forEach(appendWordExportFontStyle);
+
+  return exportElement.outerHTML;
+}
+
 export function generateHtmlString(element, options = {}) {
-  const { title = "Biểu mẫu", lang = "vi", landscape = false } = options;
+  const { title = "Biểu mẫu", lang = "vi", landscape = false, normalizeForWord = false } = options;
 
   // ── 1. Lấy HTML nội dung đã render ────────────────────────────────────
-  const bodyHtml = element.outerHTML;
+  const bodyHtml = normalizeForWord ? normalizeWordExportMarkup(element) : element.outerHTML;
   // ── 2. Thu thập toàn bộ CSS hiện có trên trang ────────────────────────
   //       Bao gồm CSS Modules (đã được hash class name và inject vào DOM).
   //       Lọc bỏ các rule font-family không phải Times New Roman để tránh
@@ -75,15 +115,22 @@ export function generateHtmlString(element, options = {}) {
       padding: 0;
       background: #fff;
       color: #000;
-      font-family: 'Times New Roman', serif !important;
+      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      mso-ascii-font-family: 'Times New Roman';
+      mso-hansi-font-family: 'Times New Roman';
+      mso-bidi-font-family: 'Times New Roman';
+      mso-fareast-font-family: 'Times New Roman';
       font-size: 14pt;
       line-height: 1.5;
     }
 
     p, span, div, td, th, li, ul, ol, h1, h2, h3, h4, h5, h6,
-    strong, em, b, i, a, label, pre {
-      font-family: 'Times New Roman', serif !important;
+    strong, em, b, i, a, label, pre, table, tbody, tr, input, textarea, select {
+      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      mso-ascii-font-family: 'Times New Roman';
+      mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
+      mso-fareast-font-family: 'Times New Roman';
     }
     
     table {
@@ -97,8 +144,19 @@ export function generateHtmlString(element, options = {}) {
       overflow-wrap: break-word !important;
       word-break: normal !important;
       white-space: normal !important;
+      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      mso-ascii-font-family: 'Times New Roman';
+      mso-hansi-font-family: 'Times New Roman';
+      mso-bidi-font-family: 'Times New Roman';
+      mso-fareast-font-family: 'Times New Roman';
       font-size: 11pt !important;
     }
+
+    ${normalizeForWord ? `
+    thead {
+      display: table-row-group !important;
+    }
+    ` : ""}
   </style>
 </head>
 <body>
@@ -118,7 +176,6 @@ export function generateHtmlString(element, options = {}) {
  */
 export function generateHtmlFile(element, filename, options = {}) {
   const htmlString = generateHtmlString(element, { title: filename, ...options });
-  console.log('html string:', htmlString)
   const blob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
   return new File([blob], filename, { type: "text/html" });
 }

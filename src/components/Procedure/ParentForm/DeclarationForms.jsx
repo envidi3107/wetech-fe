@@ -268,6 +268,16 @@ const applyDangKyThayDoiOverrides = (baseData, changeData) => {
         }
     }
 
+    if (isTruthy(change.a_doiCoDong)) {
+        if (change.doiCoDongSangLapList?.length) {
+            merged.coDongList = change.doiCoDongSangLapList;
+        }
+        if (change.doiCoDongLoaiCoPhanKhacList?.length) {
+            merged.loaiCoPhanKhacList = change.doiCoDongLoaiCoPhanKhacList;
+            merged.loaiCoPhanKhac_ten = change.doiCoDongLoaiCoPhanKhacList[0] || "";
+        }
+    }
+
     return merged;
 };
 
@@ -319,10 +329,10 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     const isDanhSachCoDongSangLap = formComponentName === "DanhSachCoDongSangLapDeclaration" ||
         formNameLower.includes("cổ đông sáng lập");
 
-    const isDangKyThayDoiDynamicBeneficialOwnerForm =
+    const isDangKyThayDoiDynamicSupplementForm =
         procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
         currentForm?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
-        (isGiayDKDN || isCSHHuongLoi);
+        (isGiayDKDN || isCSHHuongLoi || isDanhSachCoDongSangLap);
 
     const fetchDangKyThayDoiNoiDungData = useCallback(async () => {
         const changeForm = forms?.find(isDangKyThayDoiNoiDungForm);
@@ -338,7 +348,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         const sourceTypeCompany = procedure?.typeCompany;
         if (
             !DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES.has(sourceTypeCompany) ||
-            !(isDangKyThayDoiPrefillForm || isDangKyThayDoiDynamicBeneficialOwnerForm)
+            !(isDangKyThayDoiPrefillForm || isDangKyThayDoiDynamicSupplementForm)
         ) {
             return null;
         }
@@ -392,7 +402,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         return fallbackSource;
     }, [
         isDangKyThayDoiChuSoHuu,
-        isDangKyThayDoiDynamicBeneficialOwnerForm,
+        isDangKyThayDoiDynamicSupplementForm,
         isDangKyThayDoiNguoiDaiDienPhapLuat,
         isDangKyThayDoiPrefillForm,
         procedure?.procedureId,
@@ -449,7 +459,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             setHasServerData(false);
             try {
                 const applyDynamicOverrides = async (sourceData) => {
-                    if (!isDangKyThayDoiDynamicBeneficialOwnerForm || !sourceData) {
+                    if (!isDangKyThayDoiDynamicSupplementForm || !sourceData) {
                         return sourceData;
                     }
                     const changeData = await fetchDangKyThayDoiNoiDungData();
@@ -488,7 +498,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.formId,
         fetchDangKyThayDoiNoiDungData,
         fetchDangKyThayDoiPrefillData,
-        isDangKyThayDoiDynamicBeneficialOwnerForm,
+        isDangKyThayDoiDynamicSupplementForm,
     ]);
 
     const saveMissingUserCards = async (data) => {

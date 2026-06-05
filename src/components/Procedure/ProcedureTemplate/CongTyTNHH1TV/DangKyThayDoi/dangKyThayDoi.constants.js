@@ -71,6 +71,19 @@ export const BENEFICIAL_OWNER_CHANGE_OPTIONS = [
     },
 ];
 
+export const SHAREHOLDER_CHANGE_OPTIONS = [
+    {
+        name: "coDong_truongHopCoDongSangLap",
+        label:
+            "Trường hợp thay đổi cổ đông sáng lập (kê khai theo Mẫu số 7 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm (Đối với cổ đông sáng lập có phần vốn góp không thay đổi, trong danh sách cổ đông sáng lập không bắt buộc phải có chữ ký của cổ đông sáng lập đó).",
+    },
+    {
+        name: "coDong_truongHopNhaDauTuNuocNgoai",
+        label:
+            "Trường hợp thay đổi cổ đông là nhà đầu tư nước ngoài (kê khai theo Mẫu số 8 Phụ lục I ban hành kèm theo Thông tư này): Gửi kèm (Đối với cổ đông có phần vốn góp không thay đổi, trong danh sách cổ đông là nhà đầu tư nước ngoài không bắt buộc phải có chữ ký của cổ đông đó).",
+    },
+];
+
 export const FOOTNOTES = {
     nganhNghe:
         "Doanh nghiệp có quyền tự do kinh doanh trong những ngành, nghề mà luật không cấm. Đối với ngành, nghề đầu tư kinh doanh có điều kiện, doanh nghiệp chỉ được kinh doanh khi có đủ điều kiện theo quy định.",
@@ -98,6 +111,12 @@ export const emptyAOptionState = () =>
 
 export const emptyBeneficialOwnerChangeOptionState = () =>
     BENEFICIAL_OWNER_CHANGE_OPTIONS.reduce((acc, option) => {
+        acc[option.name] = false;
+        return acc;
+    }, {});
+
+export const emptyShareholderChangeOptionState = () =>
+    SHAREHOLDER_CHANGE_OPTIONS.reduce((acc, option) => {
         acc[option.name] = false;
         return acc;
     }, {});

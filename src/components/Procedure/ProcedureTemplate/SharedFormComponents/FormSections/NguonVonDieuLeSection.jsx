@@ -2,7 +2,13 @@ import { useRef, useEffect } from "react";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import FormattedNumberInput, { formatNumber } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormattedNumberInput/FormattedNumberInput";
 
-export default function NguonVonDieuLeSection({ title = 'Nguồn vốn điều lệ', dataJson, styles, isNote = false }) {
+export default function NguonVonDieuLeSection({
+    title = 'Nguồn vốn điều lệ',
+    dataJson,
+    styles,
+    isNote = false,
+    readOnly: sectionReadOnly = false,
+}) {
     const tableRef = useRef(null);
     const tooltipVonNuocNgoai = "Kê khai trong trường hợp có nhà đầu tư nước ngoài góp vốn, mua cổ phần, phần vốn góp vào doanh nghiệp dẫn đến thay đổi nội dung đăng ký doanh nghiệp.";
 
@@ -51,54 +57,61 @@ export default function NguonVonDieuLeSection({ title = 'Nguồn vốn điều l
                         { label: "Vốn nước ngoài", namePrefix: "nguonVon_nuocNgoai" },
                         { label: "Vốn khác", namePrefix: "nguonVon_khac" },
                         { label: "Tổng cộng", namePrefix: "nguonVon_tongCong", readOnly: true },
-                    ].map(({ label, namePrefix, readOnly }) => (
-                        <tr key={namePrefix}>
-                            <td>
-                                {label}
-                                {namePrefix === "nguonVon_nuocNgoai" && isNote && <InfoTooltip content={tooltipVonNuocNgoai} />}
-                            </td>
-                            <td>
-                                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                                    <div>
-                                        <label style={{ fontSize: "12px", color: "#555", marginBottom: "4px", display: "block" }}>Giá trị VNĐ:</label>
-                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                            <FormattedNumberInput
-                                                className={styles.input}
-                                                name={`${namePrefix}_soTien`}
-                                                defaultValue={dataJson?.[`${namePrefix}_soTien`] || "0"}
-                                                readOnly={readOnly}
-                                                style={readOnly ? { background: "#f5f5f5", fontWeight: 600 } : {}}
-                                            />
-                                            <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>VNĐ</span>
-                                        </div>
-                                    </div>
-                                    {namePrefix !== "nguonVon_tongCong" && (
+                    ].map(({ label, namePrefix, readOnly }) => {
+                        const isReadOnly = sectionReadOnly || readOnly;
+                        const readOnlyStyle = isReadOnly ? { background: "#f5f5f5", fontWeight: 600 } : {};
+
+                        return (
+                            <tr key={namePrefix}>
+                                <td>
+                                    {label}
+                                    {namePrefix === "nguonVon_nuocNgoai" && isNote && <InfoTooltip content={tooltipVonNuocNgoai} />}
+                                </td>
+                                <td>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <div>
-                                            <label style={{ fontSize: "12px", color: "#555", marginBottom: "4px", display: "block" }}>Ngoại tệ (nếu có):</label>
-                                            <FormattedNumberInput
-                                                className={styles.input}
-                                                name={`${namePrefix}_ngoaiTe`}
-                                                defaultValue={dataJson?.[`${namePrefix}_ngoaiTe`] || "0"}
-                                            />
+                                            <label style={{ fontSize: "12px", color: "#555", marginBottom: "4px", display: "block" }}>Giá trị VNĐ:</label>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                <FormattedNumberInput
+                                                    className={styles.input}
+                                                    name={`${namePrefix}_soTien`}
+                                                    defaultValue={dataJson?.[`${namePrefix}_soTien`] || "0"}
+                                                    readOnly={isReadOnly}
+                                                    style={readOnlyStyle}
+                                                />
+                                                <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>VNĐ</span>
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                            </td>
-                            <td>
-                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                    <input
-                                        type="number"
-                                        className={styles.input}
-                                        name={`${namePrefix}_tyLe`}
-                                        defaultValue={dataJson?.[`${namePrefix}_tyLe`] || "0"}
-                                        readOnly={readOnly}
-                                        style={readOnly ? { background: "#f5f5f5", fontWeight: 600 } : {}}
-                                    />
-                                    <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
+                                        {namePrefix !== "nguonVon_tongCong" && (
+                                            <div>
+                                                <label style={{ fontSize: "12px", color: "#555", marginBottom: "4px", display: "block" }}>Ngoại tệ (nếu có):</label>
+                                                <FormattedNumberInput
+                                                    className={styles.input}
+                                                    name={`${namePrefix}_ngoaiTe`}
+                                                    defaultValue={dataJson?.[`${namePrefix}_ngoaiTe`] || "0"}
+                                                    readOnly={sectionReadOnly}
+                                                    style={sectionReadOnly ? readOnlyStyle : undefined}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                        <input
+                                            type="number"
+                                            className={styles.input}
+                                            name={`${namePrefix}_tyLe`}
+                                            defaultValue={dataJson?.[`${namePrefix}_tyLe`] || "0"}
+                                            readOnly={isReadOnly}
+                                            style={readOnlyStyle}
+                                        />
+                                        <span style={{ whiteSpace: "nowrap", fontSize: "0.85em", color: "#555" }}>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

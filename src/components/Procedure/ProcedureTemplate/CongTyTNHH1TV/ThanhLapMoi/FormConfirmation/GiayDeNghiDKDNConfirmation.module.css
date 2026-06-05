@@ -113,7 +113,18 @@ h3.docTitle {
     break-after: page;
 }
 
-.noBorderTable {
+.borderTable {
+    border-collapse: collapse;
+    font-size: var(--procedure-confirmation-font-size);
+}
+
+.borderTable td {
+    border: 1px solid black;
+    padding: 4px 8px;
+    vertical-align: top;
+}
+
+.noBoderTable {
     border-collapse: collapse;
     font-size: var(--procedure-confirmation-font-size);
 }
@@ -135,6 +146,11 @@ h3.docTitle {
     line-height: 1;
     margin: 0 4px;
     vertical-align: middle;
+}
+
+.inlineField {
+    display: inline-block;
+    margin-left: 56px;
 }
 
 .textCenter {

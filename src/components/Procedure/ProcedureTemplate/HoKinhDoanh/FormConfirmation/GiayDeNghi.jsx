@@ -124,52 +124,60 @@ export default function GiayDeNghi({ dataJson }) {
                 </div>
             </div>
 
-            <p style={{ fontStyle: "italic", fontSize: "var(--procedure-confirmation-font-size)", margin: "4px 0 10px 16px" }}>
+            <p
+                style={{
+                    fontStyle: "italic",
+                    fontSize: "var(--procedure-confirmation-font-size)",
+                    margin: "4px 0 10px 16px",
+                }}
+            >
                 Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
                 bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
             </p>
 
-            <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Dân tộc: </span>
-                    <span className={styles.infoValue}>{nguoiDaiDien_danToc || "Kinh"}</span>
+            <div className={styles.infoBorder}>
+                <div className={styles.infoRow}>
+                    <div className={styles.infoItem} style={{ flex: 1 }}>
+                        <span className={styles.infoLabel}>Dân tộc: </span>
+                        <span className={styles.infoValue}>{nguoiDaiDien_danToc || "Kinh"}</span>
+                    </div>
+                    <div className={styles.infoItem} style={{ flex: 1 }}>
+                        <span className={styles.infoLabel}>Quốc tịch: </span>
+                        <span className={styles.infoValue}>{nguoiDaiDien_quocTich || "Việt Nam"}</span>
+                    </div>
                 </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Quốc tịch: </span>
-                    <span className={styles.infoValue}>{nguoiDaiDien_quocTich || "Việt Nam"}</span>
+
+                <div className={styles.infoLine} style={{ marginTop: "10px" }}>
+                    <span className={styles.infoLabel}>Nơi thường trú:</span>
                 </div>
-            </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
+                    <span className={styles.infoValue}>{thuongTru_soNha}</span>
+                </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Xã/Phường/Đặc khu: </span>
+                    <span className={styles.infoValue}>{thuongTru_xa}</span>
+                </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
+                    <span className={styles.infoValue}>{thuongTru_tinh}</span>
+                </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                <span className={styles.infoLabel}>Nơi thường trú:</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                <span className={styles.infoValue}>{thuongTru_soNha}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Xã/Phường/Đặc khu: </span>
-                <span className={styles.infoValue}>{thuongTru_xa}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                <span className={styles.infoValue}>{thuongTru_tinh}</span>
-            </div>
-
-            <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                <span className={styles.infoLabel}>Nơi ở hiện tại:</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                <span className={styles.infoValue}>{hienTai_soNha}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Xã/Phường/Đặc khu: </span>
-                <span className={styles.infoValue}>{hienTai_xa}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                <span className={styles.infoValue}>{hienTai_tinh}</span>
+                <div className={styles.infoLine} style={{ marginTop: "10px" }}>
+                    <span className={styles.infoLabel}>Nơi ở hiện tại:</span>
+                </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
+                    <span className={styles.infoValue}>{hienTai_soNha}</span>
+                </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Xã/Phường/Đặc khu: </span>
+                    <span className={styles.infoValue}>{hienTai_xa}</span>
+                </div>
+                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
+                    <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
+                    <span className={styles.infoValue}>{hienTai_tinh}</span>
+                </div>
             </div>
 
             <div style={{ textAlign: "center", fontWeight: "bold", margin: "20px 0 10px" }}>
@@ -255,14 +263,19 @@ export default function GiayDeNghi({ dataJson }) {
                                     <td>{idx + 1}</td>
                                     <td>
                                         <div>{row.tenNganh}</div>
-                                        {row.chiTiet && <pre
-                                            style={{
-                                                margin: 0,
-                                                whiteSpace: "pre-wrap",
-                                                wordBreak: "break-word",
-                                                fontFamily: "'Times New Roman', serif",
-                                                fontSize: "var(--procedure-confirmation-font-size)"
-                                            }}>{row.chiTiet}</pre>}
+                                        {row.chiTiet && (
+                                            <pre
+                                                style={{
+                                                    margin: 0,
+                                                    whiteSpace: "pre-wrap",
+                                                    wordBreak: "break-word",
+                                                    fontFamily: "'Times New Roman', serif",
+                                                    fontSize: "var(--procedure-confirmation-font-size)",
+                                                }}
+                                            >
+                                                {row.chiTiet}
+                                            </pre>
+                                        )}
                                     </td>
                                     <td style={{ textAlign: "center" }}>{row.maNganh}</td>
                                     <td style={{ textAlign: "center" }}>{row.laNganhChinh ? "X" : ""}</td>

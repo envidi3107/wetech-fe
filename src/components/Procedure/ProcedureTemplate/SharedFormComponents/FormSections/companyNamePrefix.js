@@ -10,6 +10,12 @@ export const CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS = [
     "CÔNG TY CỔ PHẦN",
 ];
 
-export function getCompanyNamePrefix(dataJson, defaultPrefix) {
-    return dataJson?.tenCongTyPrefix || defaultPrefix;
+export function getCompanyNamePrefix(dataJson, defaultPrefix, allowedPrefixes) {
+    const prefix = dataJson?.tenCongTyPrefix || defaultPrefix;
+
+    if (Array.isArray(allowedPrefixes) && allowedPrefixes.length > 0 && !allowedPrefixes.includes(prefix)) {
+        return defaultPrefix;
+    }
+
+    return prefix;
 }

@@ -28,17 +28,40 @@ const tabs = [
 
 const DANG_KY_THAY_DOI_NOI_DUNG_TYPE =
     "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
 
-const BENEFICIAL_OWNER_DYNAMIC_FORMS = [
-    {
-        name: "Giấy đề nghị đăng ký doanh nghiệp",
-        type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
-    },
-    {
-        name: "Danh sách CSH hưởng lợi",
-        type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
-    },
+const REGISTRATION_DYNAMIC_FORM = {
+    name: "Giấy đề nghị đăng ký doanh nghiệp",
+    type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+};
+
+const BENEFICIAL_OWNER_LIST_DYNAMIC_FORM = {
+    name: "Danh sách CSH hưởng lợi",
+    type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+};
+
+const MEMBER_MEETING_MINUTES_DYNAMIC_FORM = {
+    name: "Mẫu biên bản họp Hội đồng thành viên",
+    type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+};
+
+const SHAREHOLDER_LIST_DYNAMIC_FORM = {
+    name: "Danh sách cổ đông sáng lập",
+    type: DANG_KY_THAY_DOI_NOI_DUNG_TYPE,
+};
+
+const DANG_KY_THAY_DOI_DYNAMIC_FORMS = [
+    REGISTRATION_DYNAMIC_FORM,
+    MEMBER_MEETING_MINUTES_DYNAMIC_FORM,
+    BENEFICIAL_OWNER_LIST_DYNAMIC_FORM,
+    SHAREHOLDER_LIST_DYNAMIC_FORM,
 ];
+
+const EMPTY_DYNAMIC_FORM_STATE = {
+    showMemberMeetingMinutesForm: false,
+    showBeneficialOwnerForms: false,
+    showShareholderForms: false,
+};
 
 const normalizeProcedureText = (value = "") =>
     String(value)
@@ -49,13 +72,15 @@ const normalizeProcedureText = (value = "") =>
         .toLowerCase()
         .trim();
 
-const BENEFICIAL_OWNER_DYNAMIC_FORM_KEYS = new Set(
-    BENEFICIAL_OWNER_DYNAMIC_FORMS.map((form) => normalizeProcedureText(form.name)),
+const DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS = new Set(
+    DANG_KY_THAY_DOI_DYNAMIC_FORMS.map((form) => normalizeProcedureText(form.name)),
 );
 
-const isBeneficialOwnerDynamicForm = (form) =>
+const getDynamicFormKey = (form) => normalizeProcedureText(form?.name);
+
+const isDangKyThayDoiDynamicForm = (form) =>
     form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
-    BENEFICIAL_OWNER_DYNAMIC_FORM_KEYS.has(normalizeProcedureText(form?.name));
+    DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS.has(getDynamicFormKey(form));
 
 const isDangKyThayDoiNoiDungForm = (form) => {
     const normalizedName = normalizeProcedureText(form?.name);
@@ -77,6 +102,75 @@ const isBeneficialOwnerChangeEnabled = (data) => {
     return hasMainA && isTruthy(parsed.a_doiChuSoHuuHuongLoi);
 };
 
+const isShareholderChangeEnabled = (data) => {
+    const parsed = normalizeDataJson(data);
+    const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
+        ? parsed.noiDungThayDoi
+        : parsed.noiDungThayDoi
+            ? [parsed.noiDungThayDoi]
+            : [];
+    const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
+    return hasMainA && isTruthy(parsed.a_doiCoDong);
+};
+
+const parseDynamicCapitalNumber = (value) => {
+    if (value === null || value === undefined || value === "") return null;
+
+    const parsed = Number(
+        String(value)
+            .replace(/[^\d,.-]/g, "")
+            .replace(/\./g, "")
+            .replace(",", "."),
+    );
+    return Number.isNaN(parsed) ? null : parsed;
+};
+
+const isMemberMeetingMinutesEnabled = (data, typeCompany) => {
+    if (typeCompany !== TNHH_2TV_TYPE_COMPANY) return false;
+
+    const parsed = normalizeDataJson(data);
+    const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
+        ? parsed.noiDungThayDoi
+        : parsed.noiDungThayDoi
+            ? [parsed.noiDungThayDoi]
+            : [];
+    const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
+    if (!hasMainA || !isTruthy(parsed.a_doiVonDieuLe)) return false;
+
+    const changeType = normalizeProcedureText(parsed.hinhThucTangGiamVon || parsed.qdHinhThucTangGiamVon || "");
+    if (changeType.includes("tang")) return true;
+    if (changeType.includes("giam")) return false;
+
+    const beforeCapital = parseDynamicCapitalNumber(parsed.vonDieuLeDaDangKy);
+    const afterCapital = parseDynamicCapitalNumber(parsed.vonDieuLeSauThayDoi);
+    return beforeCapital !== null && afterCapital !== null && afterCapital > beforeCapital;
+};
+
+const getDangKyThayDoiDynamicState = (data, typeCompany) => ({
+    showMemberMeetingMinutesForm: isMemberMeetingMinutesEnabled(data, typeCompany),
+    showBeneficialOwnerForms: isBeneficialOwnerChangeEnabled(data),
+    showShareholderForms: isShareholderChangeEnabled(data),
+});
+
+const hasEnabledDynamicForms = (state) =>
+    !!state?.showMemberMeetingMinutesForm || !!state?.showBeneficialOwnerForms || !!state?.showShareholderForms;
+
+const getRequiredDynamicForms = (state) => {
+    const forms = [];
+
+    if (state?.showMemberMeetingMinutesForm) {
+        forms.push(MEMBER_MEETING_MINUTES_DYNAMIC_FORM);
+    }
+    if (state?.showBeneficialOwnerForms) {
+        forms.push(BENEFICIAL_OWNER_LIST_DYNAMIC_FORM);
+    }
+    if (state?.showShareholderForms) {
+        forms.push(SHAREHOLDER_LIST_DYNAMIC_FORM);
+    }
+
+    return forms;
+};
+
 const getMatchedFormType = ({ typeCompany, serviceType, form }) =>
     typeCompanyOptions
         .find((item) => item.value === typeCompany)
@@ -96,28 +190,34 @@ const mapProcedureForms = (rawForms, typeCompany, serviceType) =>
         };
     });
 
-const orderVisibleForms = (mappedForms, showBeneficialOwnerForms) => {
-    const baseForms = showBeneficialOwnerForms
-        ? mappedForms
-        : mappedForms.filter((form) => !isBeneficialOwnerDynamicForm(form));
+const orderVisibleForms = (mappedForms, dynamicState) => {
+    const requiredDynamicForms = getRequiredDynamicForms(dynamicState);
+    const requiredDynamicFormKeys = new Set(requiredDynamicForms.map((form) => normalizeProcedureText(form.name)));
+    const baseForms = mappedForms.filter(
+        (form) => !isDangKyThayDoiDynamicForm(form) || requiredDynamicFormKeys.has(getDynamicFormKey(form)),
+    );
 
-    if (!showBeneficialOwnerForms) return baseForms;
+    if (!requiredDynamicForms.length) return baseForms;
 
     const dynamicFormsByKey = new Map(
         mappedForms
-            .filter(isBeneficialOwnerDynamicForm)
-            .map((form) => [normalizeProcedureText(form.name), form]),
+            .filter((form) => isDangKyThayDoiDynamicForm(form) && requiredDynamicFormKeys.has(getDynamicFormKey(form)))
+            .map((form) => [getDynamicFormKey(form), form]),
     );
-    const dynamicForms = BENEFICIAL_OWNER_DYNAMIC_FORMS.map((form) =>
-        dynamicFormsByKey.get(normalizeProcedureText(form.name)),
-    ).filter(Boolean);
+    const dynamicForms = requiredDynamicForms
+        .map((form) => dynamicFormsByKey.get(normalizeProcedureText(form.name)))
+        .filter(Boolean);
 
     if (!dynamicForms.length) return baseForms;
 
-    const nonDynamicForms = mappedForms.filter((form) => !isBeneficialOwnerDynamicForm(form));
-    const decisionIndex = nonDynamicForms.findIndex((form) =>
-        normalizeProcedureText(form?.name).includes("quyet dinh hoi dong thanh vien"),
-    );
+    const nonDynamicForms = mappedForms.filter((form) => !isDangKyThayDoiDynamicForm(form));
+    const decisionIndex = nonDynamicForms.findIndex((form) => {
+        const normalizedName = normalizeProcedureText(form?.name);
+        return (
+            normalizedName.includes("quyet dinh hoi dong thanh vien") ||
+            normalizedName.includes("quyet dinh dai hoi dong co dong")
+        );
+    });
     const insertIndex = decisionIndex >= 0 ? decisionIndex + 1 : nonDynamicForms.length;
 
     return [
@@ -176,8 +276,8 @@ const ProcessProcedure = () => {
         refreshUserCards();
     }, []);
 
-    const applyVisibleFormsState = useCallback((mappedForms, showBeneficialOwnerForms) => {
-        const visibleForms = orderVisibleForms(mappedForms, showBeneficialOwnerForms);
+    const applyVisibleFormsState = useCallback((mappedForms, dynamicState) => {
+        const visibleForms = orderVisibleForms(mappedForms, dynamicState);
         setForms(visibleForms);
         setFormDeclarationSteps(buildFormDeclarationSteps(visibleForms));
         setCurrentFormStep((prev) => (visibleForms.length ? Math.min(prev, visibleForms.length - 1) : 0));
@@ -193,8 +293,8 @@ const ProcessProcedure = () => {
         return response.data.result;
     }, [id_procedure]);
 
-    const ensureBeneficialOwnerDynamicForms = useCallback(async (mappedForms, currentProcedure) => {
-        const missingForms = BENEFICIAL_OWNER_DYNAMIC_FORMS.filter(
+    const ensureDangKyThayDoiDynamicForms = useCallback(async (mappedForms, currentProcedure, dynamicState) => {
+        const missingForms = getRequiredDynamicForms(dynamicState).filter(
             (dynamicForm) =>
                 !mappedForms.some(
                     (form) => normalizeProcedureText(form.name) === normalizeProcedureText(dynamicForm.name),
@@ -226,17 +326,17 @@ const ProcessProcedure = () => {
         };
     }, [fetchProcedureResponse, id_procedure]);
 
-    const getSavedBeneficialOwnerChangeState = useCallback(async (mappedForms) => {
+    const getSavedDangKyThayDoiDynamicState = useCallback(async (mappedForms, typeCompany) => {
         const changeForm = mappedForms.find(isDangKyThayDoiNoiDungForm);
-        if (!changeForm?.formId) return false;
+        if (!changeForm?.formId) return EMPTY_DYNAMIC_FORM_STATE;
 
         try {
             const response = await authAxios.get(`/api/form-submission/get/data-json`, {
                 params: { formId: changeForm.formId },
             });
-            return isBeneficialOwnerChangeEnabled(response.data);
+            return getDangKyThayDoiDynamicState(response.data, typeCompany);
         } catch (error) {
-            return false;
+            return EMPTY_DYNAMIC_FORM_STATE;
         }
     }, []);
 
@@ -250,10 +350,17 @@ const ProcessProcedure = () => {
                     procedureResponse.typeCompany,
                     procedureResponse.serviceType,
                 );
-                const showBeneficialOwnerForms = await getSavedBeneficialOwnerChangeState(mappedForms);
+                const dynamicFormState = await getSavedDangKyThayDoiDynamicState(
+                    mappedForms,
+                    procedureResponse.typeCompany,
+                );
 
-                if (showBeneficialOwnerForms) {
-                    const ensured = await ensureBeneficialOwnerDynamicForms(mappedForms, procedureResponse);
+                if (hasEnabledDynamicForms(dynamicFormState)) {
+                    const ensured = await ensureDangKyThayDoiDynamicForms(
+                        mappedForms,
+                        procedureResponse,
+                        dynamicFormState,
+                    );
                     procedureResponse = ensured.procedureResponse;
                     mappedForms = ensured.mappedForms;
                 }
@@ -265,7 +372,7 @@ const ProcessProcedure = () => {
                 }
 
                 setAllForms(mappedForms);
-                applyVisibleFormsState(mappedForms, showBeneficialOwnerForms);
+                applyVisibleFormsState(mappedForms, dynamicFormState);
                 setProcedure(procedureResponse);
             } catch (error) {
                 console.error("Error fetching form declaration steps:", error);
@@ -276,9 +383,9 @@ const ProcessProcedure = () => {
         fetchFormDeclarationSteps();
     }, [
         applyVisibleFormsState,
-        ensureBeneficialOwnerDynamicForms,
+        ensureDangKyThayDoiDynamicForms,
         fetchProcedureResponse,
-        getSavedBeneficialOwnerChangeState,
+        getSavedDangKyThayDoiDynamicState,
         id_procedure,
         navigate,
         viewMode,
@@ -289,22 +396,22 @@ const ProcessProcedure = () => {
         let visibleForms = forms;
 
         if (isDangKyThayDoiNoiDungForm(submittedForm)) {
-            const showBeneficialOwnerForms = isBeneficialOwnerChangeEnabled(submittedData);
+            const dynamicFormState = getDangKyThayDoiDynamicState(submittedData, procedure?.typeCompany);
             let nextProcedure = procedure;
             let nextAllForms = allForms.length ? allForms : forms;
 
-            if (showBeneficialOwnerForms) {
+            if (hasEnabledDynamicForms(dynamicFormState)) {
                 try {
-                    const ensured = await ensureBeneficialOwnerDynamicForms(nextAllForms, procedure);
+                    const ensured = await ensureDangKyThayDoiDynamicForms(nextAllForms, procedure, dynamicFormState);
                     nextProcedure = ensured.procedureResponse;
                     nextAllForms = ensured.mappedForms;
                 } catch (error) {
-                    console.error("Error ensuring dynamic beneficial owner forms:", error);
+                    console.error("Error ensuring dynamic registration supplement forms:", error);
                 }
             }
 
             setAllForms(nextAllForms);
-            visibleForms = applyVisibleFormsState(nextAllForms, showBeneficialOwnerForms);
+            visibleForms = applyVisibleFormsState(nextAllForms, dynamicFormState);
             if (nextProcedure) setProcedure(nextProcedure);
         }
 

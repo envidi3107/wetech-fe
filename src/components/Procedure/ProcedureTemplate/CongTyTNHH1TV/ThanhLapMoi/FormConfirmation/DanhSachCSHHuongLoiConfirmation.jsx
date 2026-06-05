@@ -5,7 +5,7 @@ import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComp
 
 function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
     const rows = dataJson?.cshHuongLoiList || [];
-    const { chuKy_ten = "", chuKy_hoTen = "" } = dataJson || {};
+    const datePrefix = dataJson?.kinhGuiProvince || dataJson?.truSo_tinh;
 
     return (
         <div className={styles.wrapper}>
@@ -108,7 +108,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
 
             <div className={styles.signatureBlock}>
                 <p className={styles.signatureDate}>
-                    <CurrentDate />
+                    <CurrentDate prefix={datePrefix} />
                 </p>
                 <p className={styles.signatureTitle}>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</p>
                 <p className={styles.signatureSubtitle}>
