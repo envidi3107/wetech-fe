@@ -418,6 +418,11 @@ const typeCompanyOptions = [
                                 confirmation: GiayDeNghiDangKyThayDoiConfirmation_CP,
                             },
                             {
+                                title: "Danh sách cổ đông sáng lập",
+                                declaration: DanhSachCoDongSangLapDeclaration_CP,
+                                confirmation: DanhSachCoDongSangLapConfirmation_CP,
+                            },
+                            {
                                 title: "Mẫu quyết định đại hội đồng cổ đông",
                                 declaration: QuyetDinhDaiHoiDongCoDongDeclaration_CP,
                                 confirmation: QuyetDinhDaiHoiDongCoDongConfirmation_CP,
@@ -426,11 +431,6 @@ const typeCompanyOptions = [
                                 title: "Danh sách CSH hưởng lợi",
                                 declaration: DanhSachCSHHuongLoiDeclaration_CP,
                                 confirmation: DanhSachCSHHuongLoiConfirmation_CP,
-                            },
-                            {
-                                title: "Danh sách cổ đông sáng lập",
-                                declaration: DanhSachCoDongSangLapDeclaration_CP,
-                                confirmation: DanhSachCoDongSangLapConfirmation_CP,
                             }
                         ],
                     },

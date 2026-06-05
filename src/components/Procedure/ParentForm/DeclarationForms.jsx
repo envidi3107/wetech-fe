@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import * as XLSX from "xlsx";
 import styles from "./DeclarationForms.module.css";
+import Tooltip from "@/components/Tooltip/Tooltip";
 import { authAxios } from "@/services/axios-instance";
 import { useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 
@@ -51,6 +52,7 @@ const DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES = new Set([
     TNHH_2TV_TYPE_COMPANY,
     CO_PHAN_TYPE_COMPANY,
 ]);
+const DATA_RELOAD_COOLDOWN_SECONDS = 5;
 
 const parseFormDataJson = (rawData) => {
     if (!rawData) return null;
@@ -284,6 +286,8 @@ const applyDangKyThayDoiOverrides = (baseData, changeData) => {
 
 const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess, setIsSubmittingForm }, ref) => {
     const [dataJson, setDataJson] = useState(null);
+    const [isDataJsonLoading, setIsDataJsonLoading] = useState(false);
+    const [reloadCooldown, setReloadCooldown] = useState(0);
     const [hasServerData, setHasServerData] = useState(false);
     const [importKey, setImportKey] = useState(0);
     const formRef = useRef(null);
@@ -452,54 +456,76 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             : null;
     }, [fetchInitialDangKyThayDoiData]);
 
-    useEffect(() => {
-        async function fetchFormSubmission() {
-            if (!currentForm?.formId) return;
-            setDataJson(null);
-            setHasServerData(false);
-            try {
-                const applyDynamicOverrides = async (sourceData) => {
-                    if (!isDangKyThayDoiDynamicSupplementForm || !sourceData) {
-                        return sourceData;
-                    }
-                    const changeData = await fetchDangKyThayDoiNoiDungData();
-                    return changeData ? applyDangKyThayDoiOverrides(sourceData, changeData) : sourceData;
-                };
+    const fetchFormSubmission = useCallback(async () => {
+        if (!currentForm?.formId) return;
 
-                const response = await authAxios.get(`/api/form-submission/get/data-json`, {
-                    params: { formId: currentForm.formId },
-                });
-                const parsed = parseFormDataJson(response.data);
-                if (parsed) {
-                    const prefillData = await fetchDangKyThayDoiPrefillData();
-                    const mergedData = prefillData ? mergePrefillData(prefillData, parsed) : parsed;
-                    setDataJson(await applyDynamicOverrides(mergedData));
-                    setHasServerData(true);
-                    return;
+        setIsDataJsonLoading(true);
+        setDataJson(null);
+        setHasServerData(false);
+        try {
+            const applyDynamicOverrides = async (sourceData) => {
+                if (!isDangKyThayDoiDynamicSupplementForm || !sourceData) {
+                    return sourceData;
                 }
+                const changeData = await fetchDangKyThayDoiNoiDungData();
+                return changeData ? applyDangKyThayDoiOverrides(sourceData, changeData) : sourceData;
+            };
 
+            const response = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: currentForm.formId },
+            });
+            const parsed = parseFormDataJson(response.data);
+            if (parsed) {
                 const prefillData = await fetchDangKyThayDoiPrefillData();
-                if (!prefillData) {
-                    setDataJson(null);
-                    setHasServerData(false);
-                    return;
-                }
+                const mergedData = prefillData ? mergePrefillData(prefillData, parsed) : parsed;
+                setDataJson(await applyDynamicOverrides(mergedData));
+                setHasServerData(true);
+                return;
+            }
 
-                setDataJson(await applyDynamicOverrides(prefillData));
-                setHasServerData(false);
-            } catch (error) {
+            const prefillData = await fetchDangKyThayDoiPrefillData();
+            if (!prefillData) {
                 setDataJson(null);
                 setHasServerData(false);
-                console.error("Error fetching form submission:", error);
+                return;
             }
+
+            setDataJson(await applyDynamicOverrides(prefillData));
+            setHasServerData(false);
+        } catch (error) {
+            setDataJson(null);
+            setHasServerData(false);
+            console.error("Error fetching form submission:", error);
+        } finally {
+            setIsDataJsonLoading(false);
         }
-        fetchFormSubmission();
     }, [
         currentForm?.formId,
         fetchDangKyThayDoiNoiDungData,
         fetchDangKyThayDoiPrefillData,
         isDangKyThayDoiDynamicSupplementForm,
     ]);
+
+    useEffect(() => {
+        fetchFormSubmission();
+    }, [fetchFormSubmission]);
+
+    useEffect(() => {
+        if (reloadCooldown <= 0) return undefined;
+
+        const timerId = setInterval(() => {
+            setReloadCooldown((seconds) => Math.max(seconds - 1, 0));
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [reloadCooldown]);
+
+    const handleReloadDataJson = useCallback(() => {
+        if (isDataJsonLoading || reloadCooldown > 0) return;
+
+        setReloadCooldown(DATA_RELOAD_COOLDOWN_SECONDS);
+        fetchFormSubmission();
+    }, [fetchFormSubmission, isDataJsonLoading, reloadCooldown]);
 
     const saveMissingUserCards = async (data) => {
         const prefixes = ["nguoiDaiDien", "chuSoHuu", "nguoiNop", "uyQuyen", "nhanUyQuyen"];
@@ -891,6 +917,29 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 onChange={handleImportExcel}
             />
             <h2 className={styles.mainTitle}>THÔNG TIN CHI TIẾT {currentForm?.name?.toUpperCase()}</h2>
+            <div className={styles.dataJsonToolbar}>
+                {isDataJsonLoading && (
+                    <div className={styles.dataJsonLoading} role="status" aria-live="polite">
+                        <span className={styles.dataJsonSpinner} aria-hidden="true" />
+                        <span className={styles.dataJsonTyping}>Đang tải dữ liệu....</span>
+                    </div>
+                )}
+                <Tooltip text="Tải lại dữ liệu">
+                    <button
+                        type="button"
+                        className={styles.reloadDataButton}
+                        onClick={handleReloadDataJson}
+                        disabled={isDataJsonLoading || reloadCooldown > 0}
+                        aria-label={
+                            reloadCooldown > 0
+                                ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây`
+                                : "Tải lại dữ liệu"
+                        }
+                    >
+                        {reloadCooldown > 0 ? `${reloadCooldown}s` : "↻"}
+                    </button>
+                </Tooltip>
+            </div>
             {CurrentFormComponent ? (
                 <CurrentFormComponent
                     key={`form_${currentForm.formId}_${importKey}`}

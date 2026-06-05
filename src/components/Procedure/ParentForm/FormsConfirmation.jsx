@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { generateHtmlString } from "@/utils/generateHtmlFile";
 import htmlDocx from "html-docx-js/dist/html-docx";
 import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
+import Tooltip from "@/components/Tooltip/Tooltip";
 import { useNotification } from "@/hooks/useNotification";
 
 const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -15,6 +16,7 @@ const DOCX_MARGINS = {
     footer: 0,
     gutter: 0,
 };
+const DATA_RELOAD_COOLDOWN_SECONDS = 5;
 
 function getServerErrorMessage(error) {
     const responseData = error?.response?.data;
@@ -45,28 +47,52 @@ function getConfirmErrorMessage(error, submitStage) {
 
 const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess }, ref) => {
     const [dataJson, setDataJson] = useState(null);
+    const [isDataJsonLoading, setIsDataJsonLoading] = useState(false);
+    const [reloadCooldown, setReloadCooldown] = useState(0);
     const pdfContentRef = useRef(null);
 
     const currentForm = forms?.[currentFormStep];
     const CurrentFormComponent = currentForm?.confirmation;
     const { showNotification } = useNotification();
 
-    useEffect(() => {
-        async function fetchFormSubmission() {
-            if (!currentForm?.formId) return;
+    const fetchFormSubmission = useCallback(async () => {
+        if (!currentForm?.formId) return;
+
+        setIsDataJsonLoading(true);
+        setDataJson(null);
+        try {
+            const response = await authAxios.get(`/api/form-submission/get/data-json`, {
+                params: { formId: currentForm.formId },
+            });
+            setDataJson(response.data);
+        } catch (error) {
             setDataJson(null);
-            try {
-                const response = await authAxios.get(`/api/form-submission/get/data-json`, {
-                    params: { formId: currentForm.formId },
-                });
-                setDataJson(response.data);
-            } catch (error) {
-                setDataJson(null);
-                console.error("Error fetching form submission for confirmation:", error);
-            }
+            console.error("Error fetching form submission for confirmation:", error);
+        } finally {
+            setIsDataJsonLoading(false);
         }
-        fetchFormSubmission();
     }, [currentForm?.formId]);
+
+    useEffect(() => {
+        fetchFormSubmission();
+    }, [fetchFormSubmission]);
+
+    useEffect(() => {
+        if (reloadCooldown <= 0) return undefined;
+
+        const timerId = setInterval(() => {
+            setReloadCooldown((seconds) => Math.max(seconds - 1, 0));
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [reloadCooldown]);
+
+    const handleReloadDataJson = useCallback(() => {
+        if (isDataJsonLoading || reloadCooldown > 0) return;
+
+        setReloadCooldown(DATA_RELOAD_COOLDOWN_SECONDS);
+        fetchFormSubmission();
+    }, [fetchFormSubmission, isDataJsonLoading, reloadCooldown]);
 
     // Expose submitCurrentForm
     useImperativeHandle(ref, () => ({
@@ -143,6 +169,27 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
 
     return (
         <div className={styles.container}>
+            <div className={styles.dataJsonToolbar}>
+                {isDataJsonLoading && (
+                    <div className={styles.dataJsonLoading} role="status" aria-live="polite">
+                        <span className={styles.dataJsonSpinner} aria-hidden="true" />
+                        <span className={styles.dataJsonTyping}>Đang tải dữ liệu....</span>
+                    </div>
+                )}
+                <Tooltip text="Tải lại dữ liệu">
+                    <button
+                        type="button"
+                        className={styles.reloadDataButton}
+                        onClick={handleReloadDataJson}
+                        disabled={isDataJsonLoading || reloadCooldown > 0}
+                        aria-label={
+                            reloadCooldown > 0 ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây` : "Tải lại dữ liệu"
+                        }
+                    >
+                        {reloadCooldown > 0 ? `${reloadCooldown}s` : "↻"}
+                    </button>
+                </Tooltip>
+            </div>
             {CurrentFormComponent ? (
                 // Wrapper ref để generateHtmlFile đọc nội dung đã render
                 <div ref={pdfContentRef}>

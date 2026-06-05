@@ -27,6 +27,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toUppercaseValue } from "../../../SharedFormComponents/uppercaseInput";
 
 const SOURCE_FORM_NAME = "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";
+const FOUNDING_SHAREHOLDER_FORM_NAME = "Danh sách cổ đông sáng lập";
 
 const emptyContributionRow = {
     danhXung: "Ông",
@@ -118,7 +119,37 @@ function genderToDanhXung(gioiTinh) {
     return (gioiTinh || "").toLocaleLowerCase("vi-VN") === "nữ" ? "Bà" : "Ông";
 }
 
-function getSourceDefaultContributionRows(data) {
+function getFoundingShareholderContributionRows(data, foundingShareholderData) {
+    const sourceRows = Array.isArray(foundingShareholderData?.coDongList) ? foundingShareholderData.coDongList : [];
+    if (!sourceRows.length) return [];
+
+    const savedRows = Array.isArray(data.qdThanhVienGopVonList) ? data.qdThanhVienGopVonList : [];
+    const mappedRows = sourceRows.map((sourceRow, index) => {
+        const qdRow = savedRows[index] || {};
+        return {
+            ...qdRow,
+            danhXung: qdRow.danhXung || sourceRow.danhXung || genderToDanhXung(sourceRow.gioiTinh),
+            hoTen: qdRow.hoTen || sourceRow.hoTen || sourceRow.chuSoHuu || "",
+            giaTriTangGiam: qdRow.giaTriTangGiam || sourceRow.giaTriTangGiam || "",
+            phanVonSauThayDoi:
+                qdRow.phanVonSauThayDoi ||
+                sourceRow.phanVonSauThayDoi ||
+                sourceRow.tongSoCoPhan_giaTri ||
+                sourceRow.phanVonGop ||
+                "",
+            soCoPhanSauThayDoi:
+                qdRow.soCoPhanSauThayDoi || sourceRow.tongSoCoPhan_soLuong || sourceRow.soCoPhan || "",
+            tyLeSauThayDoi: qdRow.tyLeSauThayDoi || sourceRow.tyLeSauThayDoi || sourceRow.tyLe || "",
+        };
+    });
+
+    return [...mappedRows, ...savedRows.slice(sourceRows.length)];
+}
+
+function getSourceDefaultContributionRows(data, foundingShareholderData = {}) {
+    const foundingShareholderRows = getFoundingShareholderContributionRows(data, foundingShareholderData);
+    if (foundingShareholderRows.length) return foundingShareholderRows;
+
     if (data.doiCoDongSangLapList && data.doiCoDongSangLapList.length > 0) {
         return data.doiCoDongSangLapList.map((sourceRow, index) => {
             const qdRow = data.qdThanhVienGopVonList?.[index] || {};
@@ -626,8 +657,13 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
 ) {
     const { user } = useAuth();
     const sourceFormData = useGetFormDataJsonFromName(SOURCE_FORM_NAME);
+    const foundingShareholderFormData = useGetFormDataJsonFromName(FOUNDING_SHAREHOLDER_FORM_NAME);
     const currentData = useMemo(() => normalizeDataJson(dataJson), [dataJson]);
     const sourceData = useMemo(() => normalizeDataJson(sourceFormData), [sourceFormData]);
+    const foundingShareholderData = useMemo(
+        () => normalizeDataJson(foundingShareholderFormData),
+        [foundingShareholderFormData],
+    );
     const mergedData = useMemo(() => {
         const merged = { ...currentData };
         for (const [key, value] of Object.entries(sourceData)) {
@@ -673,14 +709,14 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
     };
 
     useEffect(() => {
-        setContributionRows(getSourceDefaultContributionRows(mergedData));
+        setContributionRows(getSourceDefaultContributionRows(mergedData, foundingShareholderData));
         setShareTypesRows(getSourceDefaultShareTypesRows(mergedData));
         if (mergedData.qdUnpaidShareholdersList && mergedData.qdUnpaidShareholdersList.length > 0) {
             setUnpaidRows(mergedData.qdUnpaidShareholdersList);
         } else {
             setUnpaidRows(getSourceDefaultUnpaidRows(mergedData));
         }
-    }, [mergedData]);
+    }, [foundingShareholderData, mergedData]);
 
     useEffect(() => {
         setShowRepresentative(isTruthy(mergedData.qdDoiNguoiDaiDienPhapLuat));
@@ -884,6 +920,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                         inputCoPhan.value = "";
                                     }
                                 }}
+                                required
                             />
                             VNĐ (
                             <input
@@ -905,6 +942,7 @@ const QuyetDinhDaiHoiDongCoDongDeclaration = forwardRef(function QuyetDinhDaiHoi
                                           )
                                         : "")
                                 }
+                                readOnly
                             />
                             ) tương đương{" "}
                             <input

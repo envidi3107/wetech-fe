@@ -171,60 +171,42 @@ const getRequiredDynamicForms = (state) => {
     return forms;
 };
 
-const getMatchedFormType = ({ typeCompany, serviceType, form }) =>
+const getProcedureFormTypes = ({ typeCompany, serviceType, formType }) =>
     typeCompanyOptions
         .find((item) => item.value === typeCompany)
-        ?.services.find((item) => item.value === serviceType)
-        ?.procedures?.find((p) => (p.value || p.title) === form.type)
-        ?.formsType?.find(
-            (item) => item.title === form.name || normalizeProcedureText(item.title) === normalizeProcedureText(form.name),
-        );
+        ?.services?.find((item) => item.value === serviceType)
+        ?.procedures?.find((p) => (p.value || p.title) === formType)
+        ?.formsType || [];
+
+const getMatchedFormTypeIndex = (formTypes, formName) =>
+    formTypes.findIndex(
+        (item) => item.title === formName || normalizeProcedureText(item.title) === normalizeProcedureText(formName),
+    );
 
 const mapProcedureForms = (rawForms, typeCompany, serviceType) =>
-    (rawForms || []).map((form) => {
-        const matchedFormType = getMatchedFormType({ typeCompany, serviceType, form });
-        return {
-            ...form,
-            declaration: matchedFormType?.declaration,
-            confirmation: matchedFormType?.confirmation,
-        };
-    });
+    (rawForms || [])
+        .map((form, originalIndex) => {
+            const formTypes = getProcedureFormTypes({ typeCompany, serviceType, formType: form.type });
+            const matchedFormTypeIndex = getMatchedFormTypeIndex(formTypes, form.name);
+            const matchedFormType = matchedFormTypeIndex >= 0 ? formTypes[matchedFormTypeIndex] : undefined;
+
+            return {
+                ...form,
+                declaration: matchedFormType?.declaration,
+                confirmation: matchedFormType?.confirmation,
+                formTypeOrder: matchedFormTypeIndex >= 0 ? matchedFormTypeIndex : Number.MAX_SAFE_INTEGER,
+                originalIndex,
+            };
+        })
+        .sort((a, b) => a.formTypeOrder - b.formTypeOrder || a.originalIndex - b.originalIndex)
+        .map(({ formTypeOrder, originalIndex, ...form }) => form);
 
 const orderVisibleForms = (mappedForms, dynamicState) => {
     const requiredDynamicForms = getRequiredDynamicForms(dynamicState);
     const requiredDynamicFormKeys = new Set(requiredDynamicForms.map((form) => normalizeProcedureText(form.name)));
-    const baseForms = mappedForms.filter(
+    return mappedForms.filter(
         (form) => !isDangKyThayDoiDynamicForm(form) || requiredDynamicFormKeys.has(getDynamicFormKey(form)),
     );
-
-    if (!requiredDynamicForms.length) return baseForms;
-
-    const dynamicFormsByKey = new Map(
-        mappedForms
-            .filter((form) => isDangKyThayDoiDynamicForm(form) && requiredDynamicFormKeys.has(getDynamicFormKey(form)))
-            .map((form) => [getDynamicFormKey(form), form]),
-    );
-    const dynamicForms = requiredDynamicForms
-        .map((form) => dynamicFormsByKey.get(normalizeProcedureText(form.name)))
-        .filter(Boolean);
-
-    if (!dynamicForms.length) return baseForms;
-
-    const nonDynamicForms = mappedForms.filter((form) => !isDangKyThayDoiDynamicForm(form));
-    const decisionIndex = nonDynamicForms.findIndex((form) => {
-        const normalizedName = normalizeProcedureText(form?.name);
-        return (
-            normalizedName.includes("quyet dinh hoi dong thanh vien") ||
-            normalizedName.includes("quyet dinh dai hoi dong co dong")
-        );
-    });
-    const insertIndex = decisionIndex >= 0 ? decisionIndex + 1 : nonDynamicForms.length;
-
-    return [
-        ...nonDynamicForms.slice(0, insertIndex),
-        ...dynamicForms,
-        ...nonDynamicForms.slice(insertIndex),
-    ];
 };
 
 const buildFormDeclarationSteps = (visibleForms) =>

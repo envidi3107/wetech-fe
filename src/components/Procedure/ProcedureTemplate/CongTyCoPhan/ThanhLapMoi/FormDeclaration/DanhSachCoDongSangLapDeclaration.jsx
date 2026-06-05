@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect, useImperativeHandle } from "react";
+import React, { forwardRef, useState, useEffect, useImperativeHandle, useMemo } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration.module.css";
 import {
     GioiTinhSelect,
@@ -8,6 +8,18 @@ import {
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import deleteIcon from "@/assets/delete-icon.png";
+import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
+import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+
+const CHANGE_REGISTRATION_FORM_NAME =
+    "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";
+const NEW_REGISTRATION_FORM_NAME = "Giấy đề nghị đăng ký doanh nghiệp";
+
+const SHARE_QUANTITY_TO_VALUE_FIELD = {
+    tongSoCoPhan_soLuong: "tongSoCoPhan_giaTri",
+    loaiCoPhan_phoThong_soLuong: "loaiCoPhan_phoThong_giaTri",
+    loaiCoPhan_khac_soLuong: "loaiCoPhan_khac_giaTri",
+};
 
 const EMPTY_ROW = {
     hoTen: "",
@@ -29,6 +41,90 @@ const EMPTY_ROW = {
     ghiChu: "",
 };
 
+const parseNumberValue = (value) => {
+    if (value === null || value === undefined || value === "") return 0;
+    return Number(String(value).replace(/[^\d]/g, "")) || 0;
+};
+
+const formatNumberValue = (value) => {
+    const parsed = typeof value === "number" ? value : parseNumberValue(value);
+    return parsed ? parsed.toLocaleString("vi-VN") : "";
+};
+
+const formatRatioValue = (value) => {
+    if (!value) return "";
+    const rounded = Math.round(value * 10000) / 10000;
+    return String(rounded).replace(".", ",");
+};
+
+const getOtherShareValueField = (fieldName) => {
+    const match = fieldName.match(/^loaiCoPhan_khac_soLuong(_\d+)?$/);
+    if (!match) return "";
+    return `loaiCoPhan_khac_giaTri${match[1] || ""}`;
+};
+
+const getShareValueField = (fieldName) => SHARE_QUANTITY_TO_VALUE_FIELD[fieldName] || getOtherShareValueField(fieldName);
+
+const isShareQuantityField = (fieldName) => Boolean(getShareValueField(fieldName));
+
+const isShareValueField = (fieldName) =>
+    fieldName === "tongSoCoPhan_giaTri" ||
+    fieldName === "loaiCoPhan_phoThong_giaTri" ||
+    /^loaiCoPhan_khac_giaTri(_\d+)?$/.test(fieldName);
+
+const resolveShareSourceData = (changeRegistrationData, newRegistrationData) => {
+    if (changeRegistrationData.vonDieuLeSauThayDoi || changeRegistrationData.menhGiaCoPhan) {
+        return changeRegistrationData;
+    }
+    return newRegistrationData;
+};
+
+const buildShareCalculationContext = (sourceData) => ({
+    capital: parseNumberValue(sourceData.vonDieuLeSauThayDoi || sourceData.vonDieuLe || sourceData.nguonVon_tongCong_soTien),
+    parValue: parseNumberValue(sourceData.menhGiaCoPhan),
+});
+
+const applyShareCalculation = (row, changedField, changedValue, { capital, parValue }) => {
+    const nextRow = { ...row };
+    const shouldFormatNumber = isShareQuantityField(changedField) || isShareValueField(changedField);
+    nextRow[changedField] = shouldFormatNumber ? formatNumberValue(changedValue) : changedValue;
+
+    if (isShareQuantityField(changedField)) {
+        const quantity = parseNumberValue(changedValue);
+        const valueField = getShareValueField(changedField);
+        const calculatedValue = quantity && parValue ? quantity * parValue : 0;
+        nextRow[valueField] = calculatedValue ? formatNumberValue(calculatedValue) : "";
+
+        if (changedField === "tongSoCoPhan_soLuong") {
+            nextRow.tyLe = calculatedValue && capital ? formatRatioValue((calculatedValue / capital) * 100) : "";
+        }
+    }
+
+    if (changedField === "tongSoCoPhan_giaTri") {
+        const totalValue = parseNumberValue(changedValue);
+        nextRow.tyLe = totalValue && capital ? formatRatioValue((totalValue / capital) * 100) : "";
+    }
+
+    return nextRow;
+};
+
+const recalculateShareRow = (row, shareCalculationContext) => {
+    let nextRow = { ...row };
+    Object.keys(SHARE_QUANTITY_TO_VALUE_FIELD).forEach((fieldName) => {
+        if (nextRow[fieldName]) {
+            nextRow = applyShareCalculation(nextRow, fieldName, nextRow[fieldName], shareCalculationContext);
+        }
+    });
+
+    Object.keys(nextRow)
+        .filter((fieldName) => /^loaiCoPhan_khac_soLuong(_\d+)?$/.test(fieldName) && nextRow[fieldName])
+        .forEach((fieldName) => {
+            nextRow = applyShareCalculation(nextRow, fieldName, nextRow[fieldName], shareCalculationContext);
+        });
+
+    return nextRow;
+};
+
 const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangLapDeclaration(
     {
         formId,
@@ -44,6 +140,17 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
     },
     componentRef,
 ) {
+    const changeRegistrationFormData = useGetFormDataJsonFromName(CHANGE_REGISTRATION_FORM_NAME);
+    const newRegistrationFormData = useGetFormDataJsonFromName(NEW_REGISTRATION_FORM_NAME);
+    const changeRegistrationData = useMemo(
+        () => normalizeDataJson(changeRegistrationFormData),
+        [changeRegistrationFormData],
+    );
+    const newRegistrationData = useMemo(() => normalizeDataJson(newRegistrationFormData), [newRegistrationFormData]);
+    const shareCalculationContext = useMemo(
+        () => buildShareCalculationContext(resolveShareSourceData(changeRegistrationData, newRegistrationData)),
+        [changeRegistrationData, newRegistrationData],
+    );
     const [rows, setRows] = useState([]);
     const [loaiCoPhanKhacList, setLoaiCoPhanKhacList] = useState([""]);
     const tableRows = Array.isArray(controlledRows) ? controlledRows : rows;
@@ -69,6 +176,13 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
         }
         setLoaiCoPhanKhacList(initialLoaiCoPhanKhacList);
     }, [controlledLoaiCoPhanKhacList, controlledRows, dataJson]);
+
+    useEffect(() => {
+        if (Array.isArray(controlledRows)) return;
+        if (!shareCalculationContext.capital && !shareCalculationContext.parValue) return;
+
+        setRows((prevRows) => prevRows.map((row) => recalculateShareRow(row, shareCalculationContext)));
+    }, [controlledRows, shareCalculationContext]);
 
     useImperativeHandle(componentRef, () => ({
         getDraftData: () => {
@@ -102,7 +216,9 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
             };
         },
         importData: (imported) => {
-            if (imported?.coDongList?.length) setTableRows(imported.coDongList);
+            if (imported?.coDongList?.length) {
+                setTableRows(imported.coDongList.map((row) => recalculateShareRow(row, shareCalculationContext)));
+            }
             if (imported?.loaiCoPhanKhacList && Array.isArray(imported.loaiCoPhanKhacList)) {
                 setTableLoaiCoPhanKhacList(imported.loaiCoPhanKhacList);
             } else if (imported?.loaiCoPhanKhac_ten) {
@@ -137,7 +253,7 @@ const DanhSachCoDongSangLapDeclaration = forwardRef(function DanhSachCoDongSangL
     const handleRowChange = (idx, e) => {
         const { name, value } = e.target;
         const newRows = [...tableRows];
-        newRows[idx] = { ...newRows[idx], [name]: value };
+        newRows[idx] = applyShareCalculation(newRows[idx], name, value, shareCalculationContext);
         setTableRows(newRows);
     };
 
