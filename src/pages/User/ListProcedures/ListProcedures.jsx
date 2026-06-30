@@ -28,6 +28,14 @@ const ListProcedures = () => {
     // Modal state
     const [selectedProcedure, setSelectedProcedure] = useState(null);
 
+    useEffect(() => {
+        const index = tabs.findIndex((tab) => tab.value === typeCompany);
+        if (index === -1) return;
+
+        setActiveTab(index);
+        setSelectedServiceType("all");
+    }, [typeCompany]);
+
     // Fetch khi đổi tab
     useEffect(() => {
         const selectedTypeCompany = tabs[activeTab]?.value;
@@ -47,7 +55,7 @@ const ListProcedures = () => {
             }
         };
         fetchProcedures();
-    }, [activeTab]);
+    }, [activeTab, showNotification]);
 
     const handleTabChange = (index) => {
         setActiveTab(index);
