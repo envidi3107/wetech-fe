@@ -13,7 +13,6 @@
     "file-saver": "^2.0.5",
     "html-docx-js": "^0.3.1",
     "lottie-react": "^2.4.1",
-    "pnpm": "^11.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
@@ -25,7 +24,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "cross-env CI=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{js,jsx,css,json}\""
@@ -50,6 +49,8 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "cross-env": "^10.1.0",
     "prettier": "^3.7.4"
-  }
+  },
+  "packageManager": "pnpm@10.28.0"
 }

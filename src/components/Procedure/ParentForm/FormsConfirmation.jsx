@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { generateHtmlString } from "@/utils/generateHtmlFile";
+import { generateHtmlString, getDocExportPageMarginsTwips } from "@/utils/generateHtmlFile";
 import htmlDocx from "html-docx-js/dist/html-docx";
 import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
@@ -7,15 +7,6 @@ import Tooltip from "@/components/Tooltip/Tooltip";
 import { useNotification } from "@/hooks/useNotification";
 
 const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-const DOCX_MARGINS = {
-    top: 850,
-    right: 850,
-    bottom: 1134,
-    left: 850,
-    header: 0,
-    footer: 0,
-    gutter: 0,
-};
 const DATA_RELOAD_COOLDOWN_SECONDS = 5;
 
 function getServerErrorMessage(error) {
@@ -127,7 +118,7 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                 const orientation = landscape ? "landscape" : "portrait";
                 const docxBlob = htmlDocx.asBlob(docxHtmlString, {
                     orientation,
-                    margins: DOCX_MARGINS,
+                    margins: getDocExportPageMarginsTwips(landscape),
                 });
                 const docxFilename = `${currentForm.code || "form"}.docx`;
                 const docxFile = new File([docxBlob], docxFilename, {

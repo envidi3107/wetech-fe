@@ -1,7 +1,247 @@
 import React from "react";
-import styles from "./confirmation.module.css";
-import { getToday, formatDate } from "@/utils/dateTimeUtils";
-import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import { formatDate } from "@/utils/dateTimeUtils";
+
+const FONT_FAMILY = "'Times New Roman', Times, serif";
+const DOCUMENT_FONT_SIZE = "14pt";
+const TABLE_FONT_SIZE = "11pt";
+
+const textStyle = {
+    fontFamily: FONT_FAMILY,
+    fontSize: DOCUMENT_FONT_SIZE,
+    lineHeight: 1.6,
+    color: "#000",
+};
+
+const tableTextStyle = {
+    fontFamily: FONT_FAMILY,
+    fontSize: TABLE_FONT_SIZE,
+    lineHeight: 1.25,
+    color: "#000",
+};
+
+const inlineStyles = {
+    page: {
+        ...textStyle,
+        padding: "40px 60px",
+        background: "#fff",
+        maxWidth: "820px",
+        margin: "0 auto",
+        userSelect: "none",
+    },
+    header: {
+        textAlign: "center",
+        marginBottom: "24px",
+    },
+    headerTitle: {
+        ...textStyle,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        margin: 0,
+    },
+    headerSubtitle: {
+        ...textStyle,
+        textDecoration: "underline",
+        margin: "4px 0 0",
+        fontWeight: 700,
+    },
+    dateLocation: {
+        ...textStyle,
+        textAlign: "right",
+        fontStyle: "italic",
+        margin: "16px 0",
+    },
+    docTitle: {
+        ...textStyle,
+        textAlign: "center",
+        fontWeight: 700,
+        textTransform: "uppercase",
+        margin: "20px 0 4px",
+    },
+    centerLine: {
+        ...textStyle,
+        textAlign: "center",
+        margin: "15px 0",
+    },
+    boldCenterLine: {
+        ...textStyle,
+        textAlign: "center",
+        fontWeight: 700,
+        margin: "20px 0 10px",
+    },
+    infoLine: {
+        ...textStyle,
+        margin: "0 0 6px",
+    },
+    infoLabel: {
+        ...textStyle,
+        whiteSpace: "nowrap",
+    },
+    heading: {
+        ...textStyle,
+        fontWeight: 700,
+        whiteSpace: "nowrap",
+    },
+    infoValue: {
+        ...textStyle,
+        color: "#222",
+    },
+    infoRow: {
+        ...textStyle,
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "4px 32px",
+        marginBottom: "6px",
+    },
+    infoItem: {
+        ...textStyle,
+        display: "flex",
+        gap: "4px",
+        minWidth: "200px",
+        margin: "0 0 6px"
+    },
+    infoBorder: {
+        ...textStyle,
+        border: "1px solid #000",
+        padding: "4px 8px",
+    },
+    italicParagraph: {
+        ...textStyle,
+        fontStyle: "italic",
+        margin: "4px 0 10px 16px",
+    },
+    tableContainer: {
+        width: "100%",
+        overflowX: "auto",
+        border: "1px solid #aaa",
+        borderRadius: "2px",
+        margin: "10px 0",
+    },
+    table: {
+        ...tableTextStyle,
+        width: "100%",
+        borderCollapse: "collapse",
+    },
+    th: {
+        ...tableTextStyle,
+        border: "1px solid #aaa",
+        padding: "6px 10px",
+        verticalAlign: "top",
+        backgroundColor: "#fff",
+        fontWeight: 600,
+        textAlign: "center",
+    },
+    td: {
+        ...tableTextStyle,
+        border: "1px solid #aaa",
+        padding: "6px 10px",
+        verticalAlign: "top",
+        textAlign: "left",
+    },
+    tdCenter: {
+        textAlign: "center",
+    },
+    tableHeaderParagraph: {
+        ...tableTextStyle,
+        fontWeight: 600,
+        textAlign: "center",
+        margin: 0,
+    },
+    tableParagraph: {
+        ...tableTextStyle,
+        margin: 0,
+    },
+    checkRow: {
+        ...textStyle,
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginBottom: "4px",
+    },
+    checkedBox: {
+        ...textStyle,
+        display: "inline-block",
+        width: "16px",
+        height: "16px",
+        border: "1px solid #333",
+        textAlign: "center",
+        lineHeight: "16px",
+        fontWeight: 700,
+        fontStyle: "normal",
+    },
+    uncheckedBox: {
+        display: "inline-block",
+        width: "16px",
+        height: "16px",
+        border: "1px solid #333",
+        fontStyle: "normal",
+    },
+    closingText: {
+        ...textStyle,
+        margin: "16px 0",
+        lineHeight: 1.8,
+    },
+    closingParagraph: {
+        ...textStyle,
+        margin: "0 0 6px",
+        lineHeight: 1.8,
+    },
+    signatureRow: {
+        ...textStyle,
+        width: "100%",
+        textAlign: "right",
+        marginTop: "24px",
+    },
+    signatureBlock: {
+        ...textStyle,
+        display: "inline-block",
+        width: "70mm",
+        minWidth: "58mm",
+        maxWidth: "70mm",
+        textAlign: "center",
+        verticalAlign: "top",
+    },
+    signatureTitle: {
+        ...textStyle,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        margin: "0 0 4px",
+    },
+    signatureNote: {
+        ...textStyle,
+        fontStyle: "italic",
+        margin: 0,
+    },
+    signatureName: {
+        ...textStyle,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        margin: "20px 0 0",
+    },
+};
+
+function mergeStyles(...styles) {
+    return Object.assign({}, ...styles.filter(Boolean));
+}
+
+function Th({ children, style, ...props }) {
+    return (
+        <th {...props} style={mergeStyles(inlineStyles.th, style)}>
+            <p style={inlineStyles.tableHeaderParagraph}>{children}</p>
+        </th>
+    );
+}
+
+function Td({ children, style, center = false, raw = false, ...props }) {
+    return (
+        <td {...props} style={mergeStyles(inlineStyles.td, center && inlineStyles.tdCenter, style)}>
+            {raw ? (
+                children
+            ) : (
+                <p style={mergeStyles(inlineStyles.tableParagraph, center && inlineStyles.tdCenter)}>{children}</p>
+            )}
+        </td>
+    );
+}
 
 function formatNumber(val) {
     if (!val) return "";
@@ -76,399 +316,381 @@ export default function GiayDeNghi({ dataJson }) {
         kinhGuiTemp = kinhGuiTemp.substring(kinhGuiTemp.indexOf("thị trấn") + 7).trim();
     }
 
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const datePrefix = kinhGuiTemp || ".........";
+    const currentDateLabel = `${datePrefix}, ngày ${day} tháng ${month} năm ${year}`;
+
     return (
-        <div className={styles.page}>
-            <div className={styles.header}>
-                <h2 className={styles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
-                <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
+        <div style={inlineStyles.page}>
+            <div style={inlineStyles.header}>
+                <h2 style={inlineStyles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
+                <h3 style={inlineStyles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
             </div>
 
-            <div className={styles.dateLocation}>
-                <span>
-                    <CurrentDate prefix={kinhGuiTemp} />
-                </span>
+            <p style={inlineStyles.dateLocation}>{currentDateLabel}</p>
+
+            <p style={inlineStyles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</p>
+
+            <p style={inlineStyles.centerLine}>Kính gửi: {kinhGui}</p>
+
+            <p style={inlineStyles.infoLine}>
+                Tôi là (ghi họ tên bằng chữ in hoa):
+                {(nguoiDaiDien_hoTen || "").toUpperCase()}
+            </p>
+            <p style={inlineStyles.infoLine}>
+                Sinh ngày:
+                {formatDate(nguoiDaiDien_ngaySinh)}
+            </p>
+            <p style={inlineStyles.infoLine}>
+                Giới tính:
+                {nguoiDaiDien_gioiTinh}
+            </p>
+            <p style={inlineStyles.infoLine}>
+                Số định danh cá nhân:
+                {nguoiDaiDien_cccd}
+            </p>
+            <div style={inlineStyles.infoRow}>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Điện thoại (nếu có):
+                    {nguoiDaiDien_phone}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Thư điện tử (nếu có):
+                    {nguoiDaiDien_email}
+                </p>
             </div>
 
-            <div className={styles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</div>
-
-            <div style={{ textAlign: "center", margin: "15px 0", fontSize: "var(--procedure-confirmation-font-size)" }}>
-                Kính gửi: {kinhGui}
-            </div>
-
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Tôi là (ghi họ tên bằng chữ in hoa): </span>
-                <span className={styles.infoValue} style={{ textTransform: "uppercase" }}>
-                    {nguoiDaiDien_hoTen}
-                </span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Sinh ngày: </span>
-                <span className={styles.infoValue}>{formatDate(nguoiDaiDien_ngaySinh)}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Giới tính: </span>
-                <span className={styles.infoValue}>{nguoiDaiDien_gioiTinh}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Số định danh cá nhân: </span>
-                <span className={styles.infoValue}>{nguoiDaiDien_cccd}</span>
-            </div>
-            <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Điện thoại (nếu có): </span>
-                    <span className={styles.infoValue}>{nguoiDaiDien_phone}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Thư điện tử (nếu có): </span>
-                    <span className={styles.infoValue}>{nguoiDaiDien_email}</span>
-                </div>
-            </div>
-
-            <p
-                style={{
-                    fontStyle: "italic",
-                    fontSize: "var(--procedure-confirmation-font-size)",
-                    margin: "4px 0 10px 16px",
-                }}
-            >
+            <p style={inlineStyles.italicParagraph}>
                 Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
                 bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
             </p>
 
-            <div className={styles.infoBorder}>
-                <div className={styles.infoRow}>
-                    <div className={styles.infoItem} style={{ flex: 1 }}>
-                        <span className={styles.infoLabel}>Dân tộc: </span>
-                        <span className={styles.infoValue}>{nguoiDaiDien_danToc || "Kinh"}</span>
-                    </div>
-                    <div className={styles.infoItem} style={{ flex: 1 }}>
-                        <span className={styles.infoLabel}>Quốc tịch: </span>
-                        <span className={styles.infoValue}>{nguoiDaiDien_quocTich || "Việt Nam"}</span>
-                    </div>
+            <div style={inlineStyles.infoBorder}>
+                <div style={inlineStyles.infoRow}>
+                    <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                        Dân tộc:
+                        {nguoiDaiDien_danToc || "Kinh"}
+                    </p>
+                    <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                        Quốc tịch:
+                        {nguoiDaiDien_quocTich || "Việt Nam"}
+                    </p>
                 </div>
 
-                <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                    <span className={styles.infoLabel}>Nơi thường trú:</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                    <span className={styles.infoValue}>{thuongTru_soNha}</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Xã/Phường/Đặc khu: </span>
-                    <span className={styles.infoValue}>{thuongTru_xa}</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                    <span className={styles.infoValue}>{thuongTru_tinh}</span>
-                </div>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi thường trú:</p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
+                    {thuongTru_soNha}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Xã/Phường/Đặc khu:
+                    {thuongTru_xa}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Tỉnh/Thành phố trực thuộc trung ương:
+                    {thuongTru_tinh}
+                </p>
 
-                <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                    <span className={styles.infoLabel}>Nơi ở hiện tại:</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                    <span className={styles.infoValue}>{hienTai_soNha}</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Xã/Phường/Đặc khu: </span>
-                    <span className={styles.infoValue}>{hienTai_xa}</span>
-                </div>
-                <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                    <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                    <span className={styles.infoValue}>{hienTai_tinh}</span>
-                </div>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi ở hiện tại:</p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
+                    {hienTai_soNha}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Xã/Phường/Đặc khu:
+                    {hienTai_xa}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                    Tỉnh/Thành phố trực thuộc trung ương:
+                    {hienTai_tinh}
+                </p>
             </div>
 
-            <div style={{ textAlign: "center", fontWeight: "bold", margin: "20px 0 10px" }}>
-                Đăng ký hộ kinh doanh do tôi là chủ hộ với các nội dung sau:
-            </div>
+            <p style={inlineStyles.boldCenterLine}>Đăng ký hộ kinh doanh do tôi là chủ hộ với các nội dung sau:</p>
 
-            <div className={styles.infoLine}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>1. Tên hộ kinh doanh:</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tên hộ kinh doanh viết bằng tiếng Việt (ghi bằng chữ in hoa): HỘ KINH DOANH </span>
-                <span className={styles.infoValue}>{hkd_tenVN?.toUpperCase()}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tên hộ kinh doanh viết bằng tiếng nước ngoài (nếu có): </span>
-                <span className={styles.infoValue}>{hkd_tenEN}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tên hộ kinh doanh viết tắt (nếu có): </span>
-                <span className={styles.infoValue}>{hkd_tenVietTat}</span>
-            </div>
+            <p style={inlineStyles.infoLine}>
+                <strong style={inlineStyles.heading}>1. Tên hộ kinh doanh:</strong>
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Tên hộ kinh doanh viết bằng tiếng Việt (ghi bằng chữ in hoa): HỘ KINH DOANH
+                {hkd_tenVN?.toUpperCase()}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Tên hộ kinh doanh viết bằng tiếng nước ngoài (nếu có):
+                {hkd_tenEN}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Tên hộ kinh doanh viết tắt (nếu có):
+                {hkd_tenVietTat}
+            </p>
 
-            <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>2. Trụ sở của hộ kinh doanh:</span>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>
+                <strong style={inlineStyles.heading}>2. Trụ sở của hộ kinh doanh:</strong>
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
+                {truSo_soNha}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Xã/Phường/Đặc khu:
+                {truSo_xa}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Tỉnh/Thành phố trực thuộc trung ương:
+                {truSo_tinh}
+            </p>
+            <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Điện thoại:
+                    {truSo_phone}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Fax (nếu có): ..........</p>
             </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                <span className={styles.infoValue}>{truSo_soNha}</span>
+            <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Thư điện tử (nếu có):
+                    {truSo_email}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Website (nếu có): ..........</p>
             </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Xã/Phường/Đặc khu: </span>
-                <span className={styles.infoValue}>{truSo_xa}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                <span className={styles.infoValue}>{truSo_tinh}</span>
-            </div>
-            <div className={styles.infoRow} style={{ marginLeft: "16px" }}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Điện thoại: </span>
-                    <span className={styles.infoValue}>{truSo_phone}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Fax (nếu có): ..........</span>
-                </div>
-            </div>
-            <div className={styles.infoRow} style={{ marginLeft: "16px" }}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Thư điện tử (nếu có): </span>
-                    <span className={styles.infoValue}>{truSo_email}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Website (nếu có): ..........</span>
-                </div>
-            </div>
-            <div className={styles.checkRow} style={{ marginLeft: "16px", marginTop: "6px" }}>
-                <span className={!truSo_soNha && !truSo_xa && !truSo_tinh ? styles.checkedBox : styles.uncheckedBox}>
+            <p style={mergeStyles(inlineStyles.checkRow, { marginLeft: "16px", marginTop: "6px" })}>
+                <i
+                    style={
+                        !truSo_soNha && !truSo_xa && !truSo_tinh ? inlineStyles.checkedBox : inlineStyles.uncheckedBox
+                    }
+                >
                     {!truSo_soNha && !truSo_xa && !truSo_tinh ? "X" : ""}
-                </span>
-                <span>
-                    Không kinh doanh tại trụ sở (đánh dấu X vào ô này nếu hộ kinh doanh không có địa điểm kinh doanh cố
-                    định)
-                </span>
-            </div>
+                </i>
+                Không kinh doanh tại trụ sở (đánh dấu X vào ô này nếu hộ kinh doanh không có địa điểm kinh doanh cố
+                định)
+            </p>
 
-            <div className={styles.infoLine} style={{ marginTop: "14px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>3. Ngành, nghề kinh doanh:</span>
-            </div>
-            <div className={styles.tableContainer}>
-                <table className={styles.table}>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
+                <strong style={inlineStyles.heading}>3. Ngành, nghề kinh doanh:</strong>
+            </p>
+            <div style={inlineStyles.tableContainer}>
+                <table style={inlineStyles.table}>
                     <thead>
                         <tr>
-                            <th style={{ width: "40px" }}>STT</th>
-                            <th>Tên ngành</th>
-                            <th style={{ width: "100px" }}>Mã ngành</th>
-                            <th style={{ width: "120px" }}>Ngành, nghề kinh doanh chính</th>
+                            <Th style={{ width: "40px" }}>STT</Th>
+                            <Th>Tên ngành</Th>
+                            <Th style={{ width: "100px" }}>Mã ngành</Th>
+                            <Th style={{ width: "120px" }}>Ngành, nghề kinh doanh chính</Th>
                         </tr>
                     </thead>
                     <tbody>
                         {nganhNgheList.length > 0 &&
                             nganhNgheList.map((row, idx) => (
                                 <tr key={idx}>
-                                    <td>{idx + 1}</td>
-                                    <td>
-                                        <div>{row.tenNganh}</div>
+                                    <Td center>{idx + 1}</Td>
+                                    <Td raw>
+                                        <p style={inlineStyles.tableParagraph}>{row.tenNganh}</p>
                                         {row.chiTiet && (
                                             <pre
                                                 style={{
+                                                    ...tableTextStyle,
                                                     margin: 0,
                                                     whiteSpace: "pre-wrap",
                                                     wordBreak: "break-word",
-                                                    fontFamily: "'Times New Roman', serif",
-                                                    fontSize: "var(--procedure-confirmation-font-size)",
                                                 }}
                                             >
                                                 {row.chiTiet}
                                             </pre>
                                         )}
-                                    </td>
-                                    <td style={{ textAlign: "center" }}>{row.maNganh}</td>
-                                    <td style={{ textAlign: "center" }}>{row.laNganhChinh ? "X" : ""}</td>
+                                    </Td>
+                                    <Td center>{row.maNganh}</Td>
+                                    <Td center>{row.laNganhChinh ? "X" : ""}</Td>
                                 </tr>
                             ))}
                     </tbody>
                 </table>
             </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "14px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>4. Vốn kinh doanh:</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span>Tổng số (bằng số): </span>
-                <span className={styles.infoValue}>{formatNumber(vonKinhDoanh)} VNĐ </span>
-                <span className={styles.infoValue} style={{ fontStyle: "italic" }}>
-                    ({vonKinhDoanh_bangChu})
-                </span>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
+                <strong style={inlineStyles.heading}>4. Vốn kinh doanh:</strong>
+            </p>
+            <p style={inlineStyles.infoLine}>
+                Tổng số (bằng số):
+                {formatNumber(vonKinhDoanh)} VNĐ
+                <em style={mergeStyles(inlineStyles.infoValue, { fontStyle: "italic" })}>({vonKinhDoanh_bangChu})</em>
+            </p>
+
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>
+                <strong style={inlineStyles.heading}>5. Thông tin đăng ký thuế:</strong>
+            </p>
+            <p style={inlineStyles.infoLine}>
+                5.1. Địa chỉ nhận thông báo thuế (chỉ kê khai nếu địa chỉ nhận thông báo thuế khác địa chỉ trụ sở):
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
+                {thue_soNha}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Xã/Phường/Đặc khu:
+                {thue_xa}
+            </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
+                Tỉnh/Thành phố trực thuộc trung ương:
+                {thue_tinh}
+            </p>
+            <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Điện thoại (nếu có):
+                    {thue_phone}
+                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
+                    Thư điện tử (nếu có):
+                    {thue_email}
+                </p>
             </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "10px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>5. Thông tin đăng ký thuế:</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span>
-                    5.1. Địa chỉ nhận thông báo thuế (chỉ kê khai nếu địa chỉ nhận thông báo thuế khác địa chỉ trụ sở):
-                </span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: </span>
-                <span className={styles.infoValue}>{thue_soNha}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Xã/Phường/Đặc khu: </span>
-                <span className={styles.infoValue}>{thue_xa}</span>
-            </div>
-            <div className={styles.infoLine} style={{ marginLeft: "16px" }}>
-                <span>Tỉnh/Thành phố trực thuộc trung ương: </span>
-                <span className={styles.infoValue}>{thue_tinh}</span>
-            </div>
-            <div className={styles.infoRow} style={{ marginLeft: "16px" }}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Điện thoại (nếu có): </span>
-                    <span className={styles.infoValue}>{thue_phone}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span>Thư điện tử (nếu có): </span>
-                    <span className={styles.infoValue}>{thue_email}</span>
-                </div>
-            </div>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "6px" })}>
+                5.2. Ngày bắt đầu hoạt động:
+                {formatDate(ngayBatDau)}
+            </p>
+            <p style={inlineStyles.infoLine}>
+                5.3. Tổng số lao động (dự kiến):
+                {soLaoDong}
+            </p>
 
-            <div className={styles.infoLine} style={{ marginTop: "6px" }}>
-                <span>5.2. Ngày bắt đầu hoạt động: </span>
-                <span className={styles.infoValue}>{formatDate(ngayBatDau)}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span>5.3. Tổng số lao động (dự kiến): </span>
-                <span className={styles.infoValue}>{soLaoDong}</span>
-            </div>
-
-            <div className={styles.infoLine} style={{ marginTop: "6px" }}>
-                <span>5.4. Phương pháp tính thuế GTGT (chọn 1 trong 2 phương pháp):</span>
-            </div>
-            <div className={styles.infoRow} style={{ marginLeft: "16px" }}>
-                <div className={styles.checkRow} style={{ marginRight: "40px" }}>
-                    <span className={isPPKeKhai ? styles.checkedBox : styles.uncheckedBox}>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "6px" })}>
+                5.4. Phương pháp tính thuế GTGT (chọn 1 trong 2 phương pháp):
+            </p>
+            <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
+                <p style={mergeStyles(inlineStyles.checkRow, { marginRight: "40px" })}>
+                    <i style={isPPKeKhai ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
                         {isPPKeKhai ? "X" : ""}
-                    </span>
-                    <span>Phương pháp kê khai</span>
-                </div>
-                <div className={styles.checkRow}>
-                    <span className={isPPKhoan ? styles.checkedBox : styles.uncheckedBox}>{isPPKhoan ? "X" : ""}</span>
-                    <span>Phương pháp khoán</span>
-                </div>
+                    </i>
+                    Phương pháp kê khai
+                </p>
+                <p style={inlineStyles.checkRow}>
+                    <i style={isPPKhoan ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
+                        {isPPKhoan ? "X" : ""}
+                    </i>
+                    Phương pháp khoán
+                </p>
             </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "14px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>6. Chủ thể thành lập hộ kinh doanh: </span>
-                <span>(đánh dấu X vào ô thích hợp)</span>
-            </div>
-            <div className={styles.infoRow} style={{ marginLeft: "16px" }}>
-                <div className={styles.checkRow} style={{ marginRight: "40px" }}>
-                    <span className={isCaNhan ? styles.checkedBox : styles.uncheckedBox}>{isCaNhan ? "X" : ""}</span>
-                    <span>Cá nhân</span>
-                </div>
-                <div className={styles.checkRow}>
-                    <span className={isGiaDinh ? styles.checkedBox : styles.uncheckedBox}>{isGiaDinh ? "X" : ""}</span>
-                    <span>Các thành viên hộ gia đình</span>
-                </div>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
+                <strong style={inlineStyles.heading}>6. Chủ thể thành lập hộ kinh doanh: </strong>
+                (đánh dấu X vào ô thích hợp)
+            </p>
+            <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
+                <p style={mergeStyles(inlineStyles.checkRow, { marginRight: "40px" })}>
+                    <i style={isCaNhan ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>{isCaNhan ? "X" : ""}</i>
+                    Cá nhân
+                </p>
+                <p style={inlineStyles.checkRow}>
+                    <i style={isGiaDinh ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
+                        {isGiaDinh ? "X" : ""}
+                    </i>
+                    Các thành viên hộ gia đình
+                </p>
             </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "14px" }}>
-                <span className={`${styles.infoLabel} ${styles.heading1}`}>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
+                <strong style={inlineStyles.heading}>
                     7. Thông tin về các thành viên hộ gia đình đăng ký hộ kinh doanh:
-                </span>
-            </div>
-            <div className={styles.tableContainer}>
-                <table className={styles.table} style={{ fontSize: "12px" }}>
+                </strong>
+            </p>
+            <div style={inlineStyles.tableContainer}>
+                <table style={inlineStyles.table}>
                     <thead>
                         <tr>
-                            <th style={{ width: "30px" }}>STT</th>
-                            <th>Họ tên</th>
-                            <th style={{ width: "60px" }}>Ngày, tháng, năm sinh</th>
-                            <th>Số định danh cá nhân</th>
-                            <th style={{ width: "40px" }}>Giới tính</th>
-                            <th style={{ width: "50px" }}>Quốc tịch</th>
-                            <th style={{ width: "40px" }}>Dân tộc</th>
-                            <th>Nơi thường trú</th>
-                            <th>Nơi ở hiện tại</th>
-                            <th>Chữ ký</th>
+                            <Th style={{ width: "30px" }}>STT</Th>
+                            <Th>Họ tên</Th>
+                            <Th style={{ width: "60px" }}>Ngày, tháng, năm sinh</Th>
+                            <Th>Số định danh cá nhân</Th>
+                            <Th style={{ width: "40px" }}>Giới tính</Th>
+                            <Th style={{ width: "50px" }}>Quốc tịch</Th>
+                            <Th style={{ width: "40px" }}>Dân tộc</Th>
+                            <Th>Nơi thường trú</Th>
+                            <Th>Nơi ở hiện tại</Th>
+                            <Th>Chữ ký</Th>
                         </tr>
                         <tr style={{ backgroundColor: "#fff", color: "#000" }}>
-                            <td style={{ textAlign: "center" }}>1</td>
-                            <td style={{ textAlign: "center" }}>2</td>
-                            <td style={{ textAlign: "center" }}>3</td>
-                            <td style={{ textAlign: "center" }}>4</td>
-                            <td style={{ textAlign: "center" }}>5</td>
-                            <td style={{ textAlign: "center" }}>6</td>
-                            <td style={{ textAlign: "center" }}>7</td>
-                            <td style={{ textAlign: "center" }}>8</td>
-                            <td style={{ textAlign: "center" }}>9</td>
-                            <td style={{ textAlign: "center" }}>10</td>
+                            <Td center>1</Td>
+                            <Td center>2</Td>
+                            <Td center>3</Td>
+                            <Td center>4</Td>
+                            <Td center>5</Td>
+                            <Td center>6</Td>
+                            <Td center>7</Td>
+                            <Td center>8</Td>
+                            <Td center>9</Td>
+                            <Td center>10</Td>
                         </tr>
                     </thead>
                     <tbody>
                         {thanhVienList.length > 0 ? (
                             thanhVienList.map((row, idx) => (
                                 <tr key={idx}>
-                                    <td>{idx + 1}</td>
-                                    <td>{row.hoTen}</td>
-                                    <td>{formatDate(row.ngaySinh)}</td>
-                                    <td>{row.cccd}</td>
-                                    <td>{row.gioiTinh}</td>
-                                    <td>{row.quocTich}</td>
-                                    <td>{row.danToc}</td>
-                                    <td>{row.thuongTru || ""}</td>
-                                    <td>{row.hienTai || ""}</td>
-                                    <td>{row.chuKy || ""}</td>
+                                    <Td center>{idx + 1}</Td>
+                                    <Td>{row.hoTen}</Td>
+                                    <Td>{formatDate(row.ngaySinh)}</Td>
+                                    <Td>{row.cccd}</Td>
+                                    <Td>{row.gioiTinh}</Td>
+                                    <Td>{row.quocTich}</Td>
+                                    <Td>{row.danToc}</Td>
+                                    <Td>{row.thuongTru || ""}</Td>
+                                    <Td>{row.hienTai || ""}</Td>
+                                    <Td>{row.chuKy || ""}</Td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="10" style={{ height: "30px" }}></td>
+                                <Td colSpan="10" style={{ height: "30px" }}></Td>
                             </tr>
                         )}
                         {/* Empty rows to match paper style if no list or short list */}
                         {Array.from({ length: Math.max(0, 3 - thanhVienList.length) }).map((_, i) => (
                             <tr key={`empty-${i}`}>
-                                <td>{(thanhVienList.length || 0) + i + 1}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <Td center>{(thanhVienList.length || 0) + i + 1}</Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
+                                <Td></Td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            <div className={styles.infoLine} style={{ marginTop: "14px" }}>
-                <span className={styles.infoLabel}>Tôi xin cam kết:</span>
-            </div>
-            <div className={styles.closingText}>
-                <p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>Tôi xin cam kết:</p>
+            <div style={inlineStyles.closingText}>
+                <p style={inlineStyles.closingParagraph}>
                     - Bản thân đồng ý chia sẻ thông tin cá nhân được lưu giữ tại Cơ sở dữ liệu quốc gia về dân cư cho Cơ
                     quan đăng ký kinh doanh cấp xã, Cơ quan quản lý nhà nước về đăng ký kinh doanh để phục vụ công tác
                     quản lý nhà nước về đăng ký hộ kinh doanh theo quy định;
                 </p>
-                <p>
+                <p style={inlineStyles.closingParagraph}>
                     - Bản thân không thuộc diện pháp luật cấm kinh doanh; không đồng thời là chủ hộ kinh doanh, thành
                     viên hộ gia đình đăng ký hộ kinh doanh khác; không là chủ doanh nghiệp tư nhân;
                 </p>
-                <p>
+                <p style={inlineStyles.closingParagraph}>
                     - Trụ sở thuộc quyền sử dụng hợp pháp của hộ kinh doanh và được sử dụng đúng mục đích theo quy định
                     của pháp luật (hộ kinh doanh chỉ cam kết trong trường hợp kinh doanh tại trụ sở);
                 </p>
-                <p>
+                <p style={inlineStyles.closingParagraph}>
                     - Hoàn toàn chịu trách nhiệm trước pháp luật về tính hợp pháp, chính xác và trung thực của nội dung
                     đăng ký trên.
                 </p>
             </div>
 
-            <div className={styles.signatureRow}>
-                <div className={styles.signatureBlock}>
-                    <div className={styles.signatureTitle}>CHỦ HỘ KINH DOANH</div>
-                    <div className={styles.signatureNote}>(Ký và ghi họ tên)</div>
-                    <div className={styles.signatureName}>{chuKy_ten}</div>
-                    <div className={styles.signatureName}>{chuKy_hoTen}</div>
+            <div style={inlineStyles.signatureRow}>
+                <div style={inlineStyles.signatureBlock}>
+                    <p style={inlineStyles.signatureTitle}>CHỦ HỘ KINH DOANH</p>
+                    <p style={inlineStyles.signatureNote}>(Ký và ghi họ tên)</p>
+                    <p style={inlineStyles.signatureName}>{chuKy_ten}</p>
+                    <p style={inlineStyles.signatureName}>{chuKy_hoTen}</p>
                 </div>
             </div>
         </div>
