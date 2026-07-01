@@ -2,7 +2,7 @@
     max-width: 800px;
     margin: 0 auto;
     background-color: #fff;
-    font-family: 'Times New Roman', serif;
+    font-family: "Times New Roman", serif;
     font-size: var(--procedure-confirmation-font-size);
     line-height: 1.5;
     color: #000;
@@ -93,6 +93,15 @@
     background-color: #f9f9f9;
 }
 
+.table th > p,
+.table td > p {
+    margin: 0;
+    line-height: inherit;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+}
+
 .signatures {
     display: flex;
     justify-content: space-between;
@@ -120,7 +129,6 @@
     font-weight: bold;
     margin-top: 10px;
 }
-
 
 .input,
 .select {

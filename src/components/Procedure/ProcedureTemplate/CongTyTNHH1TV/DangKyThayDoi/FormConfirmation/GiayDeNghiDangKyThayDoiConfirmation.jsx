@@ -18,7 +18,17 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
-const Checkbox = ({ checked }) => <div className={styles.checkbox}>{checked ? "x" : ""}</div>;
+const Checkbox = ({ checked }) => (
+    <i
+        className={styles.checkbox}
+        style={{
+            fontWeight: "inherit",
+            fontStyle: "normal",
+        }}
+    >
+        {checked ? "x" : ""}
+    </i>
+);
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
 const compactPdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable}`;
 const widePdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable} ${styles.widePdfTable}`;
@@ -180,18 +190,45 @@ function addressToString(soNha, xa, tinh) {
 function renderBusinessRows(rows) {
     return rows.map((row, index) => (
         <tr key={index}>
-            <td style={{ textAlign: "center" }}>{index + 1}</td>
-            <td>
-                <div>{row.tenNganh}</div>
-                {row.chiTiet && (
-                    <div>
-                        <em>{row.chiTiet}</em>
-                    </div>
-                )}
-            </td>
-            <td style={{ textAlign: "center" }}>{row.maNganh}</td>
             <td style={{ textAlign: "center" }}>
-                <Checkbox checked={!!row.laNganhChinh} />
+                <p
+                    style={{
+                        margin: 0,
+                        lineHeight: "inherit",
+                        textAlign: "inherit",
+                        font: "inherit",
+                    }}
+                >
+                    {index + 1}
+                </p>
+            </td>
+            <td>
+                <p style={{ margin: 0 }}>{row.tenNganh}</p>
+                {row.chiTiet && <p style={{ margin: 0, fontStyle: "italic" }}>{row.chiTiet}</p>}
+            </td>
+            <td style={{ textAlign: "center" }}>
+                <p
+                    style={{
+                        margin: 0,
+                        lineHeight: "inherit",
+                        textAlign: "inherit",
+                        font: "inherit",
+                    }}
+                >
+                    {row.maNganh}
+                </p>
+            </td>
+            <td style={{ textAlign: "center" }}>
+                <p
+                    style={{
+                        margin: 0,
+                        lineHeight: "inherit",
+                        textAlign: "inherit",
+                        font: "inherit",
+                    }}
+                >
+                    <Checkbox checked={!!row.laNganhChinh} />
+                </p>
             </td>
         </tr>
     ));
@@ -211,7 +248,18 @@ function BusinessChangeTable({ index, title, rows, headers }) {
                 <thead>
                     <tr>
                         {headers.map((header) => (
-                            <th key={header}>{header}</th>
+                            <th key={header}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {header}
+                                </p>
+                            </th>
                         ))}
                     </tr>
                 </thead>
@@ -226,58 +274,384 @@ function MemberChangeTable({ rows }) {
         <table className={widePdfTableClassName} style={{ marginTop: 8 }}>
             <thead>
                 <tr>
-                    <th rowSpan={2}>STT</th>
-                    <th rowSpan={2}>Tên thành viên</th>
-                    <th rowSpan={2}>Ngày, tháng, năm sinh đối với thành viên là cá nhân</th>
-                    <th rowSpan={2}>Giới tính</th>
-                    <th rowSpan={2}>Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân</th>
-                    <th rowSpan={2}>Quốc tịch</th>
-                    <th rowSpan={2}>Dân tộc</th>
-                    <th rowSpan={2}>Địa chỉ liên lạc</th>
-                    <th colSpan={3}>Vốn góp</th>
-                    <th rowSpan={2}>Thời hạn góp vốn</th>
-                    <th rowSpan={2}>Chữ ký của thành viên</th>
-                    <th rowSpan={2}>Ghi chú</th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            STT
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tên thành viên
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Ngày, tháng, năm sinh đối với thành viên là cá nhân
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Giới tính
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Loại giấy tờ, số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Quốc tịch
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Dân tộc
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Địa chỉ liên lạc
+                        </p>
+                    </th>
+                    <th colSpan={3}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Vốn góp
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Thời hạn góp vốn
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Chữ ký của thành viên
+                        </p>
+                    </th>
+                    <th rowSpan={2}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Ghi chú
+                        </p>
+                    </th>
                 </tr>
                 <tr>
-                    <th>Phần vốn góp</th>
-                    <th>Tỷ lệ (%)</th>
-                    <th>Loại tài sản, số lượng, giá trị tài sản góp vốn</th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Phần vốn góp
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỷ lệ (%)
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Loại tài sản, số lượng, giá trị tài sản góp vốn
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {rows?.length ? (
                     rows.map((row, index) => (
                         <tr key={index}>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{row.hoTen}</td>
-                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>{formatDate(row.ngaySinh)}</td>
-                            <td style={{ textAlign: "center" }}>{row.gioiTinh}</td>
-                            <td>{row.giaTo}</td>
-                            <td style={{ textAlign: "center" }}>{row.quocTich}</td>
-                            <td style={{ textAlign: "center" }}>{row.danToc}</td>
-                            <td>{row.diaChiLienLac}</td>
                             <td style={{ textAlign: "center" }}>
-                                {formatUnitValue(row.phanVonGop, "VNĐ")}
-                                {row.phanVonGopNgoaiTe_GiaTri ? (
-                                    <>
-                                        <br />({row.phanVonGopNgoaiTe_GiaTri} {row.phanVonGopNgoaiTe_Loai})
-                                    </>
-                                ) : (
-                                    ""
-                                )}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {index + 1}
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLe, "%")}</td>
-                            <td>{row.loaiTaiSan}</td>
-                            <td style={{ textAlign: "center" }}>{row.thoiHan}</td>
-                            <td>{row.chuKy}</td>
-                            <td>{row.ghiChu}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.hoTen}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatDate(row.ngaySinh)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.gioiTinh}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.giaTo}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.quocTich}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.danToc}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.diaChiLienLac}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatUnitValue(row.phanVonGop, "VNĐ")}
+                                    {row.phanVonGopNgoaiTe_GiaTri ? (
+                                        <>
+                                            <br />({row.phanVonGopNgoaiTe_GiaTri} {row.phanVonGopNgoaiTe_Loai})
+                                        </>
+                                    ) : (
+                                        ""
+                                    )}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatUnitValue(row.tyLe, "%")}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.loaiTaiSan}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.thoiHan}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.chuKy}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.ghiChu}
+                                </p>
+                            </td>
                         </tr>
                     ))
                 ) : (
                     <tr>
                         <td colSpan={14} style={{ textAlign: "center" }}>
-                            Không có dữ liệu
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Không có dữ liệu
+                            </p>
                         </td>
                     </tr>
                 )}
@@ -299,17 +673,83 @@ function MoneySourceTable({ data }) {
         <table className={styles.borderTable} style={{ marginTop: 8 }}>
             <thead>
                 <tr>
-                    <th>Loại nguồn vốn</th>
-                    <th>Số tiền</th>
-                    <th>Tỷ lệ (%)</th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Loại nguồn vốn
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Số tiền
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỷ lệ (%)
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {rows.map(([label, prefix]) => (
                     <tr key={prefix}>
-                        <td>{label}</td>
-                        <td>{formatUnitValue(data[`${prefix}_soTien`], "VNĐ")}</td>
-                        <td style={{ textAlign: "center" }}>{formatUnitValue(data[`${prefix}_tyLe`], "%")}</td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {label}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_soTien`], "VNĐ")}
+                            </p>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                            </p>
+                        </td>
                     </tr>
                 ))}
             </tbody>
@@ -336,19 +776,107 @@ function AssetTable({ data, fieldPrefix = "taiSan" }) {
         <table className={styles.borderTable} style={{ marginTop: 8 }}>
             <thead>
                 <tr>
-                    <th style={{ width: 50 }}>STT</th>
-                    <th>Tài sản góp vốn</th>
-                    <th>Giá trị vốn</th>
-                    <th>Tỷ lệ (%)</th>
+                    <th style={{ width: 50 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            STT
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tài sản góp vốn
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Giá trị vốn
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỷ lệ (%)
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {rows.map(([stt, label, prefix]) => (
                     <tr key={prefix}>
-                        <td style={{ textAlign: "center" }}>{stt}</td>
-                        <td>{label}</td>
-                        <td>{formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}</td>
-                        <td style={{ textAlign: "center" }}>{formatUnitValue(data[`${prefix}_tyLe`], "%")}</td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {stt}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {label}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}
+                            </p>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                            </p>
+                        </td>
                     </tr>
                 ))}
             </tbody>
@@ -375,19 +903,107 @@ function ShareInfoTable({ data }) {
             <table className={compactPdfTableClassName} style={{ marginTop: 8 }}>
                 <thead>
                     <tr>
-                        <th>Loại cổ phần</th>
-                        <th>Số lượng</th>
-                        <th>Giá trị</th>
-                        <th>Tỷ lệ so với vốn điều lệ (%)</th>
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Loại cổ phần
+                            </p>
+                        </th>
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Số lượng
+                            </p>
+                        </th>
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Giá trị
+                            </p>
+                        </th>
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Tỷ lệ so với vốn điều lệ (%)
+                            </p>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {rows.map(([label, soLuongKey, giaTriKey, tiLeKey]) => (
                         <tr key={soLuongKey}>
-                            <td>{label}</td>
-                            <td>{data[soLuongKey] || ""}</td>
-                            <td>{formatUnitValue(data[giaTriKey], "VNĐ")}</td>
-                            <td style={{ textAlign: "center" }}>{formatUnitValue(data[tiLeKey], "%")}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {label}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {data[soLuongKey] || ""}
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatUnitValue(data[giaTriKey], "VNĐ")}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatUnitValue(data[tiLeKey], "%")}
+                                </p>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -404,7 +1020,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
     const data = normalizeDataJson(dataJson);
 
     if (!Object.keys(data).length) {
-        return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
+        return <p className={styles.emptyMessage}>Đang tải dữ liệu...</p>;
     }
 
     const mainOptions = normalizeSelectedMainOptions(data.noiDungThayDoi);
@@ -429,10 +1045,8 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     <CurrentDate prefix={data.kinhGuiProvince} />
                 </p>
             </div>
-
             <h2 className={styles.docTitle}>GIẤY ĐỀ NGHỊ</h2>
             <h3 className={styles.docTitle}>{documentSubtitle}</h3>
-
             <div className={styles.content}>
                 <p>Kính gửi: {data.kinhGui}</p>
                 <Line
@@ -684,40 +1298,348 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 <table className={widePdfTableClassName}>
                                     <thead>
                                         <tr>
-                                            <th>STT</th>
-                                            <th>Chủ sở hữu/Thành viên/Cổ đông là tổ chức</th>
-                                            <th>Tên người đại diện</th>
-                                            <th>Ngày sinh</th>
-                                            <th>Giới tính</th>
-                                            <th>Giấy tờ pháp lý</th>
-                                            <th>Quốc tịch</th>
-                                            <th>Dân tộc</th>
-                                            <th>Địa chỉ liên lạc</th>
-                                            <th>Vốn được ủy quyền</th>
-                                            <th>Tỷ lệ (%)</th>
-                                            <th>Thời điểm đại diện phần vốn</th>
-                                            <th>Chữ ký</th>
-                                            <th>Ghi chú</th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    STT
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Chủ sở hữu/Thành viên/Cổ đông là tổ chức
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Tên người đại diện
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Ngày sinh
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Giới tính
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Giấy tờ pháp lý
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Quốc tịch
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Dân tộc
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Địa chỉ liên lạc
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Vốn được ủy quyền
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Tỷ lệ (%)
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Thời điểm đại diện phần vốn
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Chữ ký
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Ghi chú
+                                                </p>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.nguoiDaiDienUyQuyenList?.length ? (
                                             data.nguoiDaiDienUyQuyenList.map((row, index) => (
                                                 <tr key={index}>
-                                                    <td style={{ textAlign: "center" }}>{index + 1}</td>
-                                                    <td>{row.chuSoHuu}</td>
-                                                    <td>{row.hoTen}</td>
-                                                    <td>{row.ngaySinh}</td>
-                                                    <td>{row.gioiTinh}</td>
-                                                    <td>{row.giayTo}</td>
-                                                    <td>{row.quocTich}</td>
-                                                    <td>{row.danToc}</td>
-                                                    <td>{row.diaChiLienLac}</td>
-                                                    <td>{formatUnitValue(row.tongVonDaiDien, "VNĐ")}</td>
-                                                    <td>{formatUnitValue(row.tyLe, "%")}</td>
-                                                    <td>{row.thoiDiemDaiDien}</td>
-                                                    <td>{row.chuKy}</td>
-                                                    <td>{row.ghiChu}</td>
+                                                    <td style={{ textAlign: "center" }}>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {index + 1}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.chuSoHuu}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.hoTen}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.ngaySinh}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.gioiTinh}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.giayTo}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.quocTich}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.danToc}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.diaChiLienLac}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {formatUnitValue(row.tongVonDaiDien, "VNĐ")}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {formatUnitValue(row.tyLe, "%")}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.thoiDiemDaiDien}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.chuKy}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p
+                                                            style={{
+                                                                margin: 0,
+                                                                lineHeight: "inherit",
+                                                                textAlign: "inherit",
+                                                                font: "inherit",
+                                                            }}
+                                                        >
+                                                            {row.ghiChu}
+                                                        </p>
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -739,7 +1661,18 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 <table className={styles.borderTable}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: 50, textAlign: "center" }}>1</td>
+                                            <td style={{ width: 50, textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    1
+                                                </p>
+                                            </td>
                                             <td>
                                                 <p>Thông tin về Giám đốc/Tổng giám đốc:</p>
                                                 <Line label="Họ, chữ đệm và tên" value={data.giamDoc_hoTen} />
@@ -750,7 +1683,18 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>2</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    2
+                                                </p>
+                                            </td>
                                             <td>
                                                 <p>Thông tin về Kế toán trưởng/Phụ trách kế toán:</p>
                                                 <Line label="Họ, chữ đệm và tên" value={data.keToan_hoTen} />
@@ -761,7 +1705,18 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>3</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    3
+                                                </p>
+                                            </td>
                                             <td>
                                                 <Line
                                                     label="Địa chỉ nhận thông báo thuế"
@@ -779,61 +1734,166 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>4</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    4
+                                                </p>
+                                            </td>
                                             <td>
-                                                <Line
-                                                    label="Ngày bắt đầu hoạt động"
-                                                    value={formatDate(data.ngayBatDauHoatDong)}
-                                                />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Line
+                                                        label="Ngày bắt đầu hoạt động"
+                                                        value={formatDate(data.ngayBatDauHoatDong)}
+                                                    />
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>5</td>
-                                            <td>
-                                                <div
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
                                                     style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    5
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
                                                         display: "grid",
                                                         gridTemplateColumns: "max-content max-content",
                                                         gap: "4px 32px",
                                                         alignItems: "center",
                                                     }}
                                                 >
-                                                    <div>
+                                                    <i style={{ fontStyle: "normal" }}>
                                                         Hạch toán độc lập{" "}
                                                         <Checkbox checked={data.hinhThucHachToan !== "phu_thuoc"} />
-                                                    </div>
-                                                    <div>
+                                                    </i>
+                                                    <i style={{ fontStyle: "normal" }}>
                                                         Có báo cáo tài chính hợp nhất{" "}
                                                         <Checkbox checked={data.baoCaoTaiChinhHopNhat === "co"} />
-                                                    </div>
-                                                    <div>
+                                                    </i>
+                                                    <i style={{ fontStyle: "normal" }}>
                                                         Hạch toán phụ thuộc{" "}
                                                         <Checkbox checked={data.hinhThucHachToan === "phu_thuoc"} />
-                                                    </div>
-                                                </div>
+                                                    </i>
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>6</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    6
+                                                </p>
+                                            </td>
                                             <td>
-                                                Năm tài chính: áp dụng từ ngày {data.namTaiChinh_tuNgay || "01/01"} đến
-                                                ngày {data.namTaiChinh_denNgay || "31/12"}
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Năm tài chính: áp dụng từ ngày {data.namTaiChinh_tuNgay || "01/01"}
+                                                    đến ngày {data.namTaiChinh_denNgay || "31/12"}
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>7</td>
-                                            <td>Tổng số lao động: {data.tongSoLaoDong}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={{ textAlign: "center" }}>8</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    7
+                                                </p>
+                                            </td>
                                             <td>
-                                                Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không? &nbsp; Có{" "}
-                                                <Checkbox checked={data.hoatDongDuAn === "co"} />
-                                                &nbsp; Không <Checkbox checked={data.hoatDongDuAn !== "co"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Tổng số lao động: {data.tongSoLaoDong}
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ textAlign: "center" }}>9</td>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    8
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không?   Có{" "}
+                                                    <Checkbox checked={data.hoatDongDuAn === "co"} />
+                                                    Không <Checkbox checked={data.hoatDongDuAn !== "co"} />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{ textAlign: "center" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    9
+                                                </p>
+                                            </td>
                                             <td>
                                                 <p>Phương pháp tính thuế GTGT:</p>
                                                 <CheckboxList

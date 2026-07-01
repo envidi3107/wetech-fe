@@ -80,6 +80,7 @@
     display: flex;
     gap: 4px;
     min-width: 200px;
+    margin: 0;
 }
 
 .infoLabel {
@@ -91,7 +92,7 @@
 }
 
 .infoLine {
-    margin-bottom: 6px;
+    margin: 0 0 6px;
 }
 
 /* Table */
@@ -129,6 +130,15 @@
 
 .table td:first-child {
     text-align: center;
+}
+
+.table th > p,
+.table td > p {
+    margin: 0;
+    line-height: inherit;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
 }
 
 /* Checkbox display */
@@ -216,6 +226,7 @@
     line-height: 16px;
     font-size: var(--procedure-confirmation-font-size);
     font-weight: 700;
+    font-style: normal;
 }
 
 .uncheckedBox {
@@ -223,6 +234,7 @@
     width: 16px;
     height: 16px;
     border: 1px solid #333;
+    font-style: normal;
 }
 
 .input,

@@ -119,17 +119,83 @@ function MoneySourceTable({ data }) {
         <table className={styles.borderTable}>
             <thead>
                 <tr>
-                    <th>Loại nguồn vốn</th>
-                    <th>Số tiền</th>
-                    <th style={{ width: 90 }}>Tỷ lệ (%)</th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Loại nguồn vốn
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Số tiền
+                        </p>
+                    </th>
+                    <th style={{ width: 90 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỷ lệ (%)
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {rows.map(([label, prefix]) => (
                     <tr key={prefix}>
-                        <td>{label}</td>
-                        <td>{formatUnitValue(data[`${prefix}_soTien`], "VNĐ")}</td>
-                        <td style={{ textAlign: "center" }}>{formatUnitValue(data[`${prefix}_tyLe`], "%")}</td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {label}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_soTien`], "VNĐ")}
+                            </p>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                            </p>
+                        </td>
                     </tr>
                 ))}
             </tbody>
@@ -152,24 +218,110 @@ function AssetTable({ data }) {
         <table className={styles.borderTable}>
             <thead>
                 <tr>
-                    <th style={{ width: 45 }}>STT</th>
-                    <th>Tài sản góp vốn</th>
-                    <th>Giá trị vốn</th>
-                    <th style={{ width: 90 }}>Tỷ lệ (%)</th>
+                    <th style={{ width: 45 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            STT
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tài sản góp vốn
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Giá trị vốn
+                        </p>
+                    </th>
+                    <th style={{ width: 90 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỷ lệ (%)
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {rows.map(([stt, label, prefix]) => (
                     <tr key={prefix}>
-                        <td style={{ textAlign: "center" }}>{stt}</td>
-                        <td>
-                            {label}
-                            {prefix === "taiSan_khac" && data.taiSan_khac_loaiTaiSan
-                                ? `: ${data.taiSan_khac_loaiTaiSan}`
-                                : ""}
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {stt}
+                            </p>
                         </td>
-                        <td>{formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}</td>
-                        <td style={{ textAlign: "center" }}>{formatUnitValue(data[`${prefix}_tyLe`], "%")}</td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {label}
+                                {prefix === "taiSan_khac" && data.taiSan_khac_loaiTaiSan
+                                    ? `: ${data.taiSan_khac_loaiTaiSan}`
+                                    : ""}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}
+                            </p>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                            </p>
+                        </td>
                     </tr>
                 ))}
             </tbody>
@@ -188,26 +340,105 @@ function BusinessTable({ title, rows, removed = false }) {
             <table className={styles.borderTable}>
                 <thead>
                     <tr>
-                        <th style={{ width: 45 }}>STT</th>
-                        <th>
-                            {removed
-                                ? "Tên ngành, nghề kinh doanh được bỏ khỏi danh sách đã đăng ký"
-                                : "Tên ngành, nghề kinh doanh"}
+                        <th style={{ width: 45 }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                STT
+                            </p>
                         </th>
-                        <th style={{ width: 100 }}>Mã ngành</th>
-                        {!removed && <th style={{ width: 125 }}>Ngành nghề chính</th>}
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {removed
+                                    ? "Tên ngành, nghề kinh doanh được bỏ khỏi danh sách đã đăng ký"
+                                    : "Tên ngành, nghề kinh doanh"}
+                            </p>
+                        </th>
+                        <th style={{ width: 100 }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Mã ngành
+                            </p>
+                        </th>
+                        {!removed && (
+                            <th style={{ width: 125 }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Ngành nghề chính
+                                </p>
+                            </th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
                     {rows.map((row, index) => (
                         <tr key={index}>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>
-                                <div>{row.tenNganh}</div>
-                                {row.chiTiet && <div style={{ fontStyle: "italic" }}>{row.chiTiet}</div>}
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {index + 1}
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center" }}>{row.maNganh}</td>
-                            {!removed && <td style={{ textAlign: "center" }}>{row.laNganhChinh ? "X" : ""}</td>}
+                            <td>
+                                <p style={{ margin: 0 }}>{row.tenNganh}</p>
+                                {row.chiTiet && <p style={{ fontStyle: "italic" }}>{row.chiTiet}</p>}
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {row.maNganh}
+                                </p>
+                            </td>
+                            {!removed && (
+                                <td style={{ textAlign: "center" }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {row.laNganhChinh ? "X" : ""}
+                                    </p>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -221,7 +452,7 @@ function ShareTypesConfirmationTable({ data }) {
     let totalSL = 0;
     let totalGT = 0;
     let totalTL = 0;
-    data.qdShareTypesList.forEach(row => {
+    data.qdShareTypesList.forEach((row) => {
         totalSL += parseNumber(row.soLuong) || 0;
         totalGT += parseNumber(row.giaTri) || 0;
         totalTL += parseNumber(row.tyLe) || 0;
@@ -231,28 +462,182 @@ function ShareTypesConfirmationTable({ data }) {
         <table className={styles.borderTable}>
             <thead>
                 <tr>
-                    <th style={{ width: 45 }}>STT</th>
-                    <th>Loại cổ phần</th>
-                    <th>Số lượng</th>
-                    <th>Giá trị (bằng số, VNĐ)</th>
-                    <th style={{ width: 90 }}>Tỉ lệ so với vốn điều lệ (%)</th>
+                    <th style={{ width: 45 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            STT
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Loại cổ phần
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Số lượng
+                        </p>
+                    </th>
+                    <th>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Giá trị (bằng số, VNĐ)
+                        </p>
+                    </th>
+                    <th style={{ width: 90 }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tỉ lệ so với vốn điều lệ (%)
+                        </p>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {data.qdShareTypesList.map((row, index) => (
                     <tr key={index}>
-                        <td style={{ textAlign: "center" }}>{index + 1}</td>
-                        <td>{row.tenLoai}</td>
-                        <td>{formatNumber(row.soLuong)}</td>
-                        <td>{formatUnitValue(row.giaTri, "VNĐ")}</td>
-                        <td style={{ textAlign: "center" }}>{formatUnitValue(row.tyLe, "%")}</td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {index + 1}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {row.tenLoai}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatNumber(row.soLuong)}
+                            </p>
+                        </td>
+                        <td>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(row.giaTri, "VNĐ")}
+                            </p>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                {formatUnitValue(row.tyLe, "%")}
+                            </p>
+                        </td>
                     </tr>
                 ))}
                 <tr>
-                    <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>Tổng số</td>
-                    <td>{formatNumber(totalSL) || "…"}</td>
-                    <td>{formatUnitValue(totalGT, "VNĐ") || "…"}</td>
-                    <td style={{ textAlign: "center" }}>{totalTL ? `${totalTL}%` : "100%"}</td>
+                    <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            Tổng số
+                        </p>
+                    </td>
+                    <td>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            {formatNumber(totalSL) || "…"}
+                        </p>
+                    </td>
+                    <td>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            {formatUnitValue(totalGT, "VNĐ") || "…"}
+                        </p>
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                        <p
+                            style={{
+                                margin: 0,
+                                lineHeight: "inherit",
+                                textAlign: "inherit",
+                                font: "inherit",
+                            }}
+                        >
+                            {totalTL ? `${totalTL}%` : "100%"}
+                        </p>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -266,8 +651,14 @@ function CapitalChangeSection({ data }) {
     return (
         <>
             <SectionTitle>Thay đổi vốn điều lệ</SectionTitle>
-            <p>Vốn điều lệ đã đăng ký: {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}</p>
-            <p>Vốn điều lệ sau khi thay đổi: {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}</p>
+            <p>
+                Vốn điều lệ đã đăng ký:{" "}
+                {`${data.vonDieuLeDaDangKy || ""} ${data.vonDieuLeDaDangKy_bangChu ? `(${data.vonDieuLeDaDangKy_bangChu})` : ""}`.trim()}
+            </p>
+            <p>
+                Vốn điều lệ sau khi thay đổi:{" "}
+                {`${data.vonDieuLeSauThayDoi || ""} ${data.vonDieuLeSauThayDoi_bangChu ? `(${data.vonDieuLeSauThayDoi_bangChu})` : ""}`.trim()}
+            </p>
             <p>Hình thức tăng/giảm vốn: {data.qdHinhThucTangGiamVon || data.hinhThucTangGiamVon || "…"}</p>
             <p>Thời điểm tăng/giảm vốn: {formatDate(data.thoiDiemThayDoiVon) || "…/…/…"}</p>
 
@@ -285,16 +676,27 @@ function CapitalChangeSection({ data }) {
 
             {data.qdUnpaidShareholdersList?.length > 0 && (
                 <>
-                    <p>1. Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là {formatUnitValue(data.qdTongVonChuaThanhToan, "VNĐ")}{data.qdTongVonChuaThanhToanBangChu ? ` (${data.qdTongVonChuaThanhToanBangChu} VNĐ)` : ""} tương đương {formatNumber(data.qdTongCoPhanChuaThanhToan)} cổ phần, trong đó:</p>
+                    <p>
+                        1. Tổng số vốn các cổ đông chưa thanh toán đầy đủ và đúng hạn là{" "}
+                        {formatUnitValue(data.qdTongVonChuaThanhToan, "VNĐ")}
+                        {data.qdTongVonChuaThanhToanBangChu ? ` (${data.qdTongVonChuaThanhToanBangChu} VNĐ)` : ""} tương
+                        đương {formatNumber(data.qdTongCoPhanChuaThanhToan)} cổ phần, trong đó:
+                    </p>
                     {data.qdUnpaidShareholdersList.map((row, index) => (
                         <p key={index}>
-                            + {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} chưa thanh toán {formatUnitValue(row.soTienChuaThanhToan, "VNĐ")} tương đương {formatNumber(row.soCoPhanTuongDuong)} cổ phần
+                            + {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} chưa thanh toán{" "}
+                            {formatUnitValue(row.soTienChuaThanhToan, "VNĐ")} tương đương{" "}
+                            {formatNumber(row.soCoPhanTuongDuong)} cổ phần
                         </p>
                     ))}
                 </>
             )}
 
-            <p>{data.qdUnpaidShareholdersList?.length > 0 ? "2. " : ""}Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ:</p>
+            <p>
+                {data.qdUnpaidShareholdersList?.length > 0
+                    ? "2. Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ:"
+                    : "Nguồn vốn điều lệ sau khi thay đổi vốn điều lệ:"}
+            </p>
             <MoneySourceTable data={data} />
 
             <p>Tài sản góp vốn sau khi thay đổi vốn điều lệ:</p>
@@ -313,7 +715,9 @@ function CapitalChangeSection({ data }) {
                     <p>Danh sách cổ đông sau khi thay đổi vốn điều lệ:</p>
                     {contributionRows.map((row, index) => (
                         <p key={index}>
-                            + {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} sở hữu {formatNumber(row.soCoPhanSauThayDoi)} cổ phần, trị giá {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
+                            + {row.danhXung || "Ông/Bà"} {row.hoTen || "…"} sở hữu{" "}
+                            {formatNumber(row.soCoPhanSauThayDoi)} cổ phần, trị giá{" "}
+                            {formatUnitValue(row.phanVonSauThayDoi, "VNĐ")}, chiếm{" "}
                             {formatUnitValue(row.tyLeSauThayDoi, "%")} vốn điều lệ.
                         </p>
                     ))}
@@ -348,7 +752,7 @@ function QuyetDinhDaiHoiDongCoDongConfirmation({ dataJson }) {
     const data = normalizeDataJson(dataJson);
 
     if (!Object.keys(data).length) {
-        return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
+        return <p className={styles.emptyMessage}>Đang tải dữ liệu...</p>;
     }
 
     const companyName = getDecisionCompanyName(data);
@@ -402,7 +806,8 @@ function QuyetDinhDaiHoiDongCoDongConfirmation({ dataJson }) {
                 <p>- Căn cứ Nghị định 168/2025/NĐ-CP về đăng ký doanh nghiệp ban hành ngày 30/06/2025;</p>
                 <p>- Căn cứ Điều lệ {upperCompanyName || "…"}.</p>
                 <p>
-                    - Căn cứ Biên bản họp số: 01/BBH-ĐHĐCĐ của Đại hội đồng cổ đông thông qua ngày {formatDate(data.qdNgayBienBanHop) || "…/…/…"} về việc thay đổi nội dung đăng ký kinh doanh;
+                    - Căn cứ Biên bản họp số: 01/BBH-ĐHĐCĐ của Đại hội đồng cổ đông thông qua ngày{" "}
+                    {formatDate(data.qdNgayBienBanHop) || "…/…/…"} về việc thay đổi nội dung đăng ký kinh doanh;
                 </p>
 
                 <p className={styles.textCenter}>
@@ -468,8 +873,7 @@ function QuyetDinhDaiHoiDongCoDongConfirmation({ dataJson }) {
                 </p>
                 <p>
                     <strong>Điều 3: </strong>Giao cho {data.qdNguoiThucHienThuTuc_danhXung || "Ông/Bà"}{" "}
-                    {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục
-                    cần thiết theo quy định của pháp luật.
+                    {data.qdNguoiThucHienThuTuc || "…"} tiến hành các thủ tục cần thiết theo quy định của pháp luật.
                 </p>
                 <p>
                     <strong>Điều 4: </strong>Người đại diện theo pháp luật của công ty, các cổ đông công ty có trách

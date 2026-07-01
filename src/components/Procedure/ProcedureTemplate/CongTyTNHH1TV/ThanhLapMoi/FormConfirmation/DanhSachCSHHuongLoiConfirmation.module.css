@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 16px;
     background: #fff;
-    font-family: 'Times New Roman', serif;
+    font-family: "Times New Roman", serif;
     font-size: var(--procedure-confirmation-font-size);
     line-height: 1.6;
     color: #000;
@@ -15,7 +15,7 @@
     font-size: 20px;
     font-weight: 700;
     color: #000;
-    margin-top: 20px;
+    margin: 20px 0 0;
 }
 
 .tableScrollWrapper {
@@ -45,6 +45,17 @@
     padding: 6px 8px;
     vertical-align: top;
     font-size: var(--procedure-confirmation-font-size);
+}
+
+.th > p,
+.td > p,
+.colNumber > p,
+.emptyCell > p {
+    margin: 0;
+    line-height: inherit;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
 }
 
 .colNumberRow .colNumber {

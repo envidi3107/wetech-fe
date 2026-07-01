@@ -53,7 +53,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
     const data = normalizeDataJson(dataJson);
 
     if (!Object.keys(data).length) {
-        return <div className={styles.emptyMessage}>Đang tải dữ liệu...</div>;
+        return <p className={styles.emptyMessage}>Đang tải dữ liệu...</p>;
     }
 
     const companyNamePrefix = getCompanyNamePrefix(data, defaultCompanyNamePrefix, companyNamePrefixOptions);

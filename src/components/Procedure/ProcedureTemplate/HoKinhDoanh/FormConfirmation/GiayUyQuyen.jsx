@@ -29,8 +29,20 @@ export default function GiayUyQuyen({ dataJson }) {
         danToc: dataJson.nhanUyQuyen_danToc || "",
         quocTich: dataJson.nhanUyQuyen_quocTich || "",
         cccd: dataJson.nhanUyQuyen_cccd || "",
-        thuongTru: [dataJson.nhanUyQuyen_thuongTru_soNha, dataJson.nhanUyQuyen_thuongTru_xa, dataJson.nhanUyQuyen_thuongTru_tinh].filter(Boolean).join(", "),
-        lienLac: [dataJson.nhanUyQuyen_lienLac_soNha, dataJson.nhanUyQuyen_lienLac_xa, dataJson.nhanUyQuyen_lienLac_tinh].filter(Boolean).join(", "),
+        thuongTru: [
+            dataJson.nhanUyQuyen_thuongTru_soNha,
+            dataJson.nhanUyQuyen_thuongTru_xa,
+            dataJson.nhanUyQuyen_thuongTru_tinh,
+        ]
+            .filter(Boolean)
+            .join(", "),
+        lienLac: [
+            dataJson.nhanUyQuyen_lienLac_soNha,
+            dataJson.nhanUyQuyen_lienLac_xa,
+            dataJson.nhanUyQuyen_lienLac_tinh,
+        ]
+            .filter(Boolean)
+            .join(", "),
         phone: dataJson.nhanUyQuyen_phone || "",
         email: dataJson.nhanUyQuyen_email || "",
     };
@@ -41,158 +53,431 @@ export default function GiayUyQuyen({ dataJson }) {
                 <h2 className={styles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
                 <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
             </div>
-
-            <div className={styles.docTitle} style={{ margin: "30px 0" }}>
+            <p className={styles.docTitle} style={{ margin: "30px 0" }}>
                 GIẤY UỶ QUYỀN
-            </div>
-
-            <div className={styles.sectionTitle} style={{ textDecoration: "underline", fontSize: "15px" }}>
+            </p>
+            <p className={styles.sectionTitle} style={{ textDecoration: "underline", fontSize: "15px" }}>
                 BÊN ỦY QUYỀN (BÊN A):
-            </div>
+            </p>
             <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <span className={styles.infoLabel}>Họ và tên: </span>
-                    <span className={styles.infoValue}>{uyQuyen_hoTen}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Giới tính: </span>
-                    <span className={styles.infoValue}>{uyQuyen_gioiTinh}</span>
-                </div>
+                <p className={styles.infoItem} style={{ flex: 1.5 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Họ và tên:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {uyQuyen_hoTen}
+                    </b>
+                </p>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Giới tính:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {uyQuyen_gioiTinh}
+                    </b>
+                </p>
             </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Sinh ngày: </span>
-                <span className={styles.infoValue}>{formatDate(uyQuyen_ngaySinh)}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Số định danh cá nhân: </span>
-                <span className={styles.infoValue}>{uyQuyen_cccd}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Địa chỉ liên lạc: </span>
-                <span className={styles.infoValue}>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Sinh ngày:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    {formatDate(uyQuyen_ngaySinh)}
+                </b>
+            </p>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Số định danh cá nhân:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    {uyQuyen_cccd}
+                </b>
+            </p>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Địa chỉ liên lạc:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
                     {[uyQuyen_soNha, uyQuyen_xa, uyQuyen_tinh].filter(Boolean).join(", ")}
-                </span>
-            </div>
+                </b>
+            </p>
             <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Số điện thoại: </span>
-                    <span className={styles.infoValue}>{uyQuyen_phone}</span>
-                </div>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Số điện thoại:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {uyQuyen_phone}
+                    </b>
+                </p>
                 {uyQuyen_email && (
-                    <div className={styles.infoItem} style={{ flex: 1 }}>
-                        <span className={styles.infoLabel}>Email: </span>
-                        <span className={styles.infoValue}>{uyQuyen_email}</span>
-                    </div>
+                    <p className={styles.infoItem} style={{ flex: 1 }}>
+                        <b
+                            className={styles.infoLabel}
+                            style={{
+                                fontWeight: "inherit",
+                                fontStyle: "normal",
+                            }}
+                        >
+                            Email:{" "}
+                        </b>
+                        <b
+                            className={styles.infoValue}
+                            style={{
+                                fontWeight: "inherit",
+                                fontStyle: "normal",
+                            }}
+                        >
+                            {uyQuyen_email}
+                        </b>
+                    </p>
                 )}
             </div>
-
-            <div className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
-                <span>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </span>
-                <span>{chuHo_ten}</span>
-                <span> tại {kinhGuiPrefix.trim()} </span>
-                <span>{chuHo_xa_phuong}</span>
-            </div>
-
-            <div
+            <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
+                <>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </>
+                <>{chuHo_ten}</>
+                <>tại {kinhGuiPrefix.trim()} </>
+                <>{chuHo_xa_phuong}</>
+            </p>
+            <p
                 className={styles.sectionTitle}
                 style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
             >
                 BÊN NHẬN UỶ QUYỀN (BÊN B):
-            </div>
+            </p>
             <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <span className={styles.infoLabel}>Họ và tên: </span>
-                    <span className={styles.infoValue} style={{ textTransform: "uppercase" }}>
+                <p className={styles.infoItem} style={{ flex: 1.5 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Họ và tên:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            textTransform: "uppercase",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
                         {benB.hoTen}
-                    </span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Giới tính: </span>
-                    <span className={styles.infoValue}>{benB.gioiTinh}</span>
-                </div>
+                    </b>
+                </p>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Giới tính:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.gioiTinh}
+                    </b>
+                </p>
             </div>
             <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <span className={styles.infoLabel}>Sinh ngày: </span>
-                    <span className={styles.infoValue}>{benB.ngaySinh}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Dân tộc: </span>
-                    <span className={styles.infoValue}>{benB.danToc}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Quốc tịch: </span>
-                    <span className={styles.infoValue}>{benB.quocTich}</span>
-                </div>
+                <p className={styles.infoItem} style={{ flex: 1.5 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Sinh ngày:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.ngaySinh}
+                    </b>
+                </p>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Dân tộc:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.danToc}
+                    </b>
+                </p>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Quốc tịch:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.quocTich}
+                    </b>
+                </p>
             </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Số định danh cá nhân: </span>
-                <span className={styles.infoValue}>{benB.cccd}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Địa chỉ thường trú: </span>
-                <span className={styles.infoValue}>{benB.thuongTru}</span>
-            </div>
-            <div className={styles.infoLine}>
-                <span className={styles.infoLabel}>Địa chỉ liên lạc: </span>
-                <span className={styles.infoValue}>{benB.lienLac}</span>
-            </div>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Số định danh cá nhân:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    {benB.cccd}
+                </b>
+            </p>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Địa chỉ thường trú:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    {benB.thuongTru}
+                </b>
+            </p>
+            <p className={styles.infoLine}>
+                <b
+                    className={styles.infoLabel}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Địa chỉ liên lạc:{" "}
+                </b>
+                <b
+                    className={styles.infoValue}
+                    style={{
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    {benB.lienLac}
+                </b>
+            </p>
             <div className={styles.infoRow}>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Số điện thoại: </span>
-                    <span className={styles.infoValue}>{benB.phone}</span>
-                </div>
-                <div className={styles.infoItem} style={{ flex: 1 }}>
-                    <span className={styles.infoLabel}>Email: </span>
-                    <span className={styles.infoValue}>{benB.email}</span>
-                </div>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Số điện thoại:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.phone}
+                    </b>
+                </p>
+                <p className={styles.infoItem} style={{ flex: 1 }}>
+                    <b
+                        className={styles.infoLabel}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        Email:{" "}
+                    </b>
+                    <b
+                        className={styles.infoValue}
+                        style={{
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {benB.email}
+                    </b>
+                </p>
             </div>
-
-            <div
+            <p
                 className={styles.sectionTitle}
                 style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
             >
                 NỘI DUNG ỦY QUYỀN:
-            </div>
-            <div className={styles.infoLine} style={{ marginBottom: "10px" }}>
+            </p>
+            <p className={styles.infoLine} style={{ marginBottom: "10px" }}>
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
-            </div>
-            <div className={styles.infoLine} style={{ lineHeight: "1.8" }}>
-                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập HỘ KINH DOANH <span>{chuHo_ten}</span> tại {kinhGuiPrefix.trim()}{" "}
-                <span>{chuHo_xa_phuong}</span>
-            </div>
-
-            <div
+            </p>
+            <p className={styles.infoLine} style={{ lineHeight: "1.8" }}>
+                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập HỘ KINH DOANH <>{chuHo_ten}</> tại{" "}
+                {kinhGuiPrefix.trim()} <>{chuHo_xa_phuong}</>
+            </p>
+            <p
                 className={styles.sectionTitle}
                 style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
             >
                 THỜI HẠN UỶ QUYỀN:
-            </div>
-            <div className={styles.infoLine}>Từ ngày ký đến khi hoàn tất công việc.</div>
-            <div className={styles.infoLine}>Thù lao ủy quyền: ủy quyền này không có thù lao</div>
-            <div className={styles.infoLine}>
+            </p>
+            <p className={styles.infoLine}>Từ ngày ký đến khi hoàn tất công việc.</p>
+            <p className={styles.infoLine}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
+            <p className={styles.infoLine}>
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
-            </div>
-            <div className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</div>
-
-            <div className={styles.dateLocation}>
+            </p>
+            <p className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
+            <p className={styles.dateLocation}>
                 <CurrentDate prefix={chuHo_xa_phuong} />
-            </div>
-
+            </p>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", padding: "0 40px" }}>
                 <div>
-                    <div style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
+                        <b
+                            style={{
+                                fontWeight: "bold",
+                                textDecoration: "underline",
+                                fontStyle: "normal",
+                            }}
+                        >
                             BÊN NHẬN ỦY QUYỀN
-                        </span>
-                    </div>
+                        </b>
+                    </p>
                 </div>
                 <div>
-                    <div style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
+                        <b
+                            style={{
+                                fontWeight: "bold",
+                                textDecoration: "underline",
+                                fontStyle: "normal",
+                            }}
+                        >
                             BÊN ỦY QUYỀN
-                        </span>
-                    </div>
+                        </b>
+                    </p>
                 </div>
             </div>
         </div>

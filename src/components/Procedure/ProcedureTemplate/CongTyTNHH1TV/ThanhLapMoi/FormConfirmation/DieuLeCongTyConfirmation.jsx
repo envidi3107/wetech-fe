@@ -24,7 +24,7 @@ const formatCurrency = (value) => {
 };
 
 export default function DieuLeCongTyConfirmation({ dataJson }) {
-    if (!dataJson) return <div style={{ padding: "20px", textAlign: "center" }}>Đang tải dữ liệu...</div>;
+    if (!dataJson) return <p style={{ padding: "20px", textAlign: "center" }}>Đang tải dữ liệu...</p>;
     const companyNamePrefix = getCompanyNamePrefix(dataJson, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     return (
@@ -38,19 +38,17 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
                 </p>
             </div>
-
             <p className={styles.italicText}>
                 Căn cứ Luật Doanh nghiệp số 59/2020/QH14 được Quốc hội thông qua ngày 17 tháng 06 năm 2020 được sửa đổi,
                 bổ sung một số điều theo luật số 03/2022/QH15 và luật số 76/2025/QH15 và các văn bản hướng dẫn thi hành
                 Luật Doanh nghiệp
             </p>
-
             <p className={styles.chapterTitle}>CHƯƠNG I. NHỮNG QUY ĐỊNH CHUNG</p>
-
             <p className={styles.articleTitle}>Điều 1: Hình thức</p>
             <p>
-                1. {companyNamePrefix} {dataJson.tenCongTyVN?.toUpperCase() || ".............................."} thuộc hình
-                thức Công ty trách nhiệm hữu hạn một thành viên và thuộc sở hữu của cá nhân {dataJson.chuSoHuu_gioiTinh === "Nam" ? "Ông" : "Bà"}{" "}
+                1. {companyNamePrefix} {dataJson.tenCongTyVN?.toUpperCase() || ".............................."} thuộc
+                hình thức Công ty trách nhiệm hữu hạn một thành viên và thuộc sở hữu của cá nhân{" "}
+                {dataJson.chuSoHuu_gioiTinh === "Nam" ? "Ông" : "Bà"}{" "}
                 {dataJson.chuSoHuu_hoTen || ".............................."}
             </p>
             <p>
@@ -70,7 +68,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 nghiệp 2020 và quy định khác của pháp luật có liên quan; việc phát hành trái phiếu riêng lẻ theo quy
                 định tại Điều 128 và Điều 129 của Luật Doanh nghiệp 2020.
             </p>
-
             <p className={styles.articleTitle}>Điều 2: Tên gọi, trụ sở chính, chi nhánh và văn phòng đại diện</p>
             <p>
                 <strong>1. Tên công ty:</strong>
@@ -87,26 +84,36 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Tên công ty viết tắt (<em>nếu có</em>):{" "}
                 {dataJson.tenCongTyVietTat || "................................................"}
             </p>
-
             <p>
                 <strong>2. Địa chỉ trụ sở chính:</strong>
             </p>
             <p>{dataJson.diaChiTruSo || "........................................................................"}</p>
             <p>
                 Điện thoại: {dataJson.dienThoai || "..................."}
-                <span style={{ marginLeft: "20px" }}>Số fax (<em>nếu có</em>):{" "}
-                    {dataJson.fax || "..................."}</span>
+                <b
+                    style={{
+                        marginLeft: "20px",
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Số fax (<em>nếu có</em>): {dataJson.fax || "..................."}
+                </b>
             </p>
             <p>
-                <span>
+                <>
                     Thư điện tử (<em>nếu có</em>): {dataJson.email || "..................."}
-                </span>
-                <span style={{ marginLeft: "20px" }}>
-                    Website (<em>nếu có</em>):{" "}
-                    {dataJson.website || "..................."}
-                </span>
+                </>
+                <b
+                    style={{
+                        marginLeft: "20px",
+                        fontWeight: "inherit",
+                        fontStyle: "normal",
+                    }}
+                >
+                    Website (<em>nếu có</em>): {dataJson.website || "..................."}
+                </b>
             </p>
-
             <p>
                 <strong>3. </strong>Công ty có thể thành lập chi nhánh, văn phòng đại diện, địa điểm kinh doanh ở trong
                 nước và nước ngoài khi có nhu cầu và phải tuân theo các quy định của pháp luật.
@@ -116,17 +123,58 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 ngoài khi được sự nhất trí bằng văn bản của chủ sở hữu công ty và được sự chấp thuận của các cơ quan
                 quản lý nhà nước có thẩm quyền.
             </p>
-
             <p className={styles.articleTitle}>Điều 3: Ngành, nghề kinh doanh</p>
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th style={{ width: "40px" }}>STT</th>
-                        <th>Tên ngành</th>
-                        <th style={{ width: "100px" }}>Mã ngành</th>
+                        <th style={{ width: "40px" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                STT
+                            </p>
+                        </th>
                         <th>
-                            Ngành, nghề kinh doanh chính
-                            <br />(<em>đánh dấu X</em>)
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Tên ngành
+                            </p>
+                        </th>
+                        <th style={{ width: "100px" }}>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Mã ngành
+                            </p>
+                        </th>
+                        <th>
+                            <p
+                                style={{
+                                    margin: 0,
+                                    lineHeight: "inherit",
+                                    textAlign: "inherit",
+                                    font: "inherit",
+                                }}
+                            >
+                                Ngành, nghề kinh doanh chính
+                                <br />(<em>đánh dấu X</em>)
+                            </p>
                         </th>
                     </tr>
                 </thead>
@@ -134,34 +182,93 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     {dataJson.nganhNgheList && dataJson.nganhNgheList.length > 0 ? (
                         dataJson.nganhNgheList.map((row, idx) => (
                             <tr key={idx}>
-                                <td style={{ textAlign: "center" }}>{idx + 1}</td>
-                                <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                                    {row.tenNganh}
-                                    {row.chiTiet && (
-                                        <div style={{ marginTop: "4px" }}>
-                                            {row.chiTiet}
-                                        </div>
-                                    )}
+                                <td style={{ textAlign: "center" }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {idx + 1}
+                                    </p>
                                 </td>
-                                <td style={{ textAlign: "center" }}>{row.maNganh}</td>
-                                <td style={{ textAlign: "center" }}>{row.laNganhChinh ? "X" : ""}</td>
+                                <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {row.tenNganh}
+                                        {row.chiTiet && <p style={{ marginTop: "4px" }}>{row.chiTiet}</p>}
+                                    </p>
+                                </td>
+                                <td style={{ textAlign: "center" }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {row.maNganh}
+                                    </p>
+                                </td>
+                                <td style={{ textAlign: "center" }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {row.laNganhChinh ? "X" : ""}
+                                    </p>
+                                </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td style={{ textAlign: "center" }}>1</td>
-                            <td>................................................</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    1
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    ................................................
+                                </p>
+                            </td>
                             <td></td>
                             <td></td>
                         </tr>
                     )}
                 </tbody>
             </table>
-
             <p className={styles.articleTitle}>Điều 4: Chủ sở hữu công ty</p>
             <div className={styles.flexRow}>
                 <p>
-                    <span>Họ và tên: </span>
+                    <>Họ và tên: </>
                     {dataJson.chuSoHuu_hoTen || "........................................."}
                 </p>
                 <p>Giới tính: {dataJson.chuSoHuu_gioiTinh || ".........."}</p>
@@ -177,11 +284,9 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p>
                 Địa chỉ liên lạc:{" "}
-                {[dataJson.chuSoHuu_soNha, dataJson.chuSoHuu_xa, dataJson.chuSoHuu_tinh]
-                    .filter(Boolean)
-                    .join(", ") || ".........................................................."}
+                {[dataJson.chuSoHuu_soNha, dataJson.chuSoHuu_xa, dataJson.chuSoHuu_tinh].filter(Boolean).join(", ") ||
+                    ".........................................................."}
             </p>
-
             <p className={styles.articleTitle}>Điều 5: Vốn điều lệ và thay đổi vốn điều lệ</p>
             <p>1. Vốn điều lệ: </p>
             <p>
@@ -210,7 +315,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 hạn 10 ngày, kể từ ngày hoàn thành việc tăng vốn vốn điều lệ hoặc công ty đăng ký chuyển đổi thành Công
                 ty cổ phần theo quy định tại Điều 202 của Luật Doanh nghiệp số 59/2020/QH14 ngày 17/06/2020.
             </p>
-
             <p className={styles.articleTitle}>Điều 6: Con dấu doanh nghiệp</p>
             <p>
                 1. Doanh nghiệp có quyền quyết định về hình thức, số lượng và nội dung con dấu của doanh nghiệp. Nội
@@ -223,7 +327,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 phát hành và lưu giữ con dấu thực hiện tại trụ sở công ty và chỉ được mang con dấu ra khỏi trụ sở chính
                 khi được Chủ sở hữu chấp thuận bằng văn bản;
             </p>
-
             <p className={styles.articleTitle}>Điều 7: Quyền và nghĩa vụ của chủ sở hữu công ty</p>
             <p>
                 <strong>1. Quyền của chủ sở hữu:</strong>
@@ -272,9 +375,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 f) Thực hiện nghĩa vụ khác theo quy định của Luật Doanh nghiệp số 59/2020/QH14 ngày 17/06/2020 và Điều
                 lệ công ty.
             </p>
-
             <p className={styles.chapterTitle}>CHƯƠNG II. TỔ CHỨC - QUẢN LÝ - HOẠT ĐỘNG</p>
-
             <p className={styles.articleTitle}>Điều 8: Quyền hạn và nghĩa vụ của công ty </p>
             <p>
                 <strong>1. Công ty có các quyền sau:</strong>
@@ -339,7 +440,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 i) Thực hiện nghĩa vụ về đạo đức kinh doanh để bảo đảm quyền, lợi ích hợp pháp của khách hàng và người
                 tiêu dùng.
             </p>
-
             <p className={styles.articleTitle}>Điều 9: Cơ cấu tổ chức quản lý </p>
             <p>
                 1. Công ty có chủ tịch công ty và giám đốc.
@@ -348,14 +448,13 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <br />
                 3. Quyền, nghĩa vụ, nhiệm vụ cụ thể của giám đốc được quy định tại Điều lệ công ty.
             </p>
-
             <p className={styles.articleTitle}>Điều 10: Người đại diện theo pháp luật của công ty.</p>
             <p>
                 1. Công ty chỉ có duy nhất một người đại diện theo pháp luật. Giám đốc là người đại diện theo pháp luật.
             </p>
             <div className={styles.flexRow}>
                 <p>
-                    <span>Họ và tên: </span>
+                    <>Họ và tên: </>
                     {dataJson.nguoiDaiDien_hoTen || "........................................."}
                 </p>
                 <p>Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}</p>
@@ -376,10 +475,9 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     .join(", ") || ".........................................................."}
             </p>
             <p>
-                <span>Chức danh: </span>
+                <>Chức danh: </>
                 {dataJson.nguoiDaiDien_chucDanh || "Giám đốc"}
             </p>
-
             <p>
                 <strong>2. Quyền và nghĩa vụ của người đại diện theo pháp luật.</strong>
             </p>
@@ -438,7 +536,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 - Quyền và nghĩa vụ khác được quy định tại Điều lệ công ty, hợp đồng lao động mà Giám đốc ký với Chủ
                 tịch công ty.
             </p>
-
             <p>
                 <strong>3. Trách nhiệm của người đại diện theo pháp luật.</strong>
             </p>
@@ -465,7 +562,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 giải quyết việc dân sự, nguyên đơn, bị đơn, người có quyền lợi, nghĩa vụ liên quan trước Trọng tài, Tòa
                 án và các quyền, nghĩa vụ khác theo quy định của pháp luật.
             </p>
-
             <p className={styles.articleTitle}>Điều 11: Chủ tịch công ty</p>
             <p>
                 1. Chủ sở hữu công ty là Chủ tịch công ty. Chủ tịch công ty nhân danh chủ sở hữu thực hiện các quyền và
@@ -481,7 +577,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 3. Quyết định của Chủ tịch công ty về thực hiện quyền và nghĩa vụ của chủ sở hữu công ty có hiệu lực kể
                 từ ngày được chủ sở hữu công ty phê duyệt, trừ trường hợp Điều lệ công ty có quy định khác.
             </p>
-
             <p className={styles.articleTitle}>Điều 12: Giám đốc Công ty </p>
             <p>1. Giám đốc phải có các tiêu chuẩn và điều kiện sau đây:</p>
             <p>
@@ -514,7 +609,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 j) Quyền và nghĩa vụ khác được quy định tại Điều lệ công ty, hợp đồng lao động mà Giám đốc ký với Chủ
                 tịch công ty.
             </p>
-
             <p className={styles.articleTitle}>Điều 13: Trách nhiệm của chủ tịch công ty, giám đốc</p>
             <p>
                 1. Tuân thủ pháp luật, Điều lệ công ty, quyết định của chủ sở hữu công ty trong việc thực hiện các quyền
@@ -538,10 +632,8 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 5. Quyền và nghĩa vụ khác theo quy định của Luật Doanh nghiệp số 59/2020/QH14 ngày 17/06/2020 và Điều lệ
                 công ty.
             </p>
-
             <p className={styles.articleTitle}>Điều 14: Thể thức thông qua quyết định của công ty</p>
             <p>Quyết định của chủ sở hữu công ty được lập thành văn bản và có hiệu lực kể từ ngày được ký.</p>
-
             <p className={styles.articleTitle}>Điều 15: Bộ máy giúp việc</p>
             <p>
                 1. Giúp việc Giám đốc có thể có 1 hoặc 2 phó giám đốc. Phó Giám đốc điều hành một hoặc một số lĩnh vực
@@ -550,7 +642,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 2. Kế toán trưởng Công ty giúp Giám đốc chỉ đạo tổ chức, thực hiện công tác kế toán, thống kê của Công
                 ty. Quyền hạn và trách nhiệm của kế toán trưởng tuân theo quy định pháp luật.
             </p>
-
             <p className={styles.articleTitle}>
                 Điều 16: Hợp đồng, giao dịch của công ty với những người có liên quan{" "}
             </p>
@@ -558,7 +649,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Hợp đồng, giao dịch giữa công ty với chủ sở hữu công ty hoặc người có liên quan của chủ sở hữu công ty
                 phải được ghi chép lại và lưu giữ thành hồ sơ riêng của công ty.
             </p>
-
             <p className={styles.articleTitle}>Điều 17: Quản lý lao động</p>
             <p>
                 1. Người lao động được tuyển dụng vào làm việc tại Công ty theo chế độ hợp đồng lao động, được hưởng các
@@ -568,7 +658,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 2. Giám đốc Công ty là người quyết định tuyển dụng lao động, trên cơ sở người lao động có trình độ học
                 vấn và trình độ chuyên môn phù hợp với công việc và theo quy chế do Chủ tịch Công ty ban hành.
             </p>
-
             <p className={styles.articleTitle}>Điều 18: Tổ chức đảng và tổ chức xã hội trong Công ty </p>
             <p>
                 1. Tổ chức Đảng Cộng Sản Việt Nam trong Công ty là một bộ phận và chịu sự lãnh đạo của công ty, hoạt
@@ -578,9 +667,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 2. Tổ chức Công đoàn và các tổ chức chính trị xã hội khác của Công ty, hoạt động theo Hiến pháp, pháp
                 luật của Nhà nước Cộng hòa xã hội Chủ nghĩa Việt Nam và điều lệ của các tổ chức đó.
             </p>
-
             <p className={styles.chapterTitle}>CHƯƠNG III. TÀI CHÍNH, KẾ TOÁN</p>
-
             <p className={styles.articleTitle}>Điều 19: Năm tài chính và báo cáo tài chính của Công ty </p>
             <p>
                 1. Năm tài chính của Công ty bắt đầu từ ngày 01 tháng 01 và kết thúc vào cuối ngày 31 tháng 12 năm dương
@@ -595,7 +682,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 4. Trong vòng 90 ngày kể từ khi kết thúc năm tài chính, Công ty nộp báo cáo tài chính theo quy định của
                 pháp luật.
             </p>
-
             <p className={styles.articleTitle}>
                 Điều 20: Thù lao, tiền lương và lợi ích khác của người quản lý Công ty{" "}
             </p>
@@ -608,7 +694,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 pháp luật về thuế, pháp luật có liên quan và được thể hiện thành mục riêng trong báo cáo tài chính hằng
                 năm của công ty.
             </p>
-
             <p className={styles.articleTitle}>Điều 21: Phân phối lợi nhuận của công ty và xử lý lỗ trong kinh doanh</p>
             <p>
                 21.1. Hằng năm, sau khi thực hiện nghĩa vụ tài chính với Nhà nước, công ty trích từ lợi nhuận sau thuế
@@ -641,9 +726,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 - Thời gian chuyển lỗ không quá 5 năm kể từ năm tiếp sau năm phát sinh lỗ, nếu số lỗ phát sinh chưa
                 chuyển hết thì sẽ không được chuyển vào thu nhập của các năm tiếp sau.
             </p>
-
             <p className={styles.chapterTitle}>CHƯƠNG IV. TỐ TỤNG TRANH CHẤP, GIẢI THỂ, THANH LÝ, PHÁ SẢN</p>
-
             <p className={styles.articleTitle}>Điều 22: Tố tụng tranh chấp</p>
             <p>
                 1. Tranh chấp nội bộ, Công ty có thể giải quyết trên phương thức tự thỏa thuận nội bộ, nếu không được sẽ
@@ -653,12 +736,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 2. Tranh chấp bên ngoài, Công ty có quyền bình đẳng trước pháp luật với mọi pháp nhân, thể nhân khi có
                 tố tụng tranh chấp. Đại diện hợp pháp của công ty sẽ đại diện cho công ty trước pháp luật.
             </p>
-
             <p className={styles.articleTitle}>Điều 23: Giải thể công ty</p>
             <p>Công ty giải thể trong các trường hợp sau:</p>
             <p>1. Theo quyết định của chủ sở hữu;</p>
             <p>2. Bị thu hồi Giấy chứng nhận đăng ký doanh nghiệp.</p>
-
             <p className={styles.articleTitle}>Điều 24: Thủ tục giải thể và thanh lý tài sản</p>
             <p>
                 <strong>A. Thủ tục giải thế</strong>
@@ -770,29 +851,23 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p>- Biên bản giao nhận</p>
             <p>- Phiếu xuất kho</p>
             <p>- Chứng từ kế toán</p>
-
             <p className={styles.articleTitle}>Điều 25: Phá sản</p>
             <p>Việc phá sản Công ty được thực hiện theo thủ tục của pháp luật về phá sản.</p>
-
             <p className={styles.chapterTitle}>CHƯƠNG V. TỔ CHỨC THỰC HIỆN</p>
-
             <p className={styles.articleTitle}>Điều 26: Đối tượng áp dụng</p>
             <p>
                 Điều lệ này được áp dụng cho {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || ".............................."}. Mọi nhân viên trong công ty
                 có trách nhiệm thi hành nghiêm chỉnh điều lệ này.
             </p>
-
             <p className={styles.articleTitle}>Điều 27: Sửa đổi, bổ sung</p>
             <p>Điều lệ này có thể được sửa đổi, bổ sung theo quyết định của chủ sở hữu công ty. </p>
-
             <p className={styles.articleTitle}>Điều 28: Hiệu lực </p>
             <p>
                 Điều lệ này gồm 05 (năm) chương, 28 (hai tám) điều và đã được công ty thông qua ngày{" "}
                 {dataJson.ngayThongQua ? formatDate(dataJson.ngayThongQua) : "....................."}. Điều lệ này có
                 hiệu lực kể từ ngày được Chủ sở hữu công ty thông qua.
             </p>
-
             <div className={styles.signatures}>
                 <div className={styles.signatureBox} style={{ justifyContent: "flex-start", gap: 0 }}>
                     <p className={styles.bold}>CHỦ SỞ HỮU</p>

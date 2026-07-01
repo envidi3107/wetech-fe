@@ -3,10 +3,5 @@ import GiayDeNghiDangKyThayDoiConfirmationBase from "@/components/Procedure/Proc
 const EXCLUDED_A_OPTION_NAMES = ["a_doiCoDong", "a_doiVonDauTuDNTN"];
 
 export default function GiayDeNghiDangKyThayDoiConfirmation(props) {
-    return (
-        <GiayDeNghiDangKyThayDoiConfirmationBase
-            {...props}
-            excludedAOptionNames={EXCLUDED_A_OPTION_NAMES}
-        />
-    );
+    return <GiayDeNghiDangKyThayDoiConfirmationBase {...props} excludedAOptionNames={EXCLUDED_A_OPTION_NAMES} />;
 }

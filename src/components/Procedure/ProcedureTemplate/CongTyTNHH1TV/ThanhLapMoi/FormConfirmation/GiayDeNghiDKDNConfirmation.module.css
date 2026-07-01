@@ -16,6 +16,7 @@
     padding: 60px;
     color: var(--secondary-content);
     font-style: italic;
+    margin: 0;
 }
 
 .header {
@@ -135,6 +136,17 @@ h3.docTitle {
     vertical-align: top;
 }
 
+.borderTable th > p,
+.borderTable td > p,
+.noBorderTable th > p,
+.noBorderTable td > p {
+    margin: 0;
+    line-height: inherit;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+}
+
 .checkbox {
     display: inline-flex;
     justify-content: center;
@@ -146,11 +158,14 @@ h3.docTitle {
     line-height: 1;
     margin: 0 4px;
     vertical-align: middle;
+    font-style: normal;
 }
 
 .inlineField {
     display: inline-block;
     margin-left: 56px;
+    font-weight: normal;
+    font-style: normal;
 }
 
 .textCenter {

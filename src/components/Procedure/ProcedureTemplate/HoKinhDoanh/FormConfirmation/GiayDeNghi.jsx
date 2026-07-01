@@ -97,7 +97,7 @@ const inlineStyles = {
         display: "flex",
         gap: "4px",
         minWidth: "200px",
-        margin: "0 0 6px"
+        margin: "0 0 6px",
     },
     infoBorder: {
         ...textStyle,
@@ -329,131 +329,86 @@ export default function GiayDeNghi({ dataJson }) {
                 <h2 style={inlineStyles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
                 <h3 style={inlineStyles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
             </div>
-
             <p style={inlineStyles.dateLocation}>{currentDateLabel}</p>
-
             <p style={inlineStyles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</p>
-
             <p style={inlineStyles.centerLine}>Kính gửi: {kinhGui}</p>
-
             <p style={inlineStyles.infoLine}>
-                Tôi là (ghi họ tên bằng chữ in hoa):
-                {(nguoiDaiDien_hoTen || "").toUpperCase()}
+                Tôi là (ghi họ tên bằng chữ in hoa): {(nguoiDaiDien_hoTen || "").toUpperCase()}
             </p>
-            <p style={inlineStyles.infoLine}>
-                Sinh ngày:
-                {formatDate(nguoiDaiDien_ngaySinh)}
-            </p>
-            <p style={inlineStyles.infoLine}>
-                Giới tính:
-                {nguoiDaiDien_gioiTinh}
-            </p>
-            <p style={inlineStyles.infoLine}>
-                Số định danh cá nhân:
-                {nguoiDaiDien_cccd}
-            </p>
+            <p style={inlineStyles.infoLine}>Sinh ngày: {formatDate(nguoiDaiDien_ngaySinh)}</p>
+            <p style={inlineStyles.infoLine}>Giới tính: {nguoiDaiDien_gioiTinh}</p>
+            <p style={inlineStyles.infoLine}>Số định danh cá nhân: {nguoiDaiDien_cccd}</p>
             <div style={inlineStyles.infoRow}>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Điện thoại (nếu có): {nguoiDaiDien_phone}</p>
                 <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Điện thoại (nếu có):
-                    {nguoiDaiDien_phone}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Thư điện tử (nếu có):
-                    {nguoiDaiDien_email}
+                    Thư điện tử (nếu có): {nguoiDaiDien_email}
                 </p>
             </div>
-
             <p style={inlineStyles.italicParagraph}>
                 Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
                 bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
             </p>
-
             <div style={inlineStyles.infoBorder}>
                 <div style={inlineStyles.infoRow}>
                     <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                        Dân tộc:
-                        {nguoiDaiDien_danToc || "Kinh"}
+                        Dân tộc: {nguoiDaiDien_danToc || "Kinh"}
                     </p>
                     <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                        Quốc tịch:
-                        {nguoiDaiDien_quocTich || "Việt Nam"}
+                        Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}
                     </p>
                 </div>
 
                 <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi thường trú:</p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
-                    {thuongTru_soNha}
+                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {thuongTru_soNha}
                 </p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Xã/Phường/Đặc khu:
-                    {thuongTru_xa}
+                    Xã/Phường/Đặc khu: {thuongTru_xa}
                 </p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Tỉnh/Thành phố trực thuộc trung ương:
-                    {thuongTru_tinh}
+                    Tỉnh/Thành phố trực thuộc trung ương: {thuongTru_tinh}
                 </p>
 
                 <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi ở hiện tại:</p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
-                    {hienTai_soNha}
+                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {hienTai_soNha}
                 </p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Xã/Phường/Đặc khu:
-                    {hienTai_xa}
+                    Xã/Phường/Đặc khu: {hienTai_xa}
                 </p>
                 <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Tỉnh/Thành phố trực thuộc trung ương:
-                    {hienTai_tinh}
+                    Tỉnh/Thành phố trực thuộc trung ương: {hienTai_tinh}
                 </p>
             </div>
-
             <p style={inlineStyles.boldCenterLine}>Đăng ký hộ kinh doanh do tôi là chủ hộ với các nội dung sau:</p>
-
             <p style={inlineStyles.infoLine}>
                 <strong style={inlineStyles.heading}>1. Tên hộ kinh doanh:</strong>
             </p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Tên hộ kinh doanh viết bằng tiếng Việt (ghi bằng chữ in hoa): HỘ KINH DOANH
-                {hkd_tenVN?.toUpperCase()}
+                Tên hộ kinh doanh viết bằng tiếng Việt (ghi bằng chữ in hoa): HỘ KINH DOANH {hkd_tenVN?.toUpperCase()}
             </p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Tên hộ kinh doanh viết bằng tiếng nước ngoài (nếu có):
-                {hkd_tenEN}
+                Tên hộ kinh doanh viết bằng tiếng nước ngoài (nếu có): {hkd_tenEN}
             </p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Tên hộ kinh doanh viết tắt (nếu có):
-                {hkd_tenVietTat}
+                Tên hộ kinh doanh viết tắt (nếu có): {hkd_tenVietTat}
             </p>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>
                 <strong style={inlineStyles.heading}>2. Trụ sở của hộ kinh doanh:</strong>
             </p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
-                {truSo_soNha}
+                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {truSo_soNha}
             </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>Xã/Phường/Đặc khu: {truSo_xa}</p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Xã/Phường/Đặc khu:
-                {truSo_xa}
-            </p>
-            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Tỉnh/Thành phố trực thuộc trung ương:
-                {truSo_tinh}
+                Tỉnh/Thành phố trực thuộc trung ương: {truSo_tinh}
             </p>
             <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
-                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Điện thoại:
-                    {truSo_phone}
-                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Điện thoại: {truSo_phone}</p>
                 <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Fax (nếu có): ..........</p>
             </div>
             <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
-                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Thư điện tử (nếu có):
-                    {truSo_email}
-                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Thư điện tử (nếu có): {truSo_email}</p>
                 <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Website (nếu có): ..........</p>
             </div>
             <p style={mergeStyles(inlineStyles.checkRow, { marginLeft: "16px", marginTop: "6px" })}>
@@ -467,7 +422,6 @@ export default function GiayDeNghi({ dataJson }) {
                 Không kinh doanh tại trụ sở (đánh dấu X vào ô này nếu hộ kinh doanh không có địa điểm kinh doanh cố
                 định)
             </p>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
                 <strong style={inlineStyles.heading}>3. Ngành, nghề kinh doanh:</strong>
             </p>
@@ -489,7 +443,7 @@ export default function GiayDeNghi({ dataJson }) {
                                     <Td raw>
                                         <p style={inlineStyles.tableParagraph}>{row.tenNganh}</p>
                                         {row.chiTiet && (
-                                            <pre
+                                            <p
                                                 style={{
                                                     ...tableTextStyle,
                                                     margin: 0,
@@ -498,7 +452,7 @@ export default function GiayDeNghi({ dataJson }) {
                                                 }}
                                             >
                                                 {row.chiTiet}
-                                            </pre>
+                                            </p>
                                         )}
                                     </Td>
                                     <Td center>{row.maNganh}</Td>
@@ -508,16 +462,13 @@ export default function GiayDeNghi({ dataJson }) {
                     </tbody>
                 </table>
             </div>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
                 <strong style={inlineStyles.heading}>4. Vốn kinh doanh:</strong>
             </p>
             <p style={inlineStyles.infoLine}>
-                Tổng số (bằng số):
-                {formatNumber(vonKinhDoanh)} VNĐ
+                Tổng số (bằng số): {formatNumber(vonKinhDoanh)} VNĐ
                 <em style={mergeStyles(inlineStyles.infoValue, { fontStyle: "italic" })}>({vonKinhDoanh_bangChu})</em>
             </p>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>
                 <strong style={inlineStyles.heading}>5. Thông tin đăng ký thuế:</strong>
             </p>
@@ -525,37 +476,20 @@ export default function GiayDeNghi({ dataJson }) {
                 5.1. Địa chỉ nhận thông báo thuế (chỉ kê khai nếu địa chỉ nhận thông báo thuế khác địa chỉ trụ sở):
             </p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn:
-                {thue_soNha}
+                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {thue_soNha}
             </p>
+            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>Xã/Phường/Đặc khu: {thue_xa}</p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Xã/Phường/Đặc khu:
-                {thue_xa}
-            </p>
-            <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                Tỉnh/Thành phố trực thuộc trung ương:
-                {thue_tinh}
+                Tỉnh/Thành phố trực thuộc trung ương: {thue_tinh}
             </p>
             <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
-                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Điện thoại (nếu có):
-                    {thue_phone}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                    Thư điện tử (nếu có):
-                    {thue_email}
-                </p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Điện thoại (nếu có): {thue_phone}</p>
+                <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Thư điện tử (nếu có): {thue_email}</p>
             </div>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "6px" })}>
-                5.2. Ngày bắt đầu hoạt động:
-                {formatDate(ngayBatDau)}
+                5.2. Ngày bắt đầu hoạt động: {formatDate(ngayBatDau)}
             </p>
-            <p style={inlineStyles.infoLine}>
-                5.3. Tổng số lao động (dự kiến):
-                {soLaoDong}
-            </p>
-
+            <p style={inlineStyles.infoLine}>5.3. Tổng số lao động (dự kiến): {soLaoDong}</p>
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "6px" })}>
                 5.4. Phương pháp tính thuế GTGT (chọn 1 trong 2 phương pháp):
             </p>
@@ -573,7 +507,6 @@ export default function GiayDeNghi({ dataJson }) {
                     Phương pháp khoán
                 </p>
             </div>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
                 <strong style={inlineStyles.heading}>6. Chủ thể thành lập hộ kinh doanh: </strong>
                 (đánh dấu X vào ô thích hợp)
@@ -590,7 +523,6 @@ export default function GiayDeNghi({ dataJson }) {
                     Các thành viên hộ gia đình
                 </p>
             </div>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>
                 <strong style={inlineStyles.heading}>
                     7. Thông tin về các thành viên hộ gia đình đăng ký hộ kinh doanh:
@@ -663,7 +595,6 @@ export default function GiayDeNghi({ dataJson }) {
                     </tbody>
                 </table>
             </div>
-
             <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "14px" })}>Tôi xin cam kết:</p>
             <div style={inlineStyles.closingText}>
                 <p style={inlineStyles.closingParagraph}>
@@ -684,7 +615,6 @@ export default function GiayDeNghi({ dataJson }) {
                     đăng ký trên.
                 </p>
             </div>
-
             <div style={inlineStyles.signatureRow}>
                 <div style={inlineStyles.signatureBlock}>
                     <p style={inlineStyles.signatureTitle}>CHỦ HỘ KINH DOANH</p>

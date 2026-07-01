@@ -10,7 +10,17 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
-const Checkbox = ({ checked }) => <span className={styles.checkbox}>{checked ? "x" : ""}</span>;
+const Checkbox = ({ checked }) => (
+    <i
+        className={styles.checkbox}
+        style={{
+            fontWeight: "inherit",
+            fontStyle: "normal",
+        }}
+    >
+        {checked ? "x" : ""}
+    </i>
+);
 
 function GiayDeNghiDKDNConfirmation({ dataJson }) {
     // get from "Danh sách cổ đông sáng lập" form if available
@@ -214,16 +224,22 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <CurrentDate />
                 </p>
             </div>
-
             <h2 className={styles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ DOANH NGHIỆP</h2>
             <h3 className={styles.docTitle}>CÔNG TY CỔ PHẦN</h3>
-
             <div className={styles.content}>
                 <p>Kính gửi: {kinhGui}</p>
 
                 <p>
                     Tôi là (<em>ghi họ tên bằng chữ in hoa</em>):{" "}
-                    <span style={{ textTransform: "uppercase" }}>{nguoiNop_hoTen}</span>
+                    <b
+                        style={{
+                            textTransform: "uppercase",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {nguoiNop_hoTen}
+                    </b>
                 </p>
                 <p>Ngày, tháng, năm sinh: {formatDate(nguoiNop_ngaySinh)}</p>
                 <p>Giới tính: {nguoiNop_gioiTinh}</p>
@@ -283,45 +299,185 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
-                            <td>Thành lập mới</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập mới
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center", width: "40px" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "moi"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "moi"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở tách doanh nghiệp</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở tách doanh nghiệp
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "tach"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "tach"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở chia doanh nghiệp</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở chia doanh nghiệp
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "chia"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "chia"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở hợp nhất doanh nghiệp</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở hợp nhất doanh nghiệp
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "hop_nhat"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "hop_nhat"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở chuyển đổi loại hình doanh nghiệp</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở chuyển đổi loại hình doanh nghiệp
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_loai_hinh"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_loai_hinh"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở chuyển đổi từ hộ kinh doanh</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở chuyển đổi từ hộ kinh doanh
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_hkd"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_hkd"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Thành lập trên cơ sở chuyển đổi từ cơ sở bảo trợ xã hội/quỹ xã hội/quỹ từ thiện</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thành lập trên cơ sở chuyển đổi từ cơ sở bảo trợ xã hội/quỹ xã hội/quỹ từ thiện
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_quy"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={tinhTrangThanhLap === "chuyen_doi_quy"} />
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -338,7 +494,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>
                             Tên doanh nghiệp (ghi bằng chữ in hoa):{" "}
-                            <span style={{ textTransform: "uppercase" }}>{dnChuyenDoi_ten}</span>
+                            <b
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {dnChuyenDoi_ten}
+                            </b>
                         </p>
                         <p>Mã số doanh nghiệp/Mã số thuế: {dnChuyenDoi_maSo}</p>
 
@@ -347,7 +511,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>
                             Tên hộ kinh doanh (ghi bằng chữ in hoa):{" "}
-                            <span style={{ textTransform: "uppercase" }}>{hkdChuyenDoi_ten}</span>
+                            <b
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {hkdChuyenDoi_ten}
+                            </b>
                         </p>
                         <p>Số Giấy chứng nhận đăng ký hộ kinh doanh (nếu có): {hkdChuyenDoi_soGiayChungNhan}</p>
                         <p>
@@ -382,7 +554,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>
                             Tên cơ sở (ghi bằng chữ in hoa):{" "}
-                            <span style={{ textTransform: "uppercase" }}>{csqChuyenDoi_ten}</span>
+                            <b
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {csqChuyenDoi_ten}
+                            </b>
                         </p>
                         <p>Số Giấy chứng nhận: {csqChuyenDoi_soGiayChungNhan}</p>
                         <p>
@@ -435,7 +615,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
-                    <span style={{ textTransform: "uppercase" }}>{tenCongTyVN}</span>
+                    <b
+                        style={{
+                            textTransform: "uppercase",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {tenCongTyVN}
+                    </b>
                 </p>
                 <p>
                     Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>): {tenCongTyEN}
@@ -469,27 +657,107 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
-                            <td>Khu công nghiệp</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Khu công nghiệp
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center", width: "40px" }}>
-                                <Checkbox checked={truSo_loaiKhu === "Khu công nghiệp"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={truSo_loaiKhu === "Khu công nghiệp"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Khu chế xuất</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Khu chế xuất
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={truSo_loaiKhu === "Khu chế xuất"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={truSo_loaiKhu === "Khu chế xuất"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Khu kinh tế</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Khu kinh tế
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={truSo_loaiKhu === "Khu kinh tế"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={truSo_loaiKhu === "Khu kinh tế"} />
+                                </p>
                             </td>
                         </tr>
                         <tr>
-                            <td>Khu công nghệ cao</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Khu công nghệ cao
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                <Checkbox checked={truSo_loaiKhu === "Khu công nghệ cao"} />
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={truSo_loaiKhu === "Khu công nghệ cao"} />
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -498,7 +766,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
                     biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh: Có
                     <Checkbox checked={truSo_anNinhQuocPhong === "Có"} />
-                    <span style={{ marginLeft: "20px" }}></span>
+                    <b
+                        style={{
+                            marginLeft: "20px",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    ></b>
                     Không <Checkbox checked={truSo_anNinhQuocPhong === "Không"} />
                 </p>
 
@@ -510,19 +784,55 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
-                                <strong>STT</strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>STT</strong>
+                                </p>
                             </th>
                             <th style={{ textAlign: "center" }}>
-                                <strong>Tên ngành</strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>Tên ngành</strong>
+                                </p>
                             </th>
                             <th style={{ width: "100px", textAlign: "center" }}>
-                                <strong>Mã ngành</strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>Mã ngành</strong>
+                                </p>
                             </th>
                             <th style={{ width: "150px", textAlign: "center" }}>
-                                <strong>
-                                    Ngành, nghề kinh doanh chính (
-                                    <em>đánh dấu X để chọn một trong các ngành, nghề đã kê khai</em>)
-                                </strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>
+                                        Ngành, nghề kinh doanh chính (
+                                        <em>đánh dấu X để chọn một trong các ngành, nghề đã kê khai</em>)
+                                    </strong>
+                                </p>
                             </th>
                         </tr>
                     </thead>
@@ -530,11 +840,22 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         {(nganhNgheList || []).length > 0 ? (
                             nganhNgheList.map((nganh, index) => (
                                 <tr key={index}>
-                                    <td style={{ textAlign: "center" }}>{index + 1}</td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {index + 1}
+                                        </p>
+                                    </td>
                                     <td>
-                                        <div>{nganh.tenNganh}</div>
+                                        <p style={{ margin: 0 }}>{nganh.tenNganh}</p>
                                         {nganh.chiTiet && (
-                                            <pre
+                                            <p
                                                 style={{
                                                     margin: 0,
                                                     whiteSpace: "pre-wrap",
@@ -544,17 +865,48 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                 }}
                                             >
                                                 {nganh.chiTiet}
-                                            </pre>
+                                            </p>
                                         )}
                                     </td>
-                                    <td style={{ textAlign: "center" }}>{nganh.maNganh}</td>
-                                    <td style={{ textAlign: "center" }}>{nganh.laNganhChinh ? "x" : ""}</td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {nganh.maNganh}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {nganh.laNganhChinh ? "x" : ""}
+                                        </p>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
                                 <td colSpan="4" style={{ textAlign: "center" }}>
-                                    <i>Không có</i>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        <i>Không có</i>
+                                    </p>
                                 </td>
                             </tr>
                         )}
@@ -569,7 +921,14 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Vốn điều lệ (<em>bằng chữ; VNĐ</em>):{" "}
-                    <span style={{ fontStyle: "italic" }}>{vonDieuLe_bangChu}</span>
+                    <b
+                        style={{
+                            fontStyle: "italic",
+                            fontWeight: "inherit",
+                        }}
+                    >
+                        {vonDieuLe_bangChu}
+                    </b>
                 </p>
                 <p>
                     Giá trị tương đương theo đơn vị tiền nước ngoài (<em>nếu có, bằng số, loại ngoại tệ</em>):{" "}
@@ -588,46 +947,239 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center" }}>
-                                <strong>Loại nguồn vốn</strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>Loại nguồn vốn</strong>
+                                </p>
                             </th>
                             <th style={{ textAlign: "center" }}>
-                                <strong>
-                                    Số tiền (
-                                    <em>bằng số; VNĐ và giá trị tương đương theo đơn vị tiền nước ngoài, nếu có</em>)
-                                </strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>
+                                        Số tiền (
+                                        <em>bằng số; VNĐ và giá trị tương đương theo đơn vị tiền nước ngoài, nếu có</em>
+                                        )
+                                    </strong>
+                                </p>
                             </th>
                             <th style={{ textAlign: "center" }}>
-                                <strong>
-                                    Tỷ lệ (<em>%</em>)
-                                </strong>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <strong>
+                                        Tỷ lệ (<em>%</em>)
+                                    </strong>
+                                </p>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Vốn ngân sách nhà nước</td>
-                            <td style={{ textAlign: "center" }}>{formatVND(nguonVon_nganSach_soTien)}</td>
-                            <td style={{ textAlign: "center" }}>{formatPercent(nguonVon_nganSach_tyLe)}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Vốn ngân sách nhà nước
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatVND(nguonVon_nganSach_soTien)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatPercent(nguonVon_nganSach_tyLe)}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Vốn tư nhân</td>
-                            <td style={{ textAlign: "center" }}>{formatVND(nguonVon_tuNhan_soTien)}</td>
-                            <td style={{ textAlign: "center" }}>{formatPercent(nguonVon_tuNhan_tyLe)}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Vốn tư nhân
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatVND(nguonVon_tuNhan_soTien)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatPercent(nguonVon_tuNhan_tyLe)}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Vốn nước ngoài</td>
-                            <td style={{ textAlign: "center" }}>{formatVND(nguonVon_nuocNgoai_soTien)}</td>
-                            <td style={{ textAlign: "center" }}>{formatPercent(nguonVon_nuocNgoai_tyLe)}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Vốn nước ngoài
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatVND(nguonVon_nuocNgoai_soTien)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatPercent(nguonVon_nuocNgoai_tyLe)}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Vốn khác</td>
-                            <td style={{ textAlign: "center" }}>{formatVND(nguonVon_khac_soTien)}</td>
-                            <td style={{ textAlign: "center" }}>{formatPercent(nguonVon_khac_tyLe)}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Vốn khác
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatVND(nguonVon_khac_soTien)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatPercent(nguonVon_khac_tyLe)}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>Tổng cộng</td>
-                            <td style={{ textAlign: "center" }}>{formatVND(nguonVon_tongCong_soTien)}</td>
-                            <td style={{ textAlign: "center" }}>{formatPercent(nguonVon_tongCong_tyLe)}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tổng cộng
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatVND(nguonVon_tongCong_soTien)}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {formatPercent(nguonVon_tongCong_tyLe)}
+                                </p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -639,65 +1191,427 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
-                            <th style={{ width: "50px", textAlign: "center" }}>STT</th>
-                            <th style={{ textAlign: "center" }}>Loại cổ phần</th>
-                            <th style={{ textAlign: "center" }}>Số lượng</th>
-                            <th style={{ textAlign: "center" }}>Giá trị (bằng số, VNĐ)</th>
-                            <th style={{ textAlign: "center" }}>Tỉ lệ so với vốn điều lệ (%)</th>
+                            <th style={{ width: "50px", textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    STT
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Loại cổ phần
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Số lượng
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Giá trị (bằng số, VNĐ)
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tỉ lệ so với vốn điều lệ (%)
+                                </p>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ textAlign: "center" }}>1</td>
-                            <td>Cổ phần phổ thông</td>
-                            <td style={{ textAlign: "center" }}>{cp_cptt_soLuong || "0"}</td>
-                            <td style={{ textAlign: "center" }}>{cp_cptt_giaTri ? `${cp_cptt_giaTri} VNĐ` : "0"}</td>
-                            <td style={{ textAlign: "center" }}>{cp_cptt_tiLe ? cp_cptt_tiLe + "%" : "0"}</td>
-                        </tr>
-                        <tr>
-                            <td style={{ textAlign: "center" }}>2</td>
-                            <td>Cổ phần ưu đãi biểu quyết</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudbq_soLuong || "0"}</td>
                             <td style={{ textAlign: "center" }}>
-                                {cp_cpudbq_giaTri ? `${cp_cpudbq_giaTri} VNĐ` : "0"}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    1
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudbq_tiLe ? cp_cpudbq_tiLe + "%" : "0"}</td>
-                        </tr>
-                        <tr>
-                            <td style={{ textAlign: "center" }}>3</td>
-                            <td>Cổ phần ưu đãi cổ tức</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudct_soLuong || "0"}</td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần phổ thông
+                                </p>
+                            </td>
                             <td style={{ textAlign: "center" }}>
-                                {cp_cpudct_giaTri ? `${cp_cpudct_giaTri} VNĐ` : "0"}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cptt_soLuong || "0"}
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudct_tiLe ? cp_cpudct_tiLe + "%" : "0"}</td>
-                        </tr>
-                        <tr>
-                            <td style={{ textAlign: "center" }}>4</td>
-                            <td>Cổ phần ưu đãi hoàn lại</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudhl_soLuong || "0"}</td>
                             <td style={{ textAlign: "center" }}>
-                                {cp_cpudhl_giaTri ? `${cp_cpudhl_giaTri} VNĐ` : "0"}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cptt_giaTri ? `${cp_cptt_giaTri} VNĐ` : "0"}
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudhl_tiLe ? cp_cpudhl_tiLe + "%" : "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cptt_tiLe ? cp_cptt_tiLe + "%" : "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>5</td>
-                            <td>Các cổ phần ưu đãi khác</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudk_soLuong || "0"}</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudk_giaTri ? `${cp_cpudk_giaTri} VNĐ` : "0"}</td>
-                            <td style={{ textAlign: "center" }}>{cp_cpudk_tiLe ? cp_cpudk_tiLe + "%" : "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    2
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi biểu quyết
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudbq_soLuong || "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudbq_giaTri ? `${cp_cpudbq_giaTri} VNĐ` : "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudbq_tiLe ? cp_cpudbq_tiLe + "%" : "0"}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    3
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi cổ tức
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudct_soLuong || "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudct_giaTri ? `${cp_cpudct_giaTri} VNĐ` : "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudct_tiLe ? cp_cpudct_tiLe + "%" : "0"}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    4
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi hoàn lại
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudhl_soLuong || "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudhl_giaTri ? `${cp_cpudhl_giaTri} VNĐ` : "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudhl_tiLe ? cp_cpudhl_tiLe + "%" : "0"}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    5
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Các cổ phần ưu đãi khác
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudk_soLuong || "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudk_giaTri ? `${cp_cpudk_giaTri} VNĐ` : "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cpudk_tiLe ? cp_cpudk_tiLe + "%" : "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
                             <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>
-                                Tổng số
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tổng số
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center", fontWeight: "bold" }}>{cp_tongSoLuong || "0"}</td>
                             <td style={{ textAlign: "center", fontWeight: "bold" }}>
-                                {cp_tongGiaTri ? `${cp_tongGiaTri} VNĐ` : "0"}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_tongSoLuong || "0"}
+                                </p>
                             </td>
                             <td style={{ textAlign: "center", fontWeight: "bold" }}>
-                                {cp_tongTiLe ? cp_tongTiLe + "%" : "0"}
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_tongGiaTri ? `${cp_tongGiaTri} VNĐ` : "0"}
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center", fontWeight: "bold" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_tongTiLe ? cp_tongTiLe + "%" : "0"}
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -709,42 +1623,260 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
-                            <th style={{ width: "50px", textAlign: "center" }}>STT</th>
-                            <th style={{ textAlign: "center" }}>Loại cổ phần được quyền chào bán</th>
-                            <th style={{ textAlign: "center" }}>Số lượng</th>
+                            <th style={{ width: "50px", textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    STT
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Loại cổ phần được quyền chào bán
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Số lượng
+                                </p>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ textAlign: "center" }}>1</td>
-                            <td>Cổ phần phổ thông</td>
-                            <td style={{ textAlign: "center" }}>{cp_cb_cptt_soLuong || "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    1
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần phổ thông
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_cptt_soLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>2</td>
-                            <td>Cổ phần ưu đãi biểu quyết</td>
-                            <td style={{ textAlign: "center" }}>{cp_cb_cpudbq_soLuong || "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    2
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi biểu quyết
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_cpudbq_soLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>3</td>
-                            <td>Cổ phần ưu đãi cổ tức</td>
-                            <td style={{ textAlign: "center" }}>{cp_cb_cpudct_soLuong || "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    3
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi cổ tức
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_cpudct_soLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>4</td>
-                            <td>Cổ phần ưu đãi hoàn lại</td>
-                            <td style={{ textAlign: "center" }}>{cp_cb_cpudhl_soLuong || "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    4
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi hoàn lại
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_cpudhl_soLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center" }}>5</td>
-                            <td>Cổ phần ưu đãi khác</td>
-                            <td style={{ textAlign: "center" }}>{cp_cb_cpudk_soLuong || "0"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    5
+                                </p>
+                            </td>
+                            <td>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Cổ phần ưu đãi khác
+                                </p>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_cpudk_soLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                         <tr>
                             <td colSpan={2} style={{ textAlign: "center", fontWeight: "bold" }}>
-                                Tổng số
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tổng số
+                                </p>
                             </td>
-                            <td style={{ textAlign: "center", fontWeight: "bold" }}>{cp_cb_tongSoLuong || "0"}</td>
+                            <td style={{ textAlign: "center", fontWeight: "bold" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {cp_cb_tongSoLuong || "0"}
+                                </p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -755,38 +1887,267 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px", fontSize: "13px" }}>
                     <thead>
                         <tr>
-                            <th style={{ textAlign: "center", width: "40px" }}>STT</th>
-                            <th style={{ textAlign: "center" }}>Tên cổ đông</th>
-                            <th style={{ textAlign: "center", width: "110px" }}>Ngày sinh</th>
-                            <th style={{ textAlign: "center", width: "70px" }}>Giới tính</th>
-                            <th style={{ textAlign: "center" }}>Giấy tờ pháp lý</th>
-                            <th style={{ textAlign: "center", width: "90px" }}>Quốc tịch</th>
-                            <th style={{ textAlign: "center" }}>Địa chỉ liên lạc</th>
-                            <th style={{ textAlign: "center", width: "110px" }}>Số lượng cổ phần</th>
-                            <th style={{ textAlign: "center", width: "60px" }}>Tỷ lệ (%)</th>
-                            <th style={{ textAlign: "center", width: "100px" }}>Thời hạn góp vốn</th>
+                            <th style={{ textAlign: "center", width: "40px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    STT
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tên cổ đông
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "110px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Ngày sinh
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "70px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Giới tính
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Giấy tờ pháp lý
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "90px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Quốc tịch
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Địa chỉ liên lạc
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "110px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Số lượng cổ phần
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "60px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Tỷ lệ (%)
+                                </p>
+                            </th>
+                            <th style={{ textAlign: "center", width: "100px" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Thời hạn góp vốn
+                                </p>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {coDongList.length > 0 ? (
                             coDongList.map((tv, idx) => (
                                 <tr key={idx}>
-                                    <td style={{ textAlign: "center" }}>{idx + 1}</td>
-                                    <td>{tv.hoTen}</td>
-                                    <td style={{ textAlign: "center" }}>{formatDate(tv.ngaySinh)}</td>
-                                    <td style={{ textAlign: "center" }}>{tv.gioiTinh}</td>
-                                    <td>{tv.giaTo}</td>
-                                    <td style={{ textAlign: "center" }}>{tv.quocTich}</td>
-                                    <td>{tv.diaChiLienLac}</td>
-                                    <td style={{ textAlign: "center" }}>{tv.phanVonGop}</td>
-                                    <td style={{ textAlign: "center" }}>{tv.tyLe ? tv.tyLe + "%" : ""}</td>
-                                    <td style={{ textAlign: "center" }}>{tv.thoiHan}</td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {idx + 1}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.hoTen}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {formatDate(tv.ngaySinh)}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.gioiTinh}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.giaTo}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.quocTich}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.diaChiLienLac}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.phanVonGop}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.tyLe ? tv.tyLe + "%" : ""}
+                                        </p>
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {tv.thoiHan}
+                                        </p>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
                                 <td colSpan="10" style={{ textAlign: "center" }}>
-                                    <i>Chưa có dữ liệu cổ đông sáng lập, gửi kèm danh sách cổ đông sáng lập</i>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        <i>Chưa có dữ liệu cổ đông sáng lập, gửi kèm danh sách cổ đông sáng lập</i>
+                                    </p>
                                 </td>
                             </tr>
                         )}
@@ -816,7 +2177,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Họ, chữ đệm và tên (<em>ghi bằng chữ in hoa</em>):{" "}
-                    <span style={{ textTransform: "uppercase" }}>{nguoiDaiDien_hoTen}</span>
+                    <b
+                        style={{
+                            textTransform: "uppercase",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    >
+                        {nguoiDaiDien_hoTen}
+                    </b>
                 </p>
                 <p>Ngày, tháng, năm sinh: {formatDate(nguoiDaiDien_ngaySinh)}</p>
                 <p>Giới tính: {nguoiDaiDien_gioiTinh}</p>
@@ -864,22 +2233,61 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
-                            <th style={{ width: "50px", textAlign: "center" }}>STT</th>
+                            <th style={{ width: "50px", textAlign: "center" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    STT
+                                </p>
+                            </th>
                             <th colSpan="2" style={{ textAlign: "center" }}>
-                                Các chỉ tiêu thông tin đăng ký thuế
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Các chỉ tiêu thông tin đăng ký thuế
+                                </p>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.1</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.1
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Thông tin về Giám đốc/Tổng giám đốc <em>(nếu có)</em>:
                                 </p>
                                 <p>
                                     Họ, chữ đệm và tên Giám đốc/Tổng giám đốc:{" "}
-                                    <span style={{ textTransform: "uppercase" }}>{giamDoc_hoTen}</span>
+                                    <b
+                                        style={{
+                                            textTransform: "uppercase",
+                                            fontWeight: "inherit",
+                                            fontStyle: "normal",
+                                        }}
+                                    >
+                                        {giamDoc_hoTen}
+                                    </b>
                                 </p>
                                 <p>Ngày, tháng, năm sinh: {formatDate(giamDoc_ngaySinh)}</p>
                                 <p>Giới tính: {giamDoc_gioiTinh}</p>
@@ -888,14 +2296,33 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.2</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.2
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Thông tin về Kế toán trưởng/Phụ trách kế toán <em>(nếu có)</em>:
                                 </p>
                                 <p>
                                     Họ, chữ đệm và tên Kế toán trưởng/Phụ trách kế toán:{" "}
-                                    <span style={{ textTransform: "uppercase" }}>{keToan_hoTen}</span>
+                                    <b
+                                        style={{
+                                            textTransform: "uppercase",
+                                            fontWeight: "inherit",
+                                            fontStyle: "normal",
+                                        }}
+                                    >
+                                        {keToan_hoTen}
+                                    </b>
                                 </p>
                                 <p>Ngày, tháng, năm sinh: {formatDate(keToan_ngaySinh)}</p>
                                 <p>Giới tính: {keToan_gioiTinh}</p>
@@ -904,7 +2331,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.3</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.3
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Địa chỉ nhận thông báo thuế (
@@ -926,7 +2364,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.4</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.4
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Ngày bắt đầu hoạt động (
@@ -939,7 +2388,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.5</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.5
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Hình thức hạch toán (
@@ -954,20 +2414,69 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "200px" }}>Hạch toán độc lập</td>
+                                            <td style={{ width: "200px" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Hạch toán độc lập
+                                                </p>
+                                            </td>
                                             <td style={{ width: "40px", textAlign: "center" }}>
-                                                <Checkbox checked={hinhThucHachToan === "doc_lap"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox checked={hinhThucHachToan === "doc_lap"} />
+                                                </p>
                                             </td>
                                             <td style={{ width: "30px" }}></td>
                                             <td>
-                                                Có báo cáo tài chính hợp nhất{" "}
-                                                <Checkbox checked={baoCaoTaiChinhHopNhat === "co"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Có báo cáo tài chính hợp nhất{" "}
+                                                    <Checkbox checked={baoCaoTaiChinhHopNhat === "co"} />
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Hạch toán phụ thuộc</td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Hạch toán phụ thuộc
+                                                </p>
+                                            </td>
                                             <td style={{ textAlign: "center" }}>
-                                                <Checkbox checked={hinhThucHachToan === "phu_thuoc"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox checked={hinhThucHachToan === "phu_thuoc"} />
+                                                </p>
                                             </td>
                                             <td></td>
                                             <td></td>
@@ -977,7 +2486,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.6</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.6
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>Năm tài chính:</p>
                                 <p>
@@ -986,7 +2506,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.7</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.7
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Tổng số lao động (<em>dự kiến</em>): {tongSoLaoDong}
@@ -994,17 +2525,46 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.8</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.8
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
                                 <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "100px" }}>
-                                                Có <Checkbox checked={hoatDongDuAn === "co"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Có <Checkbox checked={hoatDongDuAn === "co"} />
+                                                </p>
                                             </td>
                                             <td>
-                                                Không <Checkbox checked={hoatDongDuAn === "khong"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Không <Checkbox checked={hoatDongDuAn === "khong"} />
+                                                </p>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1012,7 +2572,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}>11.9</td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    11.9
+                                </p>
+                            </td>
                             <td colSpan="2">
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
@@ -1021,30 +2592,112 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "30px" }}></td>
-                                            <td style={{ width: "250px" }}>Khấu trừ</td>
+                                            <td style={{ width: "250px" }}>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Khấu trừ
+                                                </p>
+                                            </td>
                                             <td>
-                                                <Checkbox checked={phuongPhapTinhThueGTGT === "khau_tru"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox checked={phuongPhapTinhThueGTGT === "khau_tru"} />
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>Trực tiếp trên GTGT</td>
                                             <td>
-                                                <Checkbox checked={phuongPhapTinhThueGTGT === "truc_tiep_gtgt"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Trực tiếp trên GTGT
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox checked={phuongPhapTinhThueGTGT === "truc_tiep_gtgt"} />
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>Trực tiếp trên doanh số</td>
                                             <td>
-                                                <Checkbox checked={phuongPhapTinhThueGTGT === "truc_tiep_doanh_so"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Trực tiếp trên doanh số
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox
+                                                        checked={phuongPhapTinhThueGTGT === "truc_tiep_doanh_so"}
+                                                    />
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>Không phải nộp thuế GTGT</td>
                                             <td>
-                                                <Checkbox checked={phuongPhapTinhThueGTGT === "khong_nop"} />
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    Không phải nộp thuế GTGT
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p
+                                                    style={{
+                                                        margin: 0,
+                                                        lineHeight: "inherit",
+                                                        textAlign: "inherit",
+                                                        font: "inherit",
+                                                    }}
+                                                >
+                                                    <Checkbox checked={phuongPhapTinhThueGTGT === "khong_nop"} />
+                                                </p>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1057,7 +2710,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>12. Thông tin về việc đóng bảo hiểm xã hội:</strong>
                 </p>
-                <div style={{ marginLeft: "10px", fontStyle: "italic", fontSize: "14px" }}>
+                <p style={{ marginLeft: "10px", fontStyle: "italic", fontSize: "14px" }}>
                     Lưu ý:
                     <br />
                     - Doanh nghiệp đăng ký ngành, nghề kinh doanh chính là nông nghiệp, lâm nghiệp, ngư nghiệp, diêm
@@ -1065,7 +2718,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     xã hội: hàng tháng, 03 tháng một lần, 06 tháng một lần.
                     <br />- Doanh nghiệp đăng ký ngành, nghề kinh doanh chính khác: đánh dấu vào phương thức đóng bảo
                     hiểm xã hội hàng tháng.
-                </div>
+                </p>
                 <p>
                     Phương thức đóng bảo hiểm xã hội (<em>chọn 1 trong 3 phương thức</em>):
                 </p>
@@ -1073,13 +2726,43 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <tbody>
                         <tr>
                             <td>
-                                <Checkbox checked={phuongThucDongBHXH === "hang_thang"} /> Hàng tháng
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={phuongThucDongBHXH === "hang_thang"} />
+                                    Hàng tháng
+                                </p>
                             </td>
                             <td>
-                                <Checkbox checked={phuongThucDongBHXH === "3_thang"} /> 03 tháng một lần
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={phuongThucDongBHXH === "3_thang"} />
+                                    03 tháng một lần
+                                </p>
                             </td>
                             <td>
-                                <Checkbox checked={phuongThucDongBHXH === "6_thang"} /> 06 tháng một lần
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={phuongThucDongBHXH === "6_thang"} />
+                                    06 tháng một lần
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -1093,10 +2776,30 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <tbody>
                         <tr>
                             <td>
-                                <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} /> Có
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} />
+                                    Có
+                                </p>
                             </td>
                             <td>
-                                <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} /> Không
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} />
+                                    Không
+                                </p>
                             </td>
                         </tr>
                     </tbody>
