@@ -3,7 +3,7 @@ import { formatDate } from "@/utils/dateTimeUtils";
 
 const FONT_FAMILY = "'Times New Roman', Times, serif";
 const DOCUMENT_FONT_SIZE = "14pt";
-const TABLE_FONT_SIZE = "11pt";
+const TABLE_FONT_SIZE = "14pt";
 
 const textStyle = {
     fontFamily: FONT_FAMILY,
@@ -619,8 +619,6 @@ export default function GiayDeNghi({ dataJson }) {
                 <div style={inlineStyles.signatureBlock}>
                     <p style={inlineStyles.signatureTitle}>CHỦ HỘ KINH DOANH</p>
                     <p style={inlineStyles.signatureNote}>(Ký và ghi họ tên)</p>
-                    <p style={inlineStyles.signatureName}>{chuKy_ten}</p>
-                    <p style={inlineStyles.signatureName}>{chuKy_hoTen}</p>
                 </div>
             </div>
         </div>

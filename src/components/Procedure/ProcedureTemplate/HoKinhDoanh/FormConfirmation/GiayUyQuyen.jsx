@@ -454,29 +454,13 @@ export default function GiayUyQuyen({ dataJson }) {
             </p>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", padding: "0 40px" }}>
                 <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <b
-                            style={{
-                                fontWeight: "bold",
-                                textDecoration: "underline",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            BÊN NHẬN ỦY QUYỀN
-                        </b>
+                    <p style={{ textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: "bold" }}>
+                        BÊN NHẬN ỦY QUYỀN
                     </p>
                 </div>
                 <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <b
-                            style={{
-                                fontWeight: "bold",
-                                textDecoration: "underline",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            BÊN ỦY QUYỀN
-                        </b>
+                    <p style={{ textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: "bold" }}>
+                        BÊN ỦY QUYỀN
                     </p>
                 </div>
             </div>

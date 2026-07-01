@@ -3,7 +3,7 @@
  * The generated HTML is used by the backend for PDF rendering and by
  * html-docx-js for Word export.
  */
-const WORD_EXPORT_FONT_FAMILY = "'Times New Roman', Times, serif";
+const WORD_EXPORT_FONT_FAMILY = '"Times New Roman"';
 const DOCUMENT_FONT_SIZE = "14pt";
 const TABLE_FONT_SIZE = "11pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
@@ -51,9 +51,9 @@ function getWordExportFontInlineStyle(node) {
     const lineHeight = isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
 
     return [
-        `font-family: ${WORD_EXPORT_FONT_FAMILY} !important`,
-        `font-size: ${fontSize} !important`,
-        `line-height: ${lineHeight} !important`,
+        `font-family: ${WORD_EXPORT_FONT_FAMILY}`,
+        `font-size: ${fontSize}`,
+        `line-height: ${lineHeight}`,
         "mso-ascii-font-family: 'Times New Roman'",
         "mso-hansi-font-family: 'Times New Roman'",
         "mso-bidi-font-family: 'Times New Roman'",
@@ -68,7 +68,26 @@ function createWordExportTextSpan(textNode) {
     return span;
 }
 
+/**
+ * Strip the CSS `font` shorthand (e.g. `font: inherit`) and `font-family: inherit`
+ * from an element's inline style. The `font` shorthand resets font-family, which
+ * causes Word to fall back to its theme default (Aptos) instead of using the
+ * explicit font-family we append.
+ */
+function stripFontShorthandFromInlineStyle(node) {
+    const currentStyle = node.getAttribute("style");
+    if (!currentStyle) return;
+
+    const cleaned = currentStyle
+        .replace(/\bfont\s*:[^;]+;?/gi, "")
+        .replace(/\bfont-family\s*:[^;]+;?/gi, "")
+        .trim();
+
+    node.setAttribute("style", cleaned);
+}
+
 function appendWordExportFontStyle(node) {
+    stripFontShorthandFromInlineStyle(node);
     appendInlineStyle(node, getWordExportFontInlineStyle(node));
 }
 
@@ -197,12 +216,17 @@ export function generateHtmlString(element, options = {}) {
                 const rules = sheet.cssRules || sheet.rules;
                 if (!rules) continue;
                 for (const rule of rules) {
-                    const ruleText = rule.cssText;
-                    if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
-                        cssText += ruleText.replace(/font-family\s*:[^;]+;?/gi, "") + "\n";
-                    } else {
-                        cssText += ruleText + "\n";
+                    let ruleText = rule.cssText;
+                    if (normalizeForWord) {
+                        // Aggressively strip any existing font or font-family declarations 
+                        // so they don't override the ones we inject for Word export.
+                        ruleText = ruleText.replace(/\bfont\s*:[^;]+;?/gi, "");
+                        ruleText = ruleText.replace(/\bfont-family\s*:[^;]+;?/gi, "");
+                    } else if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
+                        // Normal PDF export: just strip non-Times New Roman fonts
+                        ruleText = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
                     }
+                    cssText += ruleText + "\n";
                 }
             } catch {
                 // Ignore cross-origin stylesheets.
@@ -245,7 +269,7 @@ export function generateHtmlString(element, options = {}) {
       width: 100%;
       background: #fff;
       color: #000;
-      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      font-family: ${WORD_EXPORT_FONT_FAMILY};
       mso-ascii-font-family: 'Times New Roman';
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
@@ -267,13 +291,13 @@ export function generateHtmlString(element, options = {}) {
 
     p, span, div, td, th, li, ul, ol, h1, h2, h3, h4, h5, h6,
     strong, em, b, i, a, label, pre, table, tbody, tr, input, textarea, select {
-      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      font-family: ${WORD_EXPORT_FONT_FAMILY};
       mso-ascii-font-family: 'Times New Roman';
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
       mso-fareast-font-family: 'Times New Roman';
-      font-size: ${DOCUMENT_FONT_SIZE} !important;
-      line-height: ${DOCUMENT_LINE_HEIGHT} !important;
+      font-size: ${DOCUMENT_FONT_SIZE};
+      line-height: ${DOCUMENT_LINE_HEIGHT};
     }
 
     .document-export-root [class*="tableContainer"],
@@ -294,18 +318,18 @@ export function generateHtmlString(element, options = {}) {
       overflow-wrap: break-word !important;
       word-break: normal !important;
       white-space: normal !important;
-      font-family: ${WORD_EXPORT_FONT_FAMILY} !important;
+      font-family: ${WORD_EXPORT_FONT_FAMILY};
       mso-ascii-font-family: 'Times New Roman';
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
       mso-fareast-font-family: 'Times New Roman';
-      font-size: ${TABLE_FONT_SIZE} !important;
-      line-height: ${TABLE_LINE_HEIGHT} !important;
+      font-size: ${TABLE_FONT_SIZE};
+      line-height: ${TABLE_LINE_HEIGHT};
     }
 
     table p, table span, table div, table strong, table em, table b, table i, table li {
-      font-size: ${TABLE_FONT_SIZE} !important;
-      line-height: ${TABLE_LINE_HEIGHT} !important;
+      font-size: ${TABLE_FONT_SIZE};
+      line-height: ${TABLE_LINE_HEIGHT};
     }
 
     [data-export-signature-row] {
@@ -352,8 +376,8 @@ export function generateHtmlString(element, options = {}) {
     [data-export-signature-table] em,
     [data-export-signature-table] b,
     [data-export-signature-table] i {
-      font-size: ${DOCUMENT_FONT_SIZE} !important;
-      line-height: ${DOCUMENT_LINE_HEIGHT} !important;
+      font-size: ${DOCUMENT_FONT_SIZE};
+      line-height: ${DOCUMENT_LINE_HEIGHT};
     }
 
     ${

@@ -92,8 +92,8 @@
     background-color: #f9f9f9;
 }
 
-.table th > p,
-.table td > p {
+.table th>p,
+.table td>p {
     margin: 0;
     line-height: inherit;
     font: inherit;
@@ -122,7 +122,6 @@
 .signatureBox .bold {
     font-weight: bold;
     margin: 0;
-    white-space: nowrap;
 }
 
 .signatureName {

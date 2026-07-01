@@ -231,15 +231,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
 
                 <p>
                     Tôi là (<em>ghi họ tên bằng chữ in hoa</em>):{" "}
-                    <b
-                        style={{
-                            textTransform: "uppercase",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {displayValue(nguoiNop_hoTen)}
-                    </b>
+                    {displayValue(nguoiNop_hoTen)}
                 </p>
                 <p>Ngày, tháng, năm sinh: {displayDate(nguoiNop_ngaySinh)}</p>
                 <p>Giới tính: {displayValue(nguoiNop_gioiTinh)}</p>

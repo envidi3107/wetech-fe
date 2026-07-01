@@ -38,6 +38,7 @@
     color: #000;
     vertical-align: top;
     line-height: 1.4;
+    font-size: var(--procedure-confirmation-font-size);
 }
 
 .td {
@@ -47,10 +48,10 @@
     font-size: var(--procedure-confirmation-font-size);
 }
 
-.th > p,
-.td > p,
-.colNumber > p,
-.emptyCell > p {
+.th>p,
+.td>p,
+.colNumber>p,
+.emptyCell>p {
     margin: 0;
     line-height: inherit;
     font: inherit;
@@ -74,13 +75,6 @@
     border: 1px solid #000;
 }
 
-.signatureBlock {
-    margin-top: 30px;
-    margin-bottom: 50px;
-    text-align: center;
-    width: 50%;
-    margin-left: auto;
-}
 
 .signatureDate {
     font-style: italic;

@@ -359,14 +359,16 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                     </tbody>
                 </table>
             </div>
-            <div className={styles.signatureBlock}>
-                <p className={styles.signatureDate}>
-                    <CurrentDate prefix={datePrefix} />
-                </p>
-                <p className={styles.signatureTitle}>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</p>
-                <p className={styles.signatureSubtitle}>
-                    (<em>Ký và ghi rõ họ tên</em>)
-                </p>
+            <div style={{ textAlign: "right", width: "100%", marginTop: "30px", marginBottom: "50px" }}>
+                <div style={{ display: "inline-block", textAlign: "center", whiteSpace: "nowrap" }}>
+                    <p className={styles.signatureDate}>
+                        <CurrentDate prefix={datePrefix} />
+                    </p>
+                    <p className={styles.signatureTitle}>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</p>
+                    <p className={styles.signatureSubtitle}>
+                        (<em>Ký và ghi rõ họ tên</em>)
+                    </p>
+                </div>
             </div>
         </div>
     );
