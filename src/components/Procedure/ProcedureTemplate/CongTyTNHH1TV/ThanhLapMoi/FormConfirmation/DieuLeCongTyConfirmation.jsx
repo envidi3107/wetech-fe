@@ -204,7 +204,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         }}
                                     >
                                         {row.tenNganh}
-                                        {row.chiTiet && <p style={{ marginTop: "4px" }}>{row.chiTiet}</p>}
+                                        {row.chiTiet && <span style={{ display: "block", marginTop: "4px" }}>{row.chiTiet}</span>}
                                     </p>
                                 </td>
                                 <td style={{ textAlign: "center" }}>

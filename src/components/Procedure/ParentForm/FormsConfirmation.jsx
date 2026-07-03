@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { generateHtmlString, getDocExportPageMarginsTwips } from "@/utils/generateHtmlFile";
-import htmlDocx from "html-docx-js/dist/html-docx";
+import { generateHtmlString, getDocExportPageMarginsTwips, getDocExportPageSizeTwips } from "@/utils/generateHtmlFile";
 import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
 import Tooltip from "@/components/Tooltip/Tooltip";
@@ -8,6 +7,102 @@ import { useNotification } from "@/hooks/useNotification";
 
 const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 const DATA_RELOAD_COOLDOWN_SECONDS = 5;
+const DOCX_EXPORT_FONT_SIZE = 28;
+const WORD_RELATIONSHIP_TYPE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument";
+const HTML_CHUNK_RELATIONSHIP_TYPE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/aFChunk";
+
+function toDocxBlob(docxOutput) {
+    if (docxOutput instanceof Blob) {
+        return docxOutput;
+    }
+
+    if (docxOutput instanceof ArrayBuffer || ArrayBuffer.isView(docxOutput)) {
+        return new Blob([docxOutput], { type: DOCX_MIME_TYPE });
+    }
+
+    return new Blob([docxOutput], { type: DOCX_MIME_TYPE });
+}
+
+async function convertHtmlToDocx(htmlString, headerHtmlString, documentOptions, footerHtmlString) {
+    const htmlToDocxModule = await import("@turbodocx/html-to-docx");
+    const htmlToDocx = htmlToDocxModule.default || htmlToDocxModule;
+
+    return htmlToDocx(htmlString, headerHtmlString, documentOptions, footerHtmlString);
+}
+
+function isTurboDocxNamespaceError(error) {
+    const message = String(error?.message || error || "");
+    return message.includes("Invalid XML name") && message.includes("@w");
+}
+
+function createDocumentXml(documentOptions) {
+    const pageSize = documentOptions.pageSize || getDocExportPageSizeTwips(documentOptions.orientation === "landscape");
+    const margins = documentOptions.margins || getDocExportPageMarginsTwips(documentOptions.orientation === "landscape");
+    const orientationAttribute = documentOptions.orientation === "landscape" ? ' w:orient="landscape"' : "";
+
+    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <w:body>
+    <w:altChunk r:id="rId1"/>
+    <w:sectPr>
+      <w:pgSz w:w="${pageSize.width}" w:h="${pageSize.height}"${orientationAttribute}/>
+      <w:pgMar w:top="${margins.top}" w:right="${margins.right}" w:bottom="${margins.bottom}" w:left="${margins.left}" w:header="${margins.header || 0}" w:footer="${margins.footer || 0}" w:gutter="${margins.gutter || 0}"/>
+    </w:sectPr>
+  </w:body>
+</w:document>`;
+}
+
+async function createHtmlAltChunkDocxBlob(htmlString, documentOptions) {
+    const jsZipModule = await import("jszip");
+    const JSZip = jsZipModule.default || jsZipModule;
+    const zip = new JSZip();
+
+    zip.file(
+        "[Content_Types].xml",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Default Extension="html" ContentType="text/html"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`,
+    );
+
+    zip.folder("_rels").file(
+        ".rels",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="${WORD_RELATIONSHIP_TYPE}" Target="word/document.xml"/>
+</Relationships>`,
+    );
+
+    const wordFolder = zip.folder("word");
+    wordFolder.file("document.xml", createDocumentXml(documentOptions));
+    wordFolder.file("afchunk.html", htmlString);
+    wordFolder.folder("_rels").file(
+        "document.xml.rels",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="${HTML_CHUNK_RELATIONSHIP_TYPE}" Target="afchunk.html"/>
+</Relationships>`,
+    );
+
+    return zip.generateAsync({ type: "blob", mimeType: DOCX_MIME_TYPE });
+}
+
+async function createDocxBlobFromHtml(htmlString, documentOptions) {
+    try {
+        const docxOutput = await convertHtmlToDocx(htmlString, null, documentOptions);
+        return toDocxBlob(docxOutput);
+    } catch (error) {
+        if (!isTurboDocxNamespaceError(error)) {
+            throw error;
+        }
+
+        console.warn("[FormsConfirmation] TurboDocx failed with namespace alias error; using DOCX altChunk fallback.", error);
+        return createHtmlAltChunkDocxBlob(htmlString, documentOptions);
+    }
+}
 
 function getServerErrorMessage(error) {
     const responseData = error?.response?.data;
@@ -116,10 +211,31 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
 
                 // Tạo DOCX từ HTML hiển thị tốt hơn trên Word
                 const orientation = landscape ? "landscape" : "portrait";
-                const docxBlob = htmlDocx.asBlob(docxHtmlString, {
+                const docxDocumentOptions = {
                     orientation,
+                    pageSize: getDocExportPageSizeTwips(landscape),
                     margins: getDocExportPageMarginsTwips(landscape),
-                });
+                    title: currentForm.code || "Bieu mau",
+                    creator: "Wetech",
+                    lang: "vi-VN",
+                    font: "Times New Roman",
+                    fontSize: DOCX_EXPORT_FONT_SIZE,
+                    complexScriptFontSize: DOCX_EXPORT_FONT_SIZE,
+                    table: {
+                        row: {
+                            cantSplit: true,
+                        },
+                        addSpacingAfter: false,
+                    },
+                    preprocessing: {
+                        skipHTMLMinify: true,
+                    },
+                    imageProcessing: {
+                        svgHandling: "native",
+                        suppressSharpWarning: true,
+                    },
+                };
+                const docxBlob = await createDocxBlobFromHtml(docxHtmlString, docxDocumentOptions);
                 const docxFilename = `${currentForm.code || "form"}.docx`;
                 const docxFile = new File([docxBlob], docxFilename, {
                     type: DOCX_MIME_TYPE,

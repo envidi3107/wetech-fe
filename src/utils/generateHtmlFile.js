@@ -1,7 +1,7 @@
 /**
  * Convert a rendered DOM element into a complete HTML document.
  * The generated HTML is used by the backend for PDF rendering and by
- * html-docx-js for Word export.
+ * TurboDocx for Word export.
  */
 const WORD_EXPORT_FONT_FAMILY = '"Times New Roman"';
 const DOCUMENT_FONT_SIZE = "14pt";
@@ -9,6 +9,7 @@ const TABLE_FONT_SIZE = "11pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
 const TABLE_LINE_HEIGHT = "1.25";
 const MM_TO_TWIPS = 56.7;
+const A4_PAGE_SIZE_MM = { width: 210, height: 297 };
 
 const DOC_EXPORT_PAGE_MARGINS_MM = {
     portrait: { top: 20, right: 15, bottom: 20, left: 30 },
@@ -31,6 +32,13 @@ export function getDocExportPageMarginsTwips(landscape = false) {
         footer: 0,
         gutter: 0,
     };
+}
+
+export function getDocExportPageSizeTwips(landscape = false) {
+    const width = Math.round(A4_PAGE_SIZE_MM.width * MM_TO_TWIPS);
+    const height = Math.round(A4_PAGE_SIZE_MM.height * MM_TO_TWIPS);
+
+    return landscape ? { width: height, height: width } : { width, height };
 }
 
 function getPageMarginCss(landscape = false) {
@@ -105,6 +113,55 @@ function convertTableHeadersToBodyRows(root) {
 
         thead.replaceWith(tbody);
     });
+}
+
+function getOrderedListMarker(list, index) {
+    const start = Number.parseInt(list.getAttribute("start") || list.getAttribute("data-start") || "1", 10);
+    const markerValue = Number.isFinite(start) ? start + index : index + 1;
+
+    return `${markerValue}. `;
+}
+
+function prependListMarker(container, markerText) {
+    const marker = document.createElement("span");
+    marker.textContent = markerText;
+    appendInlineStyle(marker, "font-weight: normal");
+
+    const firstElement = container.firstElementChild;
+    if (firstElement?.tagName === "P") {
+        firstElement.insertBefore(marker, firstElement.firstChild);
+        return;
+    }
+
+    container.insertBefore(marker, container.firstChild);
+}
+
+function convertListsToPlainBlocks(root) {
+    Array.from(root.querySelectorAll("ol, ul"))
+        .reverse()
+        .forEach((list) => {
+            const items = Array.from(list.children).filter((child) => child.tagName === "LI");
+            const fragment = document.createDocumentFragment();
+
+            items.forEach((item, index) => {
+                const block = document.createElement("div");
+                Array.from(item.attributes).forEach((attribute) => {
+                    if (attribute.name === "value") return;
+                    block.setAttribute(attribute.name, attribute.value);
+                });
+                appendInlineStyle(block, "display: block; margin: 0 0 0 18pt");
+
+                while (item.firstChild) {
+                    block.appendChild(item.firstChild);
+                }
+
+                const markerText = list.tagName === "OL" ? getOrderedListMarker(list, index) : "- ";
+                prependListMarker(block, markerText);
+                fragment.appendChild(block);
+            });
+
+            list.replaceWith(fragment);
+        });
 }
 
 function normalizeSignatureText(value = "") {
@@ -196,6 +253,7 @@ function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
 
     if (normalizeForWord) {
         convertTableHeadersToBodyRows(exportElement);
+        convertListsToPlainBlocks(exportElement);
         [exportElement, ...exportElement.querySelectorAll("*")].forEach(appendWordExportFontStyle);
         wrapTextNodesForWord(exportElement);
     }
