@@ -1,11 +1,13 @@
 /**
  * Convert a rendered DOM element into a complete HTML document.
  * The generated HTML is used by the backend for PDF rendering and by
- * TurboDocx for Word export.
+ * the export_docx service for Word export.
  */
-const WORD_EXPORT_FONT_FAMILY = '"Times New Roman"';
+const WORD_EXPORT_FONT_FAMILY = "Times New Roman, Times, serif";
 const DOCUMENT_FONT_SIZE = "14pt";
 const TABLE_FONT_SIZE = "11pt";
+const WORD_DOCUMENT_FONT_SIZE = "13pt";
+const WORD_TABLE_FONT_SIZE = "13pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
 const TABLE_LINE_HEIGHT = "1.25";
 const MM_TO_TWIPS = 56.7;
@@ -52,10 +54,36 @@ function appendInlineStyle(node, styleText) {
     node.setAttribute("style", `${currentStyle}${separator}${styleText};`);
 }
 
+function hasInlineStyleValue(node, propertyPattern, valuePattern) {
+    let current = node;
+    while (current?.nodeType === Node.ELEMENT_NODE) {
+        const style = current.getAttribute("style") || "";
+        if (propertyPattern.test(style) && valuePattern.test(style)) return true;
+        current = current.parentElement;
+    }
+
+    return false;
+}
+
+function shouldPreserveBold(node) {
+    return (
+        !!node.closest?.("strong, b") ||
+        hasInlineStyleValue(node, /\bfont-weight\s*:/i, /\b(bold|[6-9]00|700)\b/i)
+    );
+}
+
+function shouldPreserveItalic(node) {
+    return !!node.closest?.("em, i") || hasInlineStyleValue(node, /\bfont-style\s*:/i, /\bitalic\b/i);
+}
+
+function shouldPreserveUnderline(node) {
+    return !!node.closest?.("u") || hasInlineStyleValue(node, /\btext-decoration(?:-line)?\s*:/i, /\bunderline\b/i);
+}
+
 function getWordExportFontInlineStyle(node) {
     const isSignatureContent = !!node.closest?.("[data-export-signature-table]");
     const isTableContent = !!node.closest?.("table") && !isSignatureContent;
-    const fontSize = isTableContent ? TABLE_FONT_SIZE : DOCUMENT_FONT_SIZE;
+    const fontSize = isTableContent ? WORD_TABLE_FONT_SIZE : WORD_DOCUMENT_FONT_SIZE;
     const lineHeight = isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
 
     return [
@@ -66,7 +94,12 @@ function getWordExportFontInlineStyle(node) {
         "mso-hansi-font-family: 'Times New Roman'",
         "mso-bidi-font-family: 'Times New Roman'",
         "mso-fareast-font-family: 'Times New Roman'",
-    ].join("; ");
+        shouldPreserveBold(node) ? "font-weight: bold" : "",
+        shouldPreserveItalic(node) ? "font-style: italic" : "",
+        shouldPreserveUnderline(node) ? "text-decoration: underline" : "",
+    ]
+        .filter(Boolean)
+        .join("; ");
 }
 
 function createWordExportTextSpan(textNode) {
@@ -164,6 +197,28 @@ function convertListsToPlainBlocks(root) {
         });
 }
 
+function convertNeutralBoldTags(root) {
+    root.querySelectorAll("b").forEach((boldNode) => {
+        const className = boldNode.getAttribute("class") || "";
+        const style = boldNode.getAttribute("style") || "";
+        const shouldRenderAsPlainText =
+            /info(Label|Value)/i.test(className) || /\bfont-weight\s*:\s*(inherit|normal|unset|400)\b/i.test(style);
+
+        if (!shouldRenderAsPlainText) return;
+
+        const span = document.createElement("span");
+        Array.from(boldNode.attributes).forEach((attribute) => {
+            span.setAttribute(attribute.name, attribute.value);
+        });
+
+        while (boldNode.firstChild) {
+            span.appendChild(boldNode.firstChild);
+        }
+
+        boldNode.replaceWith(span);
+    });
+}
+
 function normalizeSignatureText(value = "") {
     return String(value)
         .normalize("NFD")
@@ -197,18 +252,42 @@ function markSignatureElements(root) {
     root.querySelectorAll("table").forEach((table) => {
         if (!isSignatureText(table.textContent)) return;
 
+        const className = table.getAttribute("class") || "";
+        const usesEvenSignatureColumns = /signature-even-table/i.test(className);
+        const usesFixedSignatureColumns = /signature-table/i.test(className);
+        const spacerWidth = usesFixedSignatureColumns ? "auto" : "auto";
+        const signatureWidth = usesFixedSignatureColumns ? "70mm" : "70mm";
+
         table.setAttribute("data-export-signature-table", "");
+
+        if (usesEvenSignatureColumns) {
+            appendInlineStyle(
+                table,
+                "width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; table-layout: fixed !important",
+            );
+
+            table.querySelectorAll("td, th").forEach((cell) => {
+                appendInlineStyle(
+                    cell,
+                    "border: none !important; text-align: center !important; vertical-align: top !important; padding-right: 0 !important; white-space: normal !important",
+                );
+            });
+            return;
+        }
+
         appendInlineStyle(
             table,
-            "width: 100% !important; margin-left: auto !important; margin-right: 0 !important; table-layout: fixed !important",
+            /signature-single-table/i.test(className)
+                ? "width: 70mm !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important"
+                : "width: 100% !important; margin-left: auto !important; margin-right: 0 !important; table-layout: fixed !important",
         );
 
         const firstRowCells = Array.from(table.rows?.[0]?.cells || []);
         if (firstRowCells.length > 1) {
-            appendInlineStyle(firstRowCells[0], "width: auto !important");
+            appendInlineStyle(firstRowCells[0], `width: ${spacerWidth} !important`);
             appendInlineStyle(
                 firstRowCells[firstRowCells.length - 1],
-                "width: 70mm !important; max-width: 70mm !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important",
+                `width: ${signatureWidth} !important; max-width: ${signatureWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
             );
         }
 
@@ -218,7 +297,7 @@ function markSignatureElements(root) {
             cell.setAttribute("data-export-signature-cell", "");
             appendInlineStyle(
                 cell,
-                "width: 70mm !important; max-width: 70mm !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important",
+                `width: ${signatureWidth} !important; max-width: ${signatureWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
             );
         });
     });
@@ -244,6 +323,20 @@ function wrapTextNodesForWord(root) {
     });
 }
 
+function hasOnlyWhitespaceText(node) {
+    return Array.from(node.childNodes).every((child) => child.nodeType !== Node.TEXT_NODE || !child.nodeValue.trim());
+}
+
+function getWordExportBodyMarkup(exportElement) {
+    let contentRoot = exportElement;
+
+    while (contentRoot.children.length === 1 && hasOnlyWhitespaceText(contentRoot)) {
+        contentRoot = contentRoot.firstElementChild;
+    }
+
+    return contentRoot.innerHTML;
+}
+
 function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
     const exportElement = element.cloneNode(true);
     exportElement.classList.add("document-export-root");
@@ -254,11 +347,12 @@ function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
     if (normalizeForWord) {
         convertTableHeadersToBodyRows(exportElement);
         convertListsToPlainBlocks(exportElement);
+        convertNeutralBoldTags(exportElement);
         [exportElement, ...exportElement.querySelectorAll("*")].forEach(appendWordExportFontStyle);
         wrapTextNodesForWord(exportElement);
     }
 
-    return exportElement.outerHTML;
+    return normalizeForWord ? getWordExportBodyMarkup(exportElement) : exportElement.outerHTML;
 }
 
 export function generateHtmlString(element, options = {}) {
@@ -266,32 +360,31 @@ export function generateHtmlString(element, options = {}) {
     const pageMarginCss = getPageMarginCss(landscape);
     const landscapePageMarginCss = getPageMarginCss(true);
     const bodyHtml = normalizeExportMarkup(element, { normalizeForWord });
+    const exportDocumentFontSize = normalizeForWord ? WORD_DOCUMENT_FONT_SIZE : DOCUMENT_FONT_SIZE;
+    const exportTableFontSize = normalizeForWord ? WORD_TABLE_FONT_SIZE : TABLE_FONT_SIZE;
 
     let cssText = "";
-    try {
-        for (const sheet of document.styleSheets) {
-            try {
-                const rules = sheet.cssRules || sheet.rules;
-                if (!rules) continue;
-                for (const rule of rules) {
-                    let ruleText = rule.cssText;
-                    if (normalizeForWord) {
-                        // Aggressively strip any existing font or font-family declarations 
-                        // so they don't override the ones we inject for Word export.
-                        ruleText = ruleText.replace(/\bfont\s*:[^;]+;?/gi, "");
-                        ruleText = ruleText.replace(/\bfont-family\s*:[^;]+;?/gi, "");
-                    } else if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
-                        // Normal PDF export: just strip non-Times New Roman fonts
-                        ruleText = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
+    if (!normalizeForWord) {
+        try {
+            for (const sheet of document.styleSheets) {
+                try {
+                    const rules = sheet.cssRules || sheet.rules;
+                    if (!rules) continue;
+                    for (const rule of rules) {
+                        let ruleText = rule.cssText;
+                        if (ruleText.includes("font-family") && !ruleText.includes("Times New Roman")) {
+                            // Normal PDF export: just strip non-Times New Roman fonts.
+                            ruleText = ruleText.replace(/font-family\s*:[^;]+;?/gi, "");
+                        }
+                        cssText += ruleText + "\n";
                     }
-                    cssText += ruleText + "\n";
+                } catch {
+                    // Ignore cross-origin stylesheets.
                 }
-            } catch {
-                // Ignore cross-origin stylesheets.
             }
+        } catch (err) {
+            console.warn("[generateHtmlFile] Unable to read stylesheets:", err);
         }
-    } catch (err) {
-        console.warn("[generateHtmlFile] Unable to read stylesheets:", err);
     }
 
     return `<!DOCTYPE html>
@@ -308,9 +401,13 @@ export function generateHtmlString(element, options = {}) {
     *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --procedure-confirmation-font-size: ${DOCUMENT_FONT_SIZE};
+      --procedure-confirmation-font-size: ${exportDocumentFontSize};
     }
 
+    ${
+        normalizeForWord
+            ? ""
+            : `
     @page {
       size: A4 ${landscape ? "landscape" : "portrait"};
       margin: ${pageMarginCss};
@@ -319,6 +416,8 @@ export function generateHtmlString(element, options = {}) {
     @page landscape {
       size: A4 landscape;
       margin: ${landscapePageMarginCss};
+    }
+    `
     }
 
     html, body {
@@ -332,7 +431,7 @@ export function generateHtmlString(element, options = {}) {
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
       mso-fareast-font-family: 'Times New Roman';
-      font-size: ${DOCUMENT_FONT_SIZE} !important;
+      font-size: ${exportDocumentFontSize} !important;
       line-height: ${DOCUMENT_LINE_HEIGHT};
     }
 
@@ -354,12 +453,133 @@ export function generateHtmlString(element, options = {}) {
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
       mso-fareast-font-family: 'Times New Roman';
-      font-size: ${DOCUMENT_FONT_SIZE};
+      font-size: ${exportDocumentFontSize};
       line-height: ${DOCUMENT_LINE_HEIGHT};
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    .text-right {
+      text-align: right !important;
+    }
+
+    .title-recipient {
+      line-height: 1.5 !important;
+    }
+
+    .title-recipient-spacer {
+      margin: 0 !important;
+      font-size: 6.5pt !important;
+      line-height: 6.5pt !important;
+    }
+
+    .bordered-table,
+    .list-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      margin: 6pt 0 !important;
+    }
+
+    .bordered-table th,
+    .bordered-table td,
+    .list-table th,
+    .list-table td {
+      border: 1px solid #000 !important;
+      padding: 4pt 5pt !important;
+    }
+
+    .single-border-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      margin: 6pt 0 !important;
+    }
+
+    .single-border-table td,
+    .single-border-cell {
+      border: 1px solid #000 !important;
+      padding: 8pt 10pt !important;
+      vertical-align: top !important;
+    }
+
+    .indent-line {
+      margin-left: 28pt !important;
+    }
+
+    .checkbox-symbol {
+      font-family: ${WORD_EXPORT_FONT_FAMILY};
+      font-size: ${exportDocumentFontSize};
+      vertical-align: middle;
+    }
+
+    .no-border,
+    .no-border td,
+    .no-border th {
+      border: none !important;
+    }
+
+    .signature-table,
+    .signature-table td,
+    .signature-table th {
+      border: none !important;
+    }
+
+    .signature-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      margin-top: 24pt !important;
+    }
+
+    .signature-spacer {
+      width: auto !important;
+      border: none !important;
+      text-align: left !important;
+      vertical-align: top !important;
+    }
+
+    .signature-cell {
+      width: 70mm !important;
+      border: none !important;
+      text-align: center !important;
+      vertical-align: top !important;
+    }
+
+    .signature-single-table {
+      width: 70mm !important;
+      margin-left: auto !important;
+      margin-right: 0 !important;
+      table-layout: auto !important;
+    }
+
+    .signature-single-table .signature-cell {
+      width: auto !important;
+      max-width: none !important;
+      text-align: center !important;
+    }
+
+    .signature-even-table,
+    .signature-even-table td,
+    .signature-even-table th {
+      border: none !important;
+    }
+
+    .signature-even-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+    }
+
+    .signature-even-table td,
+    .signature-even-table th {
+      text-align: center !important;
+      vertical-align: top !important;
     }
 
     .document-export-root [class*="tableContainer"],
     .document-export-root [class*="tableScrollWrapper"] {
+      border: none !important;
+      border-radius: 0 !important;
       overflow: visible !important;
       max-width: 100% !important;
     }
@@ -381,13 +601,23 @@ export function generateHtmlString(element, options = {}) {
       mso-hansi-font-family: 'Times New Roman';
       mso-bidi-font-family: 'Times New Roman';
       mso-fareast-font-family: 'Times New Roman';
-      font-size: ${TABLE_FONT_SIZE};
+      font-size: ${exportTableFontSize};
       line-height: ${TABLE_LINE_HEIGHT};
     }
 
     table p, table span, table div, table strong, table em, table b, table i, table li {
-      font-size: ${TABLE_FONT_SIZE};
+      font-size: ${exportTableFontSize};
       line-height: ${TABLE_LINE_HEIGHT};
+    }
+
+    .signature-table p,
+    .signature-table span,
+    .signature-table strong,
+    .signature-table em,
+    .signature-table b,
+    .signature-table i {
+      font-size: ${exportDocumentFontSize} !important;
+      line-height: ${DOCUMENT_LINE_HEIGHT} !important;
     }
 
     [data-export-signature-row] {
@@ -426,6 +656,39 @@ export function generateHtmlString(element, options = {}) {
       white-space: normal !important;
     }
 
+    [data-export-signature-table].signature-table td:first-child {
+      width: auto !important;
+    }
+
+    [data-export-signature-table].signature-table [data-export-signature-cell],
+    [data-export-signature-table].signature-table .signature-cell {
+      width: 70mm !important;
+      max-width: 70mm !important;
+      text-align: center !important;
+    }
+
+    [data-export-signature-table].signature-single-table {
+      width: 70mm !important;
+      margin-left: auto !important;
+      margin-right: 0 !important;
+      table-layout: auto !important;
+    }
+
+    [data-export-signature-table].signature-single-table [data-export-signature-cell],
+    [data-export-signature-table].signature-single-table .signature-cell {
+      width: auto !important;
+      max-width: none !important;
+      text-align: center !important;
+    }
+
+    [data-export-signature-table].signature-even-table,
+    [data-export-signature-table].signature-even-table td,
+    [data-export-signature-table].signature-even-table th {
+      border: none !important;
+      text-align: center !important;
+      vertical-align: top !important;
+    }
+
     [data-export-signature-table] td,
     [data-export-signature-table] th,
     [data-export-signature-table] p,
@@ -434,7 +697,7 @@ export function generateHtmlString(element, options = {}) {
     [data-export-signature-table] em,
     [data-export-signature-table] b,
     [data-export-signature-table] i {
-      font-size: ${DOCUMENT_FONT_SIZE};
+      font-size: ${exportDocumentFontSize};
       line-height: ${DOCUMENT_LINE_HEIGHT};
     }
 
@@ -449,9 +712,7 @@ export function generateHtmlString(element, options = {}) {
     }
   </style>
 </head>
-<body>
-  ${bodyHtml}
-</body>
+<body>${bodyHtml}</body>
 </html>`;
 }
 

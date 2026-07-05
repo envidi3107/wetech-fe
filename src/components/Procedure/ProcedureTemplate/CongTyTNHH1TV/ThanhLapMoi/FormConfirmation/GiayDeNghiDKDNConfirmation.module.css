@@ -125,9 +125,14 @@ h3.docTitle {
     vertical-align: top;
 }
 
-.noBoderTable {
+.noBoderTable,
+.noBorderTable {
     border-collapse: collapse;
     font-size: var(--procedure-confirmation-font-size);
+}
+
+.noBorderTable {
+    border: none;
 }
 
 .noBorderTable td {
@@ -148,13 +153,8 @@ h3.docTitle {
 }
 
 .checkbox {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 16px;
-    height: 16px;
-    border: 1px solid #000;
-    font-size: var(--procedure-confirmation-font-size);
+    display: inline-block;
+    font-size: 15pt;
     line-height: 1;
     margin: 0 4px;
     vertical-align: middle;

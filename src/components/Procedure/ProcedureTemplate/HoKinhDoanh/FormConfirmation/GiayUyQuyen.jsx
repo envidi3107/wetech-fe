@@ -3,6 +3,35 @@ import styles from "./confirmation.module.css";
 import { formatDate } from "@/utils/dateTimeUtils";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
+const DOCUMENT_TEXT_STYLE = {
+    fontFamily: "'Times New Roman', Times, serif",
+    fontSize: "13pt",
+    lineHeight: 1.6,
+    color: "#000",
+};
+
+const SECTION_TITLE_STYLE = {
+    ...DOCUMENT_TEXT_STYLE,
+    textDecoration: "underline",
+    fontWeight: "bold",
+};
+
+const signatureTableStyle = {
+    ...DOCUMENT_TEXT_STYLE,
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "20px",
+};
+
+const signatureCellStyle = {
+    ...DOCUMENT_TEXT_STYLE,
+    width: "50%",
+    border: "none",
+    textAlign: "center",
+    verticalAlign: "top",
+    padding: "0 40px",
+};
+
 export default function GiayUyQuyen({ dataJson }) {
     if (!dataJson) return null;
 
@@ -48,16 +77,24 @@ export default function GiayUyQuyen({ dataJson }) {
     };
 
     return (
-        <div className={styles.page}>
+        <div className={styles.page} style={DOCUMENT_TEXT_STYLE}>
             <div className={styles.header}>
-                <h2 className={styles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
-                <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
+                <h2 className={`${styles.headerTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
+                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                </h2>
+                <p className={`${styles.headerSubtitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", textDecoration: "underline", margin: "4px 0 0", fontWeight: 700 }}>
+                    <strong>
+                        <u>Độc lập - Tự do - Hạnh phúc</u>
+                    </strong>
+                </p>
             </div>
-            <p className={styles.docTitle} style={{ margin: "30px 0" }}>
+            <h1 className={`${styles.docTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: "30px 0" }}>
                 GIẤY UỶ QUYỀN
-            </p>
-            <p className={styles.sectionTitle} style={{ textDecoration: "underline", fontSize: "15px" }}>
-                BÊN ỦY QUYỀN (BÊN A):
+            </h1>
+            <p className={styles.sectionTitle} style={SECTION_TITLE_STYLE}>
+                <strong>
+                    <u>BÊN ỦY QUYỀN (BÊN A):</u>
+                </strong>
             </p>
             <div className={styles.infoRow}>
                 <p className={styles.infoItem} style={{ flex: 1.5 }}>
@@ -207,15 +244,17 @@ export default function GiayUyQuyen({ dataJson }) {
             </div>
             <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
                 <>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </>
-                <>{chuHo_ten}</>
+                <>{chuHo_ten} {" "}</>
                 <>tại {kinhGuiPrefix.trim()} </>
                 <>{chuHo_xa_phuong}</>
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                BÊN NHẬN UỶ QUYỀN (BÊN B):
+                <strong>
+                    <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
+                </strong>
             </p>
             <div className={styles.infoRow}>
                 <p className={styles.infoItem} style={{ flex: 1.5 }}>
@@ -426,9 +465,11 @@ export default function GiayUyQuyen({ dataJson }) {
             </div>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                NỘI DUNG ỦY QUYỀN:
+                <strong>
+                    <u>NỘI DUNG ỦY QUYỀN:</u>
+                </strong>
             </p>
             <p className={styles.infoLine} style={{ marginBottom: "10px" }}>
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
@@ -439,9 +480,11 @@ export default function GiayUyQuyen({ dataJson }) {
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                THỜI HẠN UỶ QUYỀN:
+                <strong>
+                    <u>THỜI HẠN UỶ QUYỀN:</u>
+                </strong>
             </p>
             <p className={styles.infoLine}>Từ ngày ký đến khi hoàn tất công việc.</p>
             <p className={styles.infoLine}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
@@ -449,21 +492,29 @@ export default function GiayUyQuyen({ dataJson }) {
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
             </p>
             <p className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
-            <p className={styles.dateLocation}>
-                <CurrentDate prefix={chuHo_xa_phuong} />
+            <p className={`${styles.dateLocation} text-right`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "right", fontStyle: "italic" }}>
+                <CurrentDate prefix={chuHo_xa_phuong} style={{ ...DOCUMENT_TEXT_STYLE, fontStyle: "italic" }} />
             </p>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", padding: "0 40px" }}>
-                <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: "bold" }}>
-                        BÊN NHẬN ỦY QUYỀN
-                    </p>
-                </div>
-                <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: "bold" }}>
-                        BÊN ỦY QUYỀN
-                    </p>
-                </div>
-            </div>
+            <table className="signature-table no-border" style={signatureTableStyle}>
+                <tbody>
+                    <tr>
+                        <td style={signatureCellStyle}>
+                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                                <strong>
+                                    <u>BÊN NHẬN ỦY QUYỀN</u>
+                                </strong>
+                            </p>
+                        </td>
+                        <td style={signatureCellStyle}>
+                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                                <strong>
+                                    <u>BÊN ỦY QUYỀN</u>
+                                </strong>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

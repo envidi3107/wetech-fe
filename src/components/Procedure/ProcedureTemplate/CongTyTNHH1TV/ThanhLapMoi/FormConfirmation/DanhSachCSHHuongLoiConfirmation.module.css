@@ -1,7 +1,5 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: block;
     background: #fff;
     font-family: "Times New Roman", serif;
     font-size: var(--procedure-confirmation-font-size);

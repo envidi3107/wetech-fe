@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./GiayDeNghiDKDNConfirmation.module.css";
-import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/NganhNgheTable/NganhNgheTable";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import { formatDate } from "@/utils/dateTimeUtils";
 import {
@@ -9,15 +8,15 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
-    <i
+    <span
         className={styles.checkbox}
         style={{
             fontWeight: "inherit",
             fontStyle: "normal",
         }}
     >
-        {checked ? "x" : ""}
-    </i>
+        {checked ? "\u2612" : "\u2610"}
+    </span>
 );
 const InlineField = ({ children }) => (
     <b
@@ -896,7 +895,16 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <div>
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
-                    đăng ký doanh nghiệp hay không? Có <Checkbox checked={false} /> Không <Checkbox checked={true} />
+                    đăng ký doanh nghiệp hay không?
+                    Có <Checkbox checked={false} />
+                    <b
+                        style={{
+                            marginLeft: "20px",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    ></b>
+                    Không <Checkbox checked={true} />
                 </div>
 
                 <p style={{ marginTop: "16px" }}>
@@ -2182,16 +2190,35 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
 
                 <table
-                    className={styles.noBorderTable}
-                    style={{ width: "100%", marginTop: "30px", marginBottom: "50px" }}
+                    className={`${styles.noBorderTable} signature-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        tableLayout: "auto",
+                        marginTop: "30px",
+                        marginBottom: "50px",
+                    }}
                 >
                     <tbody>
                         <tr>
-                            <td style={{ width: "50%" }}></td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top", whiteSpace: "nowrap" }}>
-                                <p>
+                            <td className="signature-spacer" style={{ border: "none", width: "auto" }}>
+                                &nbsp;
+                            </td>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{
+                                    border: "none",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                    whiteSpace: "nowrap",
+                                    width: "124mm"
+                                }}
+                            >
+                                <p className="text-center" style={{ textAlign: "center", margin: 0 }}>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
+                                </p>
+                                <p className="text-center" style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>
                         </tr>

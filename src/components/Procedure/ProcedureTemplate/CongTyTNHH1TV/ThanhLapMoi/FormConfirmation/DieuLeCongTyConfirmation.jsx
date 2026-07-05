@@ -1,17 +1,10 @@
 import React from "react";
 import styles from "./DieuLeCongTyConfirmation.module.css";
 import { formatDate } from "@/utils/dateTimeUtils";
-import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
-
-const getLastName = (fullName) => {
-    if (!fullName) return "";
-    const nameParts = fullName.trim().split(" ");
-    return nameParts[nameParts.length - 1];
-};
 
 const formatCurrency = (value) => {
     if (value === null || value === undefined || value === "") return "";
@@ -868,20 +861,28 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 {dataJson.ngayThongQua ? formatDate(dataJson.ngayThongQua) : "....................."}. Điều lệ này có
                 hiệu lực kể từ ngày được Chủ sở hữu công ty thông qua.
             </p>
-            <div className={styles.signatures}>
-                <div className={styles.signatureBox} style={{ justifyContent: "flex-start", gap: 0 }}>
-                    <p className={styles.bold}>CHỦ SỞ HỮU</p>
-                    <p className={styles.signatureName}>
-                        <em>(Ký, ghi rõ họ tên)</em>
-                    </p>
-                </div>
-                <div className={styles.signatureBox}>
-                    <p className={styles.bold}>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</p>
-                    <p className={styles.signatureName}>
-                        <em>(Ký, ghi rõ họ tên)</em>
-                    </p>
-                </div>
-            </div>
+            <table className={`${styles.signatureTable} signature-even-table no-border`}>
+                <tbody>
+                    <tr>
+                        <td className={styles.signatureCell} style={{ border: "none", textAlign: "center" }}>
+                            <p className={styles.bold} style={{ textAlign: "center" }}>
+                                CHỦ SỞ HỮU
+                            </p>
+                            <p className={styles.signatureName} style={{ textAlign: "center" }}>
+                                <em>(Ký, ghi rõ họ tên)</em>
+                            </p>
+                        </td>
+                        <td className={styles.signatureCell} style={{ border: "none", textAlign: "center" }}>
+                            <p className={styles.bold} style={{ textAlign: "center" }}>
+                                NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY
+                            </p>
+                            <p className={styles.signatureName} style={{ textAlign: "center" }}>
+                                <em>(Ký, ghi rõ họ tên)</em>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

@@ -2,8 +2,8 @@ import React from "react";
 import { formatDate } from "@/utils/dateTimeUtils";
 
 const FONT_FAMILY = "'Times New Roman', Times, serif";
-const DOCUMENT_FONT_SIZE = "14pt";
-const TABLE_FONT_SIZE = "14pt";
+const DOCUMENT_FONT_SIZE = "13pt";
+const TABLE_FONT_SIZE = "13pt";
 
 const textStyle = {
     fontFamily: FONT_FAMILY,
@@ -104,6 +104,22 @@ const inlineStyles = {
         border: "1px solid #000",
         padding: "4px 8px",
     },
+    singleBorderTable: {
+        ...textStyle,
+        width: "100%",
+        borderCollapse: "collapse",
+        margin: "10px 0",
+    },
+    singleBorderCell: {
+        ...textStyle,
+        border: "1px solid #000",
+        padding: "8pt 10pt",
+        verticalAlign: "top",
+    },
+    indentLine: {
+        ...textStyle,
+        margin: "0 0 6px 28pt",
+    },
     italicParagraph: {
         ...textStyle,
         fontStyle: "italic",
@@ -112,8 +128,8 @@ const inlineStyles = {
     tableContainer: {
         width: "100%",
         overflowX: "auto",
-        border: "1px solid #aaa",
-        borderRadius: "2px",
+        border: "none",
+        borderRadius: 0,
         margin: "10px 0",
     },
     table: {
@@ -123,7 +139,7 @@ const inlineStyles = {
     },
     th: {
         ...tableTextStyle,
-        border: "1px solid #aaa",
+        border: "1px solid #000",
         padding: "6px 10px",
         verticalAlign: "top",
         backgroundColor: "#fff",
@@ -132,7 +148,7 @@ const inlineStyles = {
     },
     td: {
         ...tableTextStyle,
-        border: "1px solid #aaa",
+        border: "1px solid #000",
         padding: "6px 10px",
         verticalAlign: "top",
         textAlign: "left",
@@ -154,7 +170,7 @@ const inlineStyles = {
         ...textStyle,
         display: "flex",
         alignItems: "center",
-        gap: "8px",
+        gap: 0,
         marginBottom: "4px",
     },
     checkedBox: {
@@ -174,6 +190,13 @@ const inlineStyles = {
         height: "16px",
         border: "1px solid #333",
         fontStyle: "normal",
+    },
+    checkboxSymbol: {
+        ...textStyle,
+        display: "inline-block",
+        fontSize: "16pt",
+        marginRight: "5px",
+        verticalAlign: "middle",
     },
     closingText: {
         ...textStyle,
@@ -217,6 +240,29 @@ const inlineStyles = {
         textTransform: "uppercase",
         margin: "20px 0 0",
     },
+    signatureTable: {
+        ...textStyle,
+        width: "100%",
+        borderCollapse: "collapse",
+        marginTop: "24pt",
+        tableLayout: "auto",
+    },
+    signatureSpacer: {
+        border: "none",
+        textAlign: "left",
+        verticalAlign: "top",
+        padding: 0,
+        width: "auto",
+    },
+    signatureCell: {
+        border: "none",
+        textAlign: "center",
+        verticalAlign: "top",
+        padding: 0,
+        width: "72mm",
+        minWidth: "72mm",
+        maxWidth: "72mm",
+    },
 };
 
 function mergeStyles(...styles) {
@@ -225,7 +271,7 @@ function mergeStyles(...styles) {
 
 function Th({ children, style, ...props }) {
     return (
-        <th {...props} style={mergeStyles(inlineStyles.th, style)}>
+        <th {...props} className="text-center" style={mergeStyles(inlineStyles.th, style)}>
             <p style={inlineStyles.tableHeaderParagraph}>{children}</p>
         </th>
     );
@@ -233,13 +279,22 @@ function Th({ children, style, ...props }) {
 
 function Td({ children, style, center = false, raw = false, ...props }) {
     return (
-        <td {...props} style={mergeStyles(inlineStyles.td, center && inlineStyles.tdCenter, style)}>
+        <td {...props} className={center ? "text-center" : undefined} style={mergeStyles(inlineStyles.td, center && inlineStyles.tdCenter, style)}>
             {raw ? (
                 children
             ) : (
                 <p style={mergeStyles(inlineStyles.tableParagraph, center && inlineStyles.tdCenter)}>{children}</p>
             )}
         </td>
+    );
+}
+
+function CheckboxSymbol({ checked }) {
+    return (
+        <span className="checkbox-symbol" style={inlineStyles.checkboxSymbol}>
+            {checked ? "\u2612" : "\u2610"}
+            {"\u00A0"}
+        </span>
     );
 }
 
@@ -254,8 +309,6 @@ export default function GiayDeNghi({ dataJson }) {
     if (!dataJson) return null;
 
     const {
-        chuKy_ten = "",
-        chuKy_hoTen = "",
         nguoiDaiDien_hoTen = "",
         nguoiDaiDien_ngaySinh = "",
         nguoiDaiDien_gioiTinh = "",
@@ -326,12 +379,24 @@ export default function GiayDeNghi({ dataJson }) {
     return (
         <div style={inlineStyles.page}>
             <div style={inlineStyles.header}>
-                <h2 style={inlineStyles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
-                <h3 style={inlineStyles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
+                <h2 className="text-center" style={mergeStyles(inlineStyles.headerTitle, { textAlign: "center" })}>
+                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                </h2>
+                <p className="text-center" style={mergeStyles(inlineStyles.headerSubtitle, { textAlign: "center" })}>
+                    <strong>
+                        <u>Độc lập - Tự do - Hạnh phúc</u>
+                    </strong>
+                </p>
             </div>
-            <p style={inlineStyles.dateLocation}>{currentDateLabel}</p>
-            <p style={inlineStyles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH</p>
-            <p style={inlineStyles.centerLine}>Kính gửi: {kinhGui}</p>
+            <p className="text-right" style={inlineStyles.dateLocation}>
+                {currentDateLabel}
+            </p>
+            <h1 className="text-center" style={mergeStyles(inlineStyles.docTitle, { textAlign: "center" })}>
+                GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH
+            </h1>
+            <p className="text-center title-recipient" style={mergeStyles(inlineStyles.centerLine, { textAlign: "center", lineHeight: 1.5 })}>
+                Kính gửi: {kinhGui}
+            </p>
             <p style={inlineStyles.infoLine}>
                 Tôi là (ghi họ tên bằng chữ in hoa): {(nguoiDaiDien_hoTen || "").toUpperCase()}
             </p>
@@ -345,42 +410,50 @@ export default function GiayDeNghi({ dataJson }) {
                 </p>
             </div>
             <p style={inlineStyles.italicParagraph}>
-                Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân cư
-                bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
+                <em>
+                    Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân
+                    cư bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
+                </em>
             </p>
-            <div style={inlineStyles.infoBorder}>
-                <div style={inlineStyles.infoRow}>
-                    <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                        Dân tộc: {nguoiDaiDien_danToc || "Kinh"}
-                    </p>
-                    <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>
-                        Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}
-                    </p>
-                </div>
+            <table className="single-border-table" style={inlineStyles.singleBorderTable}>
+                <tbody>
+                    <tr>
+                        <td className="single-border-cell" style={inlineStyles.singleBorderCell}>
+                            <p style={inlineStyles.infoLine}>
+                                <span style={{ display: "inline-block", minWidth: "30mm" }}>
+                                    Dân tộc: {nguoiDaiDien_danToc || "Kinh"}
+                                </span>
+                                <span>Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}</span>
+                            </p>
 
-                <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi thường trú:</p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {thuongTru_soNha}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Xã/Phường/Đặc khu: {thuongTru_xa}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Tỉnh/Thành phố trực thuộc trung ương: {thuongTru_tinh}
-                </p>
+                            <p style={inlineStyles.infoLine}>Nơi thường trú:</p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {thuongTru_soNha}
+                            </p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Xã/Phường/Đặc khu: {thuongTru_xa}
+                            </p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Tỉnh/Thành phố trực thuộc trung ương: {thuongTru_tinh}
+                            </p>
 
-                <p style={mergeStyles(inlineStyles.infoLine, { marginTop: "10px" })}>Nơi ở hiện tại:</p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {hienTai_soNha}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Xã/Phường/Đặc khu: {hienTai_xa}
-                </p>
-                <p style={mergeStyles(inlineStyles.infoLine, { marginLeft: "16px" })}>
-                    Tỉnh/Thành phố trực thuộc trung ương: {hienTai_tinh}
-                </p>
-            </div>
-            <p style={inlineStyles.boldCenterLine}>Đăng ký hộ kinh doanh do tôi là chủ hộ với các nội dung sau:</p>
+                            <p style={inlineStyles.infoLine}>Nơi ở hiện tại:</p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn: {hienTai_soNha}
+                            </p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Xã/Phường/Đặc khu: {hienTai_xa}
+                            </p>
+                            <p className="indent-line" style={inlineStyles.indentLine}>
+                                Tỉnh/Thành phố trực thuộc trung ương: {hienTai_tinh}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p className="text-center" style={mergeStyles(inlineStyles.boldCenterLine, { textAlign: "center" })}>
+                <strong>Đăng ký hộ kinh doanh do tôi là chủ hộ với các nội dung sau:</strong>
+            </p>
             <p style={inlineStyles.infoLine}>
                 <strong style={inlineStyles.heading}>1. Tên hộ kinh doanh:</strong>
             </p>
@@ -412,13 +485,7 @@ export default function GiayDeNghi({ dataJson }) {
                 <p style={mergeStyles(inlineStyles.infoItem, { flex: 1 })}>Website (nếu có): ..........</p>
             </div>
             <p style={mergeStyles(inlineStyles.checkRow, { marginLeft: "16px", marginTop: "6px" })}>
-                <i
-                    style={
-                        !truSo_soNha && !truSo_xa && !truSo_tinh ? inlineStyles.checkedBox : inlineStyles.uncheckedBox
-                    }
-                >
-                    {!truSo_soNha && !truSo_xa && !truSo_tinh ? "X" : ""}
-                </i>
+                <CheckboxSymbol checked={!truSo_soNha && !truSo_xa && !truSo_tinh} />
                 Không kinh doanh tại trụ sở (đánh dấu X vào ô này nếu hộ kinh doanh không có địa điểm kinh doanh cố
                 định)
             </p>
@@ -426,7 +493,7 @@ export default function GiayDeNghi({ dataJson }) {
                 <strong style={inlineStyles.heading}>3. Ngành, nghề kinh doanh:</strong>
             </p>
             <div style={inlineStyles.tableContainer}>
-                <table style={inlineStyles.table}>
+                <table className="bordered-table" style={inlineStyles.table}>
                     <thead>
                         <tr>
                             <Th style={{ width: "40px" }}>STT</Th>
@@ -495,15 +562,11 @@ export default function GiayDeNghi({ dataJson }) {
             </p>
             <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
                 <p style={mergeStyles(inlineStyles.checkRow, { marginRight: "40px" })}>
-                    <i style={isPPKeKhai ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
-                        {isPPKeKhai ? "X" : ""}
-                    </i>
+                    <CheckboxSymbol checked={isPPKeKhai} />
                     Phương pháp kê khai
                 </p>
                 <p style={inlineStyles.checkRow}>
-                    <i style={isPPKhoan ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
-                        {isPPKhoan ? "X" : ""}
-                    </i>
+                    <CheckboxSymbol checked={isPPKhoan} />
                     Phương pháp khoán
                 </p>
             </div>
@@ -513,13 +576,11 @@ export default function GiayDeNghi({ dataJson }) {
             </p>
             <div style={mergeStyles(inlineStyles.infoRow, { marginLeft: "16px" })}>
                 <p style={mergeStyles(inlineStyles.checkRow, { marginRight: "40px" })}>
-                    <i style={isCaNhan ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>{isCaNhan ? "X" : ""}</i>
+                    <CheckboxSymbol checked={isCaNhan} />
                     Cá nhân
                 </p>
                 <p style={inlineStyles.checkRow}>
-                    <i style={isGiaDinh ? inlineStyles.checkedBox : inlineStyles.uncheckedBox}>
-                        {isGiaDinh ? "X" : ""}
-                    </i>
+                    <CheckboxSymbol checked={isGiaDinh} />
                     Các thành viên hộ gia đình
                 </p>
             </div>
@@ -529,7 +590,7 @@ export default function GiayDeNghi({ dataJson }) {
                 </strong>
             </p>
             <div style={inlineStyles.tableContainer}>
-                <table style={inlineStyles.table}>
+                <table className="bordered-table" style={inlineStyles.table}>
                     <thead>
                         <tr>
                             <Th style={{ width: "30px" }}>STT</Th>
@@ -615,12 +676,23 @@ export default function GiayDeNghi({ dataJson }) {
                     đăng ký trên.
                 </p>
             </div>
-            <div style={inlineStyles.signatureRow}>
-                <div style={inlineStyles.signatureBlock}>
-                    <p style={inlineStyles.signatureTitle}>CHỦ HỘ KINH DOANH</p>
-                    <p style={inlineStyles.signatureNote}>(Ký và ghi họ tên)</p>
-                </div>
-            </div>
+            <table className="signature-table no-border" style={inlineStyles.signatureTable}>
+                <tbody>
+                    <tr>
+                        <td className="signature-spacer" style={inlineStyles.signatureSpacer}>
+                            &nbsp;
+                        </td>
+                        <td className="signature-cell" style={inlineStyles.signatureCell}>
+                            <p className="text-center" style={mergeStyles(inlineStyles.signatureTitle, { textAlign: "center" })}>
+                                <strong>CHỦ HỘ KINH DOANH</strong>
+                            </p>
+                            <p className="text-center" style={mergeStyles(inlineStyles.signatureNote, { textAlign: "center" })}>
+                                <em>(Ký và ghi họ tên)</em>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

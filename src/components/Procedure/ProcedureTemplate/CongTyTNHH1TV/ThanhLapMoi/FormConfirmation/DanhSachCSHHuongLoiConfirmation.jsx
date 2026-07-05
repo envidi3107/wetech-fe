@@ -359,17 +359,44 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                     </tbody>
                 </table>
             </div>
-            <div style={{ textAlign: "right", width: "100%", marginTop: "30px", marginBottom: "50px" }}>
-                <div style={{ display: "inline-block", textAlign: "center", whiteSpace: "nowrap" }}>
-                    <p className={styles.signatureDate}>
-                        <CurrentDate prefix={datePrefix} />
-                    </p>
-                    <p className={styles.signatureTitle}>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</p>
-                    <p className={styles.signatureSubtitle}>
-                        (<em>Ký và ghi rõ họ tên</em>)
-                    </p>
-                </div>
-            </div>
+            <table
+                className="signature-table no-border"
+                style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    tableLayout: "auto",
+                    marginTop: "30px",
+                    marginBottom: "50px",
+                }}
+            >
+                <tbody>
+                    <tr>
+                        <td className="signature-spacer" style={{ border: "none", width: "auto" }}>
+                            &nbsp;
+                        </td>
+                        <td
+                            className="signature-cell"
+                            style={{
+                                border: "none",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                                whiteSpace: "nowrap",
+                                width: "125mm",
+                            }}
+                        >
+                            <p className={`${styles.signatureDate} text-center`} style={{ textAlign: "center" }}>
+                                <CurrentDate prefix={datePrefix} />
+                            </p>
+                            <p className={`${styles.signatureTitle} text-center`} style={{ textAlign: "center" }}>
+                                NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY
+                            </p>
+                            <p className={`${styles.signatureSubtitle} text-center`} style={{ textAlign: "center" }}>
+                                (<em>Ký và ghi rõ họ tên</em>)
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

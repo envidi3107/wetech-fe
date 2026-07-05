@@ -107,6 +107,25 @@
     margin-top: 40px;
 }
 
+.signatureTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+
+.signatureTable,
+.signatureTable td,
+.signatureTable th {
+    border: none;
+}
+
+.signatureCell {
+    width: 50%;
+    text-align: center;
+    vertical-align: top;
+    padding: 0 8px;
+}
+
 .signatureBox {
     width: 45%;
     display: flex;
@@ -115,11 +134,13 @@
     align-items: center;
 }
 
-.signatureBox p {
+.signatureBox p,
+.signatureCell p {
     text-align: center !important;
 }
 
-.signatureBox .bold {
+.signatureBox .bold,
+.signatureCell .bold {
     font-weight: bold;
     margin: 0;
 }
