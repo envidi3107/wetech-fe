@@ -11,7 +11,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
         <div className={styles.wrapper}>
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
-                <table className={styles.table}>
+                <table className={`${styles.table} single-border-table`}>
                     <thead>
                         <tr>
                             <th rowSpan={2} className={styles.th}>
@@ -364,33 +364,42 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                 style={{
                     width: "100%",
                     borderCollapse: "collapse",
-                    tableLayout: "auto",
+                    border: "none",
                     marginTop: "30px",
                     marginBottom: "50px",
                 }}
             >
                 <tbody>
                     <tr>
-                        <td className="signature-spacer" style={{ border: "none", width: "auto" }}>
-                            &nbsp;
-                        </td>
+                        <td
+                            className="signature-spacer"
+                            style={{
+                                border: "none",
+                                width: "40%",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                            }}
+                        ></td>
+                        <td
+                            className="signature-spacer"
+                            style={{ border: "none", width: "20%" }}
+                        ></td>
                         <td
                             className="signature-cell"
                             style={{
                                 border: "none",
                                 textAlign: "center",
                                 verticalAlign: "top",
-                                whiteSpace: "nowrap",
-                                width: "125mm",
+                                width: "40%",
                             }}
                         >
-                            <p className={`${styles.signatureDate} text-center`} style={{ textAlign: "center" }}>
+                            <p style={{ textAlign: "center", fontStyle: "italic" }}>
                                 <CurrentDate prefix={datePrefix} />
                             </p>
-                            <p className={`${styles.signatureTitle} text-center`} style={{ textAlign: "center" }}>
+                            <p style={{ textAlign: "center", fontWeight: "bold" }}>
                                 NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY
                             </p>
-                            <p className={`${styles.signatureSubtitle} text-center`} style={{ textAlign: "center" }}>
+                            <p style={{ textAlign: "center" }}>
                                 (<em>Ký và ghi rõ họ tên</em>)
                             </p>
                         </td>

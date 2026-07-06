@@ -27,3 +27,23 @@ code {
     --border-color: #c8c7d4;
 
 }
+
+/* Table styles for DOCX export compatibility */
+.single-border-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.single-border-table th,
+.single-border-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.no-border,
+.no-border th,
+.no-border td {
+    border: none !important;
+    border-collapse: collapse;
+}

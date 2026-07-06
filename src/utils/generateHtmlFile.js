@@ -337,6 +337,76 @@ function getWordExportBodyMarkup(exportElement) {
     return contentRoot.innerHTML;
 }
 
+/**
+ * Apply inline border styles to table cells based on CSS class names.
+ * The export_docx server strips all <style> tags from full HTML documents,
+ * so CSS class-based borders (e.g. `.single-border-table td { border: 1px solid #000 }`)
+ * are lost. This function converts those class-based rules into inline styles
+ * so borders survive the export pipeline.
+ */
+function applyTableBorderStyles(root) {
+    // Tables with borders: single-border-table, bordered-table, list-table
+    root.querySelectorAll("table.single-border-table, table.bordered-table, table.list-table").forEach((table) => {
+        table.querySelectorAll("td, th").forEach((cell) => {
+            const currentStyle = cell.getAttribute("style") || "";
+            if (!/\bborder\s*:/i.test(currentStyle)) {
+                appendInlineStyle(cell, "border: 1px solid #000");
+            }
+        });
+    });
+
+    // Tables without borders: no-border, signature-table
+    root.querySelectorAll("table.no-border, table.signature-table, table.signature-even-table").forEach((table) => {
+        table.querySelectorAll("td, th").forEach((cell) => {
+            const currentStyle = cell.getAttribute("style") || "";
+            if (!/\bborder\s*:/i.test(currentStyle)) {
+                appendInlineStyle(cell, "border: none");
+            }
+        });
+    });
+}
+
+/**
+ * Apply inline font-weight/text-align/text-decoration/font-style to elements
+ * that rely on CSS module classes for these properties. Since CSS module class
+ * names are hashed and the style tags are stripped during export, computed
+ * styles need to be inlined.
+ */
+function applyComputedTextStyles(root) {
+    root.querySelectorAll("*").forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        const computedStyle = window.getComputedStyle(node);
+        const inlineStyle = node.getAttribute("style") || "";
+
+        // Bold: computed fontWeight >= 600 or "bold"
+        const computedWeight = computedStyle.fontWeight;
+        const isBold = computedWeight === "bold" || Number(computedWeight) >= 600;
+        if (isBold && !/\bfont-weight\s*:/i.test(inlineStyle) && !node.closest("strong, b")) {
+            appendInlineStyle(node, "font-weight: bold");
+        }
+
+        // Text-align: center or right (only on block elements / cells)
+        const computedAlign = computedStyle.textAlign;
+        if (["center", "right"].includes(computedAlign) && !/\btext-align\s*:/i.test(inlineStyle)) {
+            const tagName = node.tagName.toUpperCase();
+            if (["P", "DIV", "TD", "TH", "H1", "H2", "H3", "H4", "H5", "H6"].includes(tagName)) {
+                appendInlineStyle(node, `text-align: ${computedAlign}`);
+            }
+        }
+
+        // Text-decoration: underline
+        const computedDecoration = computedStyle.textDecorationLine || computedStyle.textDecoration || "";
+        if (computedDecoration.includes("underline") && !/\btext-decoration\s*:/i.test(inlineStyle) && !node.closest("u")) {
+            appendInlineStyle(node, "text-decoration: underline");
+        }
+
+        // Font-style: italic
+        if (computedStyle.fontStyle === "italic" && !/\bfont-style\s*:/i.test(inlineStyle) && !node.closest("em, i")) {
+            appendInlineStyle(node, "font-style: italic");
+        }
+    });
+}
+
 function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
     const exportElement = element.cloneNode(true);
     exportElement.classList.add("document-export-root");
@@ -345,6 +415,19 @@ function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
     markSignatureElements(exportElement);
 
     if (normalizeForWord) {
+        // Temporarily attach to DOM to enable getComputedStyle
+        const offscreen = document.createElement("div");
+        offscreen.style.cssText = "position:absolute;left:-9999px;top:-9999px;width:210mm;visibility:hidden;pointer-events:none";
+        offscreen.appendChild(exportElement);
+        document.body.appendChild(offscreen);
+
+        try {
+            applyComputedTextStyles(exportElement);
+        } finally {
+            document.body.removeChild(offscreen);
+        }
+
+        applyTableBorderStyles(exportElement);
         convertTableHeadersToBodyRows(exportElement);
         convertListsToPlainBlocks(exportElement);
         convertNeutralBoldTags(exportElement);

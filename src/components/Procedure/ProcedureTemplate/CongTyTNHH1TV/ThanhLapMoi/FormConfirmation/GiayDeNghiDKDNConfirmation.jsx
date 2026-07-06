@@ -216,15 +216,23 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <h2 className={styles.nationTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
-                <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
-                <p className={styles.dateRight} style={{ fontStyle: "italic" }}>
+            <div style={{ textAlign: "center", marginBottom: "30px" }}>
+                <p style={{ fontWeight: "bold", textAlign: "center", fontSize: "20px", margin: 0 }}>
+                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                </p>
+                <p style={{ fontWeight: "bold", textAlign: "center", fontSize: "18px", textDecoration: "underline", margin: "4px 0 18px" }}>
+                    Độc lập - Tự do - Hạnh phúc
+                </p>
+                <p style={{ fontStyle: "italic", textAlign: "right", margin: "10px 0 0" }}>
                     <CurrentDate />
                 </p>
             </div>
-            <h2 className={styles.docTitle}>GIẤY ĐỀ NGHỊ ĐĂNG KÝ DOANH NGHIỆP</h2>
-            <h3 className={styles.docTitle}>CÔNG TY TRÁCH NHIỆM HỮU HẠN MỘT THÀNH VIÊN</h3>
+            <p style={{ fontWeight: "bold", textAlign: "center", fontSize: "20px", margin: "0" }}>
+                GIẤY ĐỀ NGHỊ ĐĂNG KÝ DOANH NGHIỆP
+            </p>
+            <p style={{ fontWeight: "bold", textAlign: "center", fontSize: "20px", margin: "8px 0 30px" }}>
+                CÔNG TY TRÁCH NHIỆM HỮU HẠN MỘT THÀNH VIÊN
+            </p>
             <div className={styles.content}>
                 <p>Kính gửi: {displayValue(kinhGui)}</p>
 
@@ -248,7 +256,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <table
+                    className="single-border-table"
+                    style={{ width: "calc(100% - 20px)", border: "1px solid #000" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -288,7 +299,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>1. Tình trạng thành lập </strong>(<em>đánh dấu X vào ô thích hợp</em>):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -524,7 +535,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </em>
                     ):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -650,7 +661,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>4. Ngành, nghề kinh doanh </strong>(
                     <em>ghi tên và mã theo ngành cấp 4 trong Hệ thống ngành kinh tế của Việt Nam</em>):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -832,7 +843,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <table className="single-border-table" style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -910,7 +921,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>7. Nguồn vốn điều lệ:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center" }}>
@@ -1154,7 +1165,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>8. Tài sản góp vốn:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th className={styles.textCenter} style={{ width: "50px" }}>
@@ -1591,7 +1602,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <table className="single-border-table" style={{ width: "calc(100% - 20px)" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -1624,7 +1635,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>10. Thông tin đăng ký thuế:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="single-border-table" style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -1785,7 +1796,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     </em>
                                     ):{" "}
                                 </p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "150px" }}>
@@ -1913,7 +1924,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                             <td colSpan="2">
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "100px" }}>
@@ -1962,7 +1973,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
                                 </p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "30px" }}></td>
@@ -2087,7 +2098,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     Phương thức đóng bảo hiểm xã hội (<em>chọn 1 trong 3 phương thức</em>):
                 </p>
-                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table className="no-border" style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -2137,7 +2148,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>12. Thông tin về chủ sở hữu hưởng lợi của doanh nghiệp:</strong>
                 </p>
                 <p>Doanh nghiệp có chủ sở hữu hưởng lợi không?</p>
-                <table className={styles.noBorderTable} style={{ width: "100%", maxWidth: "300px", marginTop: "8px" }}>
+                <table className="no-border" style={{ width: "100%", maxWidth: "300px", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -2190,34 +2201,39 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
 
                 <table
-                    className={`${styles.noBorderTable} signature-table no-border`}
+                    className="signature-table no-border"
                     style={{
                         width: "100%",
                         borderCollapse: "collapse",
-                        tableLayout: "auto",
+                        border: "none",
                         marginTop: "30px",
                         marginBottom: "50px",
                     }}
                 >
                     <tbody>
                         <tr>
-                            <td className="signature-spacer" style={{ border: "none", width: "auto" }}>
-                                &nbsp;
-                            </td>
                             <td
-                                className={`${styles.textCenter} signature-cell`}
+                                className="signature-spacer"
+                                style={{
+                                    border: "none",
+                                    width: "40%",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                }}
+                            ></td>
+                            <td
+                                className="signature-cell"
                                 style={{
                                     border: "none",
                                     textAlign: "center",
                                     verticalAlign: "top",
-                                    whiteSpace: "nowrap",
-                                    width: "124mm"
+                                    width: "120mm",
                                 }}
                             >
-                                <p className="text-center" style={{ textAlign: "center", margin: 0 }}>
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>
                                 </p>
-                                <p className="text-center" style={{ textAlign: "center", margin: 0 }}>
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>

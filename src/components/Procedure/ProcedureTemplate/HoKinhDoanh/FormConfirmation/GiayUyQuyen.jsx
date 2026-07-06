@@ -96,49 +96,57 @@ export default function GiayUyQuyen({ dataJson }) {
                     <u>BÊN ỦY QUYỀN (BÊN A):</u>
                 </strong>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Họ và tên:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_hoTen}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Giới tính:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_gioiTinh}
-                    </b>
-                </p>
-            </div>
-            <p className={styles.infoLine}>
+            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
+                <tbody>
+                    <tr>
+                        <td style={{ width: "60%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Họ và tên:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {uyQuyen_hoTen}
+                                </b>
+                            </p>
+                        </td>
+                        <td style={{ width: "40%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Giới tính:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {uyQuyen_gioiTinh}
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -158,7 +166,7 @@ export default function GiayUyQuyen({ dataJson }) {
                     {formatDate(uyQuyen_ngaySinh)}
                 </b>
             </p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -178,7 +186,7 @@ export default function GiayUyQuyen({ dataJson }) {
                     {uyQuyen_cccd}
                 </b>
             </p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -198,50 +206,24 @@ export default function GiayUyQuyen({ dataJson }) {
                     {[uyQuyen_soNha, uyQuyen_xa, uyQuyen_tinh].filter(Boolean).join(", ")}
                 </b>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Số điện thoại:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_phone}
-                    </b>
-                </p>
-                {uyQuyen_email && (
-                    <p className={styles.infoItem} style={{ flex: 1 }}>
-                        <b
-                            className={styles.infoLabel}
-                            style={{
-                                fontWeight: "inherit",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            Email:{" "}
-                        </b>
-                        <b
-                            className={styles.infoValue}
-                            style={{
-                                fontWeight: "inherit",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            {uyQuyen_email}
-                        </b>
-                    </p>
-                )}
-            </div>
+            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
+                <tbody>
+                    <tr>
+                        <td style={{ width: "50%", verticalAlign: "top" }}>
+                            <p style={{ margin: 0 }}>
+                                Số điện thoại: <b>{uyQuyen_phone}</b>
+                            </p>
+                        </td>
+                        {uyQuyen_email && (
+                            <td style={{ width: "50%", verticalAlign: "top" }}>
+                                <p style={{ margin: 0 }}>
+                                    Email: <b>{uyQuyen_email}</b>
+                                </p>
+                            </td>
+                        )}
+                    </tr>
+                </tbody>
+            </table>
             <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
                 <>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </>
                 <>{chuHo_ten} {" "}</>
@@ -256,112 +238,130 @@ export default function GiayUyQuyen({ dataJson }) {
                     <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
                 </strong>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Họ và tên:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            textTransform: "uppercase",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.hoTen}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Giới tính:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.gioiTinh}
-                    </b>
-                </p>
-            </div>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Sinh ngày:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.ngaySinh}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Dân tộc:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.danToc}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Quốc tịch:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.quocTich}
-                    </b>
-                </p>
-            </div>
-            <p className={styles.infoLine}>
+            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
+                <tbody>
+                    <tr>
+                        <td style={{ width: "60%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Họ và tên:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        textTransform: "uppercase",
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {benB.hoTen}
+                                </b>
+                            </p>
+                        </td>
+                        <td style={{ width: "40%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Giới tính:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {benB.gioiTinh}
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
+                <tbody>
+                    <tr>
+                        <td style={{ width: "40%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Sinh ngày:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {benB.ngaySinh}
+                                </b>
+                            </p>
+                        </td>
+                        <td style={{ width: "30%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Dân tộc:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {benB.danToc}
+                                </b>
+                            </p>
+                        </td>
+                        <td style={{ width: "30%", verticalAlign: "top" }}>
+                            <p className={styles.infoItem} style={{ margin: 0 }}>
+                                <b
+                                    className={styles.infoLabel}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    Quốc tịch:{" "}
+                                </b>
+                                <b
+                                    className={styles.infoValue}
+                                    style={{
+                                        fontWeight: "inherit",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    {benB.quocTich}
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -381,7 +381,7 @@ export default function GiayUyQuyen({ dataJson }) {
                     {benB.cccd}
                 </b>
             </p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -401,7 +401,7 @@ export default function GiayUyQuyen({ dataJson }) {
                     {benB.thuongTru}
                 </b>
             </p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
                     style={{
@@ -421,48 +421,24 @@ export default function GiayUyQuyen({ dataJson }) {
                     {benB.lienLac}
                 </b>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Số điện thoại:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.phone}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Email:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.email}
-                    </b>
-                </p>
-            </div>
+            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
+                <tbody>
+                    <tr>
+                        <td style={{ width: "50%", verticalAlign: "top" }}>
+                            <p style={{ margin: 0 }}>
+                                Số điện thoại: <b>{benB.phone}</b>
+                            </p>
+                        </td>
+                        {benB.email && (
+                            <td style={{ width: "50%", verticalAlign: "top" }}>
+                                <p style={{ margin: 0 }}>
+                                    Email: <b>{benB.email}</b>
+                                </p>
+                            </td>
+                        )}
+                    </tr>
+                </tbody>
+            </table>
             <p
                 className={styles.sectionTitle}
                 style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
@@ -486,12 +462,12 @@ export default function GiayUyQuyen({ dataJson }) {
                     <u>THỜI HẠN UỶ QUYỀN:</u>
                 </strong>
             </p>
-            <p className={styles.infoLine}>Từ ngày ký đến khi hoàn tất công việc.</p>
-            <p className={styles.infoLine}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>Từ ngày ký đến khi hoàn tất công việc.</p>
+            <p style={{ margin: "8px 0" }}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
+            <p style={{ margin: "8px 0" }}>
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
             </p>
-            <p className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
+            <p style={{ margin: "8px 0" }}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
             <p className={`${styles.dateLocation} text-right`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "right", fontStyle: "italic" }}>
                 <CurrentDate prefix={chuHo_xa_phuong} style={{ ...DOCUMENT_TEXT_STYLE, fontStyle: "italic" }} />
             </p>

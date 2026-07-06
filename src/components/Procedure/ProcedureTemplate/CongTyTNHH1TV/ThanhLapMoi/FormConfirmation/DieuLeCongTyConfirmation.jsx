@@ -117,7 +117,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 quản lý nhà nước có thẩm quyền.
             </p>
             <p className={styles.articleTitle}>Điều 3: Ngành, nghề kinh doanh</p>
-            <table className={styles.table}>
+            <table className={`${styles.table} single-border-table`}>
                 <thead>
                     <tr>
                         <th style={{ width: "40px" }}>
