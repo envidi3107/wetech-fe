@@ -11,7 +11,10 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
         <div className={styles.wrapper}>
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
-                <table className={`${styles.table} single-border-table`}>
+                <table
+                    className={`${styles.table} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <thead>
                         <tr>
                             <th rowSpan={2} className={styles.th}>
@@ -371,30 +374,26 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             >
                 <tbody>
                     <tr>
-                        <td
-                            className="signature-spacer"
-                            style={{
-                                border: "none",
-                                width: "40%",
-                                textAlign: "center",
-                                verticalAlign: "top",
-                            }}
-                        ></td>
-                        <td
-                            className="signature-spacer"
-                            style={{ border: "none", width: "20%" }}
-                        ></td>
-                        <td
-                            className="signature-cell"
-                            style={{
-                                border: "none",
-                                textAlign: "center",
-                                verticalAlign: "top",
-                                width: "40%",
-                            }}
-                        >
+                            <td
+                                className="signature-spacer"
+                                style={{
+                                    border: "none",
+                                    width: "auto",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                }}
+                            ></td>
+                            <td
+                                className="signature-cell"
+                                style={{
+                                    border: "none",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                    width: "105mm",
+                                }}
+                            >
                             <p style={{ textAlign: "center", fontStyle: "italic" }}>
-                                <CurrentDate prefix={datePrefix} />
+                                <CurrentDate prefix={datePrefix} style={{ fontStyle: "italic" }} />
                             </p>
                             <p style={{ textAlign: "center", fontWeight: "bold" }}>
                                 NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY

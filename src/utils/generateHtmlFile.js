@@ -8,6 +8,7 @@ const DOCUMENT_FONT_SIZE = "14pt";
 const TABLE_FONT_SIZE = "11pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
+const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
 const TABLE_LINE_HEIGHT = "1.25";
 const MM_TO_TWIPS = 56.7;
@@ -54,6 +55,13 @@ function appendInlineStyle(node, styleText) {
     node.setAttribute("style", `${currentStyle}${separator}${styleText};`);
 }
 
+function appendInlineStyleIfMissing(node, propertyPattern, styleText) {
+    const currentStyle = node.getAttribute("style") || "";
+    if (!propertyPattern.test(currentStyle)) {
+        appendInlineStyle(node, styleText);
+    }
+}
+
 function hasInlineStyleValue(node, propertyPattern, valuePattern) {
     let current = node;
     while (current?.nodeType === Node.ELEMENT_NODE) {
@@ -83,7 +91,9 @@ function shouldPreserveUnderline(node) {
 function getWordExportFontInlineStyle(node) {
     const isSignatureContent = !!node.closest?.("[data-export-signature-table]");
     const isTableContent = !!node.closest?.("table") && !isSignatureContent;
-    const fontSize = isTableContent ? WORD_TABLE_FONT_SIZE : WORD_DOCUMENT_FONT_SIZE;
+    const className = node?.getAttribute?.("class") || "";
+    const isCheckboxSymbol = /checkbox(?:-|_)?symbol|checkbox/i.test(className);
+    const fontSize = isCheckboxSymbol ? WORD_CHECKBOX_FONT_SIZE : isTableContent ? WORD_TABLE_FONT_SIZE : WORD_DOCUMENT_FONT_SIZE;
     const lineHeight = isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
 
     return [
@@ -232,6 +242,8 @@ function isSignatureText(value = "") {
 }
 
 function markSignatureElements(root) {
+    const signatureWidth = "105mm";
+
     [root, ...root.querySelectorAll("*")].forEach((node) => {
         const className = node.getAttribute("class") || "";
 
@@ -244,7 +256,7 @@ function markSignatureElements(root) {
             node.setAttribute("data-export-signature-block", "");
             appendInlineStyle(
                 node,
-                "display: inline-block !important; width: 70mm !important; min-width: 58mm !important; max-width: 70mm !important; margin-left: auto !important; margin-right: 0 !important; text-align: center !important; vertical-align: top !important",
+                `display: inline-block !important; width: ${signatureWidth} !important; min-width: 70mm !important; max-width: ${signatureWidth} !important; margin-left: auto !important; margin-right: 0 !important; text-align: center !important; vertical-align: top !important`,
             );
         }
     });
@@ -256,7 +268,7 @@ function markSignatureElements(root) {
         const usesEvenSignatureColumns = /signature-even-table/i.test(className);
         const usesFixedSignatureColumns = /signature-table/i.test(className);
         const spacerWidth = usesFixedSignatureColumns ? "auto" : "auto";
-        const signatureWidth = usesFixedSignatureColumns ? "70mm" : "70mm";
+        const signatureCellWidth = usesFixedSignatureColumns ? signatureWidth : signatureWidth;
 
         table.setAttribute("data-export-signature-table", "");
 
@@ -278,7 +290,7 @@ function markSignatureElements(root) {
         appendInlineStyle(
             table,
             /signature-single-table/i.test(className)
-                ? "width: 70mm !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important"
+                ? `width: ${signatureWidth} !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important`
                 : "width: 100% !important; margin-left: auto !important; margin-right: 0 !important; table-layout: fixed !important",
         );
 
@@ -287,7 +299,7 @@ function markSignatureElements(root) {
             appendInlineStyle(firstRowCells[0], `width: ${spacerWidth} !important`);
             appendInlineStyle(
                 firstRowCells[firstRowCells.length - 1],
-                `width: ${signatureWidth} !important; max-width: ${signatureWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
+                `width: ${signatureCellWidth} !important; max-width: ${signatureCellWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
             );
         }
 
@@ -297,7 +309,7 @@ function markSignatureElements(root) {
             cell.setAttribute("data-export-signature-cell", "");
             appendInlineStyle(
                 cell,
-                `width: ${signatureWidth} !important; max-width: ${signatureWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
+                `width: ${signatureCellWidth} !important; max-width: ${signatureCellWidth} !important; text-align: center !important; padding-right: 0 !important; white-space: normal !important`,
             );
         });
     });
@@ -347,6 +359,9 @@ function getWordExportBodyMarkup(exportElement) {
 function applyTableBorderStyles(root) {
     // Tables with borders: single-border-table, bordered-table, list-table
     root.querySelectorAll("table.single-border-table, table.bordered-table, table.list-table").forEach((table) => {
+        appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
+        appendInlineStyleIfMissing(table, /\bborder-collapse\s*:/i, "border-collapse: collapse");
+        appendInlineStyleIfMissing(table, /\btable-layout\s*:/i, "table-layout: auto");
         table.querySelectorAll("td, th").forEach((cell) => {
             const currentStyle = cell.getAttribute("style") || "";
             if (!/\bborder\s*:/i.test(currentStyle)) {
@@ -357,6 +372,8 @@ function applyTableBorderStyles(root) {
 
     // Tables without borders: no-border, signature-table
     root.querySelectorAll("table.no-border, table.signature-table, table.signature-even-table").forEach((table) => {
+        appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
+        appendInlineStyleIfMissing(table, /\bborder-collapse\s*:/i, "border-collapse: collapse");
         table.querySelectorAll("td, th").forEach((cell) => {
             const currentStyle = cell.getAttribute("style") || "";
             if (!/\bborder\s*:/i.test(currentStyle)) {
@@ -485,6 +502,7 @@ export function generateHtmlString(element, options = {}) {
 
     :root {
       --procedure-confirmation-font-size: ${exportDocumentFontSize};
+      --procedure-confirmation-checkbox-font-size: ${WORD_CHECKBOX_FONT_SIZE};
     }
 
     ${
@@ -592,8 +610,17 @@ export function generateHtmlString(element, options = {}) {
 
     .checkbox-symbol {
       font-family: ${WORD_EXPORT_FONT_FAMILY};
-      font-size: ${exportDocumentFontSize};
+      font-size: var(--procedure-confirmation-checkbox-font-size, ${WORD_CHECKBOX_FONT_SIZE});
       vertical-align: middle;
+    }
+
+    .checkbox {
+      font-size: var(--procedure-confirmation-checkbox-font-size, ${WORD_CHECKBOX_FONT_SIZE}) !important;
+      line-height: 1 !important;
+      vertical-align: middle !important;
+      margin: 0 3pt !important;
+      font-style: normal !important;
+      font-weight: normal !important;
     }
 
     .no-border,
@@ -622,14 +649,14 @@ export function generateHtmlString(element, options = {}) {
     }
 
     .signature-cell {
-      width: 70mm !important;
+      width: 105mm !important;
       border: none !important;
       text-align: center !important;
       vertical-align: top !important;
     }
 
     .signature-single-table {
-      width: 70mm !important;
+      width: 105mm !important;
       margin-left: auto !important;
       margin-right: 0 !important;
       table-layout: auto !important;
@@ -711,9 +738,9 @@ export function generateHtmlString(element, options = {}) {
 
     [data-export-signature-block] {
       display: inline-block !important;
-      width: 70mm !important;
-      min-width: 58mm !important;
-      max-width: 70mm !important;
+      width: 105mm !important;
+      min-width: 70mm !important;
+      max-width: 105mm !important;
       margin-left: auto !important;
       margin-right: 0 !important;
       text-align: center !important;
@@ -732,8 +759,8 @@ export function generateHtmlString(element, options = {}) {
     }
 
     [data-export-signature-cell] {
-      width: 70mm !important;
-      max-width: 70mm !important;
+      width: 105mm !important;
+      max-width: 105mm !important;
       text-align: center !important;
       padding-right: 0 !important;
       white-space: normal !important;
@@ -745,13 +772,13 @@ export function generateHtmlString(element, options = {}) {
 
     [data-export-signature-table].signature-table [data-export-signature-cell],
     [data-export-signature-table].signature-table .signature-cell {
-      width: 70mm !important;
-      max-width: 70mm !important;
+      width: 105mm !important;
+      max-width: 105mm !important;
       text-align: center !important;
     }
 
     [data-export-signature-table].signature-single-table {
-      width: 70mm !important;
+      width: 105mm !important;
       margin-left: auto !important;
       margin-right: 0 !important;
       table-layout: auto !important;

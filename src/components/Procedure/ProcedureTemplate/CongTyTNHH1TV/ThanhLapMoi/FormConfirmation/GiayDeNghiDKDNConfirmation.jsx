@@ -13,15 +13,23 @@ const Checkbox = ({ checked }) => (
         style={{
             fontWeight: "inherit",
             fontStyle: "normal",
+            fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+            lineHeight: 1,
+            margin: "0 3px",
+            verticalAlign: "middle",
         }}
     >
+        {"\u00A0"}
         {checked ? "\u2612" : "\u2610"}
+        {"\u00A0"}
     </span>
 );
 const InlineField = ({ children }) => (
     <b
         className={styles.inlineField}
         style={{
+            display: "inline-block",
+            marginLeft: "36pt",
             fontWeight: "inherit",
             fontStyle: "normal",
         }}
@@ -224,7 +232,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     Độc lập - Tự do - Hạnh phúc
                 </p>
                 <p style={{ fontStyle: "italic", textAlign: "right", margin: "10px 0 0" }}>
-                    <CurrentDate />
+                    <CurrentDate style={{ fontStyle: "italic" }} />
                 </p>
             </div>
             <p style={{ fontWeight: "bold", textAlign: "center", fontSize: "20px", margin: "0" }}>
@@ -246,6 +254,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Địa chỉ liên lạc: {displayAddress(lienLac_soNha, lienLac_xa, lienLac_tinh)}</p>
                 <p>
                     Điện thoại<em> (nếu có)</em>: {displayValue(nguoiNop_phone)}
+                    {"    "}
                     <InlineField>
                         Thư điện tử<em> (nếu có)</em>: {displayValue(nguoiNop_email)}
                     </InlineField>
@@ -258,7 +267,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <table
                     className="single-border-table"
-                    style={{ width: "calc(100% - 20px)", border: "1px solid #000" }}
+                    style={{ width: "100%", border: "1px solid #000" }}
                 >
                     <tbody>
                         <tr>
@@ -843,7 +852,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className="single-border-table" style={{ width: "calc(100% - 20px)" }}>
+                <table className="single-border-table" style={{ width: "100%" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -910,7 +919,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     Có <Checkbox checked={false} />
                     <b
                         style={{
-                            marginLeft: "20px",
+                            marginLeft: "30px",
                             fontWeight: "inherit",
                             fontStyle: "normal",
                         }}
@@ -1602,7 +1611,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className="single-border-table" style={{ width: "calc(100% - 20px)" }}>
+                <table className="single-border-table" style={{ width: "100%" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -1650,7 +1659,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     STT
                                 </p>
                             </th>
-                            <th colSpan="2" style={{ textAlign: "center" }}>
+                            <th style={{ textAlign: "center" }}>
                                 <p
                                     style={{
                                         margin: 0,
@@ -1678,7 +1687,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.1
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Thông tin về Giám đốc/Tổng giám đốc <em>(nếu có)</em>:
                                 </p>
@@ -1702,7 +1711,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.2
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Thông tin về Kế toán trưởng/Phụ trách kế toán <em>(nếu có)</em>:
                                 </p>
@@ -1726,7 +1735,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.3
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Địa chỉ nhận thông báo thuế (
                                     <em>chỉ kê khai nếu địa chỉ nhận thông báo thuế khác địa chỉ trụ sở chính</em>):
@@ -1761,7 +1770,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.4
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Ngày bắt đầu hoạt động (
                                     <em>
@@ -1785,7 +1794,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.5
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Hình thức hạch toán (
                                     <em>
@@ -1796,10 +1805,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     </em>
                                     ):{" "}
                                 </p>
-                                <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
+                                <table className="no-border" style={{ width: "100%", marginTop: "4px", tableLayout: "fixed" }}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "150px" }}>
+                                            <td style={{ width: "160px" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -1811,7 +1820,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     Hạch toán độc lập
                                                 </p>
                                             </td>
-                                            <td style={{ width: "40px", textAlign: "center" }}>
+                                            <td style={{ width: "56px", textAlign: "center" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -1823,7 +1832,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     <Checkbox checked={hinhThucHachToan === "doc_lap"} />
                                                 </p>
                                             </td>
-                                            <td style={{ width: "40px" }}></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -1864,7 +1872,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                 </p>
                                             </td>
                                             <td></td>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1883,7 +1890,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.6
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>Năm tài chính:</p>
                                 <p>
                                     Áp dụng từ ngày {namTaiChinh_tuNgay} đến ngày {namTaiChinh_denNgay}
@@ -1903,7 +1910,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.7
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Tổng số lao động (<em>dự kiến</em>): {tongSoLaoDong}
                                 </p>
@@ -1922,7 +1929,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.8
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
                                 <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
                                     <tbody>
@@ -1969,14 +1976,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     10.9
                                 </p>
                             </td>
-                            <td colSpan="2">
+                            <td>
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
                                 </p>
-                                <table className="no-border" style={{ width: "100%", marginTop: "4px" }}>
+                                <table className="no-border" style={{ width: "100%", marginTop: "4px", tableLayout: "fixed" }}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "30px" }}></td>
                                             <td style={{ width: "250px" }}>
                                                 <p
                                                     style={{
@@ -1989,7 +1995,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     Khấu trừ
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style={{ width: "60px", textAlign: "center" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -2003,7 +2009,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -2016,7 +2021,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     Trực tiếp trên GTGT
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style={{ textAlign: "center" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -2030,7 +2035,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -2043,7 +2047,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     Trực tiếp trên doanh số
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style={{ textAlign: "center" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -2059,7 +2063,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -2072,7 +2075,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     Không phải nộp thuế GTGT
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style={{ textAlign: "center" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -2148,10 +2151,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>12. Thông tin về chủ sở hữu hưởng lợi của doanh nghiệp:</strong>
                 </p>
                 <p>Doanh nghiệp có chủ sở hữu hưởng lợi không?</p>
-                <table className="no-border" style={{ width: "100%", maxWidth: "300px", marginTop: "8px" }}>
+                <table className="no-border" style={{ width: "100%", maxWidth: "360px", marginTop: "8px" }}>
                     <tbody>
                         <tr>
-                            <td>
+                            <td style={{ width: "50%" }}>
                                 <p
                                     style={{
                                         margin: 0,
@@ -2160,11 +2163,11 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} />
                                     Có
+                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} />
                                 </p>
                             </td>
-                            <td>
+                            <td style={{ width: "50%" }}>
                                 <p
                                     style={{
                                         margin: 0,
@@ -2173,8 +2176,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} />
                                     Không
+                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} />
                                 </p>
                             </td>
                         </tr>

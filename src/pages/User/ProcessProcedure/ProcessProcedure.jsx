@@ -82,6 +82,15 @@ const isDangKyThayDoiDynamicForm = (form) =>
     form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
     DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS.has(getDynamicFormKey(form));
 
+const shouldExportConfirmationLandscape = (form) => {
+    const normalizedName = normalizeProcedureText(form?.name);
+    const confirmationName = normalizeProcedureText(
+        form?.confirmation?.displayName || form?.confirmation?.name || form?.confirmation?.render?.name || "",
+    );
+
+    return normalizedName.startsWith("danh sach") || confirmationName.startsWith("danhsach");
+};
+
 const isDangKyThayDoiNoiDungForm = (form) => {
     const normalizedName = normalizeProcedureText(form?.name);
     return (
@@ -441,7 +450,7 @@ const ProcessProcedure = () => {
                     try {
                         if (confirmationFormsRef.current) {
                             const currentForm = forms?.[currentFormStep];
-                            const isLandscape = currentForm?.name?.toLowerCase().startsWith("danh sách") || false;
+                            const isLandscape = shouldExportConfirmationLandscape(currentForm);
                             await confirmationFormsRef.current.submitCurrentForm(isLandscape);
                         }
                     } finally {

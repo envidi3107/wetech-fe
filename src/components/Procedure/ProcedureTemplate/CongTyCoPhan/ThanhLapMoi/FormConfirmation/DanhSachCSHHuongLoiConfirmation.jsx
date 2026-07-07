@@ -10,7 +10,10 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
         <div className={styles.wrapper}>
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
-                <table className={styles.table}>
+                <table
+                    className={`${styles.table} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <thead>
                         <tr>
                             <th rowSpan={2} className={styles.th}>
@@ -388,7 +391,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             </div>
             <div className={styles.signatureBlock}>
                 <p className={styles.signatureDate}>
-                    <CurrentDate />
+                    <CurrentDate style={{ fontStyle: "italic" }} />
                 </p>
                 <p className={styles.signatureTitle}>
                     NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT /<br />

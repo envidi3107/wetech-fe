@@ -31,7 +31,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
                 </p>
             </div>
-            <p className={styles.italicText}>
+            <p className={styles.italicText} style={{ fontStyle: "italic", textAlign: "center" }}>
                 Căn cứ Luật Doanh nghiệp số 59/2020/QH14 được Quốc hội thông qua ngày 17 tháng 06 năm 2020 được sửa đổi,
                 bổ sung một số điều theo luật số 03/2022/QH15 và luật số 76/2025/QH15 và các văn bản hướng dẫn thi hành
                 Luật Doanh nghiệp
@@ -868,7 +868,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                             <p className={styles.bold} style={{ textAlign: "center" }}>
                                 CHỦ SỞ HỮU
                             </p>
-                            <p className={styles.signatureName} style={{ textAlign: "center" }}>
+                            <p className={styles.signatureName} style={{ textAlign: "center", fontWeight: "normal" }}>
                                 <em>(Ký, ghi rõ họ tên)</em>
                             </p>
                         </td>
@@ -876,7 +876,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                             <p className={styles.bold} style={{ textAlign: "center" }}>
                                 NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY
                             </p>
-                            <p className={styles.signatureName} style={{ textAlign: "center" }}>
+                            <p className={styles.signatureName} style={{ textAlign: "center", fontWeight: "normal" }}>
                                 <em>(Ký, ghi rõ họ tên)</em>
                             </p>
                         </td>

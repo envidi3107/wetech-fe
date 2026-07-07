@@ -154,7 +154,7 @@ h3.docTitle {
 
 .checkbox {
     display: inline-block;
-    font-size: 15pt;
+    font-size: var(--procedure-confirmation-checkbox-font-size, 18pt);
     line-height: 1;
     margin: 0 4px;
     vertical-align: middle;

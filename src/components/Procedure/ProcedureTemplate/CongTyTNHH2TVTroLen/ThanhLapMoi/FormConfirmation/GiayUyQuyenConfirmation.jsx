@@ -1,9 +1,8 @@
 import React from "react";
-import { formatDate, getToday } from "@/utils/dateTimeUtils";
+import { formatDate } from "@/utils/dateTimeUtils";
 // Reuse styles
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/confirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
-import SignatureBlock from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/SignatureBlock/SignatureBlock";
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     getCompanyNamePrefix,
@@ -466,37 +465,49 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
             </p>
             <p className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
-            <p className={styles.dateLocation}>
-                <CurrentDate />
+            <p className={styles.dateLocation} style={{ fontStyle: "italic", textAlign: "right" }}>
+                <CurrentDate style={{ fontStyle: "italic" }} />
             </p>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", padding: "0 40px" }}>
-                <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <b
-                            style={{
-                                fontWeight: "bold",
-                                textDecoration: "underline",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            BÊN NHẬN ỦY QUYỀN
-                        </b>
-                    </p>
-                </div>
-                <div>
-                    <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                        <b
-                            style={{
-                                fontWeight: "bold",
-                                textDecoration: "underline",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            BÊN ỦY QUYỀN
-                        </b>
-                    </p>
-                </div>
-            </div>
+            <table
+                className="signature-even-table no-border"
+                style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    border: "none",
+                    marginTop: "20px",
+                }}
+            >
+                <tbody>
+                    <tr>
+                        <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p style={{ textAlign: "center", marginBottom: "10px" }}>
+                                <b
+                                    style={{
+                                        fontWeight: "bold",
+                                        textDecoration: "underline",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    BÊN NHẬN ỦY QUYỀN
+                                </b>
+                            </p>
+                        </td>
+                        <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p style={{ textAlign: "center", marginBottom: "10px" }}>
+                                <b
+                                    style={{
+                                        fontWeight: "bold",
+                                        textDecoration: "underline",
+                                        fontStyle: "normal",
+                                    }}
+                                >
+                                    BÊN ỦY QUYỀN
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }
