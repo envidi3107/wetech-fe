@@ -8,9 +8,11 @@ const DOCUMENT_FONT_SIZE = "14pt";
 const TABLE_FONT_SIZE = "11pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
+const WORD_COMPACT_TABLE_FONT_SIZE = "8.5pt";
 const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
 const TABLE_LINE_HEIGHT = "1.25";
+const COMPACT_TABLE_LINE_HEIGHT = "1.05";
 const MM_TO_TWIPS = 56.7;
 const A4_PAGE_SIZE_MM = { width: 210, height: 297 };
 
@@ -91,10 +93,17 @@ function shouldPreserveUnderline(node) {
 function getWordExportFontInlineStyle(node) {
     const isSignatureContent = !!node.closest?.("[data-export-signature-table]");
     const isTableContent = !!node.closest?.("table") && !isSignatureContent;
+    const isCompactTableContent = !!node.closest?.(".docx-compact-table");
     const className = node?.getAttribute?.("class") || "";
     const isCheckboxSymbol = /checkbox(?:-|_)?symbol|checkbox/i.test(className);
-    const fontSize = isCheckboxSymbol ? WORD_CHECKBOX_FONT_SIZE : isTableContent ? WORD_TABLE_FONT_SIZE : WORD_DOCUMENT_FONT_SIZE;
-    const lineHeight = isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
+    const fontSize = isCheckboxSymbol
+        ? WORD_CHECKBOX_FONT_SIZE
+        : isCompactTableContent
+          ? WORD_COMPACT_TABLE_FONT_SIZE
+          : isTableContent
+            ? WORD_TABLE_FONT_SIZE
+            : WORD_DOCUMENT_FONT_SIZE;
+    const lineHeight = isCompactTableContent ? COMPACT_TABLE_LINE_HEIGHT : isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
 
     return [
         `font-family: ${WORD_EXPORT_FONT_FAMILY}`,
@@ -113,10 +122,34 @@ function getWordExportFontInlineStyle(node) {
 }
 
 function createWordExportTextSpan(textNode) {
+    const sourceElement = textNode.parentElement || null;
     const span = document.createElement("span");
     span.textContent = textNode.nodeValue;
-    appendInlineStyle(span, getWordExportFontInlineStyle(textNode.parentElement || span));
-    return span;
+    appendInlineStyle(span, getWordExportFontInlineStyle(sourceElement || span));
+
+    let styledNode = span;
+    if (sourceElement && shouldPreserveUnderline(sourceElement) && !sourceElement.closest("u")) {
+        const underline = document.createElement("u");
+        appendInlineStyle(underline, getWordExportFontInlineStyle(sourceElement));
+        underline.appendChild(styledNode);
+        styledNode = underline;
+    }
+
+    if (sourceElement && shouldPreserveItalic(sourceElement) && !sourceElement.closest("em, i")) {
+        const italic = document.createElement("em");
+        appendInlineStyle(italic, getWordExportFontInlineStyle(sourceElement));
+        italic.appendChild(styledNode);
+        styledNode = italic;
+    }
+
+    if (sourceElement && shouldPreserveBold(sourceElement) && !sourceElement.closest("strong, b")) {
+        const bold = document.createElement("strong");
+        appendInlineStyle(bold, getWordExportFontInlineStyle(sourceElement));
+        bold.appendChild(styledNode);
+        styledNode = bold;
+    }
+
+    return styledNode;
 }
 
 /**
@@ -383,6 +416,94 @@ function applyTableBorderStyles(root) {
     });
 }
 
+function getCssLengthInPoints(value = "") {
+    const match = String(value).trim().match(/^(-?\d+(?:\.\d+)?)(px|pt|mm|cm|in)$/i);
+    if (!match) return 0;
+
+    const number = Number(match[1]);
+    if (!Number.isFinite(number) || number <= 0) return 0;
+
+    switch (match[2].toLowerCase()) {
+        case "px":
+            return number * 0.75;
+        case "pt":
+            return number;
+        case "mm":
+            return number * 2.8346;
+        case "cm":
+            return number * 28.346;
+        case "in":
+            return number * 72;
+        default:
+            return 0;
+    }
+}
+
+function getNonBreakingSpaceCount(lengthInPoints) {
+    if (lengthInPoints < 6) return 0;
+    return Math.min(12, Math.max(2, Math.round(lengthInPoints / 6)));
+}
+
+function hasTextBeforeNode(node) {
+    let current = node.previousSibling;
+    while (current) {
+        if (current.nodeType === Node.TEXT_NODE && current.nodeValue.trim()) return true;
+        if (current.nodeType === Node.ELEMENT_NODE && current.textContent.trim()) return true;
+        current = current.previousSibling;
+    }
+
+    return false;
+}
+
+function hasMaterializedInlineSpacing(node) {
+    return node.firstChild?.nodeType === Node.TEXT_NODE && /^\u00a0{2,}/.test(node.firstChild.nodeValue || "");
+}
+
+function materializeInlineLeftSpacing(root) {
+    root.querySelectorAll("*").forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        if (hasMaterializedInlineSpacing(node) || !hasTextBeforeNode(node)) return;
+
+        const computedStyle = window.getComputedStyle(node);
+        const display = computedStyle.display || "";
+        const className = node.getAttribute("class") || "";
+        const isInlineLike = /^(inline|inline-block|inline-flex)$/i.test(display) || /inlineField/i.test(className);
+        if (!isInlineLike) return;
+
+        const spaceCount = getNonBreakingSpaceCount(getCssLengthInPoints(computedStyle.marginLeft));
+        if (!spaceCount) return;
+
+        node.insertBefore(document.createTextNode("\u00A0".repeat(spaceCount)), node.firstChild);
+        appendInlineStyle(node, "margin-left: 0");
+    });
+}
+
+function applyWordExportUtilityStyles(root) {
+    root.querySelectorAll("table.docx-contained-table").forEach((table) => {
+        appendInlineStyle(table, "width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed");
+        table.querySelectorAll("td, th").forEach((cell) => {
+            appendInlineStyle(cell, "max-width: 100%; overflow-wrap: break-word; word-break: normal; white-space: normal");
+        });
+    });
+
+    root.querySelectorAll("table.docx-choice-table").forEach((table) => {
+        appendInlineStyle(table, "margin-top: 2pt; margin-bottom: 2pt");
+        table.querySelectorAll("td, th").forEach((cell) => {
+            appendInlineStyle(cell, "padding: 1pt 4pt 1pt 0; vertical-align: top");
+        });
+    });
+
+    root.querySelectorAll("table.docx-compact-table").forEach((table) => {
+        appendInlineStyle(table, "width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed");
+        table.querySelectorAll("td, th").forEach((cell) => {
+            appendInlineStyle(
+                cell,
+                `padding: 2pt 3pt; font-size: ${WORD_COMPACT_TABLE_FONT_SIZE}; line-height: ${COMPACT_TABLE_LINE_HEIGHT}; overflow-wrap: anywhere; word-break: break-word; white-space: normal`,
+            );
+        });
+    });
+}
+
 /**
  * Apply inline font-weight/text-align/text-decoration/font-style to elements
  * that rely on CSS module classes for these properties. Since CSS module class
@@ -440,10 +561,12 @@ function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
 
         try {
             applyComputedTextStyles(exportElement);
+            materializeInlineLeftSpacing(exportElement);
         } finally {
             document.body.removeChild(offscreen);
         }
 
+        applyWordExportUtilityStyles(exportElement);
         applyTableBorderStyles(exportElement);
         convertTableHeadersToBodyRows(exportElement);
         convertListsToPlainBlocks(exportElement);

@@ -3,6 +3,28 @@ import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "./DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
+const BENEFICIAL_OWNER_COLUMN_WIDTHS = ["4%", "10%", "8%", "5%", "16%", "7%", "6%", "15%", "6%", "6%", "7%", "10%"];
+
+const getColumnStyle = (columnIndex, style = {}) => ({
+    width: BENEFICIAL_OWNER_COLUMN_WIDTHS[columnIndex],
+    ...style,
+});
+
+const BENEFICIAL_OWNER_HEADERS = [
+    "STT",
+    "Họ và tên",
+    "Ngày, tháng, năm sinh",
+    "Giới tính",
+    "Số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân",
+    "Quốc tịch",
+    "Dân tộc",
+    "Địa chỉ liên lạc",
+    "CSH hưởng lợi: Tỷ lệ sở hữu cổ phần vốn điều lệ",
+    "CSH hưởng lợi: Tỷ lệ sở hữu cổ phần có quyền biểu quyết",
+    "CSH hưởng lợi: Quyền chi phối",
+    "Ghi chú (nếu có)",
+];
+
 function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
     const rows = dataJson?.cshHuongLoiList || [];
     const datePrefix = dataJson?.kinhGuiProvince || dataJson?.truSo_tinh;
@@ -12,173 +34,29 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} single-border-table`}
+                    className={`${styles.table} single-border-table docx-contained-table`}
                     style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
                 >
                     <thead>
                         <tr>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    STT
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Họ và tên
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Ngày, tháng, năm sinh
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Giới tính
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Số, ngày cấp, cơ quan cấp Giấy tờ pháp lý của cá nhân
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Quốc tịch
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Dân tộc
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Địa chỉ liên lạc
-                                </p>
-                            </th>
-                            <th colSpan={3} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Chủ sở hữu hưởng lợi của doanh nghiệp
-                                </p>
-                            </th>
-                            <th rowSpan={2} className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Ghi chú (nếu có)
-                                </p>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Tỷ lệ sở hữu cổ phần vốn điều lệ
-                                </p>
-                            </th>
-                            <th className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Tỷ lệ sở hữu cổ phần có quyền biểu quyết
-                                </p>
-                            </th>
-                            <th className={styles.th}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Quyền chi phối
-                                </p>
-                            </th>
+                            {BENEFICIAL_OWNER_HEADERS.map((label, index) => (
+                                <th key={label} className={styles.th} style={getColumnStyle(index)}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {label}
+                                    </p>
+                                </th>
+                            ))}
                         </tr>
                         <tr className={styles.colNumberRow}>
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
-                                <td key={n} className={styles.colNumber}>
+                                <td key={n} className={styles.colNumber} style={getColumnStyle(n - 1)}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -196,23 +74,29 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                     <tbody>
                         {rows.length === 0 ? (
                             <tr>
-                                <td colSpan={12} className={styles.emptyCell}>
-                                    <p
-                                        style={{
-                                            margin: 0,
-                                            lineHeight: "inherit",
-                                            textAlign: "inherit",
-                                            font: "inherit",
-                                        }}
+                                {BENEFICIAL_OWNER_HEADERS.map((label, index) => (
+                                    <td
+                                        key={`empty-${label}`}
+                                        className={index === 0 ? styles.emptyCell : styles.td}
+                                        style={getColumnStyle(index, { textAlign: index === 0 ? "left" : "center" })}
                                     >
-                                        Chưa có dữ liệu chủ sở hữu hưởng lợi.
-                                    </p>
-                                </td>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {index === 0 ? "Chưa có dữ liệu chủ sở hữu hưởng lợi." : ""}
+                                        </p>
+                                    </td>
+                                ))}
                             </tr>
                         ) : (
                             rows.map((row, idx) => (
                                 <tr key={idx}>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(0, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -224,7 +108,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {idx + 1}
                                         </p>
                                     </td>
-                                    <td className={styles.td}>
+                                    <td className={styles.td} style={getColumnStyle(1)}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -236,7 +120,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.hoTen}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                                    <td className={styles.td} style={getColumnStyle(2, { textAlign: "center", whiteSpace: "nowrap" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -248,7 +132,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {formatDate(row.ngaySinh)}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(3, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -260,7 +144,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.gioiTinh}
                                         </p>
                                     </td>
-                                    <td className={styles.td}>
+                                    <td className={styles.td} style={getColumnStyle(4)}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -272,7 +156,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.giaTo}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(5, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -284,7 +168,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.quocTich}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(6, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -296,7 +180,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.danToc}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center", minWidth: 120 }}>
+                                    <td className={styles.td} style={getColumnStyle(7, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -308,7 +192,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.diaChiLienLac}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(8, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -320,7 +204,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.tyLeSoHuuVon ? `${row.tyLeSoHuuVon}%` : ""}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center" }}>
+                                    <td className={styles.td} style={getColumnStyle(9, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -332,7 +216,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.tyLeSoHuuBieuQuyet ? `${row.tyLeSoHuuBieuQuyet}%` : ""}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center", width: 100 }}>
+                                    <td className={styles.td} style={getColumnStyle(10, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -344,7 +228,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.quyenChiPhoi}
                                         </p>
                                     </td>
-                                    <td className={styles.td}>
+                                    <td className={styles.td} style={getColumnStyle(11)}>
                                         <p
                                             style={{
                                                 margin: 0,
