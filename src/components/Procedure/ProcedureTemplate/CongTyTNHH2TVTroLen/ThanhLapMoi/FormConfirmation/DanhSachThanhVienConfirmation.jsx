@@ -12,7 +12,7 @@ function DanhSachThanhVienConfirmation({ dataJson }) {
                 DANH SÁCH THÀNH VIÊN CÔNG TY TRÁCH NHIỆM HỮU HẠN HAI THÀNH VIÊN TRỞ LÊN
             </h2>
             <div className={styles.tableScrollWrapper}>
-                <table className={styles.table}>
+                <table className={`${styles.table} single-border-table docx-contained-table export-table-font-10`}>
                     <thead>
                         <tr>
                             <th rowSpan={2} className={styles.th}>

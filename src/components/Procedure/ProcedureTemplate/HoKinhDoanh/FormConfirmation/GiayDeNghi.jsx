@@ -3,7 +3,18 @@ import { formatDate } from "@/utils/dateTimeUtils";
 
 const FONT_FAMILY = "'Times New Roman', Times, serif";
 const DOCUMENT_FONT_SIZE = "13pt";
-const TABLE_FONT_SIZE = "13pt";
+const DEFAULT_TABLE_FONT_SIZE = "13pt";
+const DEFAULT_TABLE_LINE_HEIGHT = 1.25;
+
+const getTableTextStyle = ({
+    fontSize = DEFAULT_TABLE_FONT_SIZE,
+    lineHeight = DEFAULT_TABLE_LINE_HEIGHT,
+} = {}) => ({
+    fontFamily: FONT_FAMILY,
+    fontSize,
+    lineHeight,
+    color: "#000",
+});
 
 const textStyle = {
     fontFamily: FONT_FAMILY,
@@ -12,12 +23,7 @@ const textStyle = {
     color: "#000",
 };
 
-const tableTextStyle = {
-    fontFamily: FONT_FAMILY,
-    fontSize: TABLE_FONT_SIZE,
-    lineHeight: 1.25,
-    color: "#000",
-};
+const tableTextStyle = getTableTextStyle();
 
 const inlineStyles = {
     page: {
@@ -166,6 +172,9 @@ const inlineStyles = {
         ...tableTextStyle,
         margin: 0,
     },
+    tableSpan: {
+        ...tableTextStyle,
+    },
     checkRow: {
         ...textStyle,
         display: "flex",
@@ -245,7 +254,7 @@ const inlineStyles = {
         width: "100%",
         borderCollapse: "collapse",
         marginTop: "24pt",
-        tableLayout: "auto",
+        tableLayout: "fixed",
     },
     signatureSpacer: {
         border: "none",
@@ -259,9 +268,8 @@ const inlineStyles = {
         textAlign: "center",
         verticalAlign: "top",
         padding: 0,
-        width: "72mm",
-        minWidth: "72mm",
-        maxWidth: "72mm",
+        width: "80mm",
+        maxWidth: "80mm",
     },
 };
 
@@ -420,10 +428,11 @@ export default function GiayDeNghi({ dataJson }) {
                     <tr>
                         <td className="single-border-cell" style={inlineStyles.singleBorderCell}>
                             <p style={inlineStyles.infoLine}>
-                                <span style={{ display: "inline-block", minWidth: "30mm" }}>
+                                <span style={mergeStyles(inlineStyles.tableSpan, { display: "inline-block", minWidth: "30mm" })}>
                                     Dân tộc: {nguoiDaiDien_danToc || "Kinh"}
                                 </span>
-                                <span>Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}</span>
+                                {"      "}
+                                <span style={inlineStyles.tableSpan}>Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}</span>
                             </p>
 
                             <p style={inlineStyles.infoLine}>Nơi thường trú:</p>

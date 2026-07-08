@@ -32,6 +32,21 @@ const signatureCellStyle = {
     padding: "0 40px",
 };
 
+const inlineFieldStyle = {
+    display: "inline-block",
+    marginLeft: "36pt",
+    fontWeight: "inherit",
+    fontStyle: "normal",
+};
+
+function InlineField({ children, style }) {
+    return (
+        <span className={styles.inlineField} style={{ ...inlineFieldStyle, ...style }}>
+            {children}
+        </span>
+    );
+}
+
 export default function GiayUyQuyen({ dataJson }) {
     if (!dataJson) return null;
 
@@ -96,56 +111,10 @@ export default function GiayUyQuyen({ dataJson }) {
                     <u>BÊN ỦY QUYỀN (BÊN A):</u>
                 </strong>
             </p>
-            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: "60%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Họ và tên:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {uyQuyen_hoTen}
-                                </b>
-                            </p>
-                        </td>
-                        <td style={{ width: "40%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Giới tính:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {uyQuyen_gioiTinh}
-                                </b>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Họ và tên: {uyQuyen_hoTen}
+                <InlineField>Giới tính: {uyQuyen_gioiTinh}</InlineField>
+            </p>
             <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
@@ -206,24 +175,10 @@ export default function GiayUyQuyen({ dataJson }) {
                     {[uyQuyen_soNha, uyQuyen_xa, uyQuyen_tinh].filter(Boolean).join(", ")}
                 </b>
             </p>
-            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: "50%", verticalAlign: "top" }}>
-                            <p style={{ margin: 0 }}>
-                                Số điện thoại: <b>{uyQuyen_phone}</b>
-                            </p>
-                        </td>
-                        {uyQuyen_email && (
-                            <td style={{ width: "50%", verticalAlign: "top" }}>
-                                <p style={{ margin: 0 }}>
-                                    Email: <b>{uyQuyen_email}</b>
-                                </p>
-                            </td>
-                        )}
-                    </tr>
-                </tbody>
-            </table>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Số điện thoại: {uyQuyen_phone}
+                {uyQuyen_email && <InlineField>Email: {uyQuyen_email}</InlineField>}
+            </p>
             <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
                 <>Là chủ hộ kinh doanh đăng ký thành lập HỘ KINH DOANH </>
                 <>{chuHo_ten} {" "}</>
@@ -238,129 +193,15 @@ export default function GiayUyQuyen({ dataJson }) {
                     <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
                 </strong>
             </p>
-            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: "60%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Họ và tên:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        textTransform: "uppercase",
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {benB.hoTen}
-                                </b>
-                            </p>
-                        </td>
-                        <td style={{ width: "40%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Giới tính:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {benB.gioiTinh}
-                                </b>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: "40%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Sinh ngày:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {benB.ngaySinh}
-                                </b>
-                            </p>
-                        </td>
-                        <td style={{ width: "30%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Dân tộc:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {benB.danToc}
-                                </b>
-                            </p>
-                        </td>
-                        <td style={{ width: "30%", verticalAlign: "top" }}>
-                            <p className={styles.infoItem} style={{ margin: 0 }}>
-                                <b
-                                    className={styles.infoLabel}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    Quốc tịch:{" "}
-                                </b>
-                                <b
-                                    className={styles.infoValue}
-                                    style={{
-                                        fontWeight: "inherit",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    {benB.quocTich}
-                                </b>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Họ và tên: <span style={{ textTransform: "uppercase" }}>{benB.hoTen}</span>
+                <InlineField>Giới tính: {benB.gioiTinh}</InlineField>
+            </p>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Sinh ngày: {benB.ngaySinh}
+                <InlineField>Dân tộc: {benB.danToc}</InlineField>
+                <InlineField>Quốc tịch: {benB.quocTich}</InlineField>
+            </p>
             <p style={{ margin: "8px 0" }}>
                 <b
                     className={styles.infoLabel}
@@ -421,24 +262,10 @@ export default function GiayUyQuyen({ dataJson }) {
                     {benB.lienLac}
                 </b>
             </p>
-            <table className="no-border" style={{ width: "100%", marginBottom: "8px" }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: "50%", verticalAlign: "top" }}>
-                            <p style={{ margin: 0 }}>
-                                Số điện thoại: <b>{benB.phone}</b>
-                            </p>
-                        </td>
-                        {benB.email && (
-                            <td style={{ width: "50%", verticalAlign: "top" }}>
-                                <p style={{ margin: 0 }}>
-                                    Email: <b>{benB.email}</b>
-                                </p>
-                            </td>
-                        )}
-                    </tr>
-                </tbody>
-            </table>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Số điện thoại: {benB.phone}
+                {benB.email && <InlineField>Email: {benB.email}</InlineField>}
+            </p>
             <p
                 className={styles.sectionTitle}
                 style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}

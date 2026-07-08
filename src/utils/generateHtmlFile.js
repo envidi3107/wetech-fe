@@ -9,10 +9,12 @@ const TABLE_FONT_SIZE = "11pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
 const WORD_COMPACT_TABLE_FONT_SIZE = "8.5pt";
+const EXPORT_TABLE_FONT_10_SIZE = "12pt";
 const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
 const TABLE_LINE_HEIGHT = "1.25";
 const COMPACT_TABLE_LINE_HEIGHT = "1.05";
+const EXPORT_TABLE_FONT_10_LINE_HEIGHT = "1.2";
 const MM_TO_TWIPS = 56.7;
 const A4_PAGE_SIZE_MM = { width: 210, height: 297 };
 
@@ -94,16 +96,25 @@ function getWordExportFontInlineStyle(node) {
     const isSignatureContent = !!node.closest?.("[data-export-signature-table]");
     const isTableContent = !!node.closest?.("table") && !isSignatureContent;
     const isCompactTableContent = !!node.closest?.(".docx-compact-table");
+    const isExportTableFont10Content = !!node.closest?.(".export-table-font-10");
     const className = node?.getAttribute?.("class") || "";
     const isCheckboxSymbol = /checkbox(?:-|_)?symbol|checkbox/i.test(className);
     const fontSize = isCheckboxSymbol
         ? WORD_CHECKBOX_FONT_SIZE
+        : isExportTableFont10Content
+            ? EXPORT_TABLE_FONT_10_SIZE
+            : isCompactTableContent
+                ? WORD_COMPACT_TABLE_FONT_SIZE
+                : isTableContent
+                    ? WORD_TABLE_FONT_SIZE
+                    : WORD_DOCUMENT_FONT_SIZE;
+    const lineHeight = isExportTableFont10Content
+        ? EXPORT_TABLE_FONT_10_LINE_HEIGHT
         : isCompactTableContent
-          ? WORD_COMPACT_TABLE_FONT_SIZE
-          : isTableContent
-            ? WORD_TABLE_FONT_SIZE
-            : WORD_DOCUMENT_FONT_SIZE;
-    const lineHeight = isCompactTableContent ? COMPACT_TABLE_LINE_HEIGHT : isTableContent ? TABLE_LINE_HEIGHT : DOCUMENT_LINE_HEIGHT;
+            ? COMPACT_TABLE_LINE_HEIGHT
+            : isTableContent
+                ? TABLE_LINE_HEIGHT
+                : DOCUMENT_LINE_HEIGHT;
 
     return [
         `font-family: ${WORD_EXPORT_FONT_FAMILY}`,
@@ -628,8 +639,7 @@ export function generateHtmlString(element, options = {}) {
       --procedure-confirmation-checkbox-font-size: ${WORD_CHECKBOX_FONT_SIZE};
     }
 
-    ${
-        normalizeForWord
+    ${normalizeForWord
             ? ""
             : `
     @page {
@@ -642,7 +652,7 @@ export function generateHtmlString(element, options = {}) {
       margin: ${landscapePageMarginCss};
     }
     `
-    }
+        }
 
     html, body {
       margin: 0;
@@ -843,6 +853,26 @@ export function generateHtmlString(element, options = {}) {
       line-height: ${TABLE_LINE_HEIGHT};
     }
 
+    .document-export-root table thead,
+    .document-export-root table tfoot {
+      display: table-row-group !important;
+    }
+
+    .export-table-font-10,
+    .export-table-font-10 td,
+    .export-table-font-10 th,
+    .export-table-font-10 p,
+    .export-table-font-10 span,
+    .export-table-font-10 div,
+    .export-table-font-10 strong,
+    .export-table-font-10 em,
+    .export-table-font-10 b,
+    .export-table-font-10 i,
+    .export-table-font-10 li {
+      font-size: ${EXPORT_TABLE_FONT_10_SIZE} !important;
+      line-height: ${EXPORT_TABLE_FONT_10_LINE_HEIGHT} !important;
+    }
+
     .signature-table p,
     .signature-table span,
     .signature-table strong,
@@ -934,15 +964,6 @@ export function generateHtmlString(element, options = {}) {
       line-height: ${DOCUMENT_LINE_HEIGHT};
     }
 
-    ${
-        normalizeForWord
-            ? `
-    thead {
-      display: table-row-group !important;
-    }
-    `
-            : ""
-    }
   </style>
 </head>
 <body>${bodyHtml}</body>

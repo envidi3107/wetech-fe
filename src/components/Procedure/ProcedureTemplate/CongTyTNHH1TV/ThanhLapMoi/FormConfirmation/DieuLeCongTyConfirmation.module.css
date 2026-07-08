@@ -101,6 +101,25 @@
     text-align: inherit;
 }
 
+.table,
+.table th,
+.table td,
+.table th>p,
+.table td>p,
+.table th span,
+.table td span,
+.table th strong,
+.table td strong,
+.table th em,
+.table td em,
+.table th b,
+.table td b,
+.table th i,
+.table td i {
+    font-size: var(--procedure-confirmation-font-size) !important;
+    line-height: inherit !important;
+}
+
 .signatures {
     display: flex;
     justify-content: space-between;

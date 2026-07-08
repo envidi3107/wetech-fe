@@ -38,7 +38,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 </p>
             </div>
             <p>Chúng tôi, gồm những thành viên có tên như sau:</p>
-            <table className={styles.table}>
+            <table className={`${styles.table} single-border-table`}>
                 <thead>
                     <tr>
                         <th style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
@@ -459,7 +459,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             >
                 Điều 4. Ngành, nghề kinh doanh
             </p>
-            <table className={styles.table}>
+            <table className={`${styles.table} single-border-table`}>
                 <thead>
                     <tr>
                         <th style={{ width: "40px", textAlign: "center", border: "1px solid #000", padding: "8px" }}>
@@ -677,7 +677,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 2. Phần vốn góp, giá trị phần vốn góp của các thành viên, thời hạn góp vốn:
             </p>
-            <table className={styles.table}>
+            <table className={`${styles.table} single-border-table`}>
                 <thead>
                     <tr>
                         <th rowSpan={2} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>

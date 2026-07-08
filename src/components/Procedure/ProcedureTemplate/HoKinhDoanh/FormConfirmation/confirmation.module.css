@@ -99,7 +99,7 @@
 .tableContainer {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid #aaa;
+    border: none;
     border-radius: 2px;
     margin: 10px 0;
 }
@@ -112,7 +112,7 @@
 
 .table th,
 .table td {
-    border: 1px solid #aaa;
+    border: 1px solid #000;
     padding: 6px 10px;
     vertical-align: top;
 }
@@ -139,6 +139,35 @@
     font: inherit;
     color: inherit;
     text-align: inherit;
+}
+
+.table,
+.table th,
+.table td,
+.table th > p,
+.table td > p,
+.table th span,
+.table td span,
+.table th strong,
+.table td strong,
+.table th em,
+.table td em,
+.table th b,
+.table td b,
+.table th i,
+.table td i {
+    font-size: var(--procedure-confirmation-font-size) !important;
+    line-height: inherit !important;
+}
+
+.inlineField {
+    display: inline-block;
+    margin-left: 36pt;
+    font-family: "Times New Roman", serif !important;
+    font-size: 13pt !important;
+    line-height: 1.6 !important;
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* Checkbox display */

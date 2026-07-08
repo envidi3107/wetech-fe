@@ -172,6 +172,19 @@ h3.docTitle {
     text-align: center;
 }
 
+.content table:not([class*="signature-table"]),
+.content table:not([class*="signature-table"]) th,
+.content table:not([class*="signature-table"]) td,
+.content table:not([class*="signature-table"]) p,
+.content table:not([class*="signature-table"]) span:not([class]),
+.content table:not([class*="signature-table"]) strong,
+.content table:not([class*="signature-table"]) em,
+.content table:not([class*="signature-table"]) b,
+.content table:not([class*="signature-table"]) i {
+    font-size: var(--procedure-confirmation-table-font-size, 13pt) !important;
+    line-height: var(--procedure-confirmation-table-line-height, 1.25) !important;
+}
+
 .input,
 .select {
     width: 100%;

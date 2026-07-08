@@ -3,7 +3,7 @@ import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "./DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
-const BENEFICIAL_OWNER_COLUMN_WIDTHS = ["4%", "10%", "8%", "5%", "16%", "7%", "6%", "15%", "6%", "6%", "7%", "10%"];
+const BENEFICIAL_OWNER_COLUMN_WIDTHS = ["4%", "10%", "9%", "5%", "16%", "7%", "6%", "15%", "6%", "6%", "7%", "10%"];
 
 const getColumnStyle = (columnIndex, style = {}) => ({
     width: BENEFICIAL_OWNER_COLUMN_WIDTHS[columnIndex],
@@ -34,8 +34,12 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} single-border-table docx-contained-table`}
-                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                    className={`${styles.table} single-border-table docx-contained-table export-table-font-10`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        tableLayout: "fixed",
+                    }}
                 >
                     <thead>
                         <tr>
@@ -258,24 +262,24 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             >
                 <tbody>
                     <tr>
-                            <td
-                                className="signature-spacer"
-                                style={{
-                                    border: "none",
-                                    width: "auto",
-                                    textAlign: "center",
-                                    verticalAlign: "top",
-                                }}
-                            ></td>
-                            <td
-                                className="signature-cell"
-                                style={{
-                                    border: "none",
-                                    textAlign: "center",
-                                    verticalAlign: "top",
-                                    width: "105mm",
-                                }}
-                            >
+                        <td
+                            className="signature-spacer"
+                            style={{
+                                border: "none",
+                                width: "auto",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                            }}
+                        ></td>
+                        <td
+                            className="signature-cell"
+                            style={{
+                                border: "none",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                                width: "105mm",
+                            }}
+                        >
                             <p style={{ textAlign: "center", fontStyle: "italic" }}>
                                 <CurrentDate prefix={datePrefix} style={{ fontStyle: "italic" }} />
                             </p>

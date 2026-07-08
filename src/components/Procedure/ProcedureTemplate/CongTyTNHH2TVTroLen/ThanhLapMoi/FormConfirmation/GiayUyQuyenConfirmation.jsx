@@ -72,7 +72,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             <p className={styles.docTitle} style={{ margin: "30px 0" }}>
                 GIẤY UỶ QUYỀN
             </p>
-            <p className={styles.sectionTitle} style={{ textDecoration: "underline", fontSize: "15px" }}>
+            <p
+                className={styles.sectionTitle}
+                style={{ textDecoration: "underline", fontSize: "var(--procedure-confirmation-font-size)" }}
+            >
                 BÊN ỦY QUYỀN (BÊN A):
             </p>
             <div className={styles.infoRow}>
@@ -229,7 +232,11 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{
+                    textDecoration: "underline",
+                    fontSize: "var(--procedure-confirmation-font-size)",
+                    marginTop: "20px",
+                }}
             >
                 BÊN NHẬN UỶ QUYỀN (BÊN B):
             </p>
@@ -442,7 +449,11 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             </div>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{
+                    textDecoration: "underline",
+                    fontSize: "var(--procedure-confirmation-font-size)",
+                    marginTop: "20px",
+                }}
             >
                 NỘI DUNG ỦY QUYỀN:
             </p>
@@ -455,7 +466,11 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
+                style={{
+                    textDecoration: "underline",
+                    fontSize: "var(--procedure-confirmation-font-size)",
+                    marginTop: "20px",
+                }}
             >
                 THỜI HẠN UỶ QUYỀN:
             </p>

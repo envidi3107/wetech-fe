@@ -519,7 +519,7 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
                 </b>
             </p>
             <div className={styles.tableContainer}>
-                <table className={styles.table}>
+                <table className={`${styles.table} single-border-table`}>
                     <thead>
                         <tr>
                             <th style={{ width: "40px" }}>
@@ -598,7 +598,7 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
                                             }}
                                         >
                                             {row.tenNganh}
-                                            {row.chiTiet && <p style={{ marginTop: "4px" }}>{row.chiTiet}</p>}
+                                            {row.chiTiet && <span style={{ display: "block", marginTop: "4px" }}>{row.chiTiet}</span>}
                                         </p>
                                     </td>
                                     <td style={{ textAlign: "center" }}>
@@ -871,7 +871,7 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
                 </b>
             </p>
             <div className={styles.tableContainer}>
-                <table className={styles.table} style={{ fontSize: "12px" }}>
+                <table className={`${styles.table} single-border-table`}>
                     <thead>
                         <tr>
                             <th style={{ width: "30px" }}>

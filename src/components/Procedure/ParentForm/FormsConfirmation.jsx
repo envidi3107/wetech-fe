@@ -158,7 +158,7 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     complexScriptFontSize: DOCX_EXPORT_FONT_SIZE,
                     table: {
                         row: {
-                            cantSplit: true,
+                            cantSplit: false,
                         },
                         addSpacingAfter: false,
                     },
