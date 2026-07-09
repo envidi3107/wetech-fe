@@ -8,6 +8,39 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
+const CAPITAL_CONTRIBUTION_COLUMN_WIDTHS = ["6%", "18%", "22%", "8%", "22%", "12%", "12%"];
+
+const CAPITAL_CONTRIBUTION_HEADERS = [
+    "Stt",
+    "Tên thành viên",
+    "Phần vốn góp (bằng số; VNĐ và giá trị tương đương theo đơn vị tiền nước ngoài: bằng số, loại ngoại tệ, nếu có)",
+    "Tỷ lệ (%)",
+    "Loại tài sản, số lượng, giá trị tài sản góp vốn",
+    "Thời hạn góp vốn",
+    "Ghi chú",
+];
+
+const getCapitalContributionCellStyle = (columnIndex, style = {}) => ({
+    width: CAPITAL_CONTRIBUTION_COLUMN_WIDTHS[columnIndex],
+    border: "1px solid #000",
+    padding: "5px",
+    ...style,
+});
+
+const InlineField = ({ children, marginLeft = "36pt" }) => (
+    <span
+        className="inlineField"
+        style={{
+            display: "inline-block",
+            marginLeft,
+            fontWeight: "inherit",
+            fontStyle: "normal",
+        }}
+    >
+        {children}
+    </span>
+);
+
 export default function DieuLeCongTyConfirmation({ dataJson }) {
     const thanhVienList = useGetFormDataJsonFromName("Danh sách thành viên")?.thanhVienList || [];
 
@@ -25,16 +58,29 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
         const match = str.match(/\d{9,12}/);
         return match ? match[0] : str;
     };
+
+    const getMemberSignatureLabel = (row, index) =>
+        `Chữ ký của ${row?.hoTen || `Thành viên ${index + 1}`}`.toUpperCase();
+
     return (
         <div className={styles.documentContainer}>
             <div className={styles.header}>
-                <p className={styles.bold}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
-                <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
-                <br />
-                <p className={styles.title}>ĐIỀU LỆ</p>
-                <p className={styles.subTitle}>
-                    {companyNamePrefix}{" "}
-                    {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
+                <p className={styles.bold} style={{ textAlign: "center", margin: 0 }}>
+                    <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+                </p>
+                <p className={styles.headerSubtitle} style={{ textAlign: "center", margin: "4px 0 12px" }}>
+                    <strong>
+                        <u>Độc lập - Tự do - Hạnh phúc</u>
+                    </strong>
+                </p>
+                <p className={styles.title} style={{ textAlign: "center", margin: "12pt 0 5px", fontSize: "13pt" }}>
+                    <strong>ĐIỀU LỆ</strong>
+                </p>
+                <p className={styles.subTitle} style={{ textAlign: "center", margin: 0, fontSize: "13pt" }}>
+                    <strong>
+                        {companyNamePrefix}{" "}
+                        {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
+                    </strong>
                 </p>
             </div>
             <p>Chúng tôi, gồm những thành viên có tên như sau:</p>
@@ -265,18 +311,27 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 <tbody>
                     {thanhVienRows.length === 0 ? (
                         <tr>
-                            <td colSpan={7} style={{ border: "1px solid #000", padding: "10px", textAlign: "center" }}>
-                                <p
+                            {[0, 1, 2, 3, 4, 5, 6].map((columnIndex) => (
+                                <td
+                                    key={`empty-member-${columnIndex}`}
                                     style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
+                                        border: "1px solid #000",
+                                        padding: "5px",
+                                        textAlign: columnIndex === 0 ? "left" : "center",
                                     }}
                                 >
-                                    Chưa có dữ liệu thành viên.
-                                </p>
-                            </td>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {columnIndex === 0 ? "Chưa có dữ liệu thành viên." : ""}
+                                    </p>
+                                </td>
+                            ))}
                         </tr>
                     ) : (
                         thanhVienRows.map((row, idx) => (
@@ -385,7 +440,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -415,7 +469,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 nhận đăng ký kinh doanh. Công ty có thể chấm dứt hoạt động trước thời hạn hoặc kéo dài thêm thời gian
                 hoạt động theo quyết định của Hội đồng thành viên hoặc theo quy định của pháp luật.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -429,10 +482,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>):{" "}
                 {dataJson.tenCongTyEN || "................................................"}
-            </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Tên công ty viết tắt (<em>nếu có</em>):{" "}
-                {dataJson.tenCongTyVietTat || "................................................"}
+                <InlineField>
+                    Tên công ty viết tắt (<em>nếu có</em>):{" "}
+                    {dataJson.tenCongTyVietTat || "................................................"}
+                </InlineField>
             </p>
             <p
                 className={styles.articleTitle}
@@ -446,12 +499,16 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                     "........................................................................"}
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Điện thoại: {dataJson.truSo_phone || "..................."} Số fax (<em>nếu có</em>):{" "}
-                {dataJson.truSo_fax || "..................."}
+                Điện thoại: {dataJson.truSo_phone || "..................."}
+                <InlineField>
+                    Số fax (<em>nếu có</em>): {dataJson.truSo_fax || "..................."}
+                </InlineField>
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Thư điện tử (<em>nếu có</em>): {dataJson.truSo_email || "..................."} Website (<em>nếu có</em>
-                ): {dataJson.truSo_website || "..................."}
+                Thư điện tử (<em>nếu có</em>): {dataJson.truSo_email || "..................."}
+                <InlineField>
+                    Website (<em>nếu có</em>): {dataJson.truSo_website || "..................."}
+                </InlineField>
             </p>
             <p
                 className={styles.articleTitle}
@@ -578,18 +635,23 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={4} style={{ textAlign: "center", border: "1px solid #000", padding: "8px" }}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
+                            {[0, 1, 2, 3].map((columnIndex) => (
+                                <td
+                                    key={`empty-business-line-${columnIndex}`}
+                                    style={{ textAlign: columnIndex === 0 ? "left" : "center", border: "1px solid #000", padding: "8px" }}
                                 >
-                                    <i>Không có</i>
-                                </p>
-                            </td>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {columnIndex === 0 ? <em>Không có</em> : ""}
+                                    </p>
+                                </td>
+                            ))}
                         </tr>
                     )}
                 </tbody>
@@ -610,11 +672,9 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}
-            </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Sinh ngày: {formatDate(dataJson.nguoiDaiDien_ngaySinh) || "....................."} &nbsp;&nbsp;&nbsp;
-                Dân tộc: {dataJson.nguoiDaiDien_danToc || "........"} &nbsp;&nbsp;&nbsp; Quốc tịch:{" "}
-                {dataJson.nguoiDaiDien_quocTich || "Việt Nam"}
+                <InlineField marginLeft="50pt">Sinh ngày: {formatDate(dataJson.nguoiDaiDien_ngaySinh) || "....................."}</InlineField>
+                <InlineField marginLeft="50pt">Dân tộc: {dataJson.nguoiDaiDien_danToc || "........"}</InlineField>
+                <InlineField marginLeft="50pt">Quốc tịch: {dataJson.nguoiDaiDien_quocTich || "Việt Nam"}</InlineField>
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Số định danh cá nhân:{" "}
@@ -636,7 +696,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -645,7 +704,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             >
                 VỐN ĐIỀU LỆ, QUYỀN VÀ NGHĨA VỤ CỦA THÀNH VIÊN
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -677,10 +735,13 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 2. Phần vốn góp, giá trị phần vốn góp của các thành viên, thời hạn góp vốn:
             </p>
-            <table className={`${styles.table} single-border-table`}>
+            <table
+                className={`${styles.table} single-border-table docx-contained-table`}
+                style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+            >
                 <thead>
                     <tr>
-                        <th rowSpan={2} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                        <th rowSpan={2} style={getCapitalContributionCellStyle(0, { textAlign: "center" })}>
                             <p
                                 style={{
                                     margin: 0,
@@ -689,10 +750,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                     font: "inherit",
                                 }}
                             >
-                                Stt
+                                {CAPITAL_CONTRIBUTION_HEADERS[0]}
                             </p>
                         </th>
-                        <th rowSpan={2} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                        <th rowSpan={2} style={getCapitalContributionCellStyle(1, { textAlign: "center" })}>
                             <p
                                 style={{
                                     margin: 0,
@@ -701,10 +762,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                     font: "inherit",
                                 }}
                             >
-                                Tên thành viên
+                                {CAPITAL_CONTRIBUTION_HEADERS[1]}
                             </p>
                         </th>
-                        <th colSpan={3} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                        <th colSpan={3} style={{ border: "1px solid #000", padding: "5px", textAlign: "center", width: "52%" }}>
                             <p
                                 style={{
                                     margin: 0,
@@ -716,7 +777,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                 Vốn góp
                             </p>
                         </th>
-                        <th rowSpan={2} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                        <th rowSpan={2} style={getCapitalContributionCellStyle(5, { textAlign: "center" })}>
                             <p
                                 style={{
                                     margin: 0,
@@ -725,10 +786,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                     font: "inherit",
                                 }}
                             >
-                                Thời hạn góp vốn
+                                {CAPITAL_CONTRIBUTION_HEADERS[5]}
                             </p>
                         </th>
-                        <th rowSpan={2} style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                        <th rowSpan={2} style={getCapitalContributionCellStyle(6, { textAlign: "center" })}>
                             <p
                                 style={{
                                     margin: 0,
@@ -737,189 +798,39 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                     font: "inherit",
                                 }}
                             >
-                                Ghi chú
-                            </p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                Phần vốn góp (bằng số; VNĐ và giá trị tương đương theo đơn vị tiền nước ngoài: bằng số,
-                                loại ngoại tệ, nếu có)
-                            </p>
-                        </th>
-                        <th style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                Tỷ lệ (%)
-                            </p>
-                        </th>
-                        <th style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                Loại tài sản, số lượng, giá trị tài sản góp vốn
+                                {CAPITAL_CONTRIBUTION_HEADERS[6]}
                             </p>
                         </th>
                     </tr>
                     <tr>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                1
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                2
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                3
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                4
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                5
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                6
-                            </p>
-                        </th>
-                        <th
-                            style={{
-                                border: "1px solid #000",
-                                padding: "5px",
-                                textAlign: "center",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    lineHeight: "inherit",
-                                    textAlign: "inherit",
-                                    font: "inherit",
-                                }}
-                            >
-                                7
-                            </p>
-                        </th>
+                        {CAPITAL_CONTRIBUTION_HEADERS.slice(2, 5).map((header, headerIndex) => {
+                            const columnIndex = headerIndex + 2;
+
+                            return (
+                                <th key={header} style={getCapitalContributionCellStyle(columnIndex, { textAlign: "center" })}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {header}
+                                    </p>
+                                </th>
+                            );
+                        })}
                     </tr>
-                </thead>
-                <tbody>
-                    {thanhVienRows.length === 0 ? (
-                        <tr>
-                            <td colSpan={7} style={{ border: "1px solid #000", padding: "10px", textAlign: "center" }}>
+                    <tr>
+                        {CAPITAL_CONTRIBUTION_HEADERS.map((header, columnIndex) => (
+                            <th
+                                key={`capital-contribution-number-${header}`}
+                                style={getCapitalContributionCellStyle(columnIndex, {
+                                    textAlign: "center",
+                                    fontWeight: "normal",
+                                })}
+                            >
                                 <p
                                     style={{
                                         margin: 0,
@@ -928,9 +839,34 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    Chưa có dữ liệu thành viên.
+                                    {columnIndex + 1}
                                 </p>
-                            </td>
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {thanhVienRows.length === 0 ? (
+                        <tr>
+                            {CAPITAL_CONTRIBUTION_HEADERS.map((header, columnIndex) => (
+                                <td
+                                    key={`empty-capital-contribution-${header}`}
+                                    style={getCapitalContributionCellStyle(columnIndex, {
+                                        textAlign: columnIndex === 0 ? "left" : "center",
+                                    })}
+                                >
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            lineHeight: "inherit",
+                                            textAlign: "inherit",
+                                            font: "inherit",
+                                        }}
+                                    >
+                                        {columnIndex === 0 ? "Chưa có dữ liệu thành viên." : ""}
+                                    </p>
+                                </td>
+                            ))}
                         </tr>
                     ) : (
                         thanhVienRows.map((row, idx) => (
@@ -971,7 +907,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         {row.phanVonGop ? row.phanVonGop + " VNĐ" : "0"}
                                     </p>
                                 </td>
-                                <td style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                                <td style={getCapitalContributionCellStyle(3, { textAlign: "center" })}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -983,7 +919,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         {row.tyLe ? row.tyLe + "%" : "0"}
                                     </p>
                                 </td>
-                                <td style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                                <td style={getCapitalContributionCellStyle(4, { textAlign: "center" })}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -995,7 +931,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         {row.loaiTaiSan}
                                     </p>
                                 </td>
-                                <td style={{ border: "1px solid #000", padding: "5px", textAlign: "center" }}>
+                                <td style={getCapitalContributionCellStyle(5, { textAlign: "center" })}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -1007,7 +943,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         {row.thoiHan}
                                     </p>
                                 </td>
-                                <td style={{ border: "1px solid #000", padding: "5px" }}>
+                                <td style={getCapitalContributionCellStyle(6)}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -1071,7 +1007,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 phần vốn góp, công ty phải cấp giấy chứng nhận phần vốn góp cho thành viên tương ứng với giá trị phần
                 vốn đã góp.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1170,7 +1105,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 6. Nghĩa vụ khác theo quy định của Luật Doanh nghiệp.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1201,7 +1135,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Điều này thì thành viên đó có quyền tự do chuyển nhượng phần vốn góp của mình cho thành viên khác hoặc
                 người không phải là thành viên công ty.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1233,7 +1166,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 thực hiện đăng ký thay đổi nội dung đăng ký doanh nghiệp trong thời hạn 15 ngày kể từ ngày hoàn thành
                 việc chuyển nhượng.
             </p>
-            <br />
             <p
                 className={styles.chapterTitle}
                 style={{ textAlign: "center", marginTop: "16px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1242,7 +1174,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -1253,7 +1184,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -1262,7 +1192,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             >
                 HOẠT ĐỘNG CỦA CÔNG TY
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1275,7 +1204,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>Hội đồng thành viên;</p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>Chủ tịch Hội đồng thành viên;</p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}> Giám đốc .</p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1335,7 +1263,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 n) Quyền và nghĩa vụ khác theo quy định của Luật Doanh nghiệp và Điều lệ công ty.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1383,7 +1310,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 viên còn lại bầu một người trong số các thành viên tạm thời làm Chủ tịch Hội đồng thành viên theo nguyên
                 tắc đa số thành viên còn lại tán thành cho đến khi có quyết định mới của Hội đồng thành viên.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1430,7 +1356,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 l) Quyền và nghĩa vụ khác được quy định tại Điều lệ công ty, nghị quyết, quyết định của Hội đồng thành
                 viên, hợp đồng lao động.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1465,7 +1390,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 4. Trường hợp cuộc họp đủ điều kiện quy định tại Điều này không hoàn thành chuông trình họp trong thời
                 hạn dự kiến thì có thể kéo dài nhưng không được quá 30 ngày kể từ ngày khai mạc cuộc họp đó.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1528,7 +1452,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 5. Nghị quyết, quyết định của Hội đồng thành viên được thông qua dưới hình thức lấy ý kiến bằng văn bản
                 khi được số thành viên sở hữu từ 65% vốn điều lệ trở lên tán thành.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1602,7 +1525,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Hội đồng thành viên chịu trách nhiệm liên đới về tính đầy đủ, chính xác, trung thực của nội dung báo cáo
                 kết quả kiểm phiếu.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1698,7 +1620,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -1783,7 +1704,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -1792,7 +1712,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             >
                 THÀNH LẬP, TỔ CHỨC LẠI, GIẢI THỂ
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1810,7 +1729,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Việc tổ chức lại doanh nghiệp (chia, tách, hợp nhất, sáp nhập hoặc chuyển đổi loại hình doanh nghiệp)
                 công ty thực hiện quy định của Luật Doanh nghiệp.
             </p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1983,7 +1901,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>Biên bản giao nhận</p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>Phiếu xuất kho</p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>Chứng từ kế toán</p>
-            <br />
             <p
                 className={styles.articleTitle}
                 style={{ textAlign: "left", marginTop: "12px", marginBottom: "6px", fontWeight: "bold" }}
@@ -1993,7 +1910,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Việc phá sản Công ty được thực hiện theo thủ tục của pháp luật về phá sản.
             </p>
-            <br />
             <p
                 className={styles.chapterTitle}
                 style={{ textAlign: "center", marginTop: "16px", marginBottom: "6px", fontWeight: "bold" }}
@@ -2002,7 +1918,6 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p
                 style={{
-                    textAlign: "justify",
                     marginTop: "6px",
                     marginBottom: "6px",
                     fontWeight: "bold",
@@ -2057,60 +1972,66 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Mọi sự sao chép phải được ký xác nhận của Chủ tịch Hội đồng thành viên hoặc của Giám đốc công ty.
             </p>
-            <br />
             <p style={{ textAlign: "right", marginTop: "20px", marginBottom: "6px", fontStyle: "italic" }}>
                 <CurrentDate />
             </p>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "50px", marginTop: "20px" }}>
-                <div
-                    style={{
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        minWidth: "50%",
-                    }}
-                >
-                    <p style={{ textAlign: "center", marginBottom: "6px", marginTop: "10px", fontWeight: "bold" }}>
-                        HỌ TÊN, CHỮ KÝ CỦA CÁC THÀNH VIÊN CÔNG TY
-                    </p>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
-                        {thanhVienRows.map((row, idx) => {
-                            return (
-                                <div
-                                    key={idx}
-                                    style={{
-                                        textAlign: "center",
-                                        padding: "10px",
-                                        minWidth: "250px",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p style={{ textTransform: "uppercase", textAlign: "center", fontWeight: "bold" }}>
-                                        Chữ ký của {row.hoTen || `Thành viên ${idx + 1}`}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
+            <table
+                className="signature-table no-border"
+                style={{ width: "100%", borderCollapse: "collapse", border: "none", marginTop: "20px" }}
+            >
+                <tbody>
+                    <tr>
+                        <td
+                            className="signature-cell"
+                            style={{ border: "none", textAlign: "center", verticalAlign: "top", width: "50%", padding: "0 8px" }}
+                        >
+                            <p style={{ textAlign: "center", marginBottom: "6px", marginTop: "10px", fontWeight: "bold" }}>
+                                <strong>HỌ TÊN, CHỮ KÝ CỦA CÁC THÀNH VIÊN CÔNG TY</strong>
+                            </p>
+                            <table className="no-border" style={{ width: "100%", borderCollapse: "collapse", border: "none" }}>
+                                <tbody>
+                                    {Array.from({ length: Math.max(1, Math.ceil(thanhVienRows.length / 2)) }).map((_, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            {[0, 1].map((colIndex) => {
+                                                const memberIndex = rowIndex * 2 + colIndex;
+                                                const row = thanhVienRows[memberIndex];
 
-                <div
-                    style={{
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        minWidth: "50%",
-                    }}
-                >
-                    <p className={styles.signatureName} style={{ textAlign: "center", whiteSpace: "nowrap" }}>
-                        NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA DOANH NGHIỆP
-                    </p>
-                </div>
-            </div>
+                                                return (
+                                                    <td
+                                                        key={colIndex}
+                                                        style={{
+                                                            border: "none",
+                                                            textAlign: "center",
+                                                            verticalAlign: "top",
+                                                            padding: "10px",
+                                                        }}
+                                                    >
+                                                        {row ? (
+                                                            <p style={{ textAlign: "center", margin: 0, fontWeight: "bold" }}>
+                                                                <strong>{getMemberSignatureLabel(row, memberIndex)}</strong>
+                                                            </p>
+                                                        ) : (
+                                                            <p style={{ textAlign: "center", margin: 0 }}>&nbsp;</p>
+                                                        )}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </td>
+                        <td
+                            className="signature-cell"
+                            style={{ border: "none", textAlign: "center", verticalAlign: "top", width: "50%", padding: "0 8px" }}
+                        >
+                            <p className={styles.signatureName} style={{ textAlign: "center", marginTop: "10px", fontWeight: "bold" }}>
+                                <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA DOANH NGHIỆP</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

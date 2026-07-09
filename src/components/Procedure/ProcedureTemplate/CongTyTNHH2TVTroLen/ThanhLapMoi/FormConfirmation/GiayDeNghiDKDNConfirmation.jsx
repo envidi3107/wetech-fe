@@ -1,25 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { formatDate } from "@/utils/dateTimeUtils";
 // Reuse styles
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
-import { useGetFormDataJsonFromName, useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
-import { authAxios } from "@/services/axios-instance";
+import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
-    <i
-        className={styles.checkbox}
+    <span
+        className={`${styles.checkbox} checkbox-symbol`}
         style={{
+            fontWeight: "inherit",
+            fontStyle: "normal",
+            fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+            lineHeight: 1,
+            margin: "0 3px",
+            verticalAlign: "middle",
+        }}
+    >
+        {"\u00A0"}
+        {checked ? "\u2612" : "\u2610"}
+        {"\u00A0"}
+    </span>
+);
+const InlineField = ({ children }) => (
+    <span
+        className={styles.inlineField}
+        style={{
+            display: "inline-block",
+            marginLeft: "36pt",
             fontWeight: "inherit",
             fontStyle: "normal",
         }}
     >
-        {checked ? "x" : ""}
-    </i>
+        {children}
+    </span>
 );
 
 function GiayDeNghiDKDNConfirmation({ dataJson }) {
@@ -185,7 +203,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
 
                 <p>
                     Tôi là (<em>ghi họ tên bằng chữ in hoa</em>):{" "}
-                    <b
+                    <span
                         style={{
                             textTransform: "uppercase",
                             fontWeight: "inherit",
@@ -193,15 +211,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         }}
                     >
                         {nguoiNop_hoTen}
-                    </b>
+                    </span>
                 </p>
                 <p>Ngày, tháng, năm sinh: {formatDate(nguoiNop_ngaySinh)}</p>
                 <p>Giới tính: {nguoiNop_gioiTinh}</p>
                 <p>Số định danh cá nhân: {nguoiNop_cccd}</p>
                 <p>Địa chỉ liên lạc: {addressToString(lienLac_soNha, lienLac_xa, lienLac_tinh)}</p>
                 <p>
-                    Điện thoại<em> (nếu có)</em>: {nguoiNop_phone} &nbsp; &nbsp; Thư điện tử<em> (nếu có)</em>:{" "}
-                    {nguoiNop_email}
+                    Điện thoại<em> (nếu có)</em>: {nguoiNop_phone}
+                    {"    "}
+                    <InlineField>
+                        Thư điện tử<em> (nếu có)</em>: {nguoiNop_email}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
@@ -209,12 +230,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "calc(100% - 20px)" }}>
+                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                     <tbody>
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiNop_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiNop_quocTich}
+                                    Dân tộc: {nguoiNop_danToc}
+                                    <InlineField>Quốc tịch: {nguoiNop_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -222,8 +244,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiNop_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiNop_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {nguoiNop_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -248,7 +270,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>1. Tình trạng thành lập </strong>(<em>đánh dấu X vào ô thích hợp</em>):
                 </p>
-                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -440,7 +462,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
-                    <b
+                    <span
                         style={{
                             textTransform: "uppercase",
                             fontWeight: "inherit",
@@ -448,7 +470,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         }}
                     >
                         {tenCongTyVN}
-                    </b>
+                    </span>
                 </p>
                 <p>
                     Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>): {tenCongTyEN}
@@ -464,11 +486,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Xã/Phường/Đặc khu: {truSo_xa}</p>
                 <p>Tỉnh/Thành phố trực thuộc trung ương: {truSo_tinh}</p>
                 <p>
-                    Điện thoại: {truSo_phone} &nbsp; &nbsp; Số fax (<em>nếu có</em>): {truSo_fax}
+                    Điện thoại: {truSo_phone}
+                    {"    "}
+                    <InlineField>
+                        Số fax (<em>nếu có</em>): {truSo_fax}
+                    </InlineField>
                 </p>
                 <p>
-                    Thư điện tử (<em>nếu có</em>): {truSo_email} &nbsp; &nbsp; Website (<em>nếu có</em>):{" "}
-                    {truSo_website}
+                    Thư điện tử (<em>nếu có</em>): {truSo_email}
+                    {"    "}
+                    <InlineField>
+                        Website (<em>nếu có</em>): {truSo_website}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "8px" }}>
@@ -479,7 +508,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </em>
                     ):
                 </p>
-                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -591,13 +620,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
                     biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh: Có
                     <Checkbox checked={truSo_anNinhQuocPhong === "Có"} />
-                    <b
+                    <span
                         style={{
                             marginLeft: "20px",
                             fontWeight: "inherit",
                             fontStyle: "normal",
                         }}
-                    ></b>
+                    ></span>
                     Không <Checkbox checked={truSo_anNinhQuocPhong === "Không" || !truSo_anNinhQuocPhong} />
                 </p>
 
@@ -746,14 +775,14 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Vốn điều lệ (<em>bằng chữ; VNĐ</em>):{" "}
-                    <b
+                    <span
                         style={{
                             fontStyle: "italic",
                             fontWeight: "inherit",
                         }}
                     >
                         {vonDieuLe_bangChu}
-                    </b>
+                    </span>
                 </p>
                 <p>
                     Giá trị tương đương theo đơn vị tiền nước ngoài (<em>nếu có, bằng số, loại ngoại tệ</em>):{" "}
@@ -761,7 +790,16 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
-                    đăng ký doanh nghiệp hay không? Có <Checkbox checked={false} /> Không <Checkbox checked={true} />
+                    đăng ký doanh nghiệp hay không?
+                    Có <Checkbox checked={false} />
+                    <span
+                        style={{
+                            marginLeft: "30px",
+                            fontWeight: "inherit",
+                            fontStyle: "normal",
+                        }}
+                    ></span>
+                    Không <Checkbox checked={true} />
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
@@ -1286,7 +1324,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Họ, chữ đệm và tên (<em>ghi bằng chữ in hoa</em>):{" "}
-                    <b
+                    <span
                         style={{
                             textTransform: "uppercase",
                             fontWeight: "inherit",
@@ -1294,7 +1332,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         }}
                     >
                         {nguoiDaiDien_hoTen}
-                    </b>
+                    </span>
                 </p>
                 <p>Ngày, tháng, năm sinh: {formatDate(nguoiDaiDien_ngaySinh)}</p>
                 <p>Giới tính: {nguoiDaiDien_gioiTinh}</p>
@@ -1307,12 +1345,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "calc(100% - 20px)" }}>
+                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                     <tbody>
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiDaiDien_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiDaiDien_quocTich}
+                                    Dân tộc: {nguoiDaiDien_danToc}
+                                    <InlineField>Quốc tịch: {nguoiDaiDien_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -1320,8 +1359,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiDaiDien_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(nguoiDaiDien_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiDaiDien_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(nguoiDaiDien_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {nguoiDaiDien_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -1339,7 +1378,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>9. Thông tin đăng ký thuế:</strong>
                 </p>
-                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "8px" }}>
+                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -1444,8 +1483,11 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>Xã/Phường/Đặc khu: {thongBaoThue_xa}</p>
                                 <p>Tỉnh/Thành phố trực thuộc trung ương: {thongBaoThue_tinh}</p>
                                 <p>
-                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone} &nbsp; &nbsp; Số fax (
-                                    <em>nếu có</em>): {thongBaoThue_fax}
+                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone}
+                                    {"    "}
+                                    <InlineField>
+                                        Số fax (<em>nếu có</em>): {thongBaoThue_fax}
+                                    </InlineField>
                                 </p>
                                 <p>
                                     Thư điện tử (<em>nếu có</em>): {thongBaoThue_email}
@@ -1500,7 +1542,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     </em>
                                     ):{" "}
                                 </p>
-                                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "200px" }}>
@@ -1527,7 +1569,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     <Checkbox checked={hinhThucHachToan === "doc_lap"} />
                                                 </p>
                                             </td>
-                                            <td style={{ width: "30px" }}></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -1567,7 +1608,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                     <Checkbox checked={hinhThucHachToan === "phu_thuoc"} />
                                                 </p>
                                             </td>
-                                            <td></td>
                                             <td></td>
                                         </tr>
                                     </tbody>
@@ -1628,7 +1668,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                             <td colSpan="2">
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
-                                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "100px" }}>
@@ -1677,10 +1717,9 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
                                 </p>
-                                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", marginTop: "4px" }}>
+                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "30px" }}></td>
                                             <td style={{ width: "250px" }}>
                                                 <p
                                                     style={{
@@ -1707,7 +1746,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -1734,7 +1772,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -1763,7 +1800,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{

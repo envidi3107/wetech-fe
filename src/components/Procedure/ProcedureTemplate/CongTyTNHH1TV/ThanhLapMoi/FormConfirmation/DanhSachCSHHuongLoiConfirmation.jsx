@@ -4,6 +4,7 @@ import styles from "./DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
 const BENEFICIAL_OWNER_COLUMN_WIDTHS = ["4%", "10%", "9%", "5%", "16%", "7%", "6%", "15%", "6%", "6%", "7%", "10%"];
+const BENEFICIAL_OWNER_GROUP_WIDTH = "19%";
 
 const getColumnStyle = (columnIndex, style = {}) => ({
     width: BENEFICIAL_OWNER_COLUMN_WIDTHS[columnIndex],
@@ -25,6 +26,12 @@ const BENEFICIAL_OWNER_HEADERS = [
     "Ghi chú (nếu có)",
 ];
 
+const BENEFICIAL_OWNER_GROUP_HEADERS = [
+    "Tỷ lệ sở hữu cổ phần vốn điều lệ",
+    "Tỷ lệ sở hữu cổ phần có quyền biểu quyết",
+    "Quyền chi phối",
+];
+
 function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
     const rows = dataJson?.cshHuongLoiList || [];
     const datePrefix = dataJson?.kinhGuiProvince || dataJson?.truSo_tinh;
@@ -43,8 +50,8 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                 >
                     <thead>
                         <tr>
-                            {BENEFICIAL_OWNER_HEADERS.map((label, index) => (
-                                <th key={label} className={styles.th} style={getColumnStyle(index)}>
+                            {BENEFICIAL_OWNER_HEADERS.slice(0, 8).map((label, index) => (
+                                <th key={label} rowSpan={2} className={styles.th} style={getColumnStyle(index)}>
                                     <p
                                         style={{
                                             margin: 0,
@@ -57,6 +64,50 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                     </p>
                                 </th>
                             ))}
+                            <th colSpan={3} className={styles.th} style={{ width: BENEFICIAL_OWNER_GROUP_WIDTH }}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    Chủ sở hữu hưởng lợi của doanh nghiệp
+                                </p>
+                            </th>
+                            <th rowSpan={2} className={styles.th} style={getColumnStyle(11)}>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                        lineHeight: "inherit",
+                                        textAlign: "inherit",
+                                        font: "inherit",
+                                    }}
+                                >
+                                    {BENEFICIAL_OWNER_HEADERS[11]}
+                                </p>
+                            </th>
+                        </tr>
+                        <tr>
+                            {BENEFICIAL_OWNER_GROUP_HEADERS.map((label, headerIndex) => {
+                                const columnIndex = headerIndex + 8;
+
+                                return (
+                                    <th key={label} className={styles.th} style={getColumnStyle(columnIndex)}>
+                                        <p
+                                            style={{
+                                                margin: 0,
+                                                lineHeight: "inherit",
+                                                textAlign: "inherit",
+                                                font: "inherit",
+                                            }}
+                                        >
+                                            {label}
+                                        </p>
+                                    </th>
+                                );
+                            })}
                         </tr>
                         <tr className={styles.colNumberRow}>
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (

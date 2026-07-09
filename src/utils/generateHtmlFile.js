@@ -66,6 +66,17 @@ function appendInlineStyleIfMissing(node, propertyPattern, styleText) {
     }
 }
 
+function appendInlineStyleOverride(node, propertyPattern, styleText) {
+    const currentStyle = node.getAttribute("style") || "";
+    const preservedDeclarations = currentStyle
+        .split(";")
+        .map((declaration) => declaration.trim())
+        .filter((declaration) => declaration && !propertyPattern.test(declaration));
+
+    node.setAttribute("style", preservedDeclarations.join("; "));
+    appendInlineStyle(node, styleText);
+}
+
 function hasInlineStyleValue(node, propertyPattern, valuePattern) {
     let current = node;
     while (current?.nodeType === Node.ELEMENT_NODE) {
@@ -419,10 +430,7 @@ function applyTableBorderStyles(root) {
         appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
         appendInlineStyleIfMissing(table, /\bborder-collapse\s*:/i, "border-collapse: collapse");
         table.querySelectorAll("td, th").forEach((cell) => {
-            const currentStyle = cell.getAttribute("style") || "";
-            if (!/\bborder\s*:/i.test(currentStyle)) {
-                appendInlineStyle(cell, "border: none");
-            }
+            appendInlineStyleOverride(cell, /^border\s*:/i, "border: none");
         });
     });
 }

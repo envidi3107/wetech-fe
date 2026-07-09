@@ -1,12 +1,55 @@
 import React from "react";
-import { formatDate } from "@/utils/dateTimeUtils";
-// Reuse styles
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/confirmation.module.css";
+import { formatDate } from "@/utils/dateTimeUtils";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
+
+const DOCUMENT_TEXT_STYLE = {
+    fontFamily: "'Times New Roman', Times, serif",
+    fontSize: "13pt",
+    lineHeight: 1.6,
+    color: "#000",
+};
+
+const SECTION_TITLE_STYLE = {
+    ...DOCUMENT_TEXT_STYLE,
+    textDecoration: "underline",
+    fontWeight: "bold",
+};
+
+const signatureTableStyle = {
+    ...DOCUMENT_TEXT_STYLE,
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "20px",
+};
+
+const signatureCellStyle = {
+    ...DOCUMENT_TEXT_STYLE,
+    width: "50%",
+    border: "none",
+    textAlign: "center",
+    verticalAlign: "top",
+    padding: "0 40px",
+};
+
+const inlineFieldStyle = {
+    display: "inline-block",
+    marginLeft: "36pt",
+    fontWeight: "inherit",
+    fontStyle: "normal",
+};
+
+function InlineField({ children, style }) {
+    return (
+        <span className={styles.inlineField} style={{ ...inlineFieldStyle, ...style }}>
+            {children}
+        </span>
+    );
+}
 
 export default function GiayUyQuyenConfirmation({ dataJson }) {
     if (!dataJson) return null;
@@ -23,105 +66,64 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
         uyQuyen_tinh = "",
 
         chuHo_ten = "",
-        tenCongTyPrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
         chuHo_xa_phuong = "",
-
-        nhanUyQuyen_hoTen = "",
-        nhanUyQuyen_ngaySinh = "",
-        nhanUyQuyen_gioiTinh = "",
-        nhanUyQuyen_cccd = "",
-        nhanUyQuyen_phone = "",
-        nhanUyQuyen_email = "",
-        nhanUyQuyen_danToc = "",
-        nhanUyQuyen_quocTich = "",
-        nhanUyQuyen_thuongTru_soNha = "",
-        nhanUyQuyen_thuongTru_xa = "",
-        nhanUyQuyen_thuongTru_tinh = "",
-        nhanUyQuyen_lienLac_soNha = "",
-        nhanUyQuyen_lienLac_xa = "",
-        nhanUyQuyen_lienLac_tinh = "",
+        tenCongTyPrefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX,
+        kinhGuiPrefix = "Phòng Đăng ký kinh doanh",
     } = dataJson;
+
     const companyNamePrefix = getCompanyNamePrefix({ tenCongTyPrefix }, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
     const benB = {
-        hoTen: nhanUyQuyen_hoTen || "",
-        gioiTinh: nhanUyQuyen_gioiTinh || "",
-        ngaySinh: nhanUyQuyen_ngaySinh || "",
-        danToc: nhanUyQuyen_danToc || "",
-        quocTich: nhanUyQuyen_quocTich || "",
-        cccd: nhanUyQuyen_cccd || "",
-        thuongTru: [nhanUyQuyen_thuongTru_soNha, nhanUyQuyen_thuongTru_xa, nhanUyQuyen_thuongTru_tinh]
+        hoTen: dataJson.nhanUyQuyen_hoTen || "",
+        gioiTinh: dataJson.nhanUyQuyen_gioiTinh || "",
+        ngaySinh: formatDate(dataJson.nhanUyQuyen_ngaySinh || ""),
+        danToc: dataJson.nhanUyQuyen_danToc || "",
+        quocTich: dataJson.nhanUyQuyen_quocTich || "",
+        cccd: dataJson.nhanUyQuyen_cccd || "",
+        thuongTru: [
+            dataJson.nhanUyQuyen_thuongTru_soNha,
+            dataJson.nhanUyQuyen_thuongTru_xa,
+            dataJson.nhanUyQuyen_thuongTru_tinh,
+        ]
             .filter(Boolean)
             .join(", "),
-        lienLac: [nhanUyQuyen_lienLac_soNha, nhanUyQuyen_lienLac_xa, nhanUyQuyen_lienLac_tinh]
+        lienLac: [
+            dataJson.nhanUyQuyen_lienLac_soNha,
+            dataJson.nhanUyQuyen_lienLac_xa,
+            dataJson.nhanUyQuyen_lienLac_tinh,
+        ]
             .filter(Boolean)
             .join(", "),
-        phone: nhanUyQuyen_phone || "",
-        email: nhanUyQuyen_email || "",
+        phone: dataJson.nhanUyQuyen_phone || "",
+        email: dataJson.nhanUyQuyen_email || "",
     };
 
-    // Determine the prefix to display
-    let prefix = "Phòng Đăng ký kinh doanh";
-
     return (
-        <div className={styles.page}>
+        <div className={styles.page} style={DOCUMENT_TEXT_STYLE}>
             <div className={styles.header}>
-                <h2 className={styles.headerTitle}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h2>
-                <h3 className={styles.headerSubtitle}>Độc lập - Tự do - Hạnh phúc</h3>
+                <h2 className={`${styles.headerTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
+                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                </h2>
+                <p className={`${styles.headerSubtitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", textDecoration: "underline", margin: "4px 0 0", fontWeight: 700 }}>
+                    <strong>
+                        <u>Độc lập - Tự do - Hạnh phúc</u>
+                    </strong>
+                </p>
             </div>
-            <p className={styles.docTitle} style={{ margin: "30px 0" }}>
+            <h1 className={`${styles.docTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: "30px 0" }}>
                 GIẤY UỶ QUYỀN
+            </h1>
+            <p className={styles.sectionTitle} style={SECTION_TITLE_STYLE}>
+                <strong>
+                    <u>BÊN ỦY QUYỀN (BÊN A):</u>
+                </strong>
             </p>
-            <p
-                className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "var(--procedure-confirmation-font-size)" }}
-            >
-                BÊN ỦY QUYỀN (BÊN A):
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Họ và tên: {uyQuyen_hoTen}
+                <InlineField>Giới tính: {uyQuyen_gioiTinh}</InlineField>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Họ và tên:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_hoTen}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Giới tính:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_gioiTinh}
-                    </b>
-                </p>
-            </div>
-            <p className={styles.infoLine}>
-                <b
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -129,8 +131,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Sinh ngày:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -138,10 +140,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {formatDate(uyQuyen_ngaySinh)}
-                </b>
+                </span>
             </p>
-            <p className={styles.infoLine}>
-                <b
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -149,8 +151,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Số định danh cá nhân:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -158,10 +160,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {uyQuyen_cccd}
-                </b>
+                </span>
             </p>
-            <p className={styles.infoLine}>
-                <b
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -169,8 +171,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Địa chỉ liên lạc:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -178,175 +180,37 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {[uyQuyen_soNha, uyQuyen_xa, uyQuyen_tinh].filter(Boolean).join(", ")}
-                </b>
+                </span>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Số điện thoại:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {uyQuyen_phone}
-                    </b>
-                </p>
-                {uyQuyen_email && (
-                    <p className={styles.infoItem} style={{ flex: 1 }}>
-                        <b
-                            className={styles.infoLabel}
-                            style={{
-                                fontWeight: "inherit",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            Email:{" "}
-                        </b>
-                        <b
-                            className={styles.infoValue}
-                            style={{
-                                fontWeight: "inherit",
-                                fontStyle: "normal",
-                            }}
-                        >
-                            {uyQuyen_email}
-                        </b>
-                    </p>
-                )}
-            </div>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Số điện thoại: {uyQuyen_phone}
+                {uyQuyen_email && <InlineField>Email: {uyQuyen_email}</InlineField>}
+            </p>
             <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
                 <>Là người đại diện đăng ký thành lập {companyNamePrefix} </>
-                <>{chuHo_ten}</>
-                <>tại {prefix} </>
+                <>{chuHo_ten} {" "}</>
+                <>tại {kinhGuiPrefix.trim()} </>
                 <>{chuHo_xa_phuong}</>
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{
-                    textDecoration: "underline",
-                    fontSize: "var(--procedure-confirmation-font-size)",
-                    marginTop: "20px",
-                }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                BÊN NHẬN UỶ QUYỀN (BÊN B):
+                <strong>
+                    <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
+                </strong>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Họ và tên:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            textTransform: "uppercase",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.hoTen}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Giới tính:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.gioiTinh}
-                    </b>
-                </p>
-            </div>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1.5 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Sinh ngày:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {formatDate(benB.ngaySinh)}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Dân tộc:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.danToc}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Quốc tịch:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.quocTich}
-                    </b>
-                </p>
-            </div>
-            <p className={styles.infoLine}>
-                <b
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Họ và tên: <span style={{ textTransform: "uppercase" }}>{benB.hoTen}</span>
+                <InlineField>Giới tính: {benB.gioiTinh}</InlineField>
+            </p>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Sinh ngày: {benB.ngaySinh}
+                <InlineField>Dân tộc: {benB.danToc}</InlineField>
+                <InlineField>Quốc tịch: {benB.quocTich}</InlineField>
+            </p>
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -354,8 +218,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Số định danh cá nhân:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -363,10 +227,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {benB.cccd}
-                </b>
+                </span>
             </p>
-            <p className={styles.infoLine}>
-                <b
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -374,8 +238,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Địa chỉ thường trú:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -383,10 +247,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {benB.thuongTru}
-                </b>
+                </span>
             </p>
-            <p className={styles.infoLine}>
-                <b
+            <p style={{ margin: "8px 0" }}>
+                <span
                     className={styles.infoLabel}
                     style={{
                         fontWeight: "inherit",
@@ -394,8 +258,8 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     Địa chỉ liên lạc:{" "}
-                </b>
-                <b
+                </span>
+                <span
                     className={styles.infoValue}
                     style={{
                         fontWeight: "inherit",
@@ -403,121 +267,59 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     }}
                 >
                     {benB.lienLac}
-                </b>
+                </span>
             </p>
-            <div className={styles.infoRow}>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Số điện thoại:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.phone}
-                    </b>
-                </p>
-                <p className={styles.infoItem} style={{ flex: 1 }}>
-                    <b
-                        className={styles.infoLabel}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        Email:{" "}
-                    </b>
-                    <b
-                        className={styles.infoValue}
-                        style={{
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    >
-                        {benB.email}
-                    </b>
-                </p>
-            </div>
+            <p className={styles.infoLine} style={{ margin: "8px 0" }}>
+                Số điện thoại: {benB.phone}
+                {benB.email && <InlineField>Email: {benB.email}</InlineField>}
+            </p>
             <p
                 className={styles.sectionTitle}
-                style={{
-                    textDecoration: "underline",
-                    fontSize: "var(--procedure-confirmation-font-size)",
-                    marginTop: "20px",
-                }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                NỘI DUNG ỦY QUYỀN:
+                <strong>
+                    <u>NỘI DUNG ỦY QUYỀN:</u>
+                </strong>
             </p>
             <p className={styles.infoLine} style={{ marginBottom: "10px" }}>
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
             </p>
             <p className={styles.infoLine} style={{ lineHeight: "1.8" }}>
-                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập {companyNamePrefix} <>{chuHo_ten}</> tại {prefix}{" "}
-                <>{chuHo_xa_phuong}</>
+                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập {companyNamePrefix} <>{chuHo_ten}</> tại{" "}
+                {kinhGuiPrefix.trim()} <>{chuHo_xa_phuong}</>
             </p>
             <p
                 className={styles.sectionTitle}
-                style={{
-                    textDecoration: "underline",
-                    fontSize: "var(--procedure-confirmation-font-size)",
-                    marginTop: "20px",
-                }}
+                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
             >
-                THỜI HẠN UỶ QUYỀN:
+                <strong>
+                    <u>THỜI HẠN UỶ QUYỀN:</u>
+                </strong>
             </p>
-            <p className={styles.infoLine}>Từ ngày ký đến khi hoàn tất công việc.</p>
-            <p className={styles.infoLine}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
-            <p className={styles.infoLine}>
+            <p style={{ margin: "8px 0" }}>Từ ngày ký đến khi hoàn tất công việc.</p>
+            <p style={{ margin: "8px 0" }}>Thù lao ủy quyền: ủy quyền này không có thù lao</p>
+            <p style={{ margin: "8px 0" }}>
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
             </p>
-            <p className={styles.infoLine}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
-            <p className={styles.dateLocation} style={{ fontStyle: "italic", textAlign: "right" }}>
-                <CurrentDate style={{ fontStyle: "italic" }} />
+            <p style={{ margin: "8px 0" }}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
+            <p className={`${styles.dateLocation} text-right`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "right", fontStyle: "italic" }}>
+                <CurrentDate prefix={chuHo_xa_phuong} style={{ ...DOCUMENT_TEXT_STYLE, fontStyle: "italic" }} />
             </p>
-            <table
-                className="signature-even-table no-border"
-                style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    border: "none",
-                    marginTop: "20px",
-                }}
-            >
+            <table className="signature-table no-border" style={signatureTableStyle}>
                 <tbody>
                     <tr>
-                        <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
-                            <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                                <b
-                                    style={{
-                                        fontWeight: "bold",
-                                        textDecoration: "underline",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    BÊN NHẬN ỦY QUYỀN
-                                </b>
+                        <td style={signatureCellStyle}>
+                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                                <strong>
+                                    <u>BÊN NHẬN ỦY QUYỀN</u>
+                                </strong>
                             </p>
                         </td>
-                        <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
-                            <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                                <b
-                                    style={{
-                                        fontWeight: "bold",
-                                        textDecoration: "underline",
-                                        fontStyle: "normal",
-                                    }}
-                                >
-                                    BÊN ỦY QUYỀN
-                                </b>
+                        <td style={signatureCellStyle}>
+                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                                <strong>
+                                    <u>BÊN ỦY QUYỀN</u>
+                                </strong>
                             </p>
                         </td>
                     </tr>
