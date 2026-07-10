@@ -1,25 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { formatDate } from "@/utils/dateTimeUtils";
 // Reuse styles
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
-import { useGetFormDataJsonFromName, useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
-import { authAxios } from "@/services/axios-instance";
+import { useGetFormDataJsonFromName } from "@/pages/User/ProcessProcedure/ProcessProcedure";
 import {
     DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
-    <i
-        className={styles.checkbox}
+    <span
+        className={`${styles.checkbox} checkbox-symbol`}
         style={{
+            fontWeight: "inherit",
+            fontStyle: "normal",
+            fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+            lineHeight: 1,
+            margin: "0 3px",
+            verticalAlign: "middle",
+        }}
+    >
+        {"\u00A0"}
+        {checked ? "\u2612" : "\u2610"}
+        {"\u00A0"}
+    </span>
+);
+const InlineField = ({ children }) => (
+    <span
+        className={styles.inlineField}
+        style={{
+            display: "inline-block",
+            marginLeft: "36pt",
             fontWeight: "inherit",
             fontStyle: "normal",
         }}
     >
-        {checked ? "x" : ""}
-    </i>
+        {children}
+    </span>
 );
 
 function GiayDeNghiDKDNConfirmation({ dataJson }) {
@@ -249,8 +267,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Xã/Phường/Đặc khu: {lienLac_xa}</p>
                 <p>Tỉnh/Thành phố trực thuộc trung ương: {lienLac_tinh}</p>
                 <p>
-                    Điện thoại<em> (nếu có)</em>: {nguoiNop_phone} &nbsp; &nbsp; Thư điện tử<em> (nếu có)</em>:{" "}
-                    {nguoiNop_email}
+                    Điện thoại<em> (nếu có)</em>: {nguoiNop_phone}
+                    <InlineField>
+                        Thư điện tử<em> (nếu có)</em>: {nguoiNop_email}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
@@ -263,7 +283,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiNop_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiNop_quocTich}
+                                    Dân tộc: {nguoiNop_danToc}
+                                    <InlineField>Quốc tịch: {nguoiNop_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -271,8 +292,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiNop_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiNop_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(nguoiNop_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {nguoiNop_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -523,7 +544,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>Số Giấy chứng nhận đăng ký hộ kinh doanh (nếu có): {hkdChuyenDoi_soGiayChungNhan}</p>
                         <p>
-                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCap)} &nbsp;&nbsp; Nơi cấp: {hkdChuyenDoi_noiCap}
+                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCap)}
+                            <InlineField>Nơi cấp: {hkdChuyenDoi_noiCap}</InlineField>
                         </p>
                         <p>Mã số thuế của hộ kinh doanh: {hkdChuyenDoi_maSoThue}</p>
                         <p>Địa chỉ trụ sở hộ kinh doanh: {hkdChuyenDoi_diaChi}</p>
@@ -542,9 +564,9 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>Số giấy tờ pháp lý của cá nhân: {hkdChuyenDoi_soGiayTo}</p>
                         <p>
-                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCapGiayTo)} &nbsp;&nbsp; Nơi cấp:{" "}
-                            {hkdChuyenDoi_noiCapGiayTo} &nbsp;&nbsp; Ngày hết hạn:{" "}
-                            {formatDate(hkdChuyenDoi_ngayHetHanGiayTo)}
+                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCapGiayTo)}
+                            <InlineField>Nơi cấp: {hkdChuyenDoi_noiCapGiayTo}</InlineField>
+                            <InlineField>Ngày hết hạn: {formatDate(hkdChuyenDoi_ngayHetHanGiayTo)}</InlineField>
                         </p>
 
                         <p style={{ marginTop: "8px" }}>
@@ -566,7 +588,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>Số Giấy chứng nhận: {csqChuyenDoi_soGiayChungNhan}</p>
                         <p>
-                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCap)} &nbsp;&nbsp; Nơi cấp: {csqChuyenDoi_noiCap}
+                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCap)}
+                            <InlineField>Nơi cấp: {csqChuyenDoi_noiCap}</InlineField>
                         </p>
                         <p>Mã số thuế: {csqChuyenDoi_maSoThue}</p>
                         <p>Địa chỉ trụ sở chính: {csqChuyenDoi_diaChi}</p>
@@ -585,9 +608,9 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         </p>
                         <p>Số giấy tờ pháp lý: {csqChuyenDoi_soGiayTo}</p>
                         <p>
-                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCapGiayTo)} &nbsp;&nbsp; Nơi cấp:{" "}
-                            {csqChuyenDoi_noiCapGiayTo} &nbsp;&nbsp; Ngày hết hạn:{" "}
-                            {formatDate(csqChuyenDoi_ngayHetHanGiayTo)}
+                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCapGiayTo)}
+                            <InlineField>Nơi cấp: {csqChuyenDoi_noiCapGiayTo}</InlineField>
+                            <InlineField>Ngày hết hạn: {formatDate(csqChuyenDoi_ngayHetHanGiayTo)}</InlineField>
                         </p>
                     </div>
                 )}
@@ -639,11 +662,16 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Xã/Phường/Đặc khu: {truSo_xa}</p>
                 <p>Tỉnh/Thành phố trực thuộc trung ương: {truSo_tinh}</p>
                 <p>
-                    Điện thoại: {truSo_phone} &nbsp; &nbsp; Số fax (<em>nếu có</em>): {truSo_fax}
+                    Điện thoại: {truSo_phone}
+                    <InlineField>
+                        Số fax (<em>nếu có</em>): {truSo_fax}
+                    </InlineField>
                 </p>
                 <p>
-                    Thư điện tử (<em>nếu có</em>): {truSo_email} &nbsp; &nbsp; Website (<em>nếu có</em>):{" "}
-                    {truSo_website}
+                    Thư điện tử (<em>nếu có</em>): {truSo_email}
+                    <InlineField>
+                        Website (<em>nếu có</em>): {truSo_website}
+                    </InlineField>
                 </p>
 
                 <p style={{ marginTop: "8px" }}>
@@ -2168,7 +2196,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </p>
                     <p>Mã số dự án: {maSoDuAn}</p>
                     <p>
-                        Ngày cấp: {formatDate(ngayCapDuAn)} &nbsp; &nbsp; Cơ quan cấp: {coQuanCapDuAn}
+                        Ngày cấp: {formatDate(ngayCapDuAn)}
+                        <InlineField>Cơ quan cấp: {coQuanCapDuAn}</InlineField>
                     </p>
                 </div>
 
@@ -2203,7 +2232,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                         <tr>
                             <td>
                                 <p>
-                                    Dân tộc: {nguoiDaiDien_danToc} &nbsp; &nbsp; Quốc tịch: {nguoiDaiDien_quocTich}
+                                    Dân tộc: {nguoiDaiDien_danToc}
+                                    <InlineField>Quốc tịch: {nguoiDaiDien_quocTich}</InlineField>
                                 </p>
                                 <p>
                                     Số Hộ chiếu (<em>đối với cá nhân Việt Nam không có số định danh cá nhân</em>)/Số Hộ
@@ -2211,8 +2241,8 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     <em>đối với cá nhân là người nước ngoài</em>): {nguoiDaiDien_soHoChieu}
                                 </p>
                                 <p>
-                                    Ngày cấp: {formatDate(nguoiDaiDien_ngayCapHoChieu)} &nbsp; &nbsp; Nơi cấp:{" "}
-                                    {nguoiDaiDien_noiCapHoChieu}
+                                    Ngày cấp: {formatDate(nguoiDaiDien_ngayCapHoChieu)}
+                                    <InlineField>Nơi cấp: {nguoiDaiDien_noiCapHoChieu}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <p>
@@ -2230,7 +2260,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>11. Thông tin đăng ký thuế:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -2355,8 +2388,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>Xã/Phường/Đặc khu: {thongBaoThue_xa}</p>
                                 <p>Tỉnh/Thành phố trực thuộc trung ương: {thongBaoThue_tinh}</p>
                                 <p>
-                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone} &nbsp; &nbsp; Số fax (
-                                    <em>nếu có</em>): {thongBaoThue_fax}
+                                    Điện thoại (<em>nếu có</em>): {thongBaoThue_phone}
+                                    <InlineField>
+                                        Số fax (<em>nếu có</em>): {thongBaoThue_fax}
+                                    </InlineField>
                                 </p>
                                 <p>
                                     Thư điện tử (<em>nếu có</em>): {thongBaoThue_email}
@@ -2411,7 +2446,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     </em>
                                     ):{" "}
                                 </p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "200px" }}>
@@ -2539,7 +2582,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                             <td colSpan="2">
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "100px" }}>
@@ -2588,10 +2639,17 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
                                 </p>
-                                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: "4px" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "30px" }}></td>
                                             <td style={{ width: "250px" }}>
                                                 <p
                                                     style={{
@@ -2618,7 +2676,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -2645,7 +2702,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{
@@ -2674,7 +2730,6 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <p
                                                     style={{

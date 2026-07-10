@@ -54,6 +54,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         lienLac_soNha = "",
         lienLac_xa = "",
         lienLac_tinh = "",
+        lienLac_quocGia = "Việt Nam",
         nguoiNop_phone = "",
         nguoiNop_email = "",
 
@@ -86,7 +87,9 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
 
         vonDieuLe = "",
         vonDieuLe_bangChu = "",
-        vonDieuLe_ngoaiTe = "",
+        vonDieuLe_ngoaiTeBangSo = "",
+        vonDieuLe_ngoaiTeDonVi = "",
+        hienThiNgoaiTe = "khong",
 
         nguonVon_nganSach_soTien = "",
         nguonVon_nganSach_ngoaiTe = "",
@@ -111,6 +114,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         nguoiDaiDien_soNha = "",
         nguoiDaiDien_xa = "",
         nguoiDaiDien_tinh = "",
+        nguoiDaiDien_lienLac_quocGia = "Việt Nam",
 
         nguoiDaiDien_danToc = "",
         nguoiDaiDien_quocTich = "",
@@ -151,6 +155,42 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
         phuongThucDongBHXH = "hang_thang",
         doanhNghiepCoCSHHuongLoi = "co",
         tinhTrangThanhLap = "moi",
+
+        lyDoChuyenDoi = "",
+        dnChuyenDoi_ten = "",
+        dnChuyenDoi_maSo = "",
+        hkdChuyenDoi_ten = "",
+        hkdChuyenDoi_soGiayChungNhan = "",
+        hkdChuyenDoi_ngayCap = "",
+        hkdChuyenDoi_noiCap = "",
+        hkdChuyenDoi_maSoThue = "",
+        hkdChuyenDoi_diaChi = "",
+        hkdChuyenDoi_tenChuHo = "",
+        hkdChuyenDoi_loaiGiayTo = "",
+        hkdChuyenDoi_loaiGiayToKhac = "",
+        hkdChuyenDoi_soGiayTo = "",
+        hkdChuyenDoi_ngayCapGiayTo = "",
+        hkdChuyenDoi_noiCapGiayTo = "",
+        hkdChuyenDoi_ngayHetHanGiayTo = "",
+        csqChuyenDoi_ten = "",
+        csqChuyenDoi_soGiayChungNhan = "",
+        csqChuyenDoi_ngayCap = "",
+        csqChuyenDoi_noiCap = "",
+        csqChuyenDoi_maSoThue = "",
+        csqChuyenDoi_diaChi = "",
+        csqChuyenDoi_tenNguoiDaiDien = "",
+        csqChuyenDoi_loaiGiayTo = "",
+        csqChuyenDoi_loaiGiayToKhac = "",
+        csqChuyenDoi_soGiayTo = "",
+        csqChuyenDoi_ngayCapGiayTo = "",
+        csqChuyenDoi_noiCapGiayTo = "",
+        csqChuyenDoi_ngayHetHanGiayTo = "",
+
+        duAnDauTuDacBiet = "",
+        doanhNghiepXaHoi = "",
+        congTyChungKhoan = "",
+        congTyChungKhoan_soGiayPhep = "",
+        congTyChungKhoan_ngayCap = "",
     } = dataJson;
     const companyNamePrefix = getCompanyNamePrefix({ tenCongTyPrefix }, DEFAULT_TNHH_COMPANY_NAME_PREFIX);
 
@@ -217,6 +257,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Giới tính: {nguoiNop_gioiTinh}</p>
                 <p>Số định danh cá nhân: {nguoiNop_cccd}</p>
                 <p>Địa chỉ liên lạc: {addressToString(lienLac_soNha, lienLac_xa, lienLac_tinh)}</p>
+                <p>Quốc gia: {lienLac_quocGia}</p>
                 <p>
                     Điện thoại<em> (nếu có)</em>: {nguoiNop_phone}
                     {"    "}
@@ -230,7 +271,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                <table
+                    className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -270,7 +314,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>1. Tình trạng thành lập </strong>(<em>đánh dấu X vào ô thích hợp</em>):
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -457,6 +504,133 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </tbody>
                 </table>
 
+                {tinhTrangThanhLap !== "moi" && (
+                    <div style={{ marginLeft: "20px", marginTop: "8px" }}>
+                        <p>- Lý do chuyển đổi loại hình doanh nghiệp: {lyDoChuyenDoi}</p>
+
+                        <p style={{ marginTop: "8px" }}>
+                            <strong>
+                                - Thông tin về các doanh nghiệp bị chia, bị tách, bị hợp nhất, được chuyển đổi:
+                            </strong>
+                        </p>
+                        <p>
+                            Tên doanh nghiệp (ghi bằng chữ in hoa):{" "}
+                            <span
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {dnChuyenDoi_ten}
+                            </span>
+                        </p>
+                        <p>Mã số doanh nghiệp/Mã số thuế: {dnChuyenDoi_maSo}</p>
+
+                        <p style={{ marginTop: "8px" }}>
+                            <strong>- Thông tin về hộ kinh doanh được chuyển đổi:</strong>
+                        </p>
+                        <p>
+                            Tên hộ kinh doanh (ghi bằng chữ in hoa):{" "}
+                            <span
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {hkdChuyenDoi_ten}
+                            </span>
+                        </p>
+                        <p>Số Giấy chứng nhận đăng ký hộ kinh doanh (nếu có): {hkdChuyenDoi_soGiayChungNhan}</p>
+                        <p>
+                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCap)}
+                            <InlineField>Nơi cấp: {hkdChuyenDoi_noiCap}</InlineField>
+                        </p>
+                        <p>Mã số thuế của hộ kinh doanh: {hkdChuyenDoi_maSoThue}</p>
+                        <p>Địa chỉ trụ sở hộ kinh doanh: {hkdChuyenDoi_diaChi}</p>
+                        <p>Tên chủ hộ kinh doanh: {hkdChuyenDoi_tenChuHo}</p>
+                        <p>
+                            Loại giấy tờ pháp lý của cá nhân:{" "}
+                            {hkdChuyenDoi_loaiGiayTo === "khac"
+                                ? hkdChuyenDoi_loaiGiayToKhac
+                                : hkdChuyenDoi_loaiGiayTo === "cmnd"
+                                  ? "Chứng minh nhân dân"
+                                  : hkdChuyenDoi_loaiGiayTo === "cccd"
+                                    ? "Căn cước công dân"
+                                    : hkdChuyenDoi_loaiGiayTo === "ho_chieu"
+                                      ? "Hộ chiếu"
+                                      : ""}
+                        </p>
+                        <p>Số giấy tờ pháp lý của cá nhân: {hkdChuyenDoi_soGiayTo}</p>
+                        <p>
+                            Ngày cấp: {formatDate(hkdChuyenDoi_ngayCapGiayTo)}
+                            <InlineField>Nơi cấp: {hkdChuyenDoi_noiCapGiayTo}</InlineField>
+                            <InlineField>Ngày hết hạn: {formatDate(hkdChuyenDoi_ngayHetHanGiayTo)}</InlineField>
+                        </p>
+
+                        <p style={{ marginTop: "8px" }}>
+                            <strong>
+                                - Thông tin về cơ sở bảo trợ xã hội/quỹ xã hội/quỹ từ thiện được chuyển đổi:
+                            </strong>
+                        </p>
+                        <p>
+                            Tên cơ sở (ghi bằng chữ in hoa):{" "}
+                            <span
+                                style={{
+                                    textTransform: "uppercase",
+                                    fontWeight: "inherit",
+                                    fontStyle: "normal",
+                                }}
+                            >
+                                {csqChuyenDoi_ten}
+                            </span>
+                        </p>
+                        <p>Số Giấy chứng nhận: {csqChuyenDoi_soGiayChungNhan}</p>
+                        <p>
+                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCap)}
+                            <InlineField>Nơi cấp: {csqChuyenDoi_noiCap}</InlineField>
+                        </p>
+                        <p>Mã số thuế: {csqChuyenDoi_maSoThue}</p>
+                        <p>Địa chỉ trụ sở chính: {csqChuyenDoi_diaChi}</p>
+                        <p>Tên người đại diện: {csqChuyenDoi_tenNguoiDaiDien}</p>
+                        <p>
+                            Loại giấy tờ pháp lý:{" "}
+                            {csqChuyenDoi_loaiGiayTo === "khac"
+                                ? csqChuyenDoi_loaiGiayToKhac
+                                : csqChuyenDoi_loaiGiayTo === "cmnd"
+                                  ? "Chứng minh nhân dân"
+                                  : csqChuyenDoi_loaiGiayTo === "cccd"
+                                    ? "Căn cước công dân"
+                                    : csqChuyenDoi_loaiGiayTo === "ho_chieu"
+                                      ? "Hộ chiếu"
+                                      : ""}
+                        </p>
+                        <p>Số giấy tờ pháp lý: {csqChuyenDoi_soGiayTo}</p>
+                        <p>
+                            Ngày cấp: {formatDate(csqChuyenDoi_ngayCapGiayTo)}
+                            <InlineField>Nơi cấp: {csqChuyenDoi_noiCapGiayTo}</InlineField>
+                            <InlineField>Ngày hết hạn: {formatDate(csqChuyenDoi_ngayHetHanGiayTo)}</InlineField>
+                        </p>
+                    </div>
+                )}
+
+                <p style={{ marginTop: "8px" }}>
+                    - Doanh nghiệp thực hiện dự án đầu tư được đăng ký đầu tư theo thủ tục đầu tư đặc biệt:{" "}
+                    <Checkbox checked={duAnDauTuDacBiet === "co"} />
+                </p>
+                <p style={{ marginTop: "4px" }}>
+                    - Doanh nghiệp xã hội: <Checkbox checked={doanhNghiepXaHoi === "co"} />
+                </p>
+                <p style={{ marginTop: "4px" }}>
+                    - Công ty chứng khoán/Công ty quản lý quỹ đầu tư chứng khoán/Công ty đầu tư chứng khoán:{" "}
+                    <Checkbox checked={congTyChungKhoan === "co"} />
+                </p>
+                <p style={{ marginLeft: "20px" }}>
+                    Giấy phép thành lập và hoạt động số: {congTyChungKhoan_soGiayPhep} do Uỷ ban Chứng khoán Nhà nước
+                    cấp ngày: {formatDate(congTyChungKhoan_ngayCap)} <em>(nếu có)</em>
+                </p>
+
                 <p style={{ marginTop: "16px" }}>
                     <strong>2. Tên công ty:</strong>
                 </p>
@@ -508,7 +682,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </em>
                     ):
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -634,7 +811,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>4. Ngành, nghề kinh doanh </strong>(
                     <em>ghi tên và mã theo ngành cấp 4 trong Hệ thống ngành kinh tế của Việt Nam</em>):
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -786,26 +966,21 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Giá trị tương đương theo đơn vị tiền nước ngoài (<em>nếu có, bằng số, loại ngoại tệ</em>):{" "}
-                    {vonDieuLe_ngoaiTe}
+                    {vonDieuLe_ngoaiTeBangSo ? `${vonDieuLe_ngoaiTeBangSo} ${vonDieuLe_ngoaiTeDonVi}` : ""}
                 </p>
                 <p>
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
-                    đăng ký doanh nghiệp hay không?
-                    Có <Checkbox checked={false} />
-                    <span
-                        style={{
-                            marginLeft: "30px",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    ></span>
-                    Không <Checkbox checked={true} />
+                    đăng ký doanh nghiệp hay không? Có <Checkbox checked={hienThiNgoaiTe === "co"} /> Không{" "}
+                    <Checkbox checked={hienThiNgoaiTe === "khong"} />
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>6. Nguồn vốn điều lệ:</strong>
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center" }}>
@@ -1049,7 +1224,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>7. Danh sách thành viên:</strong>
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center", width: "40px" }}>
@@ -1339,13 +1517,17 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>Số định danh cá nhân: {nguoiDaiDien_cccd}</p>
                 <p>Chức danh: {nguoiDaiDien_chucDanh}</p>
                 <p>Địa chỉ liên lạc: {addressToString(nguoiDaiDien_soNha, nguoiDaiDien_xa, nguoiDaiDien_tinh)}</p>
+                <p>Quốc gia: {nguoiDaiDien_lienLac_quocGia}</p>
 
                 <p style={{ marginTop: "16px", fontStyle: "italic" }}>
                     Trường hợp không có số định danh cá nhân hoặc việc kết nối giữa Cơ sở dữ liệu quốc gia về đăng ký
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                <table
+                    className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -1378,7 +1560,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>9. Thông tin đăng ký thuế:</strong>
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -1542,7 +1727,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                     </em>
                                     ):{" "}
                                 </p>
-                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "200px" }}>
@@ -1668,7 +1861,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                             <td colSpan="2">
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
-                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "100px" }}>
@@ -1717,7 +1918,15 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 <p>
                                     Phương pháp tính thuế GTGT (<em>chọn 1 trong 4 phương pháp</em>):
                                 </p>
-                                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", marginTop: "4px", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                                <table
+                                    className={`${styles.borderTable} single-border-table`}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "4px",
+                                        borderCollapse: "collapse",
+                                        tableLayout: "fixed",
+                                    }}
+                                >
                                     <tbody>
                                         <tr>
                                             <td style={{ width: "250px" }}>
@@ -1903,7 +2112,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>11. Thông tin về chủ sở hữu hưởng lợi của doanh nghiệp:</strong>
                 </p>
                 <p>Doanh nghiệp có chủ sở hữu hưởng lợi không?</p>
-                <table className={`${styles.noBorderTable} no-border`} style={{ width: "100%", maxWidth: "300px", marginTop: "8px" }}>
+                <table
+                    className={`${styles.noBorderTable} no-border`}
+                    style={{ width: "100%", maxWidth: "300px", marginTop: "8px" }}
+                >
                     <tbody>
                         <tr>
                             <td>

@@ -6,6 +6,7 @@ import NganhNgheTable from "@/components/Procedure/ProcedureTemplate/SharedFormC
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
 import ThongTinNguoiNopSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinNguoiNopSection";
 import TinhTrangThanhLapSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/TinhTrangThanhLapSection";
+import ThongTinChuyenDoiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinChuyenDoiSection";
 import TenCongTySection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/TenCongTySection";
 import DiaChiTruSoSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/DiaChiTruSoSection";
 import VonDieuLeSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/VonDieuLeSection";
@@ -77,15 +78,18 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
 
     const baoHiemNote = (
         <>
-            Lưu ý:<br />
-            - Doanh nghiệp đăng ký ngành, nghề kinh doanh chính là nông nghiệp, lâm nghiệp, ngư nghiệp, diêm nghiệp và trả lương theo sản phẩm, theo khoán: có thể lựa chọn 1 trong 3 phương thức đóng bảo hiểm xã hội: hàng tháng, 03 tháng một lần, 06 tháng một lần.<br />
-            - Doanh nghiệp đăng ký ngành, nghề kinh doanh chính khác: đánh dấu vào phương thức đóng bảo hiểm xã hội hàng tháng.
+            Lưu ý:
+            <br />
+            - Doanh nghiệp đăng ký ngành, nghề kinh doanh chính là nông nghiệp, lâm nghiệp, ngư nghiệp, diêm nghiệp và
+            trả lương theo sản phẩm, theo khoán: có thể lựa chọn 1 trong 3 phương thức đóng bảo hiểm xã hội: hàng tháng,
+            03 tháng một lần, 06 tháng một lần.
+            <br />- Doanh nghiệp đăng ký ngành, nghề kinh doanh chính khác: đánh dấu vào phương thức đóng bảo hiểm xã
+            hội hàng tháng.
         </>
     );
 
     return (
         <form onSubmit={handleSubmit} ref={formRef} key={dataJson ? "loaded" : "empty"}>
-
             {/* NGƯỜI NỘP HỒ SƠ */}
             <div className={styles.sectionGroup}>
                 <ThongTinNguoiNopSection dataJson={dataJson} styles={styles} />
@@ -93,16 +97,13 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
 
             {/* TÌNH TRẠNG THÀNH LẬP */}
             <TinhTrangThanhLapSection dataJson={dataJson} styles={styles} />
+            <ThongTinChuyenDoiSection dataJson={dataJson} styles={styles} />
 
             {/* TÊN CÔNG TY */}
             <TenCongTySection dataJson={dataJson} styles={styles} prefix={TNHH_COMPANY_NAME_PREFIX_OPTIONS} />
 
             {/* ĐỊA CHỈ TRỤ SỞ */}
-            <DiaChiTruSoSection
-                dataJson={dataJson}
-                styles={styles}
-                onProvinceNameChange={handleProvinceNameChange}
-            />
+            <DiaChiTruSoSection dataJson={dataJson} styles={styles} onProvinceNameChange={handleProvinceNameChange} />
 
             {/* KÍNH GỬI – tự động cập nhật theo tỉnh/thành phố trụ sở */}
             <KinhGuiSection dataJson={dataJson} styles={styles} autoKinhGui={kinhGuiValue} />
@@ -132,6 +133,5 @@ const GiayDeNghiDKDNDeclaration = forwardRef(function GiayDeNghiDKDNDeclaration(
         </form>
     );
 });
-
 
 export default GiayDeNghiDKDNDeclaration;
