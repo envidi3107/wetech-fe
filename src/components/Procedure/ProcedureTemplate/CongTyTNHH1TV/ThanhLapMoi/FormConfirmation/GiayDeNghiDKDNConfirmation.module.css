@@ -185,6 +185,18 @@ h3.docTitle {
     line-height: var(--procedure-confirmation-table-line-height, 1.25) !important;
 }
 
+.content table.regularLineHeightTable,
+.content table.regularLineHeightTable th,
+.content table.regularLineHeightTable td,
+.content table.regularLineHeightTable p,
+.content table.regularLineHeightTable span,
+.content table.regularLineHeightTable strong,
+.content table.regularLineHeightTable em,
+.content table.regularLineHeightTable b,
+.content table.regularLineHeightTable i {
+    line-height: 1.5 !important;
+}
+
 .input,
 .select {
     width: 100%;

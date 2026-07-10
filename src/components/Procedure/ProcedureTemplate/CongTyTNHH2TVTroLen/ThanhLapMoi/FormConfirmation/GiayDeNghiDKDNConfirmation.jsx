@@ -230,7 +230,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                <table className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                     <tbody>
                         <tr>
                             <td>
@@ -1345,7 +1345,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={`${styles.borderTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                <table className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`} style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                     <tbody>
                         <tr>
                             <td>
