@@ -13,11 +13,14 @@ const Checkbox = ({ checked }) => (
     <span
         className={`${styles.checkbox} checkbox-symbol`}
         style={{
+            display: "inline-block",
             fontWeight: "inherit",
             fontStyle: "normal",
             fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
             lineHeight: 1,
-            margin: "0 3px",
+            margin: "0 6pt",
+            minWidth: "18pt",
+            textAlign: "center",
             verticalAlign: "middle",
         }}
     >
@@ -37,6 +40,32 @@ const InlineField = ({ children }) => (
         }}
     >
         {children}
+    </span>
+);
+
+const CheckOption = ({ label, checked, checkboxFirst = false, style }) => (
+    <span
+        className="check-option"
+        style={{
+            display: "inline-block",
+            whiteSpace: "nowrap",
+            marginRight: "24pt",
+            fontWeight: "inherit",
+            fontStyle: "normal",
+            ...style,
+        }}
+    >
+        {checkboxFirst ? (
+            <>
+                <Checkbox checked={checked} />
+                <span style={{ whiteSpace: "nowrap" }}>{label}</span>
+            </>
+        ) : (
+            <>
+                <span style={{ whiteSpace: "nowrap" }}>{label}</span>
+                <Checkbox checked={checked} />
+            </>
+        )}
     </span>
 );
 
@@ -278,7 +307,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <table
+                    className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -317,7 +349,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>1. Tình trạng thành lập </strong>(<em>đánh dấu X vào ô thích hợp</em>):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -555,12 +590,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             {hkdChuyenDoi_loaiGiayTo === "khac"
                                 ? hkdChuyenDoi_loaiGiayToKhac
                                 : hkdChuyenDoi_loaiGiayTo === "cmnd"
-                                  ? "Chứng minh nhân dân"
-                                  : hkdChuyenDoi_loaiGiayTo === "cccd"
-                                    ? "Căn cước công dân"
-                                    : hkdChuyenDoi_loaiGiayTo === "ho_chieu"
-                                      ? "Hộ chiếu"
-                                      : ""}
+                                    ? "Chứng minh nhân dân"
+                                    : hkdChuyenDoi_loaiGiayTo === "cccd"
+                                        ? "Căn cước công dân"
+                                        : hkdChuyenDoi_loaiGiayTo === "ho_chieu"
+                                            ? "Hộ chiếu"
+                                            : ""}
                         </p>
                         <p>Số giấy tờ pháp lý của cá nhân: {hkdChuyenDoi_soGiayTo}</p>
                         <p>
@@ -599,12 +634,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             {csqChuyenDoi_loaiGiayTo === "khac"
                                 ? csqChuyenDoi_loaiGiayToKhac
                                 : csqChuyenDoi_loaiGiayTo === "cmnd"
-                                  ? "Chứng minh nhân dân"
-                                  : csqChuyenDoi_loaiGiayTo === "cccd"
-                                    ? "Căn cước công dân"
-                                    : csqChuyenDoi_loaiGiayTo === "ho_chieu"
-                                      ? "Hộ chiếu"
-                                      : ""}
+                                    ? "Chứng minh nhân dân"
+                                    : csqChuyenDoi_loaiGiayTo === "cccd"
+                                        ? "Căn cước công dân"
+                                        : csqChuyenDoi_loaiGiayTo === "ho_chieu"
+                                            ? "Hộ chiếu"
+                                            : ""}
                         </p>
                         <p>Số giấy tờ pháp lý: {csqChuyenDoi_soGiayTo}</p>
                         <p>
@@ -682,7 +717,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     </em>
                     ):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -792,23 +830,20 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </table>
                 <p style={{ marginTop: "8px" }}>
                     - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
-                    biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh: Có
-                    <Checkbox checked={truSo_anNinhQuocPhong === "Có"} />
-                    <b
-                        style={{
-                            marginLeft: "20px",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    ></b>
-                    Không <Checkbox checked={truSo_anNinhQuocPhong === "Không"} />
+                    biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
+                    <br />
+                    <CheckOption label="Có" checked={truSo_anNinhQuocPhong === "Có"} />
+                    <CheckOption label="Không" checked={truSo_anNinhQuocPhong === "Không"} style={{ marginRight: 0 }} />
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>4. Ngành, nghề kinh doanh </strong>(
                     <em>ghi tên và mã theo ngành cấp 4 trong Hệ thống ngành kinh tế của Việt Nam</em>):
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -964,14 +999,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
                 <p>
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
-                    đăng ký doanh nghiệp hay không? Có <Checkbox checked={hienThiNgoaiTe === "co"} /> Không{" "}
-                    <Checkbox checked={hienThiNgoaiTe === "khong"} />
+                    đăng ký doanh nghiệp hay không?
+                    <CheckOption label="Có" checked={hienThiNgoaiTe === "co"} style={{ marginLeft: "12pt" }} />
+                    <CheckOption label="Không" checked={hienThiNgoaiTe === "khong"} style={{ marginRight: 0 }} />
                 </p>
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>6. Nguồn vốn điều lệ:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center" }}>
@@ -1216,7 +1255,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     <strong>7. Thông tin về cổ phần:</strong>
                 </p>
                 <p>Mệnh giá cổ phần (VNĐ): {menhGiaCoPhan} VNĐ</p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -1648,7 +1690,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     <strong>Thông tin về cổ phần được quyền chào bán:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ width: "50px", textAlign: "center" }}>
@@ -1912,7 +1957,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p style={{ marginTop: "16px" }}>
                     <strong>8. Danh sách cổ đông sáng lập:</strong>
                 </p>
-                <table className={styles.borderTable} style={{ width: "100%", marginTop: "8px", fontSize: "13px" }}>
+                <table
+                    className={`${styles.borderTable} single-border-table`}
+                    style={{ width: "100%", marginTop: "8px", fontSize: "13px" }}
+                >
                     <thead>
                         <tr>
                             <th style={{ textAlign: "center", width: "40px" }}>
@@ -2227,7 +2275,10 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá
                     nhân dưới đây:
                 </p>
-                <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <table
+                    className={`${styles.borderTable} ${styles.regularLineHeightTable} single-border-table`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                >
                     <tbody>
                         <tr>
                             <td>
@@ -2602,7 +2653,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                         font: "inherit",
                                                     }}
                                                 >
-                                                    Có <Checkbox checked={hoatDongDuAn === "co"} />
+                                                    <CheckOption label="Có" checked={hoatDongDuAn === "co"} style={{ marginRight: 0 }} />
                                                 </p>
                                             </td>
                                             <td>
@@ -2614,7 +2665,11 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                         font: "inherit",
                                                     }}
                                                 >
-                                                    Không <Checkbox checked={hoatDongDuAn === "khong"} />
+                                                    <CheckOption
+                                                        label="Không"
+                                                        checked={hoatDongDuAn === "khong"}
+                                                        style={{ marginRight: 0 }}
+                                                    />
                                                 </p>
                                             </td>
                                         </tr>
@@ -2789,8 +2844,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={phuongThucDongBHXH === "hang_thang"} />
-                                    Hàng tháng
+                                    <CheckOption
+                                        label="Hàng tháng"
+                                        checked={phuongThucDongBHXH === "hang_thang"}
+                                        checkboxFirst
+                                        style={{ marginRight: 0 }}
+                                    />
                                 </p>
                             </td>
                             <td>
@@ -2802,8 +2861,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={phuongThucDongBHXH === "3_thang"} />
-                                    03 tháng một lần
+                                    <CheckOption
+                                        label="03 tháng một lần"
+                                        checked={phuongThucDongBHXH === "3_thang"}
+                                        checkboxFirst
+                                        style={{ marginRight: 0 }}
+                                    />
                                 </p>
                             </td>
                             <td>
@@ -2815,8 +2878,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={phuongThucDongBHXH === "6_thang"} />
-                                    06 tháng một lần
+                                    <CheckOption
+                                        label="06 tháng một lần"
+                                        checked={phuongThucDongBHXH === "6_thang"}
+                                        checkboxFirst
+                                        style={{ marginRight: 0 }}
+                                    />
                                 </p>
                             </td>
                         </tr>
@@ -2839,8 +2906,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} />
-                                    Có
+                                    <CheckOption
+                                        label="Có"
+                                        checked={doanhNghiepCoCSHHuongLoi === "co"}
+                                        checkboxFirst
+                                        style={{ marginRight: 0 }}
+                                    />
                                 </p>
                             </td>
                             <td>
@@ -2852,8 +2923,12 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                         font: "inherit",
                                     }}
                                 >
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} />
-                                    Không
+                                    <CheckOption
+                                        label="Không"
+                                        checked={doanhNghiepCoCSHHuongLoi === "khong"}
+                                        checkboxFirst
+                                        style={{ marginRight: 0 }}
+                                    />
                                 </p>
                             </td>
                         </tr>
@@ -2891,10 +2966,23 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 >
                     <tbody>
                         <tr>
-                            <td style={{ border: "none" }}>&nbsp;</td>
+                            <td
+                                className="signature-spacer"
+                                style={{
+                                    border: "none",
+                                    width: "auto",
+                                    textAlign: "left",
+                                    verticalAlign: "top",
+                                }}
+                            ></td>
                             <td
                                 className={`${styles.textCenter} signature-cell`}
-                                style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                                style={{
+                                    border: "none",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                    width: "105mm",
+                                }}
                             >
                                 <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>

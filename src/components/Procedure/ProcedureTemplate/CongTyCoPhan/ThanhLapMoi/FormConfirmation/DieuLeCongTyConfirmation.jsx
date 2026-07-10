@@ -8,6 +8,20 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
+const InlineField = ({ children, marginLeft = "36pt" }) => (
+    <span
+        className="inlineField"
+        style={{
+            display: "inline-block",
+            marginLeft,
+            fontWeight: "inherit",
+            fontStyle: "normal",
+        }}
+    >
+        {children}
+    </span>
+);
+
 export default function DieuLeCongTyConfirmation({ dataJson }) {
     const danhSachCoDongData = useGetFormDataJsonFromName("Danh sách cổ đông sáng lập");
     const giayDeNghiData = useGetFormDataJsonFromName("Giấy đề nghị đăng ký doanh nghiệp");
@@ -45,6 +59,9 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
         const match = str.match(/\d{9,12}/);
         return match ? match[0] : str;
     };
+
+    const getShareholderSignatureLabel = (row, index) =>
+        `Chữ ký của ${row?.hoTen || `Cổ đông ${index + 1}`}`.toUpperCase();
 
     return (
         <div className={styles.documentContainer}>
@@ -310,9 +327,10 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Tên công ty viết bằng tiếng nước ngoài:{" "}
                 {dataJson.tenCongTyEN || "................................................"}
-            </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Tên công ty viết tắt: {dataJson.tenCongTyVietTat || "................................................"}
+                <InlineField>
+                    Tên công ty viết tắt:{" "}
+                    {dataJson.tenCongTyVietTat || "................................................"}
+                </InlineField>
             </p>
             <p
                 className={styles.chapterTitle}
@@ -327,12 +345,11 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Điện thoại: {dataJson.truSo_phone || "..................."}
+                <InlineField>Số fax: {dataJson.truSo_fax || "..................."}</InlineField>
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Thư điện tử: {dataJson.truSo_email || "..................."}
-            </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Website: {dataJson.truSo_website || "..................."}
+                <InlineField>Website: {dataJson.truSo_website || "..................."}</InlineField>
             </p>
             <p
                 className={styles.chapterTitle}
@@ -488,13 +505,13 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Họ và tên người đại diện theo pháp luật:{" "}
-                {dataJson.nguoiDaiDien_hoTen?.toUpperCase() || "........................................."}{" "}
-                &nbsp;&nbsp;&nbsp; Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}
+                {dataJson.nguoiDaiDien_hoTen?.toUpperCase() || "........................................."}
+                <InlineField marginLeft="50pt">Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}</InlineField>
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
-                Sinh ngày: {formatDate(dataJson.nguoiDaiDien_ngaySinh) || "....................."} &nbsp;&nbsp;&nbsp;
-                Dân tộc: {dataJson.nguoiDaiDien_danToc || "........"} &nbsp;&nbsp;&nbsp; Quốc tịch:{" "}
-                {dataJson.nguoiDaiDien_quocTich || "Việt Nam"}
+                Sinh ngày: {formatDate(dataJson.nguoiDaiDien_ngaySinh) || "....................."}
+                <InlineField marginLeft="50pt">Dân tộc: {dataJson.nguoiDaiDien_danToc || "........"}</InlineField>
+                <InlineField marginLeft="50pt">Quốc tịch: {dataJson.nguoiDaiDien_quocTich || "Việt Nam"}</InlineField>
             </p>
             <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
                 Số định danh cá nhân:{" "}
@@ -2882,8 +2899,8 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                                         return (
                                             <tr key={idx}>
                                                 <td style={{ border: "none", padding: "10px", textAlign: "center" }}>
-                                                    <p style={{ textAlign: "center", margin: 0 }}>
-                                                        <strong>Chữ ký của</strong> {row.hoTen || `Cổ đông ${idx + 1}`}
+                                                    <p style={{ textAlign: "center", margin: 0, fontWeight: "bold" }}>
+                                                        <strong>{getShareholderSignatureLabel(row, idx)}</strong>
                                                     </p>
                                                 </td>
                                             </tr>

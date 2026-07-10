@@ -24,8 +24,8 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
             <p style={{ marginBottom: "10px", fontWeight: "bold" }}>I. Cổ đông sáng lập là cá nhân</p>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} bordered-table`}
-                    style={{ width: "100%", borderCollapse: "collapse" }}
+                    className={`${styles.table} bordered-table docx-contained-table export-table-font-10`}
+                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
                 >
                     <thead>
                         <tr>
@@ -629,13 +629,27 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                 </p>
             </div>
             <table
-                className="signature-table no-border"
-                style={{ width: "100%", borderCollapse: "collapse", border: "none", marginTop: "20px" }}
+                className="signature-single-table no-border"
+                style={{
+                    width: "105mm",
+                    borderCollapse: "collapse",
+                    border: "none",
+                    marginLeft: "auto",
+                    marginRight: 0,
+                    marginTop: "30px",
+                    marginBottom: "50px",
+                }}
             >
                 <tbody>
                     <tr>
-                        <td style={{ border: "none" }}>&nbsp;</td>
-                        <td className="signature-cell" style={{ border: "none", textAlign: "center" }}>
+                        <td
+                            className="signature-cell"
+                            style={{
+                                border: "none",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                            }}
+                        >
                             <p style={{ textAlign: "center", margin: "0 0 8px" }}>
                                 <em>
                                     <CurrentDate />

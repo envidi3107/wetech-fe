@@ -5,7 +5,7 @@
  */
 const WORD_EXPORT_FONT_FAMILY = "Times New Roman, Times, serif";
 const DOCUMENT_FONT_SIZE = "14pt";
-const TABLE_FONT_SIZE = "11pt";
+const TABLE_FONT_SIZE = "13pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
 const WORD_COMPACT_TABLE_FONT_SIZE = "8.5pt";
@@ -412,9 +412,16 @@ function getWordExportBodyMarkup(exportElement) {
  * so borders survive the export pipeline.
  */
 function applyTableBorderStyles(root) {
-    // Tables with borders: single-border-table, bordered-table, list-table
-    root.querySelectorAll("table.single-border-table, table.bordered-table, table.list-table").forEach((table) => {
-        appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
+    // Tables with borders: single-border-table, bordered-table, list-table, CSS-module borderTable.
+    root.querySelectorAll(
+        "table.single-border-table, table.bordered-table, table.list-table, table[class*='borderTable']",
+    ).forEach((table) => {
+        const currentStyle = table.getAttribute("style") || "";
+        if (/\bwidth\s*:\s*calc\(/i.test(currentStyle)) {
+            appendInlineStyleOverride(table, /^width\s*:/i, "width: 100%");
+        } else {
+            appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
+        }
         appendInlineStyleIfMissing(table, /\bborder-collapse\s*:/i, "border-collapse: collapse");
         appendInlineStyleIfMissing(table, /\btable-layout\s*:/i, "table-layout: auto");
         table.querySelectorAll("td, th").forEach((cell) => {
@@ -425,8 +432,10 @@ function applyTableBorderStyles(root) {
         });
     });
 
-    // Tables without borders: no-border, signature-table
-    root.querySelectorAll("table.no-border, table.signature-table, table.signature-even-table").forEach((table) => {
+    // Tables without borders: no-border, signature-table, CSS-module noBorderTable.
+    root.querySelectorAll(
+        "table.no-border, table.signature-table, table.signature-even-table, table[class*='noBorderTable']",
+    ).forEach((table) => {
         appendInlineStyleIfMissing(table, /\bwidth\s*:/i, "width: 100%");
         appendInlineStyleIfMissing(table, /\bborder-collapse\s*:/i, "border-collapse: collapse");
         table.querySelectorAll("td, th").forEach((cell) => {
