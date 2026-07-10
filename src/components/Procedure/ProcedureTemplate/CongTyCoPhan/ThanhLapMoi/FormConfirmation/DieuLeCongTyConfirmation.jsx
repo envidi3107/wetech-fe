@@ -2863,67 +2863,46 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
             >
                 <CurrentDate />
             </p>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "20px", marginTop: "20px" }}>
-                <div
-                    style={{
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        minWidth: "50%",
-                    }}
-                >
-                    <p
-                        style={{
-                            textAlign: "center",
-                            marginBottom: "6px",
-                            marginTop: "10px",
-                            fontWeight: "bold",
-                            textTransform: "uppercase",
-                            whiteSpace: "nowrap",
-                        }}
-                    >
-                        HỌ TÊN, CHỮ KÝ CỦA TẤT CẢ CÁC CỔ ĐÔNG SÁNG LẬP
-                    </p>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
-                        {coDongList.map((row, idx) => {
-                            const sigHoTen = dataJson[`chuKyCoDong_${idx}_hoTen`] || row.hoTen;
-                            const sigTen = dataJson[`chuKyCoDong_${idx}_ten`] || "";
-                            return (
-                                <div
-                                    key={idx}
-                                    style={{
-                                        textAlign: "center",
-                                        padding: "10px",
-                                        minWidth: "250px",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p style={{ textTransform: "uppercase", textAlign: "center", fontWeight: "bold" }}>
-                                        Chữ ký của {row.hoTen || `Cổ đông ${idx + 1}`}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <div
-                    style={{
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        minWidth: "50%",
-                    }}
-                >
-                    <p className={styles.signatureName} style={{ textAlign: "center", whiteSpace: "nowrap" }}>
-                        HỌ TÊN, CHỮ KÝ CỦA NGƯỜI ĐẠI DIỆN PHÁP LUẬT
-                    </p>
-                </div>
-            </div>
+            <table
+                className="signature-table no-border"
+                style={{ width: "100%", borderCollapse: "collapse", border: "none", marginTop: "20px" }}
+            >
+                <tbody>
+                    <tr>
+                        <td style={{ border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p style={{ textAlign: "center", marginBottom: "6px", marginTop: "10px" }}>
+                                <strong>HỌ TÊN, CHỮ KÝ CỦA TẤT CẢ CÁC CỔ ĐÔNG SÁNG LẬP</strong>
+                            </p>
+                            <table
+                                className="no-border"
+                                style={{ width: "100%", borderCollapse: "collapse", border: "none" }}
+                            >
+                                <tbody>
+                                    {coDongList.map((row, idx) => {
+                                        return (
+                                            <tr key={idx}>
+                                                <td style={{ border: "none", padding: "10px", textAlign: "center" }}>
+                                                    <p style={{ textAlign: "center", margin: 0 }}>
+                                                        <strong>Chữ ký của</strong> {row.hoTen || `Cổ đông ${idx + 1}`}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </td>
+                        <td
+                            className="signature-cell"
+                            style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                        >
+                            <p style={{ textAlign: "center", marginTop: "10px" }}>
+                                <strong>HỌ TÊN, CHỮ KÝ CỦA NGƯỜI ĐẠI DIỆN PHÁP LUẬT</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

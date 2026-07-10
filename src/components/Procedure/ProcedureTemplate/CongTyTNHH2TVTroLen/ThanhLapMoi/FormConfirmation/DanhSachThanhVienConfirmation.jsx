@@ -20,7 +20,7 @@ function DanhSachThanhVienConfirmation({ dataJson }) {
             </h2>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} single-border-table docx-contained-table`}
+                    className={`${styles.table} bordered-table docx-contained-table`}
                     style={{
                         width: "100%",
                         borderCollapse: "collapse",
@@ -279,7 +279,10 @@ function DanhSachThanhVienConfirmation({ dataJson }) {
                                             {row.hoTen}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={getColumnStyle(2, { textAlign: "center", whiteSpace: "nowrap" })}>
+                                    <td
+                                        className={styles.td}
+                                        style={getColumnStyle(2, { textAlign: "center", whiteSpace: "nowrap" })}
+                                    >
                                         <p
                                             style={{
                                                 margin: 0,

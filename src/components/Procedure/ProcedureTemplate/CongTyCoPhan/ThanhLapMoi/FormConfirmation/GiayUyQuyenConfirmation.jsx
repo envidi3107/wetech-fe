@@ -1,6 +1,7 @@
 import React from "react";
 import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/confirmation.module.css";
+import localStyles from "./DieuLeCongTyConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
 export default function GiayUyQuyenConfirmation({ dataJson }) {
@@ -43,10 +44,12 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
             <p className={styles.docTitle} style={{ margin: "30px 0" }}>
                 GIẤY UỶ QUYỀN
             </p>
-            <p className={styles.sectionTitle} style={{ textDecoration: "underline", fontSize: "15px" }}>
-                BÊN ỦY QUYỀN (BÊN A):
+            <p className={styles.sectionTitle} style={{ textAlign: "left", fontSize: "13pt" }}>
+                <strong>
+                    <u>BÊN ỦY QUYỀN (BÊN A):</u>
+                </strong>
             </p>
-            <div className={styles.infoRow}>
+            <div className={`${styles.infoRow} ${localStyles.docxInfoRow}`}>
                 <p className={styles.infoItem} style={{ flex: 1.5 }}>
                     <b
                         className={styles.infoLabel}
@@ -149,7 +152,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     {[uyQuyen_soNha, uyQuyen_xa, uyQuyen_tinh].filter(Boolean).join(", ")}
                 </b>
             </p>
-            <div className={styles.infoRow}>
+            <div className={`${styles.infoRow} ${localStyles.docxInfoRow}`}>
                 <p className={styles.infoItem} style={{ flex: 1 }}>
                     <b
                         className={styles.infoLabel}
@@ -193,13 +196,12 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     </p>
                 )}
             </div>
-            <p
-                className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px" }}
-            >
-                BÊN NHẬN UỶ QUYỀN (BÊN B):
+            <p className={styles.sectionTitle} style={{ textAlign: "left", fontSize: "13pt", marginTop: "20px" }}>
+                <strong>
+                    <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
+                </strong>
             </p>
-            <div className={styles.infoRow}>
+            <div className={`${styles.infoRow} ${localStyles.docxInfoRow}`}>
                 <p className={styles.infoItem} style={{ flex: 1.5 }}>
                     <b
                         className={styles.infoLabel}
@@ -242,7 +244,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     </b>
                 </p>
             </div>
-            <div className={styles.infoRow}>
+            <div className={`${styles.infoRow} ${localStyles.docxInfoRow}`}>
                 <p className={styles.infoItem} style={{ flex: 1.5 }}>
                     <b
                         className={styles.infoLabel}
@@ -368,7 +370,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                         .join(", ")}
                 </b>
             </p>
-            <div className={styles.infoRow}>
+            <div className={`${styles.infoRow} ${localStyles.docxInfoRow}`}>
                 <p className={styles.infoItem} style={{ flex: 1 }}>
                     <b
                         className={styles.infoLabel}
@@ -410,11 +412,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     </b>
                 </p>
             </div>
-            <p
-                className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px", textAlign: "left" }}
-            >
-                NỘI DUNG ỦY QUYỀN:
+            <p className={styles.sectionTitle} style={{ fontSize: "13pt", marginTop: "20px", textAlign: "left" }}>
+                <strong>
+                    <u>NỘI DUNG ỦY QUYỀN:</u>
+                </strong>
             </p>
             <p className={styles.infoLine} style={{ marginBottom: "10px", textAlign: "left" }}>
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
@@ -424,11 +425,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     Nộp hồ sơ và nhận kết quả thủ tục đăng ký mới {companyName} tại {phongThucHien}
                 </>
             </p>
-            <p
-                className={styles.sectionTitle}
-                style={{ textDecoration: "underline", fontSize: "15px", marginTop: "20px", textAlign: "left" }}
-            >
-                THỜI HẠN UỶ QUYỀN:
+            <p className={styles.sectionTitle} style={{ fontSize: "13pt", marginTop: "20px", textAlign: "left" }}>
+                <strong>
+                    <u>THỜI HẠN UỶ QUYỀN:</u>
+                </strong>
             </p>
             <p className={styles.infoLine} style={{ textAlign: "left" }}>
                 Từ ngày ký đến khi hoàn tất công việc.
@@ -458,7 +458,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                     <tr>
                         <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                                <b
+                                <strong
                                     style={{
                                         fontWeight: "bold",
                                         textDecoration: "underline",
@@ -466,12 +466,12 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                                     }}
                                 >
                                     BÊN NHẬN ỦY QUYỀN
-                                </b>
+                                </strong>
                             </p>
                         </td>
                         <td style={{ width: "50%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                                <b
+                                <strong
                                     style={{
                                         fontWeight: "bold",
                                         textDecoration: "underline",
@@ -479,7 +479,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                                     }}
                                 >
                                     BÊN ỦY QUYỀN
-                                </b>
+                                </strong>
                             </p>
                         </td>
                     </tr>

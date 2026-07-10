@@ -2825,16 +2825,27 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </p>
 
                 <table
-                    className={styles.noBorderTable}
-                    style={{ width: "100%", marginTop: "30px", marginBottom: "50px" }}
+                    className={`${styles.noBorderTable} signature-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        marginTop: "30px",
+                        marginBottom: "50px",
+                    }}
                 >
                     <tbody>
                         <tr>
-                            <td style={{ width: "50%" }}></td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
-                                <p>
+                            <td style={{ border: "none" }}>&nbsp;</td>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
+                                </p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>
                         </tr>

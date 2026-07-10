@@ -23,7 +23,10 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
             </p>
             <p style={{ marginBottom: "10px", fontWeight: "bold" }}>I. Cổ đông sáng lập là cá nhân</p>
             <div className={styles.tableScrollWrapper}>
-                <table className={styles.table}>
+                <table
+                    className={`${styles.table} bordered-table`}
+                    style={{ width: "100%", borderCollapse: "collapse" }}
+                >
                     <thead>
                         <tr>
                             <th rowSpan={4} className={styles.th}>
@@ -625,19 +628,29 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                     vốn.
                 </p>
             </div>
-            <div className={styles.signatureBlock}>
-                <p className={styles.signatureDate}>
-                    <CurrentDate />
-                </p>
-                <p className={styles.signatureTitle}>
-                    NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT
-                    <br />
-                    CỦA CÔNG TY
-                </p>
-                <p className={styles.signatureSubtitle}>
-                    (<em>Ký và ghi họ tên</em>)
-                </p>
-            </div>
+            <table
+                className="signature-table no-border"
+                style={{ width: "100%", borderCollapse: "collapse", border: "none", marginTop: "20px" }}
+            >
+                <tbody>
+                    <tr>
+                        <td style={{ border: "none" }}>&nbsp;</td>
+                        <td className="signature-cell" style={{ border: "none", textAlign: "center" }}>
+                            <p style={{ textAlign: "center", margin: "0 0 8px" }}>
+                                <em>
+                                    <CurrentDate />
+                                </em>
+                            </p>
+                            <p style={{ textAlign: "center", margin: 0 }}>
+                                <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA CÔNG TY</strong>
+                            </p>
+                            <p style={{ textAlign: "center", margin: 0 }}>
+                                <em>(Ký và ghi họ tên)</em>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

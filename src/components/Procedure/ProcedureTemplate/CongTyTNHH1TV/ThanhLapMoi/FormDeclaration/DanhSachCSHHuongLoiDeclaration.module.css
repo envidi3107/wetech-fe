@@ -45,6 +45,14 @@
     color: #000;
 }
 
+.tdWrapper {
+    border: 1px solid #e8e8e8;
+    padding: 10px 12px;
+    text-align: center;
+    vertical-align: middle;
+    color: #000;
+}
+
 .colNumberRow .colNumber {
     border: 1px solid #bbb;
     text-align: center;
