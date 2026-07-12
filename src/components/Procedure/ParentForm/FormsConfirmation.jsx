@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { generateHtmlString } from "@/utils/generateHtmlFile";
+import { generateHtmlString, getDocExportPageMarginsTwips, getDocExportPageSizeTwips } from "@/utils/generateHtmlFile";
 import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { useNotification } from "@/hooks/useNotification";
 
 const DATA_RELOAD_COOLDOWN_SECONDS = 5;
+const DOCX_EXPORT_FONT_SIZE = 26;
 
 function getServerErrorMessage(error) {
     const responseData = error?.response?.data;
@@ -105,12 +106,50 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                 const htmlBlob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
                 const htmlFile = new File([htmlBlob], filename, { type: "text/html" });
 
+                submitStage = "tạo DOCX HTML";
+
+                const docxHtmlString = generateHtmlString(element, {
+                    title: currentForm.code || "Biểu mẫu",
+                    landscape,
+                    normalizeForWord: true,
+                });
+
+                const docxHtmlBlob = new Blob([docxHtmlString], { type: "text/html; charset=utf-8" });
+                const docxHtmlFile = new File([docxHtmlBlob], `docx_${filename}`, { type: "text/html" });
+
+                const docxDocumentOptions = {
+                    orientation: landscape ? "landscape" : "portrait",
+                    pageSize: getDocExportPageSizeTwips(landscape),
+                    margins: getDocExportPageMarginsTwips(landscape),
+                    title: currentForm.code || "Bieu mau",
+                    creator: "Wetech",
+                    lang: "vi-VN",
+                    font: "Times New Roman",
+                    fontSize: DOCX_EXPORT_FONT_SIZE,
+                    complexScriptFontSize: DOCX_EXPORT_FONT_SIZE,
+                    table: {
+                        row: {
+                            cantSplit: false,
+                        },
+                        addSpacingAfter: false,
+                    },
+                    preprocessing: {
+                        skipHTMLMinify: true,
+                    },
+                    imageProcessing: {
+                        svgHandling: "native",
+                        suppressSharpWarning: true,
+                    },
+                };
+
                 submitStage = "gửi API xác nhận";
 
                 // Gửi FormData lên server
                 const formData = new FormData();
                 formData.append("formId", currentForm.formId);
                 formData.append("htmlFile", htmlFile);
+                formData.append("docxHtmlFile", docxHtmlFile);
+                formData.append("docxOptions", JSON.stringify(docxDocumentOptions));
                 formData.append("landscape", landscape);
 
                 await authAxios.post("/api/form-submission/confirm", formData, {
