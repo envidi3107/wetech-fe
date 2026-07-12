@@ -6,7 +6,12 @@ import Tooltip from "@/components/Tooltip/Tooltip";
 import { useNotification } from "@/hooks/useNotification";
 
 const DATA_RELOAD_COOLDOWN_SECONDS = 5;
-const DOCX_EXPORT_FONT_SIZE = 26;
+
+// Cỡ chữ chuẩn cho văn bản hành chính là 14pt. 
+// Engine xuất Word (html-to-docx) yêu cầu truyền vào đơn vị half-points (1/2 pt).
+// Do đó fontSize truyền vào sẽ là 14 * 2 = 28.
+const DOCX_EXPORT_FONT_SIZE_PT = 13;
+const DOCX_EXPORT_FONT_SIZE_HALF_PT = DOCX_EXPORT_FONT_SIZE_PT * 2;
 
 function getServerErrorMessage(error) {
     const responseData = error?.response?.data;
@@ -125,8 +130,8 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     creator: "Wetech",
                     lang: "vi-VN",
                     font: "Times New Roman",
-                    fontSize: DOCX_EXPORT_FONT_SIZE,
-                    complexScriptFontSize: DOCX_EXPORT_FONT_SIZE,
+                    fontSize: DOCX_EXPORT_FONT_SIZE_HALF_PT,
+                    complexScriptFontSize: DOCX_EXPORT_FONT_SIZE_HALF_PT,
                     table: {
                         row: {
                             cantSplit: false,

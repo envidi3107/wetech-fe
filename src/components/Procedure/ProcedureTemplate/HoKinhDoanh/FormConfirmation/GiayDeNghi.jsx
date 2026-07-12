@@ -685,13 +685,10 @@ export default function GiayDeNghi({ dataJson }) {
                     đăng ký trên.
                 </p>
             </div>
-            <table className="signature-table no-border" style={inlineStyles.signatureTable}>
+            <table className="signature-single-table signature-table no-border" style={mergeStyles(inlineStyles.signatureTable, { width: "105mm", marginLeft: "auto", marginRight: "0" })}>
                 <tbody>
                     <tr>
-                        <td className="signature-spacer" style={inlineStyles.signatureSpacer}>
-                            &nbsp;
-                        </td>
-                        <td className="signature-cell" style={inlineStyles.signatureCell}>
+                        <td style={mergeStyles(inlineStyles.signatureCell, { width: "100%", maxWidth: "none" })}>
                             <p className="text-center" style={mergeStyles(inlineStyles.signatureTitle, { textAlign: "center" })}>
                                 <strong>CHỦ HỘ KINH DOANH</strong>
                             </p>
