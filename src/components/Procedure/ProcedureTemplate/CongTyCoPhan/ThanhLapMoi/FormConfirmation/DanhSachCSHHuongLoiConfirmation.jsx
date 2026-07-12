@@ -3,6 +3,8 @@ import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
+const BENEFICIAL_OWNER_COLUMN_WIDTHS = ["4%", "10%", "9%", "5%", "16%", "7%", "6%", "15%", "6%", "6%", "7%", "10%"];
+
 function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
     const rows = dataJson?.cshHuongLoiList || [];
 
@@ -11,9 +13,14 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} bordered-table docx-contained-table export-table-font-10`}
-                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                    className={`${styles.table} ${styles.htmlWideTable} bordered-table docx-contained-table export-table-font-10`}
+                    style={{ width: "100%", minWidth: "1500px", borderCollapse: "collapse", tableLayout: "fixed" }}
                 >
+                    <colgroup>
+                        {BENEFICIAL_OWNER_COLUMN_WIDTHS.map((width, index) => (
+                            <col key={index} style={{ width }} />
+                        ))}
+                    </colgroup>
                     <thead>
                         <tr>
                             <th rowSpan={2} className={styles.th}>
@@ -235,7 +242,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.hoTen}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                                    <td className={styles.td} style={{ textAlign: "center" }}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -295,7 +302,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.danToc}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ minWidth: 250 }}>
+                                    <td className={styles.td}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -390,13 +397,11 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                 </p>
             </div>
             <table
-                className="signature-single-table no-border"
+                className="signature-table no-border"
                 style={{
-                    width: "105mm",
+                    width: "100%",
                     borderCollapse: "collapse",
                     border: "none",
-                    marginLeft: "auto",
-                    marginRight: 0,
                     marginTop: "30px",
                     marginBottom: "50px",
                 }}
@@ -404,8 +409,18 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                 <tbody>
                     <tr>
                         <td
+                            className="signature-spacer"
+                            style={{
+                                width: "auto",
+                                border: "none",
+                                textAlign: "left",
+                                verticalAlign: "top",
+                            }}
+                        ></td>
+                        <td
                             className="signature-cell"
                             style={{
+                                width: "105mm",
                                 border: "none",
                                 textAlign: "center",
                                 verticalAlign: "top",

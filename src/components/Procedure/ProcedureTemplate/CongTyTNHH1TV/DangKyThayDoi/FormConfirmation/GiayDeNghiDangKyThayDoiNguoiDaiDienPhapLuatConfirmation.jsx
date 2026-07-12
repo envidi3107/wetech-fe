@@ -18,6 +18,22 @@ function Line({ label, value }) {
     );
 }
 
+function InlineField({ children, marginLeft = "36pt" }) {
+    return (
+        <span
+            className={`${styles.inlineField} inlineField`}
+            style={{
+                display: "inline-block",
+                marginLeft,
+                fontWeight: "inherit",
+                fontStyle: "normal",
+            }}
+        >
+            {children}
+        </span>
+    );
+}
+
 function isEmptyValue(value) {
     return value === undefined || value === null || String(value).trim() === "";
 }
@@ -100,7 +116,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                 />
                 <p>
                     Điện thoại: {data.nguoiDaiDien_phone || ""}
-                    &nbsp;&nbsp;&nbsp;&nbsp; Thư điện tử: {data.nguoiDaiDien_email || ""}
+                    <InlineField>Thư điện tử: {data.nguoiDaiDien_email || ""}</InlineField>
                 </p>
 
                 <p style={{ marginTop: 16, fontStyle: "italic" }}>
@@ -115,7 +131,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                             <td>
                                 <p>
                                     Dân tộc: {data.nguoiDaiDien_danToc || ""}
-                                    &nbsp;&nbsp; Quốc tịch: {data.nguoiDaiDien_quocTich || ""}
+                                    <InlineField>Quốc tịch: {data.nguoiDaiDien_quocTich || ""}</InlineField>
                                 </p>
                                 <Line
                                     label="Số Hộ chiếu (đối với cá nhân Việt Nam không có số định danh cá nhân)/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế hộ chiếu nước ngoài (đối với cá nhân là người nước ngoài)"
@@ -123,7 +139,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                                 />
                                 <p>
                                     Ngày cấp: {formatDate(data.nguoiDaiDien_ngayCapHoChieu)}
-                                    &nbsp;&nbsp; Nơi cấp: {data.nguoiDaiDien_noiCapHoChieu || ""}
+                                    <InlineField>Nơi cấp: {data.nguoiDaiDien_noiCapHoChieu || ""}</InlineField>
                                 </p>
                                 <p>Nơi thường trú:</p>
                                 <AddressFields
@@ -145,17 +161,31 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                     thực của nội dung Giấy đề nghị này.
                 </p>
 
-                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: 30, marginBottom: 50 }}>
+                <table
+                    className={`${styles.noBorderTable} signature-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        marginTop: 30,
+                        marginBottom: 50,
+                    }}
+                >
                     <tbody>
                         <tr>
-                            <td style={{ width: "50%" }}></td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
-                                <p>
+                            <td className="signature-spacer" style={{ border: "none", width: "50%" }}></td>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>
                                         CHỦ TỊCH CÔNG TY/CHỦ TỊCH HỘI ĐỒNG THÀNH VIÊN/CHỦ TỊCH HỘI ĐỒNG QUẢN TRỊ/NGƯỜI
                                         ĐƯỢC ỦY QUYỀN/NGƯỜI ĐẠI DIỆN
                                     </strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
+                                </p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>
                         </tr>

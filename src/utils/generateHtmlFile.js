@@ -6,9 +6,11 @@
 const WORD_EXPORT_FONT_FAMILY = "Times New Roman, Times, serif";
 const DOCUMENT_FONT_SIZE = "14pt";
 const TABLE_FONT_SIZE = "13pt";
+const PDF_LARGE_DOCUMENT_FONT_SIZE = "16pt";
+const PDF_LARGE_TITLE_FONT_SIZE = "18pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
-const WORD_COMPACT_TABLE_FONT_SIZE = "8.5pt";
+const WORD_COMPACT_TABLE_FONT_SIZE = "11pt";
 const EXPORT_TABLE_FONT_10_SIZE = "12pt";
 const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
@@ -89,10 +91,7 @@ function hasInlineStyleValue(node, propertyPattern, valuePattern) {
 }
 
 function shouldPreserveBold(node) {
-    return (
-        !!node.closest?.("strong, b") ||
-        hasInlineStyleValue(node, /\bfont-weight\s*:/i, /\b(bold|[6-9]00|700)\b/i)
-    );
+    return !!node.closest?.("strong, b") || hasInlineStyleValue(node, /\bfont-weight\s*:/i, /\b(bold|[6-9]00|700)\b/i);
 }
 
 function shouldPreserveItalic(node) {
@@ -113,19 +112,19 @@ function getWordExportFontInlineStyle(node) {
     const fontSize = isCheckboxSymbol
         ? WORD_CHECKBOX_FONT_SIZE
         : isExportTableFont10Content
-            ? EXPORT_TABLE_FONT_10_SIZE
-            : isCompactTableContent
-                ? WORD_COMPACT_TABLE_FONT_SIZE
-                : isTableContent
-                    ? WORD_TABLE_FONT_SIZE
-                    : WORD_DOCUMENT_FONT_SIZE;
+          ? EXPORT_TABLE_FONT_10_SIZE
+          : isCompactTableContent
+            ? WORD_COMPACT_TABLE_FONT_SIZE
+            : isTableContent
+              ? WORD_TABLE_FONT_SIZE
+              : WORD_DOCUMENT_FONT_SIZE;
     const lineHeight = isExportTableFont10Content
         ? EXPORT_TABLE_FONT_10_LINE_HEIGHT
         : isCompactTableContent
-            ? COMPACT_TABLE_LINE_HEIGHT
-            : isTableContent
-                ? TABLE_LINE_HEIGHT
-                : DOCUMENT_LINE_HEIGHT;
+          ? COMPACT_TABLE_LINE_HEIGHT
+          : isTableContent
+            ? TABLE_LINE_HEIGHT
+            : DOCUMENT_LINE_HEIGHT;
 
     return [
         `font-family: ${WORD_EXPORT_FONT_FAMILY}`,
@@ -320,12 +319,37 @@ function markSignatureElements(root) {
         if (!isSignatureText(table.textContent)) return;
 
         const className = table.getAttribute("class") || "";
+        const usesRecipientSignatureColumns = /signature-recipients-table/i.test(className);
         const usesEvenSignatureColumns = /signature-even-table/i.test(className);
         const usesFixedSignatureColumns = /signature-table/i.test(className);
         const spacerWidth = usesFixedSignatureColumns ? "auto" : "auto";
         const signatureCellWidth = usesFixedSignatureColumns ? signatureWidth : signatureWidth;
 
         table.setAttribute("data-export-signature-table", "");
+
+        if (usesRecipientSignatureColumns) {
+            appendInlineStyle(
+                table,
+                "width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; table-layout: fixed !important",
+            );
+
+            const firstRowCells = Array.from(table.rows?.[0]?.cells || []);
+            const recipientCell = firstRowCells[0];
+            const signatureCell = firstRowCells[firstRowCells.length - 1];
+
+            if (recipientCell && signatureCell && recipientCell !== signatureCell) {
+                appendInlineStyle(
+                    recipientCell,
+                    "width: 45% !important; max-width: 45% !important; border: none !important; text-align: left !important; vertical-align: top !important; white-space: normal !important",
+                );
+                signatureCell.setAttribute("data-export-signature-cell", "");
+                appendInlineStyle(
+                    signatureCell,
+                    "width: 55% !important; max-width: 55% !important; border: none !important; text-align: center !important; vertical-align: top !important; padding-right: 0 !important; white-space: normal !important",
+                );
+            }
+            return;
+        }
 
         if (usesEvenSignatureColumns) {
             appendInlineStyle(
@@ -346,7 +370,7 @@ function markSignatureElements(root) {
             table,
             /signature-single-table/i.test(className)
                 ? `width: ${signatureWidth} !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important`
-                : "width: 100% !important; margin-left: auto !important; margin-right: 0 !important; table-layout: fixed !important",
+                : "width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; table-layout: fixed !important",
         );
 
         const firstRowCells = Array.from(table.rows?.[0]?.cells || []);
@@ -445,7 +469,9 @@ function applyTableBorderStyles(root) {
 }
 
 function getCssLengthInPoints(value = "") {
-    const match = String(value).trim().match(/^(-?\d+(?:\.\d+)?)(px|pt|mm|cm|in)$/i);
+    const match = String(value)
+        .trim()
+        .match(/^(-?\d+(?:\.\d+)?)(px|pt|mm|cm|in)$/i);
     if (!match) return 0;
 
     const number = Number(match[1]);
@@ -510,7 +536,10 @@ function applyWordExportUtilityStyles(root) {
     root.querySelectorAll("table.docx-contained-table").forEach((table) => {
         appendInlineStyle(table, "width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed");
         table.querySelectorAll("td, th").forEach((cell) => {
-            appendInlineStyle(cell, "max-width: 100%; overflow-wrap: break-word; word-break: normal; white-space: normal");
+            appendInlineStyle(
+                cell,
+                "max-width: 100%; overflow-wrap: break-word; word-break: normal; white-space: normal",
+            );
         });
     });
 
@@ -562,7 +591,11 @@ function applyComputedTextStyles(root) {
 
         // Text-decoration: underline
         const computedDecoration = computedStyle.textDecorationLine || computedStyle.textDecoration || "";
-        if (computedDecoration.includes("underline") && !/\btext-decoration\s*:/i.test(inlineStyle) && !node.closest("u")) {
+        if (
+            computedDecoration.includes("underline") &&
+            !/\btext-decoration\s*:/i.test(inlineStyle) &&
+            !node.closest("u")
+        ) {
             appendInlineStyle(node, "text-decoration: underline");
         }
 
@@ -583,7 +616,8 @@ function normalizeExportMarkup(element, { normalizeForWord = false } = {}) {
     if (normalizeForWord) {
         // Temporarily attach to DOM to enable getComputedStyle
         const offscreen = document.createElement("div");
-        offscreen.style.cssText = "position:absolute;left:-9999px;top:-9999px;width:210mm;visibility:hidden;pointer-events:none";
+        offscreen.style.cssText =
+            "position:absolute;left:-9999px;top:-9999px;width:210mm;visibility:hidden;pointer-events:none";
         offscreen.appendChild(exportElement);
         document.body.appendChild(offscreen);
 
@@ -656,7 +690,8 @@ export function generateHtmlString(element, options = {}) {
       --procedure-confirmation-checkbox-font-size: ${WORD_CHECKBOX_FONT_SIZE};
     }
 
-    ${normalizeForWord
+    ${
+        normalizeForWord
             ? ""
             : `
     @page {
@@ -669,7 +704,7 @@ export function generateHtmlString(element, options = {}) {
       margin: ${landscapePageMarginCss};
     }
     `
-        }
+    }
 
     html, body {
       margin: 0;
@@ -842,6 +877,52 @@ export function generateHtmlString(element, options = {}) {
       border-radius: 0 !important;
       overflow: visible !important;
       max-width: 100% !important;
+    }
+
+    .document-export-root.pdf-document-font-large,
+    .document-export-root.pdf-document-font-large p,
+    .document-export-root.pdf-document-font-large span,
+    .document-export-root.pdf-document-font-large div,
+    .document-export-root.pdf-document-font-large table,
+    .document-export-root.pdf-document-font-large td,
+    .document-export-root.pdf-document-font-large th,
+    .document-export-root.pdf-document-font-large strong,
+    .document-export-root.pdf-document-font-large em,
+    .document-export-root.pdf-document-font-large b,
+    .document-export-root.pdf-document-font-large i {
+      font-size: ${PDF_LARGE_DOCUMENT_FONT_SIZE} !important;
+    }
+
+    .document-export-root.pdf-document-font-large h1,
+    .document-export-root.pdf-document-font-large h2,
+    .document-export-root.pdf-document-font-large h3,
+    .document-export-root.pdf-document-font-large h4,
+    .document-export-root.pdf-document-font-large h5,
+    .document-export-root.pdf-document-font-large h6 {
+      font-size: ${PDF_LARGE_TITLE_FONT_SIZE} !important;
+    }
+
+    .ultra-wide-table,
+    .ultra-wide-table td,
+    .ultra-wide-table th,
+    .ultra-wide-table p,
+    .ultra-wide-table span,
+    .ultra-wide-table div,
+    .ultra-wide-table strong,
+    .ultra-wide-table em,
+    .ultra-wide-table b,
+    .ultra-wide-table i {
+      font-size: ${WORD_COMPACT_TABLE_FONT_SIZE} !important;
+      line-height: ${COMPACT_TABLE_LINE_HEIGHT} !important;
+    }
+
+    .ultra-wide-table td,
+    .ultra-wide-table th {
+      padding: 1pt 1.5pt !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+      white-space: normal !important;
+      vertical-align: top !important;
     }
 
     table {

@@ -12,15 +12,24 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
-    <i
-        className={styles.checkbox}
+    <span
+        className={`${styles.checkbox} checkbox-symbol`}
         style={{
+            display: "inline-block",
             fontWeight: "inherit",
             fontStyle: "normal",
+            fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+            lineHeight: 1,
+            margin: "0 6pt",
+            minWidth: "18pt",
+            textAlign: "center",
+            verticalAlign: "middle",
         }}
     >
-        {checked ? "x" : ""}
-    </i>
+        {"\u00A0"}
+        {checked ? "\u2612" : "\u2610"}
+        {"\u00A0"}
+    </span>
 );
 
 const TOOLTIP = {
@@ -558,19 +567,38 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                     nghiệp theo quy định của pháp luật và Điều lệ công ty.
                 </p>
 
-                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: 30, marginBottom: 50 }}>
+                <table
+                    className={`${styles.noBorderTable} signature-even-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        marginTop: 30,
+                        marginBottom: 50,
+                    }}
+                >
                     <tbody>
                         <tr>
-                            <td className={styles.textCenter} style={{ width: "50%", verticalAlign: "top" }}>
-                                <p>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{ border: "none", width: "50%", textAlign: "center", verticalAlign: "top" }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>CHỦ SỞ HỮU MỚI</strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
+                                </p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>
-                            <td className={styles.textCenter} style={{ width: "50%", verticalAlign: "top" }}>
-                                <p>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{ border: "none", width: "50%", textAlign: "center", verticalAlign: "top" }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>CHỦ SỞ HỮU CŨ</strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
+                                </p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
                                 </p>
                             </td>
                         </tr>

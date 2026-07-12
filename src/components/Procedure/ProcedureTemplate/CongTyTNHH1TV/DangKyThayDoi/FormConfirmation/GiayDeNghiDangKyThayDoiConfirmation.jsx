@@ -19,16 +19,51 @@ import {
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
 const Checkbox = ({ checked }) => (
-    <i
-        className={styles.checkbox}
+    <span
+        className={`${styles.checkbox} checkbox-symbol`}
         style={{
+            display: "inline-block",
             fontWeight: "inherit",
             fontStyle: "normal",
+            fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+            lineHeight: 1,
+            margin: "0 0 0 4pt",
+            minWidth: "18pt",
+            textAlign: "center",
+            verticalAlign: "middle",
         }}
     >
-        {checked ? "x" : ""}
-    </i>
+        {checked ? "\u2612" : "\u2610"}
+        {"\u00A0"}
+    </span>
 );
+
+function InlineField({ children, marginLeft = "36pt" }) {
+    return (
+        <span
+            className={`${styles.inlineField} inlineField`}
+            style={{
+                display: "inline-block",
+                marginLeft,
+                fontWeight: "inherit",
+                fontStyle: "normal",
+            }}
+        >
+            {children}
+        </span>
+    );
+}
+
+function CheckboxOption({ label, checked, marginLeft = "0" }) {
+    return (
+        <InlineField marginLeft={marginLeft}>
+            {label}
+            {"\u00A0"}
+            <Checkbox checked={checked} />
+        </InlineField>
+    );
+}
+
 const DEFAULT_EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiCoDong", "a_doiVonDauTuDNTN"];
 const compactPdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable}`;
 const widePdfTableClassName = `${styles.borderTable} ${styles.compactPdfTable} ${styles.widePdfTable}`;
@@ -65,13 +100,15 @@ function formatUnitValue(value, unit) {
 
 function CheckboxList({ items }) {
     return (
-        <ul style={{ margin: "4px 0 4px 22px", paddingLeft: 18 }}>
+        <div style={{ margin: "4pt 0 4pt 18pt" }}>
             {items.map((item) => (
-                <li key={item.label} style={{ margin: "4px 0" }}>
-                    {item.label} <Checkbox checked={item.checked} />
-                </li>
+                <p key={item.label} style={{ margin: "4pt 0" }}>
+                    {item.label}
+                    {"\u00A0"}
+                    <Checkbox checked={item.checked} />
+                </p>
             ))}
-        </ul>
+        </div>
     );
 }
 
@@ -1064,16 +1101,18 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                     đăng ký thay đổi trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X
                                     vào ô thích hợp):
                                 </p>
-                                <ul style={{ margin: "4px 0 4px 22px", paddingLeft: 18, listStyleType: "none" }}>
-                                    <li>
-                                        - Đăng ký thay đổi trên cơ sở tách doanh nghiệp{" "}
+                                <div style={{ margin: "4pt 0 4pt 18pt" }}>
+                                    <p style={{ margin: "4pt 0" }}>
+                                        - Đăng ký thay đổi trên cơ sở tách doanh nghiệp
+                                        {"\u00A0"}
                                         <Checkbox checked={data.coSoThayDoi === "tach"} />
-                                    </li>
-                                    <li>
-                                        - Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp{" "}
+                                    </p>
+                                    <p style={{ margin: "4pt 0" }}>
+                                        - Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp
+                                        {"\u00A0"}
                                         <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
-                                    </li>
-                                </ul>
+                                    </p>
+                                </div>
                                 {data.coSoThayDoi === "sap_nhap" && (
                                     <>
                                         <Line
@@ -1093,9 +1132,17 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 )}
                                 <p>
                                     Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
-                                    xã/phường ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh: &nbsp; Có{" "}
-                                    <Checkbox checked={data.anNinhQuocPhong === "Có"} />
-                                    &nbsp; Không <Checkbox checked={data.anNinhQuocPhong !== "Có"} />
+                                    xã/phường ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh:
+                                    <CheckboxOption
+                                        label="Có"
+                                        checked={data.anNinhQuocPhong === "Có"}
+                                        marginLeft="36pt"
+                                    />
+                                    <CheckboxOption
+                                        label="Không"
+                                        checked={data.anNinhQuocPhong !== "Có"}
+                                        marginLeft="24pt"
+                                    />
                                 </p>
                             </div>
                         </Section>
@@ -1127,14 +1174,18 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 <Line label="Xã/Phường/Đặc khu" value={data.truSo_xa} />
                                 <Line label="Tỉnh/Thành phố trực thuộc trung ương" value={data.truSo_tinh} />
                                 <p>
-                                    Điện thoại: {data.truSo_phone} &nbsp;&nbsp; Số fax: {data.truSo_fax}
+                                    Điện thoại: {data.truSo_phone}
+                                    <InlineField>Số fax: {data.truSo_fax}</InlineField>
                                 </p>
                                 <p>
-                                    Thư điện tử: {data.truSo_email} &nbsp;&nbsp; Website: {data.truSo_website}
+                                    Thư điện tử: {data.truSo_email}
+                                    <InlineField>Website: {data.truSo_website}</InlineField>
                                 </p>
                                 <p>
-                                    Đồng thời thay đổi địa chỉ nhận thông báo thuế:
-                                    <Checkbox checked={isTruthy(data.doiDiaChiNhanThongBaoThue)} />
+                                    <CheckboxOption
+                                        label="Đồng thời thay đổi địa chỉ nhận thông báo thuế:"
+                                        checked={isTruthy(data.doiDiaChiNhanThongBaoThue)}
+                                    />
                                 </p>
                                 <p>Doanh nghiệp nằm trong:</p>
                                 <CheckboxList
@@ -1185,8 +1236,17 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 />
                                 <Line label="Loại ngoại tệ" value={data.vonDieuLe_ngoaiTeDonVi} />
                                 <p>
-                                    Hiển thị thông tin ngoại tệ: Có <Checkbox checked={data.hienThiNgoaiTe === "Có"} />
-                                    &nbsp; Không <Checkbox checked={data.hienThiNgoaiTe !== "Có"} />
+                                    Hiển thị thông tin ngoại tệ:
+                                    <CheckboxOption
+                                        label="Có"
+                                        checked={data.hienThiNgoaiTe === "Có"}
+                                        marginLeft="36pt"
+                                    />
+                                    <CheckboxOption
+                                        label="Không"
+                                        checked={data.hienThiNgoaiTe !== "Có"}
+                                        marginLeft="24pt"
+                                    />
                                 </p>
                                 <Line label="Thời điểm thay đổi vốn" value={formatDate(data.thoiDiemThayDoiVon)} />
                                 <Line label="Hình thức tăng, giảm vốn" value={data.hinhThucTangGiamVon} />
@@ -1268,9 +1328,17 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 />
                                 <Line label="Loại ngoại tệ" value={data.vonDauTu_ngoaiTeDonVi} />
                                 <p>
-                                    Hiển thị thông tin ngoại tệ: Có{" "}
-                                    <Checkbox checked={data.vonDauTu_hienThiNgoaiTe === "Có"} />
-                                    &nbsp; Không <Checkbox checked={data.vonDauTu_hienThiNgoaiTe !== "Có"} />
+                                    Hiển thị thông tin ngoại tệ:
+                                    <CheckboxOption
+                                        label="Có"
+                                        checked={data.vonDauTu_hienThiNgoaiTe === "Có"}
+                                        marginLeft="36pt"
+                                    />
+                                    <CheckboxOption
+                                        label="Không"
+                                        checked={data.vonDauTu_hienThiNgoaiTe !== "Có"}
+                                        marginLeft="24pt"
+                                    />
                                 </p>
                                 <Line
                                     label="Thời điểm thay đổi vốn"
@@ -1727,8 +1795,8 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                                     )}
                                                 />
                                                 <p>
-                                                    Điện thoại: {data.thongBaoThue_phone} &nbsp;&nbsp; Fax:{" "}
-                                                    {data.thongBaoThue_fax}
+                                                    Điện thoại: {data.thongBaoThue_phone}
+                                                    <InlineField>Fax: {data.thongBaoThue_fax}</InlineField>
                                                 </p>
                                                 <Line label="Thư điện tử" value={data.thongBaoThue_email} />
                                             </td>
@@ -1776,27 +1844,22 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                                 </p>
                                             </td>
                                             <td>
-                                                <p
-                                                    style={{
-                                                        margin: 0,
-                                                        display: "grid",
-                                                        gridTemplateColumns: "max-content max-content",
-                                                        gap: "4px 32px",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
-                                                    <i style={{ fontStyle: "normal" }}>
-                                                        Hạch toán độc lập{" "}
-                                                        <Checkbox checked={data.hinhThucHachToan !== "phu_thuoc"} />
-                                                    </i>
-                                                    <i style={{ fontStyle: "normal" }}>
-                                                        Có báo cáo tài chính hợp nhất{" "}
-                                                        <Checkbox checked={data.baoCaoTaiChinhHopNhat === "co"} />
-                                                    </i>
-                                                    <i style={{ fontStyle: "normal" }}>
-                                                        Hạch toán phụ thuộc{" "}
-                                                        <Checkbox checked={data.hinhThucHachToan === "phu_thuoc"} />
-                                                    </i>
+                                                <p style={{ margin: 0 }}>
+                                                    <CheckboxOption
+                                                        label="Hạch toán độc lập"
+                                                        checked={data.hinhThucHachToan !== "phu_thuoc"}
+                                                    />
+                                                    <CheckboxOption
+                                                        label="Có báo cáo tài chính hợp nhất"
+                                                        checked={data.baoCaoTaiChinhHopNhat === "co"}
+                                                        marginLeft="36pt"
+                                                    />
+                                                </p>
+                                                <p style={{ margin: "4px 0 0" }}>
+                                                    <CheckboxOption
+                                                        label="Hạch toán phụ thuộc"
+                                                        checked={data.hinhThucHachToan === "phu_thuoc"}
+                                                    />
                                                 </p>
                                             </td>
                                         </tr>
@@ -1823,7 +1886,9 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                                     }}
                                                 >
                                                     Năm tài chính: áp dụng từ ngày {data.namTaiChinh_tuNgay || "01/01"}
-                                                    đến ngày {data.namTaiChinh_denNgay || "31/12"}
+                                                    <InlineField>
+                                                        đến ngày {data.namTaiChinh_denNgay || "31/12"}
+                                                    </InlineField>
                                                 </p>
                                             </td>
                                         </tr>
@@ -1875,9 +1940,15 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                                         font: "inherit",
                                                     }}
                                                 >
-                                                    Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không?   Có{" "}
-                                                    <Checkbox checked={data.hoatDongDuAn === "co"} />
-                                                    Không <Checkbox checked={data.hoatDongDuAn !== "co"} />
+                                                    Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không?
+                                                </p>
+                                                <p style={{ margin: "4px 0 0" }}>
+                                                    <CheckboxOption label="Có" checked={data.hoatDongDuAn === "co"} />
+                                                    <CheckboxOption
+                                                        label="Không"
+                                                        checked={data.hoatDongDuAn !== "co"}
+                                                        marginLeft="36pt"
+                                                    />
                                                 </p>
                                             </td>
                                         </tr>
@@ -1945,7 +2016,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
 
                 {isMainSelected("C") && (
                     <Section title={getMainOptionLabel("C")}>
-                        <p>
+                        <>
                             <p>
                                 - Thông tin trên Giấy chứng nhận đăng ký doanh nghiệp/Giấy xác nhận về việc thay đổi nội
                                 dung đăng ký doanh nghiệp cấp ngày {formatDate(data.hieuDinh_ngayCapGiay) || ""} là{" "}
@@ -1960,7 +2031,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 nghiệp, Giấy xác nhận về việc thay đổi nội dung đăng ký doanh nghiệp theo đúng thông tin
                                 trong hồ sơ đăng ký doanh nghiệp mà doanh nghiệp đã đăng ký.
                             </p>
-                        </p>
+                        </>
                     </Section>
                 )}
 
@@ -1982,16 +2053,32 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     nghiệp theo quy định của pháp luật và Điều lệ công ty.
                 </p>
 
-                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: 30, marginBottom: 50 }}>
+                <table
+                    className={`${styles.noBorderTable} signature-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        marginTop: 30,
+                        marginBottom: 50,
+                    }}
+                >
                     <tbody>
                         <tr>
-                            <td style={{ width: "50%" }}></td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
-                                <p>
+                            <td className="signature-spacer" style={{ border: "none", width: "50%" }}></td>
+                            <td
+                                className={`${styles.textCenter} signature-cell`}
+                                style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT</strong>
-                                    <br />(<em>Ký và ghi họ tên</em>)
                                 </p>
-                                {data.nguoiKy_thongTin && <p>{data.nguoiKy_thongTin}</p>}
+                                <p style={{ textAlign: "center", margin: 0 }}>
+                                    <em>(Ký và ghi họ tên)</em>
+                                </p>
+                                {data.nguoiKy_thongTin && (
+                                    <p style={{ textAlign: "center", margin: "8px 0 0" }}>{data.nguoiKy_thongTin}</p>
+                                )}
                             </td>
                         </tr>
                     </tbody>

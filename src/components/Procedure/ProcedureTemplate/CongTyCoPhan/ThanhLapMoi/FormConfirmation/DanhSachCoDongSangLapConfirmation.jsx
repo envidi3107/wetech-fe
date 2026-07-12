@@ -3,11 +3,27 @@ import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
+const BASE_COLUMN_WEIGHTS = [3, 7, 6, 4, 9, 4.5, 4.5, 9, 4, 5.5, 4, 4, 5.5];
+const OTHER_SHARE_COLUMN_WEIGHTS = [4, 5.5];
+const TRAILING_COLUMN_WEIGHTS = [7.5, 5.5, 4, 3.5];
+
+function getColumnWidths(otherShareTypeCount) {
+    const weights = [
+        ...BASE_COLUMN_WEIGHTS,
+        ...Array.from({ length: otherShareTypeCount }, () => OTHER_SHARE_COLUMN_WEIGHTS).flat(),
+        ...TRAILING_COLUMN_WEIGHTS,
+    ];
+    const totalWeight = weights.reduce((total, weight) => total + weight, 0);
+
+    return weights.map((weight) => `${((weight / totalWeight) * 100).toFixed(3)}%`);
+}
+
 function DanhSachCoDongSangLapConfirmation({ dataJson }) {
     const rows = dataJson?.coDongList || [];
     const loaiCoPhanKhacList = dataJson?.loaiCoPhanKhacList?.length
         ? dataJson.loaiCoPhanKhacList
         : [dataJson?.loaiCoPhanKhac_ten || "........"];
+    const columnWidths = getColumnWidths(loaiCoPhanKhacList.length);
 
     return (
         <div className={styles.wrapper}>
@@ -24,9 +40,19 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
             <p style={{ marginBottom: "10px", fontWeight: "bold" }}>I. Cổ đông sáng lập là cá nhân</p>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} bordered-table docx-contained-table export-table-font-10`}
-                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+                    className={`${styles.table} ${styles.htmlWideTable} bordered-table docx-contained-table docx-compact-table ultra-wide-table docx-column-grid-table`}
+                    style={{
+                        width: "100%",
+                        minWidth: `${Math.max(1900, columnWidths.length * 100)}px`,
+                        borderCollapse: "collapse",
+                        tableLayout: "fixed",
+                    }}
                 >
+                    <colgroup>
+                        {columnWidths.map((width, index) => (
+                            <col key={index} style={{ width }} />
+                        ))}
+                    </colgroup>
                     <thead>
                         <tr>
                             <th rowSpan={4} className={styles.th}>
@@ -390,7 +416,7 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                                             {row.hoTen}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                                    <td className={styles.td} style={{ textAlign: "center" }}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -450,7 +476,7 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                                             {row.danToc}
                                         </p>
                                     </td>
-                                    <td className={styles.td} style={{ minWidth: 120 }}>
+                                    <td className={styles.td}>
                                         <p
                                             style={{
                                                 margin: 0,
@@ -629,13 +655,11 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                 </p>
             </div>
             <table
-                className="signature-single-table no-border"
+                className="signature-table no-border"
                 style={{
-                    width: "105mm",
+                    width: "100%",
                     borderCollapse: "collapse",
                     border: "none",
-                    marginLeft: "auto",
-                    marginRight: 0,
                     marginTop: "30px",
                     marginBottom: "50px",
                 }}
@@ -643,8 +667,18 @@ function DanhSachCoDongSangLapConfirmation({ dataJson }) {
                 <tbody>
                     <tr>
                         <td
+                            className="signature-spacer"
+                            style={{
+                                width: "auto",
+                                border: "none",
+                                textAlign: "left",
+                                verticalAlign: "top",
+                            }}
+                        ></td>
+                        <td
                             className="signature-cell"
                             style={{
+                                width: "105mm",
                                 border: "none",
                                 textAlign: "center",
                                 verticalAlign: "top",

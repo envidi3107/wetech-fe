@@ -1,44 +1,11 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { generateHtmlString, getDocExportPageMarginsTwips, getDocExportPageSizeTwips } from "@/utils/generateHtmlFile";
+import { generateHtmlString } from "@/utils/generateHtmlFile";
 import { authAxios } from "@/services/axios-instance";
 import styles from "./DeclarationForms.module.css";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { useNotification } from "@/hooks/useNotification";
 
-const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 const DATA_RELOAD_COOLDOWN_SECONDS = 5;
-const DOCX_EXPORT_FONT_SIZE = 26;
-const EXPORT_DOCX_API_URL = process.env.REACT_APP_EXPORT_DOCX_URL || "http://127.0.0.1:3001/api/export-docx";
-
-async function createDocxBlobFromExportServer({ html, filename, options }) {
-    const response = await fetch(EXPORT_DOCX_API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            filename,
-            html,
-            headerHtml: "",
-            footerHtml: "",
-            options,
-        }),
-    });
-
-    if (!response.ok) {
-        let message = "";
-        try {
-            const errorBody = await response.json();
-            message = errorBody?.message || errorBody?.error || "";
-        } catch {
-            message = await response.text();
-        }
-
-        throw new Error(message || `Export DOCX failed with HTTP ${response.status}`);
-    }
-
-    return response.blob();
-}
 
 function getServerErrorMessage(error) {
     const responseData = error?.response?.data;
@@ -134,51 +101,9 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                     title: currentForm.code || "Biểu mẫu",
                     landscape,
                 });
-                const docxHtmlString = generateHtmlString(element, {
-                    title: currentForm.code || "Biểu mẫu",
-                    landscape,
-                    normalizeForWord: true,
-                });
 
                 const htmlBlob = new Blob([htmlString], { type: "text/html; charset=utf-8" });
                 const htmlFile = new File([htmlBlob], filename, { type: "text/html" });
-
-                submitStage = "tạo DOCX";
-
-                const orientation = landscape ? "landscape" : "portrait";
-                const docxDocumentOptions = {
-                    orientation,
-                    pageSize: getDocExportPageSizeTwips(landscape),
-                    margins: getDocExportPageMarginsTwips(landscape),
-                    title: currentForm.code || "Bieu mau",
-                    creator: "Wetech",
-                    lang: "vi-VN",
-                    font: "Times New Roman",
-                    fontSize: DOCX_EXPORT_FONT_SIZE,
-                    complexScriptFontSize: DOCX_EXPORT_FONT_SIZE,
-                    table: {
-                        row: {
-                            cantSplit: false,
-                        },
-                        addSpacingAfter: false,
-                    },
-                    preprocessing: {
-                        skipHTMLMinify: true,
-                    },
-                    imageProcessing: {
-                        svgHandling: "native",
-                        suppressSharpWarning: true,
-                    },
-                };
-                const docxFilename = `${currentForm.code || "form"}.docx`;
-                const docxBlob = await createDocxBlobFromExportServer({
-                    html: docxHtmlString,
-                    filename: docxFilename,
-                    options: docxDocumentOptions,
-                });
-                const docxFile = new File([docxBlob], docxFilename, {
-                    type: DOCX_MIME_TYPE,
-                });
 
                 submitStage = "gửi API xác nhận";
 
@@ -186,7 +111,6 @@ const FormsConfirmation = forwardRef(({ forms, currentFormStep = 0, onStepSubmit
                 const formData = new FormData();
                 formData.append("formId", currentForm.formId);
                 formData.append("htmlFile", htmlFile);
-                formData.append("docxFile", docxFile);
                 formData.append("landscape", landscape);
 
                 await authAxios.post("/api/form-submission/confirm", formData, {

@@ -41,9 +41,10 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
             <h2 className={styles.tableTitle}>DANH SÁCH CHỦ SỞ HỮU HƯỞNG LỢI CỦA DOANH NGHIỆP</h2>
             <div className={styles.tableScrollWrapper}>
                 <table
-                    className={`${styles.table} bordered-table docx-contained-table export-table-font-10`}
+                    className={`${styles.table} ${styles.htmlWideTable} bordered-table docx-contained-table export-table-font-10`}
                     style={{
                         width: "100%",
+                        minWidth: "1500px",
                         borderCollapse: "collapse",
                         tableLayout: "fixed",
                     }}
@@ -175,10 +176,7 @@ function DanhSachCSHHuongLoiConfirmation({ dataJson }) {
                                             {row.hoTen}
                                         </p>
                                     </td>
-                                    <td
-                                        className={styles.td}
-                                        style={getColumnStyle(2, { textAlign: "center", whiteSpace: "nowrap" })}
-                                    >
+                                    <td className={styles.td} style={getColumnStyle(2, { textAlign: "center" })}>
                                         <p
                                             style={{
                                                 margin: 0,

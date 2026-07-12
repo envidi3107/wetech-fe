@@ -41,6 +41,26 @@ function formatUnitValue(value, unit) {
     return `${displayValue} ${unit}`;
 }
 
+function formatTableUnitValue(value, unit) {
+    return parseNumber(value) === 0 ? "0" : formatUnitValue(value, unit);
+}
+
+function InlineField({ children, marginLeft = "36pt" }) {
+    return (
+        <span
+            className={`${styles.inlineField} inlineField`}
+            style={{
+                display: "inline-block",
+                marginLeft,
+                fontWeight: "inherit",
+                fontStyle: "normal",
+            }}
+        >
+            {children}
+        </span>
+    );
+}
+
 function getFullCompanyName(value, prefix = DEFAULT_TNHH_COMPANY_NAME_PREFIX) {
     if (!value) return "";
 
@@ -182,7 +202,7 @@ function MoneySourceTable({ data }) {
                                     font: "inherit",
                                 }}
                             >
-                                {formatUnitValue(data[`${prefix}_soTien`], "VNĐ")}
+                                {formatTableUnitValue(data[`${prefix}_soTien`], "VNĐ")}
                             </p>
                         </td>
                         <td style={{ textAlign: "center" }}>
@@ -194,7 +214,7 @@ function MoneySourceTable({ data }) {
                                     font: "inherit",
                                 }}
                             >
-                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                                {formatTableUnitValue(data[`${prefix}_tyLe`], "%")}
                             </p>
                         </td>
                     </tr>
@@ -308,7 +328,7 @@ function AssetTable({ data }) {
                                     font: "inherit",
                                 }}
                             >
-                                {formatUnitValue(data[`${prefix}_giaTri`], "VNĐ")}
+                                {formatTableUnitValue(data[`${prefix}_giaTri`], "VNĐ")}
                             </p>
                         </td>
                         <td style={{ textAlign: "center" }}>
@@ -320,7 +340,7 @@ function AssetTable({ data }) {
                                     font: "inherit",
                                 }}
                             >
-                                {formatUnitValue(data[`${prefix}_tyLe`], "%")}
+                                {formatTableUnitValue(data[`${prefix}_tyLe`], "%")}
                             </p>
                         </td>
                     </tr>
@@ -514,8 +534,8 @@ function RepresentativeChangeSection({ data }) {
             <p>Chức danh: {data.qdNguoiDaiDien_chucDanh || "…"}</p>
             <p>Địa chỉ liên lạc: {data.qdNguoiDaiDien_diaChi || "…"}</p>
             <p>
-                Điện thoại: {data.qdNguoiDaiDien_phone || "…"} &nbsp;&nbsp; Thư điện tử:{" "}
-                {data.qdNguoiDaiDien_email || "…"}
+                Điện thoại: {data.qdNguoiDaiDien_phone || "…"}
+                <InlineField>Thư điện tử: {data.qdNguoiDaiDien_email || "…"}</InlineField>
             </p>
         </>
     );
@@ -534,29 +554,46 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
 
     return (
         <div className={styles.container}>
-            <table className={styles.noBorderTable} style={{ width: "100%", marginBottom: 16 }}>
+            <table
+                className={`${styles.noBorderTable} no-border`}
+                style={{ width: "100%", borderCollapse: "collapse", border: "none", marginBottom: 16 }}
+            >
                 <tbody>
                     <tr>
-                        <td className={styles.textCenter} style={{ width: "42%", verticalAlign: "top" }}>
-                            <p>
+                        <td
+                            className={styles.textCenter}
+                            style={{ border: "none", width: "42%", textAlign: "center", verticalAlign: "top" }}
+                        >
+                            <p style={{ textAlign: "center" }}>
                                 <strong>{upperCompanyName || "CÔNG TY TNHH …"}</strong>
                             </p>
                             <p style={{ margin: 0, lineHeight: 0.5, marginTop: "-10px" }}>-------</p>
                         </td>
-                        <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
-                            <p>
-                                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong> <br />
+                        <td
+                            className={styles.textCenter}
+                            style={{ border: "none", textAlign: "center", verticalAlign: "top" }}
+                        >
+                            <p style={{ textAlign: "center", marginBottom: 0 }}>
+                                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
+                            </p>
+                            <p style={{ textAlign: "center", marginTop: 0 }}>
                                 <strong>Độc lập - Tự do - Hạnh phúc</strong>
                             </p>
                             <p style={{ margin: 0, lineHeight: 0.5, marginTop: "-10px" }}>---------------</p>
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.textCenter} style={{ verticalAlign: "bottom" }}>
-                            <p>Số: 01/2026/QĐ</p>
+                        <td
+                            className={styles.textCenter}
+                            style={{ border: "none", textAlign: "center", verticalAlign: "bottom" }}
+                        >
+                            <p style={{ textAlign: "center" }}>Số: 01/2026/QĐ</p>
                         </td>
-                        <td className={styles.textCenter} style={{ verticalAlign: "bottom" }}>
-                            <p style={{ fontStyle: "italic" }}>
+                        <td
+                            className={styles.textCenter}
+                            style={{ border: "none", textAlign: "center", verticalAlign: "bottom" }}
+                        >
+                            <p style={{ textAlign: "center", fontStyle: "italic" }}>
                                 {formatDecisionDate(data.qdDiaDiemLap, data.qdNgayQuyetDinh)}
                             </p>
                         </td>
@@ -632,10 +669,12 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                         <p>Xã/Phường/Đặc khu: {data.truSo_xa || "…"}</p>
                         <p>Tỉnh/Thành phố trực thuộc trung ương: {data.truSo_tinh || "…"}</p>
                         <p>
-                            Điện thoại: {data.truSo_phone || "…"} &nbsp;&nbsp; Số fax: {data.truSo_fax || "…"}
+                            Điện thoại: {data.truSo_phone || "…"}
+                            <InlineField>Số fax: {data.truSo_fax || "…"}</InlineField>
                         </p>
                         <p>
-                            Thư điện tử: {data.truSo_email || "…"} &nbsp;&nbsp; Website: {data.truSo_website || "…"}
+                            Thư điện tử: {data.truSo_email || "…"}
+                            <InlineField>Website: {data.truSo_website || "…"}</InlineField>
                         </p>
                     </>
                 )}
@@ -657,10 +696,28 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                     <strong>Điều 5: </strong>Quyết định này có hiệu lực kể từ ngày ký.
                 </p>
 
-                <table className={styles.noBorderTable} style={{ width: "100%", marginTop: 24 }}>
+                <table
+                    className={`${styles.noBorderTable} signature-recipients-table no-border`}
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        tableLayout: "fixed",
+                        marginTop: 24,
+                    }}
+                >
                     <tbody>
                         <tr>
-                            <td style={{ width: "48%", verticalAlign: "top" }}>
+                            <td
+                                className="signature-recipients-cell"
+                                style={{
+                                    border: "none",
+                                    width: "45%",
+                                    maxWidth: "45%",
+                                    textAlign: "left",
+                                    verticalAlign: "top",
+                                }}
+                            >
                                 <p>
                                     <strong>Nơi nhận:</strong>
                                 </p>
@@ -668,14 +725,23 @@ function QuyetDinhHoiDongThanhVienConfirmation({ dataJson }) {
                                 <p>- Phòng ĐKKD - Sở TC (để đăng ký);</p>
                                 <p>- Lưu.</p>
                             </td>
-                            <td className={styles.textCenter} style={{ verticalAlign: "top" }}>
-                                <p>
+                            <td
+                                className={`${styles.textCenter} signature-cell signature-recipients-signature-cell`}
+                                style={{
+                                    border: "none",
+                                    width: "55%",
+                                    maxWidth: "55%",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                }}
+                            >
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>TM. HỘI ĐỒNG THÀNH VIÊN</strong>
                                 </p>
-                                <p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <strong>CHỦ TỊCH HỘI ĐỒNG THÀNH VIÊN</strong>
                                 </p>
-                                <p>
+                                <p style={{ textAlign: "center", margin: 0 }}>
                                     <em>(ký, ghi rõ họ tên)</em>
                                 </p>
                             </td>
