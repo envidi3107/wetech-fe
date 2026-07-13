@@ -14,6 +14,9 @@ const PaymentQRCard = forwardRef(function PaymentQRCard(
     const [isSuccess, setIsSuccess] = useState(false);
     const [checking, setChecking] = useState(false);
 
+    // const stk = "0989466992";
+    const stk = "0345798572";
+
     useImperativeHandle(ref, () => ({
         triggerSuccess() {
             setIsSuccess(true);
@@ -27,7 +30,7 @@ const PaymentQRCard = forwardRef(function PaymentQRCard(
 
     const minutes = Math.floor((timeLeft || 0) / 60);
     const seconds = (timeLeft || 0) % 60;
-    const qrUrl = `https://qr.sepay.vn/img?acc=0918297371&bank=MBBank&amount=${amount}&des=${code}&template=compact`;
+    const qrUrl = `https://qr.sepay.vn/img?acc=${stk}&bank=MBBank&amount=${amount}&des=${code}&template=compact`;
 
     const handleCheck = async () => {
         if (!onCheckTransaction || checking) return;
@@ -59,8 +62,8 @@ const PaymentQRCard = forwardRef(function PaymentQRCard(
                             <tr className={styles["info-item-qr-page"]}>
                                 <td>Số điện thoại</td>
                                 <td>
-                                    <Tooltip text="Nhấn để sao chép" copyValue="0989466992">
-                                        0989466992
+                                    <Tooltip text="Nhấn để sao chép" copyValue={stk}>
+                                        {stk}
                                     </Tooltip>
                                 </td>
                             </tr>
@@ -112,7 +115,7 @@ const PaymentQRCard = forwardRef(function PaymentQRCard(
                     <h3>Quét mã QR thanh toán trực tiếp</h3>
                     <div className={styles["qr-box"]}>
                         <img src={qrUrl} alt="QR Code" />
-                        <p>Lê Thị Lan - 0989466992</p>
+                        <p>Lê Thị Lan - {stk}</p>
                     </div>
                     <p className={styles["qr-note"]}>Mở ứng dụng ngân hàng để Quét Mã QR</p>
                     <button className={styles["check-transaction-btn"]} onClick={handleCheck} disabled={checking}>

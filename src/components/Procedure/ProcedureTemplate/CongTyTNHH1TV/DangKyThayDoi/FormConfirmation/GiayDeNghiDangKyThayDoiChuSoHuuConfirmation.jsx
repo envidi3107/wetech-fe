@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import CheckboxChoiceTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CheckboxChoiceTable/CheckboxChoiceTable";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import { formatDate } from "@/utils/dateTimeUtils";
 import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
@@ -48,6 +49,22 @@ function Line({ label, value }) {
     );
 }
 
+function InlineField({ children, marginLeft = "36pt" }) {
+    return (
+        <span
+            className={`${styles.inlineField} inlineField`}
+            style={{
+                display: "inline-block",
+                marginLeft,
+                fontWeight: "inherit",
+                fontStyle: "normal",
+            }}
+        >
+            {children}
+        </span>
+    );
+}
+
 function isEmptyValue(value) {
     return value === undefined || value === null || String(value).trim() === "";
 }
@@ -89,7 +106,7 @@ function IndividualOwner({ data }) {
             <AddressFields soNha={data.chuSoHuu_soNha} xa={data.chuSoHuu_xa} tinh={data.chuSoHuu_tinh} />
             <p>
                 Điện thoại: {data.chuSoHuu_phone || ""}
-                &nbsp;&nbsp; Thư điện tử: {data.chuSoHuu_email || ""}
+                <InlineField>Thư điện tử: {data.chuSoHuu_email || ""}</InlineField>
             </p>
             <p style={{ fontStyle: "italic" }}>
                 Trường hợp không có số định danh cá nhân hoặc việc kết nối dữ liệu bị gián đoạn thì kê khai các thông
@@ -97,7 +114,7 @@ function IndividualOwner({ data }) {
             </p>
             <p>
                 Dân tộc: {data.chuSoHuu_danToc || ""}
-                &nbsp;&nbsp; Quốc tịch: {data.chuSoHuu_quocTich || ""}
+                <InlineField>Quốc tịch: {data.chuSoHuu_quocTich || ""}</InlineField>
             </p>
             <Line
                 label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
@@ -105,7 +122,7 @@ function IndividualOwner({ data }) {
             />
             <p>
                 Ngày cấp: {formatDate(data.chuSoHuu_ngayCapHoChieu)}
-                &nbsp;&nbsp; Nơi cấp: {data.chuSoHuu_noiCapHoChieu || ""}
+                <InlineField>Nơi cấp: {data.chuSoHuu_noiCapHoChieu || ""}</InlineField>
             </p>
             <p>Nơi thường trú:</p>
             <AddressFields
@@ -121,7 +138,7 @@ function IndividualOwner({ data }) {
             <Line label="Mã số dự án" value={data.chuSoHuu_maSoDuAn} />
             <p>
                 Ngày cấp: {formatDate(data.chuSoHuu_ngayCapDuAn)}
-                &nbsp;&nbsp; Cơ quan cấp: {data.chuSoHuu_coQuanCapDuAn || ""}
+                <InlineField>Cơ quan cấp: {data.chuSoHuu_coQuanCapDuAn || ""}</InlineField>
             </p>
         </>
     );
@@ -142,7 +159,7 @@ function OrganizationOwner({ data }) {
             <Line label="Mã số doanh nghiệp/Số Quyết định thành lập" value={data.chuSoHuuToChuc_maSo} />
             <p>
                 Ngày cấp: {formatDate(data.chuSoHuuToChuc_ngayCap)}
-                &nbsp;&nbsp; Nơi cấp: {data.chuSoHuuToChuc_noiCap || ""}
+                <InlineField>Nơi cấp: {data.chuSoHuuToChuc_noiCap || ""}</InlineField>
             </p>
             <p>Địa chỉ trụ sở chính:</p>
             <AddressFields
@@ -152,11 +169,11 @@ function OrganizationOwner({ data }) {
             />
             <p>
                 Điện thoại: {data.chuSoHuuToChuc_phone || ""}
-                &nbsp;&nbsp; Số fax: {data.chuSoHuuToChuc_fax || ""}
+                <InlineField>Số fax: {data.chuSoHuuToChuc_fax || ""}</InlineField>
             </p>
             <p>
                 Thư điện tử: {data.chuSoHuuToChuc_email || ""}
-                &nbsp;&nbsp; Website: {data.chuSoHuuToChuc_website || ""}
+                <InlineField>Website: {data.chuSoHuuToChuc_website || ""}</InlineField>
             </p>
             <p>
                 <strong>Mô hình tổ chức công ty:</strong>
@@ -542,10 +559,15 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
                 <p>
                     Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới, xã/phường ven biển
-                    hoặc khu vực khác có ảnh hưởng đến quốc phòng, an ninh: &nbsp; Có{" "}
-                    <Checkbox checked={data.anNinhQuocPhong === "Có"} />
-                    &nbsp; Không <Checkbox checked={data.anNinhQuocPhong !== "Có"} />
+                    hoặc khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
                 </p>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Có", checked: data.anNinhQuocPhong === "Có" },
+                        { label: "Không", checked: data.anNinhQuocPhong !== "Có" },
+                    ]}
+                />
 
                 <p style={{ marginTop: 16 }}>
                     <strong>
@@ -575,12 +597,13 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                         border: "none",
                         marginTop: 30,
                         marginBottom: 50,
+                        tableLayout: "fixed",
                     }}
                 >
                     <tbody>
                         <tr>
                             <td
-                                className={`${styles.textCenter} signature-cell`}
+                                className={`${styles.textCenter} text-center`}
                                 style={{ border: "none", width: "50%", textAlign: "center", verticalAlign: "top" }}
                             >
                                 <p style={{ textAlign: "center", margin: 0 }}>
@@ -591,7 +614,7 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                                 </p>
                             </td>
                             <td
-                                className={`${styles.textCenter} signature-cell`}
+                                className={`${styles.textCenter} text-center`}
                                 style={{ border: "none", width: "50%", textAlign: "center", verticalAlign: "top" }}
                             >
                                 <p style={{ textAlign: "center", margin: 0 }}>
