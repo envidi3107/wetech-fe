@@ -479,7 +479,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Tên công ty viết bằng tiếng Việt (<em>ghi bằng chữ in hoa</em>): {companyNamePrefix}{" "}
                 {dataJson.tenCongTyVN?.toUpperCase() || "................................................"}
             </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
+            <p style={{ textAlign: "left", marginTop: "6px", marginBottom: "6px" }}>
                 Tên công ty viết bằng tiếng nước ngoài (<em>nếu có</em>):{" "}
                 {dataJson.tenCongTyEN || "................................................"}
                 <InlineField>
@@ -498,13 +498,13 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 {addressToString(dataJson.truSo_soNha, dataJson.truSo_xa, dataJson.truSo_tinh) ||
                     "........................................................................"}
             </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
+            <p style={{ textAlign: "left", marginTop: "6px", marginBottom: "6px" }}>
                 Điện thoại: {dataJson.truSo_phone || "..................."}
                 <InlineField>
                     Số fax (<em>nếu có</em>): {dataJson.truSo_fax || "..................."}
                 </InlineField>
             </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
+            <p style={{ textAlign: "left", marginTop: "6px", marginBottom: "6px" }}>
                 Thư điện tử (<em>nếu có</em>): {dataJson.truSo_email || "..................."}
                 <InlineField>
                     Website (<em>nếu có</em>): {dataJson.truSo_website || "..................."}
@@ -670,7 +670,7 @@ export default function DieuLeCongTyConfirmation({ dataJson }) {
                 Họ và tên người đại diện theo pháp luật:{" "}
                 {dataJson.nguoiDaiDien_hoTen?.toUpperCase() || "........................................."}
             </p>
-            <p style={{ textAlign: "justify", marginTop: "6px", marginBottom: "6px" }}>
+            <p style={{ textAlign: "left", marginTop: "6px", marginBottom: "6px" }}>
                 Giới tính: {dataJson.nguoiDaiDien_gioiTinh || ".........."}
                 <InlineField marginLeft="50pt">Sinh ngày: {formatDate(dataJson.nguoiDaiDien_ngaySinh) || "....................."}</InlineField>
                 <InlineField marginLeft="50pt">Dân tộc: {dataJson.nguoiDaiDien_danToc || "........"}</InlineField>

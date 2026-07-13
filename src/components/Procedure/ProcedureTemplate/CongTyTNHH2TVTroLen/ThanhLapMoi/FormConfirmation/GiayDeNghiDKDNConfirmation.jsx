@@ -1746,7 +1746,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                 >
                                     <tbody>
                                         <tr>
-                                            <td style={{ width: "200px" }}>
+                                            <td style={{ width: "240px" }}>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -1755,18 +1755,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                         font: "inherit",
                                                     }}
                                                 >
-                                                    Hạch toán độc lập
-                                                </p>
-                                            </td>
-                                            <td style={{ width: "40px", textAlign: "center" }}>
-                                                <p
-                                                    style={{
-                                                        margin: 0,
-                                                        lineHeight: "inherit",
-                                                        textAlign: "inherit",
-                                                        font: "inherit",
-                                                    }}
-                                                >
+                                                    Hạch toán độc lập{" "}
                                                     <Checkbox checked={hinhThucHachToan === "doc_lap"} />
                                                 </p>
                                             </td>
@@ -1794,18 +1783,7 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                                                         font: "inherit",
                                                     }}
                                                 >
-                                                    Hạch toán phụ thuộc
-                                                </p>
-                                            </td>
-                                            <td style={{ textAlign: "center" }}>
-                                                <p
-                                                    style={{
-                                                        margin: 0,
-                                                        lineHeight: "inherit",
-                                                        textAlign: "inherit",
-                                                        font: "inherit",
-                                                    }}
-                                                >
+                                                    Hạch toán phụ thuộc{" "}
                                                     <Checkbox checked={hinhThucHachToan === "phu_thuoc"} />
                                                 </p>
                                             </td>

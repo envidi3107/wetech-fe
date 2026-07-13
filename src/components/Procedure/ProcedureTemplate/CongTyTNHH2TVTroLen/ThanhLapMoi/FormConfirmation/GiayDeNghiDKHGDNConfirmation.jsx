@@ -3,7 +3,8 @@ import { formatDate } from "@/utils/dateTimeUtils";
 
 const FONT_FAMILY = "'Times New Roman', Times, serif";
 const DOCUMENT_FONT_SIZE = "13pt";
-const DEFAULT_TABLE_FONT_SIZE = "13pt";
+const DEFAULT_TABLE_FONT_SIZE = "var(--procedure-confirmation-table-font-size, 13pt)";
+const HOUSEHOLD_MEMBER_TABLE_FONT_SIZE = "12pt";
 const DEFAULT_TABLE_LINE_HEIGHT = 1.25;
 
 const getTableTextStyle = ({
@@ -599,7 +600,13 @@ export default function GiayDeNghiDKHGDNConfirmation({ dataJson }) {
                 </strong>
             </p>
             <div style={inlineStyles.tableContainer}>
-                <table className="bordered-table" style={inlineStyles.table}>
+                <table
+                    className="bordered-table docx-contained-table export-table-font-10"
+                    style={mergeStyles(inlineStyles.table, {
+                        "--procedure-confirmation-table-font-size": HOUSEHOLD_MEMBER_TABLE_FONT_SIZE,
+                        tableLayout: "fixed",
+                    })}
+                >
                     <thead>
                         <tr>
                             <Th style={{ width: "30px" }}>STT</Th>

@@ -4,7 +4,7 @@ import { formatDate } from "@/utils/dateTimeUtils";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 
-const MEMBER_COLUMN_WIDTHS = ["4%", "10%", "9%", "5%", "12%", "6%", "5%", "13%", "8%", "5%", "8%", "6%", "5%", "5%"];
+const MEMBER_COLUMN_WIDTHS = ["4%", "10%", "9%", "5%", "12%", "6%", "5%", "13%", "10%", "5%", "8%", "6%", "5%", "5%"];
 
 const getColumnStyle = (columnIndex, style = {}) => ({
     width: MEMBER_COLUMN_WIDTHS[columnIndex],
