@@ -14,8 +14,8 @@ const PaymentQRCard = forwardRef(function PaymentQRCard(
     const [isSuccess, setIsSuccess] = useState(false);
     const [checking, setChecking] = useState(false);
 
-    // const stk = "0989466992";
-    const stk = "0345798572";
+    const stk = "0989466992";
+    // const stk = "0345798572";
 
     useImperativeHandle(ref, () => ({
         triggerSuccess() {
