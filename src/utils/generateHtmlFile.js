@@ -10,7 +10,7 @@ const PDF_LARGE_DOCUMENT_FONT_SIZE = "16pt";
 const PDF_LARGE_TITLE_FONT_SIZE = "18pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
 const WORD_TABLE_FONT_SIZE = "13pt";
-const WORD_COMPACT_TABLE_FONT_SIZE = "11pt";
+const WORD_COMPACT_TABLE_FONT_SIZE = "12pt";
 const EXPORT_TABLE_FONT_10_SIZE = "12pt";
 const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
@@ -112,19 +112,19 @@ function getWordExportFontInlineStyle(node) {
     const fontSize = isCheckboxSymbol
         ? WORD_CHECKBOX_FONT_SIZE
         : isExportTableFont10Content
-          ? EXPORT_TABLE_FONT_10_SIZE
-          : isCompactTableContent
-            ? WORD_COMPACT_TABLE_FONT_SIZE
-            : isTableContent
-              ? WORD_TABLE_FONT_SIZE
-              : WORD_DOCUMENT_FONT_SIZE;
+            ? EXPORT_TABLE_FONT_10_SIZE
+            : isCompactTableContent
+                ? WORD_COMPACT_TABLE_FONT_SIZE
+                : isTableContent
+                    ? WORD_TABLE_FONT_SIZE
+                    : WORD_DOCUMENT_FONT_SIZE;
     const lineHeight = isExportTableFont10Content
         ? EXPORT_TABLE_FONT_10_LINE_HEIGHT
         : isCompactTableContent
-          ? COMPACT_TABLE_LINE_HEIGHT
-          : isTableContent
-            ? TABLE_LINE_HEIGHT
-            : DOCUMENT_LINE_HEIGHT;
+            ? COMPACT_TABLE_LINE_HEIGHT
+            : isTableContent
+                ? TABLE_LINE_HEIGHT
+                : DOCUMENT_LINE_HEIGHT;
 
     return [
         `font-family: ${WORD_EXPORT_FONT_FAMILY}`,
@@ -319,11 +319,12 @@ function markSignatureElements(root) {
         if (!isSignatureText(table.textContent)) return;
 
         const className = table.getAttribute("class") || "";
+        const configuredSignatureWidth = table.getAttribute("data-export-signature-width")?.trim();
         const usesRecipientSignatureColumns = /signature-recipients-table/i.test(className);
         const usesEvenSignatureColumns = /signature-even-table/i.test(className);
         const usesFixedSignatureColumns = /signature-table/i.test(className);
         const spacerWidth = usesFixedSignatureColumns ? "auto" : "auto";
-        const signatureCellWidth = usesFixedSignatureColumns ? signatureWidth : signatureWidth;
+        const signatureCellWidth = configuredSignatureWidth || signatureWidth;
 
         table.setAttribute("data-export-signature-table", "");
 
@@ -369,7 +370,7 @@ function markSignatureElements(root) {
         appendInlineStyle(
             table,
             /signature-single-table/i.test(className)
-                ? `width: ${signatureWidth} !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important`
+                ? `width: ${signatureCellWidth} !important; margin-left: auto !important; margin-right: 0 !important; table-layout: auto !important`
                 : "width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; table-layout: fixed !important",
         );
 
@@ -690,8 +691,7 @@ export function generateHtmlString(element, options = {}) {
       --procedure-confirmation-checkbox-font-size: ${WORD_CHECKBOX_FONT_SIZE};
     }
 
-    ${
-        normalizeForWord
+    ${normalizeForWord
             ? ""
             : `
     @page {
@@ -704,7 +704,7 @@ export function generateHtmlString(element, options = {}) {
       margin: ${landscapePageMarginCss};
     }
     `
-    }
+        }
 
     html, body {
       margin: 0;

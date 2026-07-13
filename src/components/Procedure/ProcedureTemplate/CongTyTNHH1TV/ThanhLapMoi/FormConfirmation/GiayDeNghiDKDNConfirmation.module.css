@@ -185,6 +185,26 @@ h3.docTitle {
     line-height: var(--procedure-confirmation-table-line-height, 1.25) !important;
 }
 
+.content table.compactPdfTable,
+.content table.compactPdfTable th,
+.content table.compactPdfTable td,
+.content table.compactPdfTable p,
+.content table.compactPdfTable span,
+.content table.compactPdfTable strong,
+.content table.compactPdfTable em,
+.content table.compactPdfTable b,
+.content table.compactPdfTable i {
+    font-size: 12pt !important;
+    line-height: 1.2 !important;
+}
+
+.content table.compactPdfTable th,
+.content table.compactPdfTable td {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
+
 .content table.regularLineHeightTable,
 .content table.regularLineHeightTable th,
 .content table.regularLineHeightTable td,

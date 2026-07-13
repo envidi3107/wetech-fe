@@ -3,13 +3,11 @@ import { formatDate } from "@/utils/dateTimeUtils";
 
 const FONT_FAMILY = "'Times New Roman', Times, serif";
 const DOCUMENT_FONT_SIZE = "13pt";
-const DEFAULT_TABLE_FONT_SIZE = "13pt";
+const DEFAULT_TABLE_FONT_SIZE = "var(--procedure-confirmation-table-font-size, 13pt)";
+const HOUSEHOLD_MEMBER_TABLE_FONT_SIZE = "12pt";
 const DEFAULT_TABLE_LINE_HEIGHT = 1.25;
 
-const getTableTextStyle = ({
-    fontSize = DEFAULT_TABLE_FONT_SIZE,
-    lineHeight = DEFAULT_TABLE_LINE_HEIGHT,
-} = {}) => ({
+const getTableTextStyle = ({ fontSize = DEFAULT_TABLE_FONT_SIZE, lineHeight = DEFAULT_TABLE_LINE_HEIGHT } = {}) => ({
     fontFamily: FONT_FAMILY,
     fontSize,
     lineHeight,
@@ -203,8 +201,11 @@ const inlineStyles = {
     checkboxSymbol: {
         ...textStyle,
         display: "inline-block",
-        fontSize: "16pt",
+        width: "23pt",
+        minWidth: "23pt",
+        fontSize: "20pt",
         marginRight: "5px",
+        textAlign: "center",
         verticalAlign: "middle",
     },
     closingText: {
@@ -287,7 +288,11 @@ function Th({ children, style, ...props }) {
 
 function Td({ children, style, center = false, raw = false, ...props }) {
     return (
-        <td {...props} className={center ? "text-center" : undefined} style={mergeStyles(inlineStyles.td, center && inlineStyles.tdCenter, style)}>
+        <td
+            {...props}
+            className={center ? "text-center" : undefined}
+            style={mergeStyles(inlineStyles.td, center && inlineStyles.tdCenter, style)}
+        >
             {raw ? (
                 children
             ) : (
@@ -402,7 +407,10 @@ export default function GiayDeNghi({ dataJson }) {
             <h1 className="text-center" style={mergeStyles(inlineStyles.docTitle, { textAlign: "center" })}>
                 GIẤY ĐỀ NGHỊ ĐĂNG KÝ HỘ KINH DOANH
             </h1>
-            <p className="text-center title-recipient" style={mergeStyles(inlineStyles.centerLine, { textAlign: "center", lineHeight: 1.5 })}>
+            <p
+                className="text-center title-recipient"
+                style={mergeStyles(inlineStyles.centerLine, { textAlign: "center", lineHeight: 1.5 })}
+            >
                 Kính gửi: {kinhGui}
             </p>
             <p style={inlineStyles.infoLine}>
@@ -419,8 +427,8 @@ export default function GiayDeNghi({ dataJson }) {
             </div>
             <p style={inlineStyles.italicParagraph}>
                 <em>
-                    Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về dân
-                    cư bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
+                    Trường hợp việc kết nối giữa Cơ sở dữ liệu về đăng ký hộ kinh doanh với Cơ sở dữ liệu quốc gia về
+                    dân cư bị gián đoạn thì đề nghị kê khai thêm các thông tin cá nhân dưới đây:
                 </em>
             </p>
             <table className="single-border-table" style={inlineStyles.singleBorderTable}>
@@ -428,11 +436,18 @@ export default function GiayDeNghi({ dataJson }) {
                     <tr>
                         <td className="single-border-cell" style={inlineStyles.singleBorderCell}>
                             <p style={inlineStyles.infoLine}>
-                                <span style={mergeStyles(inlineStyles.tableSpan, { display: "inline-block", minWidth: "30mm" })}>
+                                <span
+                                    style={mergeStyles(inlineStyles.tableSpan, {
+                                        display: "inline-block",
+                                        minWidth: "30mm",
+                                    })}
+                                >
                                     Dân tộc: {nguoiDaiDien_danToc || "Kinh"}
                                 </span>
                                 {"      "}
-                                <span style={inlineStyles.tableSpan}>Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}</span>
+                                <span style={inlineStyles.tableSpan}>
+                                    Quốc tịch: {nguoiDaiDien_quocTich || "Việt Nam"}
+                                </span>
                             </p>
 
                             <p style={inlineStyles.infoLine}>Nơi thường trú:</p>
@@ -599,7 +614,13 @@ export default function GiayDeNghi({ dataJson }) {
                 </strong>
             </p>
             <div style={inlineStyles.tableContainer}>
-                <table className="bordered-table" style={inlineStyles.table}>
+                <table
+                    className="bordered-table docx-contained-table export-table-font-10"
+                    style={mergeStyles(inlineStyles.table, {
+                        "--procedure-confirmation-table-font-size": HOUSEHOLD_MEMBER_TABLE_FONT_SIZE,
+                        tableLayout: "fixed",
+                    })}
+                >
                     <thead>
                         <tr>
                             <Th style={{ width: "30px" }}>STT</Th>
@@ -685,14 +706,31 @@ export default function GiayDeNghi({ dataJson }) {
                     đăng ký trên.
                 </p>
             </div>
-            <table className="signature-single-table signature-table no-border" style={mergeStyles(inlineStyles.signatureTable, { width: "105mm", marginLeft: "auto", marginRight: "0" })}>
+            <table
+                className="signature-table no-border"
+                data-export-signature-width="80mm"
+                style={inlineStyles.signatureTable}
+            >
                 <tbody>
                     <tr>
-                        <td style={mergeStyles(inlineStyles.signatureCell, { width: "100%", maxWidth: "none" })}>
-                            <p className="text-center" style={mergeStyles(inlineStyles.signatureTitle, { textAlign: "center" })}>
+                        <td className="signature-spacer" style={inlineStyles.signatureSpacer}></td>
+                        <td
+                            className="signature-cell"
+                            style={mergeStyles(inlineStyles.signatureCell, {
+                                width: "80mm",
+                                maxWidth: "80mm",
+                            })}
+                        >
+                            <p
+                                className="text-center"
+                                style={mergeStyles(inlineStyles.signatureTitle, { textAlign: "center" })}
+                            >
                                 <strong>CHỦ HỘ KINH DOANH</strong>
                             </p>
-                            <p className="text-center" style={mergeStyles(inlineStyles.signatureNote, { textAlign: "center" })}>
+                            <p
+                                className="text-center"
+                                style={mergeStyles(inlineStyles.signatureNote, { textAlign: "center" })}
+                            >
                                 <em>(Ký và ghi họ tên)</em>
                             </p>
                         </td>

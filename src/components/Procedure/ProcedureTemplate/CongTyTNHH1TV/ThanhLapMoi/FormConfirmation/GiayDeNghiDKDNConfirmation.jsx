@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./GiayDeNghiDKDNConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import CheckboxChoiceTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CheckboxChoiceTable/CheckboxChoiceTable";
 import { formatDate } from "@/utils/dateTimeUtils";
 import {
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
@@ -658,17 +659,18 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 </table>
                 <p style={{ marginTop: "8px" }}>
                     - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
-                    biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh: Có
-                    <Checkbox checked={truSo_anNinhQuocPhong === "Có"} />
-                    <b
-                        style={{
-                            marginLeft: "20px",
-                            fontWeight: "inherit",
-                            fontStyle: "normal",
-                        }}
-                    ></b>
-                    Không <Checkbox checked={truSo_anNinhQuocPhong === "Không" || !truSo_anNinhQuocPhong} />
+                    biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
                 </p>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Có", checked: truSo_anNinhQuocPhong === "Có" },
+                        {
+                            label: "Không",
+                            checked: truSo_anNinhQuocPhong === "Không" || !truSo_anNinhQuocPhong,
+                        },
+                    ]}
+                />
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>4. Ngành, nghề kinh doanh </strong>(
@@ -925,39 +927,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                     Có hiển thị thông tin về giá trị tương đương theo đơn vị tiền tệ nước ngoài trên Giấy chứng nhận
                     đăng ký doanh nghiệp hay không?
                 </p>
-                <table
-                    className="no-border docx-contained-table docx-choice-table"
-                    style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", marginTop: "2px" }}
-                >
-                    <tbody>
-                        <tr>
-                            <td style={{ border: "none", width: "20%" }}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Có <Checkbox checked={false} />
-                                </p>
-                            </td>
-                            <td style={{ border: "none", width: "80%" }}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Không <Checkbox checked={true} />
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Có", checked: false },
+                        { label: "Không", checked: true },
+                    ]}
+                />
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>7. Nguồn vốn điều lệ:</strong>
@@ -1949,39 +1925,13 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                             </td>
                             <td>
                                 <p>Hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M:</p>
-                                <table
-                                    className="no-border docx-contained-table docx-choice-table"
-                                    style={{ width: "100%", marginTop: "4px", tableLayout: "fixed", borderCollapse: "collapse" }}
-                                >
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ width: "50%", border: "none" }}>
-                                                <p
-                                                    style={{
-                                                        margin: 0,
-                                                        lineHeight: "inherit",
-                                                        textAlign: "inherit",
-                                                        font: "inherit",
-                                                    }}
-                                                >
-                                                    Có <Checkbox checked={hoatDongDuAn === "co"} />
-                                                </p>
-                                            </td>
-                                            <td style={{ width: "50%", border: "none" }}>
-                                                <p
-                                                    style={{
-                                                        margin: 0,
-                                                        lineHeight: "inherit",
-                                                        textAlign: "inherit",
-                                                        font: "inherit",
-                                                    }}
-                                                >
-                                                    Không <Checkbox checked={hoatDongDuAn === "khong"} />
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <CheckboxChoiceTable
+                                    CheckboxComponent={Checkbox}
+                                    options={[
+                                        { label: "Có", checked: hoatDongDuAn === "co" },
+                                        { label: "Không", checked: hoatDongDuAn === "khong" },
+                                    ]}
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -2125,88 +2075,26 @@ function GiayDeNghiDKDNConfirmation({ dataJson }) {
                 <p>
                     Phương thức đóng bảo hiểm xã hội (<em>chọn 1 trong 3 phương thức</em>):
                 </p>
-                <table className="no-border" style={{ width: "100%", marginTop: "8px" }}>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    <Checkbox checked={phuongThucDongBHXH === "hang_thang"} />
-                                    Hàng tháng
-                                </p>
-                            </td>
-                            <td>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    <Checkbox checked={phuongThucDongBHXH === "3_thang"} />
-                                    03 tháng một lần
-                                </p>
-                            </td>
-                            <td>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    <Checkbox checked={phuongThucDongBHXH === "6_thang"} />
-                                    06 tháng một lần
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Hàng tháng", checked: phuongThucDongBHXH === "hang_thang" },
+                        { label: "03 tháng một lần", checked: phuongThucDongBHXH === "3_thang" },
+                        { label: "06 tháng một lần", checked: phuongThucDongBHXH === "6_thang" },
+                    ]}
+                />
 
                 <p style={{ marginTop: "16px" }}>
                     <strong>12. Thông tin về chủ sở hữu hưởng lợi của doanh nghiệp:</strong>
                 </p>
                 <p>Doanh nghiệp có chủ sở hữu hưởng lợi không?</p>
-                <table className="no-border" style={{ width: "100%", maxWidth: "360px", marginTop: "8px" }}>
-                    <tbody>
-                        <tr>
-                            <td style={{ width: "50%" }}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Có
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "co"} />
-                                </p>
-                            </td>
-                            <td style={{ width: "50%" }}>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        lineHeight: "inherit",
-                                        textAlign: "inherit",
-                                        font: "inherit",
-                                    }}
-                                >
-                                    Không
-                                    <Checkbox checked={doanhNghiepCoCSHHuongLoi === "khong"} />
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Có", checked: doanhNghiepCoCSHHuongLoi === "co" },
+                        { label: "Không", checked: doanhNghiepCoCSHHuongLoi === "khong" },
+                    ]}
+                />
 
                 <p style={{ marginTop: "16px" }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
