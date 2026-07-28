@@ -273,11 +273,6 @@ const typeCompanyOptions = [
                                 confirmation: DieuLeCongTyConfirmation2TV,
                             },
                             {
-                                title: "Giấy đề nghị đăng ký hộ kinh doanh",
-                                declaration: GiayDeNghiDKHGDNDeclaration2TV,
-                                confirmation: GiayDeNghiDKHGDNConfirmation2TV,
-                            },
-                            {
                                 title: "Giấy uỷ quyền",
                                 declaration: GiayUyQuyenDeclaration2TV,
                                 confirmation: GiayUyQuyenConfirmation2TV,
