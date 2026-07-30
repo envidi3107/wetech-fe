@@ -26,8 +26,9 @@ const tabs = [
     { id: 3, title: "Nộp hồ sơ" },
 ];
 
-const DANG_KY_THAY_DOI_NOI_DUNG_TYPE =
-    "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+const DANG_KY_THAY_DOI_NOI_DUNG_TYPE = "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+const DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE = "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat";
+const TNHH_1TV_TYPE_COMPANY = "cong_ty_tnhh_mot_thanh_vien";
 const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
 
 const REGISTRATION_DYNAMIC_FORM = {
@@ -79,8 +80,7 @@ const DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS = new Set(
 const getDynamicFormKey = (form) => normalizeProcedureText(form?.name);
 
 const isDangKyThayDoiDynamicForm = (form) =>
-    form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE &&
-    DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS.has(getDynamicFormKey(form));
+    form?.type === DANG_KY_THAY_DOI_NOI_DUNG_TYPE && DANG_KY_THAY_DOI_DYNAMIC_FORM_KEYS.has(getDynamicFormKey(form));
 
 const shouldExportConfirmationLandscape = (form) => {
     const normalizedName = normalizeProcedureText(form?.name);
@@ -105,8 +105,8 @@ const isBeneficialOwnerChangeEnabled = (data) => {
     const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
         ? parsed.noiDungThayDoi
         : parsed.noiDungThayDoi
-            ? [parsed.noiDungThayDoi]
-            : [];
+          ? [parsed.noiDungThayDoi]
+          : [];
     const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
     return hasMainA && isTruthy(parsed.a_doiChuSoHuuHuongLoi);
 };
@@ -116,8 +116,8 @@ const isShareholderChangeEnabled = (data) => {
     const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
         ? parsed.noiDungThayDoi
         : parsed.noiDungThayDoi
-            ? [parsed.noiDungThayDoi]
-            : [];
+          ? [parsed.noiDungThayDoi]
+          : [];
     const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
     return hasMainA && isTruthy(parsed.a_doiCoDong);
 };
@@ -141,8 +141,8 @@ const isMemberMeetingMinutesEnabled = (data, typeCompany) => {
     const selectedMainOptions = Array.isArray(parsed.noiDungThayDoi)
         ? parsed.noiDungThayDoi
         : parsed.noiDungThayDoi
-            ? [parsed.noiDungThayDoi]
-            : [];
+          ? [parsed.noiDungThayDoi]
+          : [];
     const hasMainA = !selectedMainOptions.length || selectedMainOptions.includes("A");
     if (!hasMainA || !isTruthy(parsed.a_doiVonDieuLe)) return false;
 
@@ -184,13 +184,16 @@ const getProcedureFormTypes = ({ typeCompany, serviceType, formType }) =>
     typeCompanyOptions
         .find((item) => item.value === typeCompany)
         ?.services?.find((item) => item.value === serviceType)
-        ?.procedures?.find((p) => (p.value || p.title) === formType)
-        ?.formsType || [];
+        ?.procedures?.find((p) => (p.value || p.title) === formType)?.formsType || [];
 
-const getMatchedFormTypeIndex = (formTypes, formName) =>
-    formTypes.findIndex(
-        (item) => item.title === formName || normalizeProcedureText(item.title) === normalizeProcedureText(formName),
+const getMatchedFormTypeIndex = (formTypes, formName) => {
+    const normalizedFormName = normalizeProcedureText(formName);
+    return formTypes.findIndex((item) =>
+        [item.title, ...(item.aliases || [])].some(
+            (candidate) => candidate === formName || normalizeProcedureText(candidate) === normalizedFormName,
+        ),
     );
+};
 
 const mapProcedureForms = (rawForms, typeCompany, serviceType) =>
     (rawForms || [])
@@ -252,10 +255,10 @@ const ProcessProcedure = () => {
 
     const refreshUserCards = async () => {
         try {
-            const response = await authAxios.get('/api/users/my-card/get');
+            const response = await authAxios.get("/api/users/my-card/get");
             if (response?.data) {
                 // Determine structure based on format mapping
-                const cards = Array.isArray(response.data) ? response.data : (response.data.result || []);
+                const cards = Array.isArray(response.data) ? response.data : response.data.result || [];
                 setUserCards(cards);
             }
         } catch (error) {
@@ -284,38 +287,92 @@ const ProcessProcedure = () => {
         return response.data.result;
     }, [id_procedure]);
 
-    const ensureDangKyThayDoiDynamicForms = useCallback(async (mappedForms, currentProcedure, dynamicState) => {
-        const missingForms = getRequiredDynamicForms(dynamicState).filter(
-            (dynamicForm) =>
-                !mappedForms.some(
-                    (form) => normalizeProcedureText(form.name) === normalizeProcedureText(dynamicForm.name),
+    const ensureDangKyThayDoiDynamicForms = useCallback(
+        async (mappedForms, currentProcedure, dynamicState) => {
+            const missingForms = getRequiredDynamicForms(dynamicState).filter(
+                (dynamicForm) =>
+                    !mappedForms.some(
+                        (form) => normalizeProcedureText(form.name) === normalizeProcedureText(dynamicForm.name),
+                    ),
+            );
+
+            if (!missingForms.length) {
+                return { procedureResponse: currentProcedure, mappedForms };
+            }
+
+            await Promise.all(
+                missingForms.map((form) =>
+                    authAxios.post(
+                        "/api/procedurer/add-form",
+                        { name: form.name, type: form.type },
+                        { params: { procedureId: id_procedure } },
+                    ),
                 ),
-        );
+            );
 
-        if (!missingForms.length) {
-            return { procedureResponse: currentProcedure, mappedForms };
-        }
-
-        await Promise.all(
-            missingForms.map((form) =>
-                authAxios.post(
-                    "/api/procedurer/add-form",
-                    { name: form.name, type: form.type },
-                    { params: { procedureId: id_procedure } },
+            const nextProcedureResponse = await fetchProcedureResponse();
+            return {
+                procedureResponse: nextProcedureResponse,
+                mappedForms: mapProcedureForms(
+                    nextProcedureResponse.forms,
+                    nextProcedureResponse.typeCompany,
+                    nextProcedureResponse.serviceType,
                 ),
-            ),
-        );
+            };
+        },
+        [fetchProcedureResponse, id_procedure],
+    );
 
-        const nextProcedureResponse = await fetchProcedureResponse();
-        return {
-            procedureResponse: nextProcedureResponse,
-            mappedForms: mapProcedureForms(
-                nextProcedureResponse.forms,
-                nextProcedureResponse.typeCompany,
-                nextProcedureResponse.serviceType,
-            ),
-        };
-    }, [fetchProcedureResponse, id_procedure]);
+    const ensureConfiguredRepresentativeChangeForms = useCallback(
+        async (mappedForms, currentProcedure) => {
+            const isTargetProcedure =
+                currentProcedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
+                currentProcedure?.serviceType === "dang_ky_thay_doi" &&
+                mappedForms.some((form) => form.type === DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE);
+
+            if (!isTargetProcedure) {
+                return { procedureResponse: currentProcedure, mappedForms };
+            }
+
+            const configuredForms = getProcedureFormTypes({
+                typeCompany: currentProcedure.typeCompany,
+                serviceType: currentProcedure.serviceType,
+                formType: DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE,
+            });
+            const missingForms = configuredForms.filter(
+                (configuredForm) =>
+                    !mappedForms.some((form) => getMatchedFormTypeIndex([configuredForm], form.name) === 0),
+            );
+
+            if (!missingForms.length) {
+                return { procedureResponse: currentProcedure, mappedForms };
+            }
+
+            await Promise.all(
+                missingForms.map((form) =>
+                    authAxios.post(
+                        "/api/procedurer/add-form",
+                        {
+                            name: form.title,
+                            type: DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE,
+                        },
+                        { params: { procedureId: id_procedure } },
+                    ),
+                ),
+            );
+
+            const nextProcedureResponse = await fetchProcedureResponse();
+            return {
+                procedureResponse: nextProcedureResponse,
+                mappedForms: mapProcedureForms(
+                    nextProcedureResponse.forms,
+                    nextProcedureResponse.typeCompany,
+                    nextProcedureResponse.serviceType,
+                ),
+            };
+        },
+        [fetchProcedureResponse, id_procedure],
+    );
 
     const getSavedDangKyThayDoiDynamicState = useCallback(async (mappedForms, typeCompany) => {
         const changeForm = mappedForms.find(isDangKyThayDoiNoiDungForm);
@@ -341,6 +398,12 @@ const ProcessProcedure = () => {
                     procedureResponse.typeCompany,
                     procedureResponse.serviceType,
                 );
+                const configuredFormsResult = await ensureConfiguredRepresentativeChangeForms(
+                    mappedForms,
+                    procedureResponse,
+                );
+                procedureResponse = configuredFormsResult.procedureResponse;
+                mappedForms = configuredFormsResult.mappedForms;
                 const dynamicFormState = await getSavedDangKyThayDoiDynamicState(
                     mappedForms,
                     procedureResponse.typeCompany,
@@ -375,6 +438,7 @@ const ProcessProcedure = () => {
     }, [
         applyVisibleFormsState,
         ensureDangKyThayDoiDynamicForms,
+        ensureConfiguredRepresentativeChangeForms,
         fetchProcedureResponse,
         getSavedDangKyThayDoiDynamicState,
         id_procedure,
@@ -547,7 +611,9 @@ const ProcessProcedure = () => {
     }, [tab]);
 
     return (
-        <ProcessProcedureContext.Provider value={{ procedure, forms, setProcedure, setForms, userCards, refreshUserCards }}>
+        <ProcessProcedureContext.Provider
+            value={{ procedure, forms, setProcedure, setForms, userCards, refreshUserCards }}
+        >
             <div className="stepper-container">
                 {loading && <Overlay />}
                 <div className="stepper-header-main">
@@ -721,8 +787,8 @@ const ProcessProcedure = () => {
                                 >
                                     <img src={iconCheck} alt="" />
                                     {viewMode === "see_again" &&
-                                        activeTab === 1 &&
-                                        currentFormStep === formDeclarationSteps.length - 1
+                                    activeTab === 1 &&
+                                    currentFormStep === formDeclarationSteps.length - 1
                                         ? "Tạo mới"
                                         : "Tiếp theo"}
 

@@ -45,8 +45,8 @@ const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
 const CO_PHAN_TYPE_COMPANY = "cong_ty_co_phan";
 const THANH_LAP_CONG_TY_SERVICE = "thanh_lap_cong_ty";
 const DANG_KY_THAY_DOI_SERVICE = "dang_ky_thay_doi";
-const DANG_KY_THAY_DOI_NOI_DUNG_TYPE =
-    "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+const DANG_KY_THAY_DOI_NOI_DUNG_TYPE = "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
+const DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE = "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat";
 const DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES = new Set([
     TNHH_1TV_TYPE_COMPANY,
     TNHH_2TV_TYPE_COMPANY,
@@ -59,17 +59,23 @@ const parseFormDataJson = (rawData) => {
 
     let parsed = rawData;
     if (typeof parsed === "string") {
-        try { parsed = JSON.parse(parsed); } catch (e) { }
+        try {
+            parsed = JSON.parse(parsed);
+        } catch (e) {}
     }
     if (parsed && typeof parsed.dataJson === "string") {
-        try { parsed = JSON.parse(parsed.dataJson); } catch (e) { }
+        try {
+            parsed = JSON.parse(parsed.dataJson);
+        } catch (e) {}
     } else if (parsed && typeof parsed.dataJson === "object") {
         parsed = parsed.dataJson;
     }
 
     ["nganhNgheList", "thanhVienList", "coDongList", "loaiCoPhanKhacList", "cshHuongLoiList"].forEach((key) => {
         if (parsed?.[key] && typeof parsed[key] === "string") {
-            try { parsed[key] = JSON.parse(parsed[key]); } catch (e) { }
+            try {
+                parsed[key] = JSON.parse(parsed[key]);
+            } catch (e) {}
         }
     });
 
@@ -157,7 +163,9 @@ const mergePrefillData = (prefillData, currentData) => {
     const mergedData = { ...(prefillData || {}) };
 
     Object.entries(currentData || {}).forEach(([key, value]) => {
-        const hasValue = Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null && value !== "";
+        const hasValue = Array.isArray(value)
+            ? value.length > 0
+            : value !== undefined && value !== null && value !== "";
         if (hasValue) {
             mergedData[key] = value;
         }
@@ -216,7 +224,9 @@ const getSelectedBusinessLocationType = (data) =>
         ["truSo_loaiKhu_Khu_chế_xuất", "Khu chế xuất"],
         ["truSo_loaiKhu_Khu_kinh_tế", "Khu kinh tế"],
         ["truSo_loaiKhu_Khu_công_nghệ_cao", "Khu công nghệ cao"],
-    ].find(([key]) => isTruthy(data?.[key]))?.[1] || data?.truSo_loaiKhu || "";
+    ].find(([key]) => isTruthy(data?.[key]))?.[1] ||
+    data?.truSo_loaiKhu ||
+    "";
 
 const applyDangKyThayDoiOverrides = (baseData, changeData) => {
     const merged = { ...(baseData || {}) };
@@ -283,7 +293,6 @@ const applyDangKyThayDoiOverrides = (baseData, changeData) => {
     return merged;
 };
 
-
 const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitSuccess, setIsSubmittingForm }, ref) => {
     const [dataJson, setDataJson] = useState(null);
     const [isDataJsonLoading, setIsDataJsonLoading] = useState(false);
@@ -302,11 +311,12 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         currentForm?.name?.toLowerCase().includes("uỷ quyền") || currentForm?.name?.toLowerCase().includes("ủy quyền");
 
     // Detect form type by component name or title
-    const formComponentName = CurrentFormComponent?.displayName || CurrentFormComponent?.name || CurrentFormComponent?.render?.name || "";
+    const formComponentName =
+        CurrentFormComponent?.displayName || CurrentFormComponent?.name || CurrentFormComponent?.render?.name || "";
     const formNameLower = currentForm?.name?.toLowerCase() || "";
 
-    const isDangKyThayDoiDoanhNghiep = formComponentName === "GiayDeNghiDangKyThayDoiDeclaration" ||
-        formNameLower.includes("thay đổi nội dung");
+    const isDangKyThayDoiDoanhNghiep =
+        formComponentName === "GiayDeNghiDangKyThayDoiDeclaration" || formNameLower.includes("thay đổi nội dung");
 
     const isDangKyThayDoiChuSoHuu =
         formComponentName === "GiayDeNghiDangKyThayDoiChuSoHuuDeclaration" ||
@@ -316,22 +326,30 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         formComponentName === "GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration" ||
         formNameLower.includes("thay đổi người đại diện");
 
-    const isDangKyThayDoiPrefillForm = isDangKyThayDoiDoanhNghiep || isDangKyThayDoiChuSoHuu || isDangKyThayDoiNguoiDaiDienPhapLuat;
+    const isDangKyThayDoiPrefillForm =
+        isDangKyThayDoiDoanhNghiep || isDangKyThayDoiChuSoHuu || isDangKyThayDoiNguoiDaiDienPhapLuat;
+    const isTnhh1RepresentativeChangeProcedure =
+        procedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
+        procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
+        currentForm?.type === DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE;
 
-    const isGiayDKDN = formComponentName === "GiayDeNghiDKDNDeclaration" ||
+    const isGiayDKDN =
+        formComponentName === "GiayDeNghiDKDNDeclaration" ||
         (formNameLower.includes("đăng ký doanh nghiệp") && !isDangKyThayDoiPrefillForm);
 
-    const isCSHHuongLoi = formComponentName === "DanhSachCSHHuongLoiDeclaration" ||
-        formNameLower.includes("csh hưởng lợi");
+    const isCSHHuongLoi =
+        formComponentName === "DanhSachCSHHuongLoiDeclaration" || formNameLower.includes("csh hưởng lợi");
 
-    const isDieuLeCongTy = formComponentName === "DieuLeCongTyDeclaration" ||
-        formNameLower.includes("điều lệ công ty") || formNameLower.includes("charter");
+    const isDieuLeCongTy =
+        formComponentName === "DieuLeCongTyDeclaration" ||
+        formNameLower.includes("điều lệ công ty") ||
+        formNameLower.includes("charter");
 
-    const isDanhSachThanhVien = formComponentName === "DanhSachThanhVienDeclaration" ||
-        formNameLower.includes("danh sách thành viên");
+    const isDanhSachThanhVien =
+        formComponentName === "DanhSachThanhVienDeclaration" || formNameLower.includes("danh sách thành viên");
 
-    const isDanhSachCoDongSangLap = formComponentName === "DanhSachCoDongSangLapDeclaration" ||
-        formNameLower.includes("cổ đông sáng lập");
+    const isDanhSachCoDongSangLap =
+        formComponentName === "DanhSachCoDongSangLapDeclaration" || formNameLower.includes("cổ đông sáng lập");
 
     const isDangKyThayDoiDynamicSupplementForm =
         procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
@@ -352,7 +370,11 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         const sourceTypeCompany = procedure?.typeCompany;
         if (
             !DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES.has(sourceTypeCompany) ||
-            !(isDangKyThayDoiPrefillForm || isDangKyThayDoiDynamicSupplementForm)
+            !(
+                isDangKyThayDoiPrefillForm ||
+                isDangKyThayDoiDynamicSupplementForm ||
+                isTnhh1RepresentativeChangeProcedure
+            )
         ) {
             return null;
         }
@@ -364,8 +386,9 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             },
         });
 
-        const sourceProcedures = (draftResponse.data || [])
-            .filter((item) => item.procedureId && item.procedureId !== procedure?.procedureId);
+        const sourceProcedures = (draftResponse.data || []).filter(
+            (item) => item.procedureId && item.procedureId !== procedure?.procedureId,
+        );
 
         let fallbackSource = null;
         for (const sourceProcedure of sourceProcedures) {
@@ -389,7 +412,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 foundingShareholderForm: sourceForms.find(isFoundingShareholderForm),
             };
 
-            if (isDangKyThayDoiNguoiDaiDienPhapLuat) {
+            if (isDangKyThayDoiNguoiDaiDienPhapLuat || isTnhh1RepresentativeChangeProcedure) {
                 return { registrationForm };
             }
 
@@ -409,6 +432,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         isDangKyThayDoiDynamicSupplementForm,
         isDangKyThayDoiNguoiDaiDienPhapLuat,
         isDangKyThayDoiPrefillForm,
+        isTnhh1RepresentativeChangeProcedure,
         procedure?.procedureId,
         procedure?.typeCompany,
     ]);
@@ -448,13 +472,52 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
 
         return registrationData
             ? buildDangKyThayDoiPrefillData(
-                registrationData,
-                beneficialOwnerData,
-                memberListData,
-                foundingShareholderData,
-            )
+                  registrationData,
+                  beneficialOwnerData,
+                  memberListData,
+                  foundingShareholderData,
+              )
             : null;
     }, [fetchInitialDangKyThayDoiData]);
+
+    const fetchPreviousRepresentativeChangeData = useCallback(async () => {
+        if (!isTnhh1RepresentativeChangeProcedure || !currentForm?.formId) return null;
+
+        const currentIndex = forms?.findIndex((form) => form.formId === currentForm.formId) ?? -1;
+        if (currentIndex <= 0) return null;
+
+        const previousForms = forms.slice(0, currentIndex).filter((form) => form.formId);
+        const previousData = await Promise.all(
+            previousForms.map(async (form) => {
+                try {
+                    const response = await authAxios.get("/api/form-submission/get/data-json", {
+                        params: { formId: form.formId },
+                    });
+                    return parseFormDataJson(response.data);
+                } catch (error) {
+                    return null;
+                }
+            }),
+        );
+
+        const combined = previousData.reduce(
+            (accumulator, item) => (item ? { ...accumulator, ...item } : accumulator),
+            {},
+        );
+        return Object.keys(combined).length ? combined : null;
+    }, [currentForm?.formId, forms, isTnhh1RepresentativeChangeProcedure]);
+
+    const fetchCombinedPrefillData = useCallback(async () => {
+        const [initialData, previousData] = await Promise.all([
+            fetchDangKyThayDoiPrefillData(),
+            fetchPreviousRepresentativeChangeData(),
+        ]);
+        const combined = {
+            ...(initialData || {}),
+            ...(previousData || {}),
+        };
+        return Object.keys(combined).length ? combined : null;
+    }, [fetchDangKyThayDoiPrefillData, fetchPreviousRepresentativeChangeData]);
 
     const fetchFormSubmission = useCallback(async () => {
         if (!currentForm?.formId) return;
@@ -476,14 +539,14 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             });
             const parsed = parseFormDataJson(response.data);
             if (parsed) {
-                const prefillData = await fetchDangKyThayDoiPrefillData();
+                const prefillData = await fetchCombinedPrefillData();
                 const mergedData = prefillData ? mergePrefillData(prefillData, parsed) : parsed;
                 setDataJson(await applyDynamicOverrides(mergedData));
                 setHasServerData(true);
                 return;
             }
 
-            const prefillData = await fetchDangKyThayDoiPrefillData();
+            const prefillData = await fetchCombinedPrefillData();
             if (!prefillData) {
                 setDataJson(null);
                 setHasServerData(false);
@@ -501,8 +564,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         }
     }, [
         currentForm?.formId,
+        fetchCombinedPrefillData,
         fetchDangKyThayDoiNoiDungData,
-        fetchDangKyThayDoiPrefillData,
         isDangKyThayDoiDynamicSupplementForm,
     ]);
 
@@ -530,7 +593,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     const saveMissingUserCards = async (data) => {
         const prefixes = ["nguoiDaiDien", "chuSoHuu", "nguoiNop", "uyQuyen", "nhanUyQuyen"];
         const newCardsData = [];
-        const seenCccds = new Set(userCards?.map(c => c.cccd) || []);
+        const seenCccds = new Set(userCards?.map((c) => c.cccd) || []);
 
         for (const prefix of prefixes) {
             const docCccd = data[`${prefix}_cccd`];
@@ -548,9 +611,18 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                     permanentStreet: data[`${prefix}_thuongTru_soNha`] || data[`thuongTru_soNha`] || "",
                     permanentWard: data[`${prefix}_thuongTru_xa`] || data[`thuongTru_xa`] || "",
                     permanentProvince: data[`${prefix}_thuongTru_tinh`] || data[`thuongTru_tinh`] || "",
-                    currentStreet: prefix === "nguoiNop" ? (data[`lienLac_soNha`] || "") : (data[`${prefix}_hienTai_soNha`] || data[`hienTai_soNha`] || data[`${prefix}_soNha`] || ""),
-                    currentWard: prefix === "nguoiNop" ? (data[`lienLac_xa`] || "") : (data[`${prefix}_hienTai_xa`] || data[`hienTai_xa`] || data[`${prefix}_xa`] || ""),
-                    currentProvince: prefix === "nguoiNop" ? (data[`lienLac_tinh`] || "") : (data[`${prefix}_hienTai_tinh`] || data[`hienTai_tinh`] || data[`${prefix}_tinh`] || ""),
+                    currentStreet:
+                        prefix === "nguoiNop"
+                            ? data[`lienLac_soNha`] || ""
+                            : data[`${prefix}_hienTai_soNha`] || data[`hienTai_soNha`] || data[`${prefix}_soNha`] || "",
+                    currentWard:
+                        prefix === "nguoiNop"
+                            ? data[`lienLac_xa`] || ""
+                            : data[`${prefix}_hienTai_xa`] || data[`hienTai_xa`] || data[`${prefix}_xa`] || "",
+                    currentProvince:
+                        prefix === "nguoiNop"
+                            ? data[`lienLac_tinh`] || ""
+                            : data[`${prefix}_hienTai_tinh`] || data[`hienTai_tinh`] || data[`${prefix}_tinh`] || "",
                 };
                 newCardsData.push(payload);
             }
@@ -559,9 +631,11 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         if (newCardsData.length > 0) {
             try {
                 await Promise.all(
-                    newCardsData.map(payload =>
-                        authAxios.post("/api/users/my-card/create", payload).catch(err => console.error("Failed to save card:", err))
-                    )
+                    newCardsData.map((payload) =>
+                        authAxios
+                            .post("/api/users/my-card/create", payload)
+                            .catch((err) => console.error("Failed to save card:", err)),
+                    ),
                 );
                 if (refreshUserCards) refreshUserCards();
             } catch (err) {
@@ -778,10 +852,14 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
 
                 const LABEL_MAP = isGiayDKDN
                     ? FIELD_LABEL_MAP_GIAY_DKDN
-                    : isUyQuyen ? FIELD_LABEL_MAP_UYQUYEN : FIELD_LABEL_MAP_DENGHI;
+                    : isUyQuyen
+                      ? FIELD_LABEL_MAP_UYQUYEN
+                      : FIELD_LABEL_MAP_DENGHI;
                 const SECTION_MAP = isGiayDKDN
                     ? SECTION_FIELD_MAP_GIAY_DKDN
-                    : isUyQuyen ? SECTION_FIELD_MAP_UYQUYEN : SECTION_FIELD_MAP_DENGHI;
+                    : isUyQuyen
+                      ? SECTION_FIELD_MAP_UYQUYEN
+                      : SECTION_FIELD_MAP_DENGHI;
 
                 for (const row of allRows) {
                     const col0 = row[0] !== undefined ? String(row[0]).trim() : "";
@@ -805,7 +883,10 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                                 tenNganh: String(row[1] || ""),
                                 chiTiet: String(row[2] || ""),
                                 maNganh: String(row[3] || ""),
-                                laNganhChinh: String(row[4] || "").trim().toLowerCase() === "có",
+                                laNganhChinh:
+                                    String(row[4] || "")
+                                        .trim()
+                                        .toLowerCase() === "có",
                             });
                             continue;
                         }
@@ -842,7 +923,10 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                                 tenNganh: String(row[1] || ""),
                                 chiTiet: String(row[2] || ""),
                                 maNganh: String(row[3] || ""),
-                                laNganhChinh: String(row[4] || "").trim().toLowerCase() === "có",
+                                laNganhChinh:
+                                    String(row[4] || "")
+                                        .trim()
+                                        .toLowerCase() === "có",
                             });
                             continue;
                         }
@@ -931,9 +1015,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                         onClick={handleReloadDataJson}
                         disabled={isDataJsonLoading || reloadCooldown > 0}
                         aria-label={
-                            reloadCooldown > 0
-                                ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây`
-                                : "Tải lại dữ liệu"
+                            reloadCooldown > 0 ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây` : "Tải lại dữ liệu"
                         }
                     >
                         {reloadCooldown > 0 ? `${reloadCooldown}s` : "↻"}

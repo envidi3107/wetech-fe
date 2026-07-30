@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
-import { GioiTinhSelect, DanTocSelect, QuocTichSelect, ChucDanhSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import {
+    GioiTinhSelect,
+    DanTocSelect,
+    QuocTichSelect,
+    ChucDanhSelect,
+} from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import UploadCCCD from "@/components/UploadCCCD/UploadCCCD";
@@ -13,11 +18,22 @@ import {
     toUppercaseValue,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/uppercaseInput";
 
-export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote = false }) {
+export default function NguoiDaiDienPhapLuatSection({
+    dataJson,
+    styles,
+    isNote = false,
+    hideAdditionalPersonalInfo = false,
+    hidePermanentAddress = false,
+}) {
     const [provCode_lienLac, setProvCode_lienLac] = useState("");
     const [provCode_thuongTru, setProvCode_thuongTru] = useState("");
-    const { provinces, communes: communes_lienLac, loadingCommunes: loadingCommunes_lienLac } = useFetchAddress(provCode_lienLac);
-    const { communes: communes_thuongTru, loadingCommunes: loadingCommunes_thuongTru } = useFetchAddress(provCode_thuongTru);
+    const {
+        provinces,
+        communes: communes_lienLac,
+        loadingCommunes: loadingCommunes_lienLac,
+    } = useFetchAddress(provCode_lienLac);
+    const { communes: communes_thuongTru, loadingCommunes: loadingCommunes_thuongTru } =
+        useFetchAddress(provCode_thuongTru);
 
     const [localData, setLocalData] = useState(dataJson || {});
     const [formKey, setFormKey] = useState(0);
@@ -25,11 +41,11 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
     // Sync if parent dataJson changes completely (e.g. excel import)
     useEffect(() => {
         setLocalData(dataJson || {});
-        setFormKey(k => k + 1);
+        setFormKey((k) => k + 1);
     }, [dataJson]);
 
     const handleFillCard = (card) => {
-        setLocalData(prev => ({
+        setLocalData((prev) => ({
             ...prev,
             nguoiDaiDien_hoTen: toUppercaseValue(card.fullName),
             nguoiDaiDien_ngaySinh: card.dob,
@@ -44,14 +60,14 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
             nguoiDaiDien_thuongTru_xa: card.permanentAddress?.ward,
             nguoiDaiDien_thuongTru_soNha: card.permanentAddress?.street,
         }));
-        setFormKey(k => k + 1);
+        setFormKey((k) => k + 1);
 
         setTimeout(() => {
             const hoTenInput = document.querySelector('input[name="nguoiDaiDien_hoTen"]');
             const form = hoTenInput?.closest("form");
             if (form) {
                 // Kích hoạt sự kiện để ThongTinDangKyThueSection tự đồng bộ
-                ["nguoiDaiDien_hoTen", "nguoiDaiDien_gioiTinh", "nguoiDaiDien_cccd"].forEach(key => {
+                ["nguoiDaiDien_hoTen", "nguoiDaiDien_gioiTinh", "nguoiDaiDien_cccd"].forEach((key) => {
                     const el = form.querySelector(`[name="${key}"]`);
                     if (el) {
                         el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -85,17 +101,17 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
             provinces,
         });
 
-        setLocalData(prev => ({
+        setLocalData((prev) => ({
             ...prev,
             ...cccdData,
         }));
-        setFormKey(k => k + 1);
+        setFormKey((k) => k + 1);
 
         setTimeout(() => {
             const hoTenInput = document.querySelector('input[name="nguoiDaiDien_hoTen"]');
             const form = hoTenInput?.closest("form");
             if (form) {
-                ["nguoiDaiDien_hoTen", "nguoiDaiDien_gioiTinh", "nguoiDaiDien_cccd"].forEach(key => {
+                ["nguoiDaiDien_hoTen", "nguoiDaiDien_gioiTinh", "nguoiDaiDien_cccd"].forEach((key) => {
                     const el = form.querySelector(`[name="${key}"]`);
                     if (el) {
                         el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -113,7 +129,8 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
         }, 100);
     };
 
-    const tooltipNguoiDaiDien = "Ghi thông tin của tất cả người đại diện theo pháp luật trong trường hợp công ty có nhiều hơn 01 người đại diện theo pháp luật.";
+    const tooltipNguoiDaiDien =
+        "Ghi thông tin của tất cả người đại diện theo pháp luật trong trường hợp công ty có nhiều hơn 01 người đại diện theo pháp luật.";
 
     return (
         <div className={styles.sectionGroup} key={formKey}>
@@ -128,21 +145,57 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                 <div style={{ flex: 1 }}>
                     <div className={styles.grid2}>
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Họ, chữ đệm và tên (ghi bằng chữ in hoa): <span className={styles.required}>*</span></label>
-                            <input type="text" className={styles.input} name="nguoiDaiDien_hoTen" defaultValue={toUppercaseValue(localData?.nguoiDaiDien_hoTen)} style={{ textTransform: "uppercase" }} onInput={handleUppercaseInput} required />
+                            <label className={styles.label}>
+                                Họ, chữ đệm và tên (ghi bằng chữ in hoa): <span className={styles.required}>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                name="nguoiDaiDien_hoTen"
+                                defaultValue={toUppercaseValue(localData?.nguoiDaiDien_hoTen)}
+                                style={{ textTransform: "uppercase" }}
+                                onInput={handleUppercaseInput}
+                                required
+                            />
                         </div>
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Ngày, tháng, năm sinh: <span className={styles.required}>*</span></label>
-                            <DateInput className={styles.input} name="nguoiDaiDien_ngaySinh" defaultValue={localData?.nguoiDaiDien_ngaySinh || ""} required />
+                            <label className={styles.label}>
+                                Ngày, tháng, năm sinh: <span className={styles.required}>*</span>
+                            </label>
+                            <DateInput
+                                className={styles.input}
+                                name="nguoiDaiDien_ngaySinh"
+                                defaultValue={localData?.nguoiDaiDien_ngaySinh || ""}
+                                required
+                            />
                         </div>
-                        <GioiTinhSelect name="nguoiDaiDien_gioiTinh" defaultValue={localData?.nguoiDaiDien_gioiTinh} required />
+                        <GioiTinhSelect
+                            name="nguoiDaiDien_gioiTinh"
+                            defaultValue={localData?.nguoiDaiDien_gioiTinh}
+                            required
+                        />
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Số định danh cá nhân: <span className={styles.required}>*</span></label>
-                            <input type="text" className={styles.input} name="nguoiDaiDien_cccd" defaultValue={localData?.nguoiDaiDien_cccd || ""} required pattern="[0-9]{9,12}" />
+                            <label className={styles.label}>
+                                Số định danh cá nhân: <span className={styles.required}>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                name="nguoiDaiDien_cccd"
+                                defaultValue={localData?.nguoiDaiDien_cccd || ""}
+                                required
+                                pattern="[0-9]{9,12}"
+                            />
                         </div>
-                        <ChucDanhSelect name="nguoiDaiDien_chucDanh" defaultValue={localData?.nguoiDaiDien_chucDanh} required />
+                        <ChucDanhSelect
+                            name="nguoiDaiDien_chucDanh"
+                            defaultValue={localData?.nguoiDaiDien_chucDanh}
+                            required
+                        />
                     </div>
-                    <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>Địa chỉ liên lạc của người đại diện:</h3>
+                    <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>
+                        Địa chỉ liên lạc của người đại diện:
+                    </h3>
                     <AddressSelect
                         provinces={provinces}
                         communes={communes_lienLac}
@@ -161,45 +214,89 @@ export default function NguoiDaiDienPhapLuatSection({ dataJson, styles, isNote =
                         styles={styles}
                     />
 
-                    <h3 className={styles.sectionTitle} style={{ marginTop: "25px" }}>Thông tin cá nhân khác của người đại diện theo pháp luật:</h3>
-                    <p className={styles.subLabel} style={{ marginTop: "16px", fontStyle: "italic", fontSize: "14px" }}>Trường hợp không có số định danh cá nhân hoặc việc kết nối giữa Cơ sở dữ liệu quốc gia về đăng ký doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê khai các thông tin cá nhân dưới đây:</p>
-                    <div className={styles.grid2} style={{ marginTop: "8px" }}>
-                        <DanTocSelect name="nguoiDaiDien_danToc" defaultValue={localData?.nguoiDaiDien_danToc} required={false} />
-                        <QuocTichSelect name="nguoiDaiDien_quocTich" defaultValue={localData?.nguoiDaiDien_quocTich} required={false} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Số hộ chiếu (đối với cá nhân VN không có định danh cá nhân) / Số hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế (đối với người nước ngoài):</label>
-                        <input type="text" className={styles.input} name="nguoiDaiDien_soHoChieu" defaultValue={localData?.nguoiDaiDien_soHoChieu || ""} />
-                    </div>
-                    <div className={styles.grid2}>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Ngày cấp:</label>
-                            <DateInput name="nguoiDaiDien_ngayCapHoChieu" className={styles.input} defaultValue={localData?.nguoiDaiDien_ngayCapHoChieu || ""} />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Nơi cấp:</label>
-                            <input type="text" className={styles.input} name="nguoiDaiDien_noiCapHoChieu" defaultValue={localData?.nguoiDaiDien_noiCapHoChieu || ""} />
-                        </div>
-                    </div>
-                    <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>Nơi thường trú:</h3>
-                    <AddressSelect
-                        isRequired={false}
-                        provinces={provinces}
-                        communes={communes_thuongTru}
-                        onProvinceChange={setProvCode_thuongTru}
-                        provinceName="nguoiDaiDien_thuongTru_tinh"
-                        wardName="nguoiDaiDien_thuongTru_xa"
-                        houseNumberName="nguoiDaiDien_thuongTru_soNha"
-                        provinceDefault={localData?.nguoiDaiDien_thuongTru_tinh || ""}
-                        wardDefault={localData?.nguoiDaiDien_thuongTru_xa || ""}
-                        houseNumberDefault={localData?.nguoiDaiDien_thuongTru_soNha || ""}
-                        isLoadingCommunes={loadingCommunes_thuongTru}
-                    />
-                    <QuocGiaInput
-                        name="nguoiDaiDien_thuongTru_quocGia"
-                        defaultValue={localData?.nguoiDaiDien_thuongTru_quocGia ?? ""}
-                        styles={styles}
-                    />
+                    {!hideAdditionalPersonalInfo && (
+                        <>
+                            <h3 className={styles.sectionTitle} style={{ marginTop: "25px" }}>
+                                Thông tin cá nhân khác của người đại diện theo pháp luật:
+                            </h3>
+                            <p
+                                className={styles.subLabel}
+                                style={{ marginTop: "16px", fontStyle: "italic", fontSize: "14px" }}
+                            >
+                                Trường hợp không có số định danh cá nhân hoặc việc kết nối giữa Cơ sở dữ liệu quốc gia
+                                về đăng ký doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì đề nghị kê
+                                khai các thông tin cá nhân dưới đây:
+                            </p>
+                            <div className={styles.grid2} style={{ marginTop: "8px" }}>
+                                <DanTocSelect
+                                    name="nguoiDaiDien_danToc"
+                                    defaultValue={localData?.nguoiDaiDien_danToc}
+                                    required={false}
+                                />
+                                <QuocTichSelect
+                                    name="nguoiDaiDien_quocTich"
+                                    defaultValue={localData?.nguoiDaiDien_quocTich}
+                                    required={false}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>
+                                    Số hộ chiếu (đối với cá nhân VN không có định danh cá nhân) / Số hộ chiếu nước ngoài
+                                    hoặc giấy tờ có giá trị thay thế (đối với người nước ngoài):
+                                </label>
+                                <input
+                                    type="text"
+                                    className={styles.input}
+                                    name="nguoiDaiDien_soHoChieu"
+                                    defaultValue={localData?.nguoiDaiDien_soHoChieu || ""}
+                                />
+                            </div>
+                            <div className={styles.grid2}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Ngày cấp:</label>
+                                    <DateInput
+                                        name="nguoiDaiDien_ngayCapHoChieu"
+                                        className={styles.input}
+                                        defaultValue={localData?.nguoiDaiDien_ngayCapHoChieu || ""}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Nơi cấp:</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        name="nguoiDaiDien_noiCapHoChieu"
+                                        defaultValue={localData?.nguoiDaiDien_noiCapHoChieu || ""}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    {!hidePermanentAddress && (
+                        <>
+                            <h3 className={styles.sectionTitle} style={{ marginTop: "8px" }}>
+                                Nơi thường trú:
+                            </h3>
+                            <AddressSelect
+                                isRequired={false}
+                                provinces={provinces}
+                                communes={communes_thuongTru}
+                                onProvinceChange={setProvCode_thuongTru}
+                                provinceName="nguoiDaiDien_thuongTru_tinh"
+                                wardName="nguoiDaiDien_thuongTru_xa"
+                                houseNumberName="nguoiDaiDien_thuongTru_soNha"
+                                provinceDefault={localData?.nguoiDaiDien_thuongTru_tinh || ""}
+                                wardDefault={localData?.nguoiDaiDien_thuongTru_xa || ""}
+                                houseNumberDefault={localData?.nguoiDaiDien_thuongTru_soNha || ""}
+                                isLoadingCommunes={loadingCommunes_thuongTru}
+                            />
+                            <QuocGiaInput
+                                name="nguoiDaiDien_thuongTru_quocGia"
+                                defaultValue={localData?.nguoiDaiDien_thuongTru_quocGia ?? ""}
+                                styles={styles}
+                            />
+                        </>
+                    )}
                 </div>
                 <div style={{ width: "320px", flexShrink: 0, marginTop: "22px" }}>
                     <UploadCCCD onComplete={handleFillCCCD} />

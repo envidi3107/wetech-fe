@@ -51,7 +51,7 @@ function InlineField({ children, style }) {
     );
 }
 
-export default function GiayUyQuyenConfirmation({ dataJson }) {
+export default function GiayUyQuyenConfirmation({ dataJson, procedureActionText = "đăng ký thành lập" }) {
     if (!dataJson) return null;
 
     const {
@@ -101,16 +101,43 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
     return (
         <div className={styles.page} style={DOCUMENT_TEXT_STYLE}>
             <div className={styles.header}>
-                <h2 className={`${styles.headerTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
+                <h2
+                    className={`${styles.headerTitle} text-center`}
+                    style={{
+                        ...DOCUMENT_TEXT_STYLE,
+                        textAlign: "center",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        margin: 0,
+                    }}
+                >
                     CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
                 </h2>
-                <p className={`${styles.headerSubtitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", textDecoration: "underline", margin: "4px 0 0", fontWeight: 700 }}>
+                <p
+                    className={`${styles.headerSubtitle} text-center`}
+                    style={{
+                        ...DOCUMENT_TEXT_STYLE,
+                        textAlign: "center",
+                        textDecoration: "underline",
+                        margin: "4px 0 0",
+                        fontWeight: 700,
+                    }}
+                >
                     <strong>
                         <u>Độc lập - Tự do - Hạnh phúc</u>
                     </strong>
                 </p>
             </div>
-            <h1 className={`${styles.docTitle} text-center`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", fontWeight: 700, textTransform: "uppercase", margin: "30px 0" }}>
+            <h1
+                className={`${styles.docTitle} text-center`}
+                style={{
+                    ...DOCUMENT_TEXT_STYLE,
+                    textAlign: "center",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    margin: "30px 0",
+                }}
+            >
                 GIẤY UỶ QUYỀN
             </h1>
             <p className={styles.sectionTitle} style={SECTION_TITLE_STYLE}>
@@ -187,15 +214,14 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 {uyQuyen_email && <InlineField>Email: {uyQuyen_email}</InlineField>}
             </p>
             <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
-                <>Là người đại diện đăng ký thành lập {companyNamePrefix} </>
-                <>{chuHo_ten} {" "}</>
+                <>
+                    Là người đại diện {procedureActionText} {companyNamePrefix}{" "}
+                </>
+                <>{chuHo_ten} </>
                 <>tại {kinhGuiPrefix.trim()} </>
                 <>{chuHo_xa_phuong}</>
             </p>
-            <p
-                className={styles.sectionTitle}
-                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
-            >
+            <p className={styles.sectionTitle} style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}>
                 <strong>
                     <u>BÊN NHẬN UỶ QUYỀN (BÊN B):</u>
                 </strong>
@@ -273,10 +299,7 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Số điện thoại: {benB.phone}
                 {benB.email && <InlineField>Email: {benB.email}</InlineField>}
             </p>
-            <p
-                className={styles.sectionTitle}
-                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
-            >
+            <p className={styles.sectionTitle} style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}>
                 <strong>
                     <u>NỘI DUNG ỦY QUYỀN:</u>
                 </strong>
@@ -285,13 +308,10 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Bên A ủy quyền cho bên B thực hiện các công việc sau đây:
             </p>
             <p className={styles.infoLine} style={{ lineHeight: "1.8" }}>
-                Nộp hồ sơ và nhận kết quả thủ tục đăng ký thành lập {companyNamePrefix} <>{chuHo_ten}</> tại{" "}
+                Nộp hồ sơ và nhận kết quả thủ tục {procedureActionText} {companyNamePrefix} <>{chuHo_ten}</> tại{" "}
                 {kinhGuiPrefix.trim()} <>{chuHo_xa_phuong}</>
             </p>
-            <p
-                className={styles.sectionTitle}
-                style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}
-            >
+            <p className={styles.sectionTitle} style={{ ...SECTION_TITLE_STYLE, marginTop: "20px" }}>
                 <strong>
                     <u>THỜI HẠN UỶ QUYỀN:</u>
                 </strong>
@@ -302,21 +322,42 @@ export default function GiayUyQuyenConfirmation({ dataJson }) {
                 Chúng tôi cam kết chịu trách nhiệm trước pháp luật về nội dung ủy quyền này.
             </p>
             <p style={{ margin: "8px 0" }}>Giấy ủy quyền này được lập thành 02 bản chính, mỗi bên giữ 01 bản.</p>
-            <p className={`${styles.dateLocation} text-right`} style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "right", fontStyle: "italic" }}>
+            <p
+                className={`${styles.dateLocation} text-right`}
+                style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "right", fontStyle: "italic" }}
+            >
                 <CurrentDate prefix={chuHo_xa_phuong} style={{ ...DOCUMENT_TEXT_STYLE, fontStyle: "italic" }} />
             </p>
             <table className="signature-table no-border" style={signatureTableStyle}>
                 <tbody>
                     <tr>
                         <td style={signatureCellStyle}>
-                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                            <p
+                                className="text-center"
+                                style={{
+                                    ...DOCUMENT_TEXT_STYLE,
+                                    textAlign: "center",
+                                    marginBottom: "10px",
+                                    textDecoration: "underline",
+                                    fontWeight: 700,
+                                }}
+                            >
                                 <strong>
                                     <u>BÊN NHẬN ỦY QUYỀN</u>
                                 </strong>
                             </p>
                         </td>
                         <td style={signatureCellStyle}>
-                            <p className="text-center" style={{ ...DOCUMENT_TEXT_STYLE, textAlign: "center", marginBottom: "10px", textDecoration: "underline", fontWeight: 700 }}>
+                            <p
+                                className="text-center"
+                                style={{
+                                    ...DOCUMENT_TEXT_STYLE,
+                                    textAlign: "center",
+                                    marginBottom: "10px",
+                                    textDecoration: "underline",
+                                    fontWeight: 700,
+                                }}
+                            >
                                 <strong>
                                     <u>BÊN ỦY QUYỀN</u>
                                 </strong>
