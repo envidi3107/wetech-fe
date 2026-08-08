@@ -20,7 +20,7 @@ import {
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
-import { toUppercaseValue } from "../../../SharedFormComponents/uppercaseInput";
+import { toUppercaseValue } from "../../../../SharedFormComponents/uppercaseInput";
 import { useAuth } from "@/context/AuthContext";
 
 const SOURCE_FORM_NAME = "Giấy đề nghị đăng ký thay đổi nội dung giấy chứng nhận đăng ký doanh nghiệp";

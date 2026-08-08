@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation.module.css";
+import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
 import { formatDate } from "@/utils/dateTimeUtils";
 import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 import {
@@ -16,7 +17,6 @@ const DOCUMENT_STYLE = {
     color: "#000",
 };
 const DECISION_NUMBER = "01/2026/QĐ-CSH";
-const DECISION_DATE_TEXT = "…., ngày … tháng … năm 2026";
 
 function isEmptyValue(value) {
     return value === undefined || value === null || String(value).trim() === "";
@@ -60,19 +60,29 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
     return (
         <div className={styles.container} style={DOCUMENT_STYLE}>
             <table
-                className={`${styles.noBorderTable} no-border`}
-                style={{ width: "100%", borderCollapse: "collapse", border: "none", ...DOCUMENT_STYLE }}
+                className={`${styles.noBorderTable} no-border docx-contained-table decision-header-table`}
+                style={{
+                    width: "100%",
+                    maxWidth: "100%",
+                    tableLayout: "fixed",
+                    borderCollapse: "collapse",
+                    border: "none",
+                    ...DOCUMENT_STYLE,
+                }}
             >
+                <colgroup>
+                    <col width="42%" style={{ width: "42%" }} />
+                    <col width="58%" style={{ width: "58%" }} />
+                </colgroup>
                 <tbody>
                     <tr>
-                        <td style={{ width: "45%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                        <td style={{ width: "42%", maxWidth: "42%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ margin: 0, textAlign: "center" }}>
                                 <strong>{companyName.toLocaleUpperCase("vi-VN")}</strong>
                             </p>
                             <p style={{ margin: "2pt 0 0", textAlign: "center" }}>-------</p>
-                            <p style={{ margin: "8pt 0 0", textAlign: "center" }}>Số: {DECISION_NUMBER}</p>
                         </td>
-                        <td style={{ width: "55%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                        <td style={{ width: "58%", maxWidth: "58%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ margin: 0, textAlign: "center" }}>
                                 <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
                             </p>
@@ -81,15 +91,33 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                                     <u>Độc lập - Tự do - Hạnh phúc</u>
                                 </strong>
                             </p>
-                            <p style={{ margin: "8pt 0 0", textAlign: "center", fontStyle: "italic" }}>
-                                <em>{DECISION_DATE_TEXT}</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ width: "42%", maxWidth: "42%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p style={{ margin: "8pt 0 0", textAlign: "center" }}>Số: {DECISION_NUMBER}</p>
+                        </td>
+                        <td style={{ width: "58%", maxWidth: "58%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p
+                                className="decision-date-line"
+                                style={{
+                                    display: "block",
+                                    margin: "8pt 0 0",
+                                    textAlign: "center",
+                                    fontStyle: "italic",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                <em>
+                                    <CurrentDate prefix={data.kinhGuiProvince} />
+                                </em>
                             </p>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <h2 className={styles.docTitle} style={{ marginTop: "22pt", textAlign: "center", fontSize: "13pt" }}>
+            <h2 className={styles.docTitle} style={{ marginTop: "14pt", textAlign: "center", fontSize: "13pt" }}>
                 QUYẾT ĐỊNH
             </h2>
             <p style={{ margin: "4pt 0 14pt", textAlign: "center" }}>
@@ -152,9 +180,14 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                 >
                     <tbody>
                         <tr>
-                            <td style={{ width: "45%", border: "none", verticalAlign: "top" }}>
+                            <td
+                                className={`${styles.recipientsBlock} export-recipients-block signature-recipients-cell`}
+                                style={{ width: "45%", border: "none", verticalAlign: "top" }}
+                            >
                                 <p style={{ margin: 0 }}>
-                                    <strong>Nơi nhận:</strong>
+                                    <strong>
+                                        <em>Nơi nhận:</em>
+                                    </strong>
                                 </p>
                                 <p style={{ margin: 0 }}>- Như Điều 2 (để thực hiện);</p>
                                 <p style={{ margin: 0 }}>- Phòng ĐKKD – Sở TC (để đăng ký);</p>

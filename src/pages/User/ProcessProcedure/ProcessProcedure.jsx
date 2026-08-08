@@ -28,6 +28,15 @@ const tabs = [
 
 const DANG_KY_THAY_DOI_NOI_DUNG_TYPE = "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
 const DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE = "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat";
+const DANG_KY_THAY_DOI_CHU_SO_HUU_TYPE =
+    "giay_de_nghi_dang_ky_thay_doi_chu_so_huu_cong_ty_tnhh_1_thanh_vien";
+const DANG_KY_THAY_DOI_DONG_THOI_CHU_SO_HUU_NGUOI_DAI_DIEN_TYPE =
+    "dong_thoi_thay_doi_chu_so_huu_cong_ty_va_nguoi_dai_dien_theo_phap_luat";
+const CONFIGURED_TNHH_1TV_CHANGE_TYPES = new Set([
+    DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE,
+    DANG_KY_THAY_DOI_CHU_SO_HUU_TYPE,
+    DANG_KY_THAY_DOI_DONG_THOI_CHU_SO_HUU_NGUOI_DAI_DIEN_TYPE,
+]);
 const TNHH_1TV_TYPE_COMPANY = "cong_ty_tnhh_mot_thanh_vien";
 const TNHH_2TV_TYPE_COMPANY = "cong_ty_tnhh_hai_thanh_vien_tro_len";
 
@@ -323,12 +332,15 @@ const ProcessProcedure = () => {
         [fetchProcedureResponse, id_procedure],
     );
 
-    const ensureConfiguredRepresentativeChangeForms = useCallback(
+    const ensureConfiguredTnhh1ChangeForms = useCallback(
         async (mappedForms, currentProcedure) => {
+            const configuredChangeType = mappedForms.find((form) =>
+                CONFIGURED_TNHH_1TV_CHANGE_TYPES.has(form.type),
+            )?.type;
             const isTargetProcedure =
                 currentProcedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
                 currentProcedure?.serviceType === "dang_ky_thay_doi" &&
-                mappedForms.some((form) => form.type === DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE);
+                !!configuredChangeType;
 
             if (!isTargetProcedure) {
                 return { procedureResponse: currentProcedure, mappedForms };
@@ -337,7 +349,7 @@ const ProcessProcedure = () => {
             const configuredForms = getProcedureFormTypes({
                 typeCompany: currentProcedure.typeCompany,
                 serviceType: currentProcedure.serviceType,
-                formType: DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE,
+                formType: configuredChangeType,
             });
             const missingForms = configuredForms.filter(
                 (configuredForm) =>
@@ -354,7 +366,7 @@ const ProcessProcedure = () => {
                         "/api/procedurer/add-form",
                         {
                             name: form.title,
-                            type: DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE,
+                            type: configuredChangeType,
                         },
                         { params: { procedureId: id_procedure } },
                     ),
@@ -398,7 +410,7 @@ const ProcessProcedure = () => {
                     procedureResponse.typeCompany,
                     procedureResponse.serviceType,
                 );
-                const configuredFormsResult = await ensureConfiguredRepresentativeChangeForms(
+                const configuredFormsResult = await ensureConfiguredTnhh1ChangeForms(
                     mappedForms,
                     procedureResponse,
                 );
@@ -438,7 +450,7 @@ const ProcessProcedure = () => {
     }, [
         applyVisibleFormsState,
         ensureDangKyThayDoiDynamicForms,
-        ensureConfiguredRepresentativeChangeForms,
+        ensureConfiguredTnhh1ChangeForms,
         fetchProcedureResponse,
         getSavedDangKyThayDoiDynamicState,
         id_procedure,
@@ -822,7 +834,15 @@ export const useGetFormDataJsonFromName = (formName) => {
     useEffect(() => {
         if (!forms) return;
         const fetchFormDataJson = async () => {
-            const formId = forms.find((form) => form.name === formName)?.formId;
+            const normalizedFormName = String(formName || "")
+                .trim()
+                .toLocaleLowerCase("vi-VN");
+            const formId = forms.find(
+                (form) =>
+                    String(form.name || "")
+                        .trim()
+                        .toLocaleLowerCase("vi-VN") === normalizedFormName,
+            )?.formId;
             if (!formId) return;
             try {
                 const response = await authAxios.get(`/api/form-submission/get/data-json`, {
@@ -836,7 +856,7 @@ export const useGetFormDataJsonFromName = (formName) => {
             }
         };
         fetchFormDataJson();
-    }, [forms]);
+    }, [formName, forms]);
 
     return formDataJson;
 };

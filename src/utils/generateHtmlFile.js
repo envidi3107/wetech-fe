@@ -5,16 +5,17 @@
  */
 const WORD_EXPORT_FONT_FAMILY = "Times New Roman, Times, serif";
 const DOCUMENT_FONT_SIZE = "14pt";
-const TABLE_FONT_SIZE = "13pt";
+const TABLE_FONT_SIZE = DOCUMENT_FONT_SIZE;
 const PDF_LARGE_DOCUMENT_FONT_SIZE = "16pt";
 const PDF_LARGE_TITLE_FONT_SIZE = "18pt";
 const WORD_DOCUMENT_FONT_SIZE = "13pt";
-const WORD_TABLE_FONT_SIZE = "13pt";
+const WORD_TABLE_FONT_SIZE = WORD_DOCUMENT_FONT_SIZE;
 const WORD_COMPACT_TABLE_FONT_SIZE = "12pt";
 const EXPORT_TABLE_FONT_10_SIZE = "12pt";
+const RECIPIENTS_BLOCK_FONT_SIZE = "12pt";
 const WORD_CHECKBOX_FONT_SIZE = "18pt";
 const DOCUMENT_LINE_HEIGHT = "1.5";
-const TABLE_LINE_HEIGHT = "1.25";
+const TABLE_LINE_HEIGHT = DOCUMENT_LINE_HEIGHT;
 const COMPACT_TABLE_LINE_HEIGHT = "1.05";
 const EXPORT_TABLE_FONT_10_LINE_HEIGHT = "1.2";
 const MM_TO_TWIPS = 56.7;
@@ -107,17 +108,20 @@ function getWordExportFontInlineStyle(node) {
     const isTableContent = !!node.closest?.("table") && !isSignatureContent;
     const isCompactTableContent = !!node.closest?.(".docx-compact-table");
     const isExportTableFont10Content = !!node.closest?.(".export-table-font-10");
+    const isRecipientsBlockContent = !!node.closest?.(".export-recipients-block");
     const className = node?.getAttribute?.("class") || "";
     const isCheckboxSymbol = /checkbox(?:-|_)?symbol|checkbox/i.test(className);
     const fontSize = isCheckboxSymbol
         ? WORD_CHECKBOX_FONT_SIZE
-        : isExportTableFont10Content
+        : isRecipientsBlockContent
+          ? RECIPIENTS_BLOCK_FONT_SIZE
+          : isExportTableFont10Content
             ? EXPORT_TABLE_FONT_10_SIZE
             : isCompactTableContent
-                ? WORD_COMPACT_TABLE_FONT_SIZE
-                : isTableContent
-                    ? WORD_TABLE_FONT_SIZE
-                    : WORD_DOCUMENT_FONT_SIZE;
+              ? WORD_COMPACT_TABLE_FONT_SIZE
+              : isTableContent
+                ? WORD_TABLE_FONT_SIZE
+                : WORD_DOCUMENT_FONT_SIZE;
     const lineHeight = isExportTableFont10Content
         ? EXPORT_TABLE_FONT_10_LINE_HEIGHT
         : isCompactTableContent
@@ -1060,6 +1064,16 @@ export function generateHtmlString(element, options = {}) {
     [data-export-signature-table] i {
       font-size: ${exportDocumentFontSize};
       line-height: ${DOCUMENT_LINE_HEIGHT};
+    }
+
+    .document-export-root .export-recipients-block,
+    .document-export-root .export-recipients-block p,
+    .document-export-root .export-recipients-block span,
+    .document-export-root .export-recipients-block strong,
+    .document-export-root .export-recipients-block em,
+    .document-export-root .export-recipients-block b,
+    .document-export-root .export-recipients-block i {
+      font-size: ${RECIPIENTS_BLOCK_FONT_SIZE} !important;
     }
 
   </style>

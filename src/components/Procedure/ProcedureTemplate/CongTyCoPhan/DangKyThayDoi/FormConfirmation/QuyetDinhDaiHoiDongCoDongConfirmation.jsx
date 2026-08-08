@@ -935,7 +935,7 @@ function QuyetDinhDaiHoiDongCoDongConfirmation({ dataJson }) {
                     <tbody>
                         <tr>
                             <td
-                                className="signature-recipients-cell"
+                                className={`${styles.recipientsBlock} export-recipients-block signature-recipients-cell`}
                                 style={{
                                     border: "none",
                                     width: "45%",
@@ -945,7 +945,9 @@ function QuyetDinhDaiHoiDongCoDongConfirmation({ dataJson }) {
                                 }}
                             >
                                 <p>
-                                    <strong>Nơi nhận:</strong>
+                                    <strong>
+                                        <em>Nơi nhận:</em>
+                                    </strong>
                                 </p>
                                 <p>- Như Điều 3 (để thực hiện);</p>
                                 <p>- Phòng ĐKKD - Sở TC (để đăng ký);</p>

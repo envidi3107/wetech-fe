@@ -1,4 +1,4 @@
-import GiayDeNghiDangKyThayDoiDeclarationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiDeclarationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiGiayChungNhanDoanhNghiep/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
 
 const EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiVonDauTuDNTN"];
 

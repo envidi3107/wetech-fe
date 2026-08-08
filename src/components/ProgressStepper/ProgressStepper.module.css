@@ -8,10 +8,10 @@
 
 .steps {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
     width: 100%;
-    max-width: 850px;
+    max-width: 1115px;
     margin: 0 auto;
     position: relative;
 }
@@ -21,6 +21,7 @@
     flex-direction: column;
     align-items: center;
     flex: 1;
+    max-width: 250px;
     position: relative;
     z-index: 1;
 }

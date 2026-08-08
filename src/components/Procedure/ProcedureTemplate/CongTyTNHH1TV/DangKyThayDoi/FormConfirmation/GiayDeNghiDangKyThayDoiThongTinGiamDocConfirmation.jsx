@@ -17,6 +17,41 @@ const DOCUMENT_STYLE = {
     color: "#000",
 };
 
+function Checkbox({ checked }) {
+    return (
+        <span
+            className={`${styles.checkbox} checkbox-symbol`}
+            style={{
+                display: "inline-block",
+                fontWeight: "inherit",
+                fontStyle: "normal",
+                fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
+                lineHeight: 1,
+                margin: "0 0 0 4pt",
+                minWidth: "18pt",
+                textAlign: "center",
+                verticalAlign: "middle",
+            }}
+        >
+            {checked ? "☒" : "☐"}
+            {"\u00A0"}
+        </span>
+    );
+}
+
+function CheckboxOption({ label, checked, marginLeft = "0" }) {
+    return (
+        <span
+            className={`${styles.inlineField} inlineField`}
+            style={{ display: "inline-block", marginLeft, fontWeight: "inherit", fontStyle: "normal" }}
+        >
+            {label}
+            {"\u00A0"}
+            <Checkbox checked={checked} />
+        </span>
+    );
+}
+
 function isEmptyValue(value) {
     return value === undefined || value === null || String(value).trim() === "";
 }
@@ -99,13 +134,45 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                 <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={companyName} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
 
-                <p style={{ margin: "14pt 0 8pt" }}>
-                    <strong>MỤC A: KÊ KHAI THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ</strong>
+                <p style={{ margin: "14pt 0 8pt", textAlign: "center" }}>
+                    <strong>A. ĐĂNG KÝ THAY ĐỔI NỘI DUNG ĐĂNG KÝ DOANH NGHIỆP</strong>
                 </p>
-                <p style={{ margin: "8pt 0" }}>
-                    <span style={{ fontSize: "15pt", fontStyle: "normal" }}>☒</span>
-                    {"\u00A0"}THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ
+
+                <p style={{ margin: "10pt 0 4pt" }}>
+                    Doanh nghiệp đăng ký thay đổi trên cơ sở (chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi
+                    trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X vào ô thích hợp):
                 </p>
+                <p style={{ margin: "4pt 0 4pt 18pt" }}>
+                    - Đăng ký thay đổi trên cơ sở tách doanh nghiệp{"\u00A0"}
+                    <Checkbox checked={data.coSoThayDoi === "tach"} />
+                </p>
+                <p style={{ margin: "4pt 0 4pt 18pt" }}>
+                    - Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp{"\u00A0"}
+                    <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
+                </p>
+                <p style={{ margin: "8pt 0 4pt" }}>
+                    <strong>
+                        Thông tin về doanh nghiệp bị sáp nhập (chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi
+                        trên cơ sở sáp nhập doanh nghiệp):
+                    </strong>
+                </p>
+                <Line
+                    label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
+                    value={data.sapNhap_tenDoanhNghiep}
+                />
+                <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.sapNhap_maSoDoanhNghiep} />
+                <p>
+                    Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập và các chi nhánh/văn
+                    phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp nhập.
+                </p>
+                <p>
+                    - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
+                    biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
+                    <CheckboxOption label="Có" checked={data.anNinhQuocPhong === "Có"} marginLeft="36pt" />
+                    <CheckboxOption label="Không" checked={data.anNinhQuocPhong !== "Có"} marginLeft="24pt" />
+                </p>
+
+                <p style={{ margin: "8pt 0", textAlign: "center" }}>THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ</p>
 
                 <table
                     className={styles.borderTable}
@@ -121,7 +188,7 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ border: "1px solid #000", textAlign: "center" }}>10.1</td>
+                            <td style={{ border: "1px solid #000", textAlign: "center" }}>1</td>
                             <td style={{ border: "1px solid #000" }}>
                                 <p style={{ margin: 0 }}>
                                     <strong>Thông tin về Giám đốc/Tổng giám đốc sau khi thay đổi:</strong>
@@ -131,7 +198,7 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                         </tr>
                         {hasAccountingInfo && (
                             <tr>
-                                <td style={{ border: "1px solid #000", textAlign: "center" }}>10.2</td>
+                                <td style={{ border: "1px solid #000", textAlign: "center" }}>2</td>
                                 <td style={{ border: "1px solid #000" }}>
                                     <p style={{ margin: 0 }}>
                                         <strong>Thông tin về Kế toán trưởng/Phụ trách kế toán:</strong>
@@ -148,13 +215,18 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                     thực của nội dung Giấy đề nghị này.
                 </p>
 
+                <p>
+                    Người ký tại Thông báo này cam kết là người có quyền và nghĩa vụ thực hiện thủ tục đăng ký doanh
+                    nghiệp theo quy định của pháp luật và Điều lệ công ty.
+                </p>
+
                 <table
                     className={`${styles.noBorderTable} signature-table no-border`}
                     style={{ width: "100%", borderCollapse: "collapse", border: "none", marginTop: "20pt" }}
                 >
                     <tbody>
                         <tr>
-                            <td className="signature-spacer" style={{ width: "50%", border: "none" }}>
+                            <td className="signature-spacer" style={{ width: "55%", border: "none" }}>
                                 {"\u00A0"}
                             </td>
                             <td className="signature-cell" style={{ border: "none", textAlign: "center" }}>

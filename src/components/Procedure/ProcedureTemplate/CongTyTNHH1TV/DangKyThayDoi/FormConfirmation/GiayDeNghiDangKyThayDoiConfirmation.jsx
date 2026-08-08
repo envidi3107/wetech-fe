@@ -1113,26 +1113,27 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                         <Checkbox checked={data.coSoThayDoi === "sap_nhap"} />
                                     </p>
                                 </div>
-                                {data.coSoThayDoi === "sap_nhap" && (
-                                    <>
-                                        <Line
-                                            label="Tên doanh nghiệp bị sáp nhập"
-                                            value={data.sapNhap_tenDoanhNghiep}
-                                        />
-                                        <Line
-                                            label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
-                                            value={data.sapNhap_maSoDoanhNghiep}
-                                        />
-                                        <p>
-                                            Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp
-                                            nhập và các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh
-                                            nghiệp bị sáp nhập.
-                                        </p>
-                                    </>
-                                )}
+                                <p style={{ margin: "8pt 0 4pt" }}>
+                                    <strong>
+                                        Thông tin về doanh nghiệp bị sáp nhập (chỉ kê khai trong trường hợp doanh nghiệp
+                                        đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp):
+                                    </strong>
+                                </p>
+                                <Line
+                                    label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
+                                    value={data.sapNhap_tenDoanhNghiep}
+                                />
+                                <Line
+                                    label="Mã số doanh nghiệp/Mã số thuế"
+                                    value={data.sapNhap_maSoDoanhNghiep}
+                                />
                                 <p>
-                                    Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
-                                    xã/phường ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh:
+                                    Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập và
+                                    các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp nhập.
+                                </p>
+                                <p>
+                                    - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới;
+                                    xã, phường ven biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
                                     <CheckboxOption
                                         label="Có"
                                         checked={data.anNinhQuocPhong === "Có"}

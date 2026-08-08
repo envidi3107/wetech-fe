@@ -84,6 +84,26 @@ function PersonFields({ data, prefix, required = false }) {
     );
 }
 
+function YesNoRadio({ name, value, onChange }) {
+    return (
+        <div className={styles.radioGroup}>
+            {["Có", "Không"].map((option) => (
+                <label key={option} className={styles.radioLabel}>
+                    <input
+                        type="radio"
+                        name={name}
+                        value={option}
+                        className={styles.radioInput}
+                        checked={value === option}
+                        onChange={() => onChange(option)}
+                    />
+                    {option}
+                </label>
+            ))}
+        </div>
+    );
+}
+
 const REPRESENTATIVE_FIELDS_TO_CLEAR = [
     "nguoiDaiDien_email",
     "nguoiDaiDien_tinh",
@@ -108,6 +128,12 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
         const [formVersion, setFormVersion] = useState(0);
         const [kinhGuiProvince, setKinhGuiProvince] = useState("");
         const [kinhGuiValue, setKinhGuiValue] = useState("");
+        const [coSoThayDoi, setCoSoThayDoi] = useState(
+            () => normalizeDataJson(dataJson).coSoThayDoi || "",
+        );
+        const [anNinhQuocPhong, setAnNinhQuocPhong] = useState(
+            () => normalizeDataJson(dataJson).anNinhQuocPhong || "Không",
+        );
 
         useEffect(() => {
             const parsed = normalizeDataJson(dataJson);
@@ -123,6 +149,8 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
             setNormalizedData(parsed);
             setKinhGuiProvince(matchedProvince);
             setKinhGuiValue(matchedProvince ? buildKinhGui(matchedProvince) : parsed.kinhGui || "");
+            setCoSoThayDoi(parsed.coSoThayDoi || "");
+            setAnNinhQuocPhong(parsed.anNinhQuocPhong || "Không");
             setFormVersion((version) => version + 1);
         }, [dataJson, provinces]);
 
@@ -145,6 +173,12 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
             const data = Object.fromEntries(new FormData(formRef.current).entries());
             data.kinhGui = kinhGuiValue;
             data.kinhGuiProvince = kinhGuiProvince;
+            data.coSoThayDoi = coSoThayDoi;
+            data.anNinhQuocPhong = anNinhQuocPhong;
+            if (coSoThayDoi !== "sap_nhap") {
+                data.sapNhap_tenDoanhNghiep = "";
+                data.sapNhap_maSoDoanhNghiep = "";
+            }
             data.noiDungThayDoi = ["A"];
             A_CHANGE_OPTIONS.forEach((option) => {
                 data[option.name] = option.name === "a_doiThongTinThue" ? "true" : "false";
@@ -167,7 +201,10 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
             getDraftData: collectData,
             getExportData: collectData,
             importData: (importedData) => {
-                setNormalizedData(normalizeDataJson(importedData));
+                const parsed = normalizeDataJson(importedData);
+                setNormalizedData(parsed);
+                setCoSoThayDoi(parsed.coSoThayDoi || "");
+                setAnNinhQuocPhong(parsed.anNinhQuocPhong || "Không");
                 setFormVersion((version) => version + 1);
             },
         }));
@@ -198,7 +235,79 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
                 />
 
                 <div className={styles.sectionGroup}>
-                    <h3 className={styles.sectionTitle}>MỤC A: KÊ KHAI THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ</h3>
+                    <h3 className={styles.sectionTitle}>Doanh nghiệp đăng ký thay đổi trên cơ sở:</h3>
+                    <p className={styles.note}>
+                        (Chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi trên cơ sở tách doanh nghiệp hoặc
+                        sáp nhập doanh nghiệp, đánh dấu X vào ô thích hợp)
+                    </p>
+                    <div className={styles.radioGroup} style={{ alignItems: "flex-start", flexWrap: "wrap" }}>
+                        {[
+                            ["tach", "Đăng ký thay đổi trên cơ sở tách doanh nghiệp"],
+                            ["sap_nhap", "Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp"],
+                        ].map(([value, label]) => (
+                            <label key={value} className={styles.radioLabel}>
+                                <input
+                                    type="checkbox"
+                                    value={value}
+                                    className={styles.radioInput}
+                                    checked={coSoThayDoi === value}
+                                    onChange={(event) => setCoSoThayDoi(event.target.checked ? value : "")}
+                                />
+                                {label}
+                            </label>
+                        ))}
+                    </div>
+
+                    {coSoThayDoi === "sap_nhap" && (
+                        <div>
+                            <h3 className={styles.sectionTitle}>
+                                Thông tin về doanh nghiệp bị sáp nhập (chỉ kê khai trong trường hợp doanh nghiệp đăng ký
+                                thay đổi trên cơ sở sáp nhập doanh nghiệp):
+                            </h3>
+                            <div className={styles.grid2}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Tên doanh nghiệp (ghi bằng chữ in hoa)</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        name="sapNhap_tenDoanhNghiep"
+                                        defaultValue={toUppercaseValue(normalizedData.sapNhap_tenDoanhNghiep)}
+                                        style={{ textTransform: "uppercase" }}
+                                        onInput={handleUppercaseInput}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Mã số doanh nghiệp/Mã số thuế</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        name="sapNhap_maSoDoanhNghiep"
+                                        defaultValue={normalizedData.sapNhap_maSoDoanhNghiep || ""}
+                                    />
+                                </div>
+                            </div>
+                            <p className={styles.note}>
+                                Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập và các
+                                chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp nhập.
+                            </p>
+                        </div>
+                    )}
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>
+                            Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã,
+                            phường ven biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
+                        </label>
+                        <YesNoRadio
+                            name="anNinhQuocPhong"
+                            value={anNinhQuocPhong}
+                            onChange={setAnNinhQuocPhong}
+                        />
+                    </div>
+                </div>
+
+                <div className={styles.sectionGroup}>
+                    <h3 className={styles.sectionTitle}>A. ĐĂNG KÝ THAY ĐỔI NỘI DUNG ĐĂNG KÝ DOANH NGHIỆP</h3>
                     <table className={styles.table}>
                         <thead>
                             <tr>

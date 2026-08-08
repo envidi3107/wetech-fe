@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclarationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclarationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
 import {
     CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
     DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,

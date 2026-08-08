@@ -4,20 +4,42 @@ import GiayDeNghiDKDNDeclaration from "@/components/Procedure/ProcedureTemplate/
 import GiayDeNghiDKDNConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation";
 import DanhSachCSHHuongLoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
 import DanhSachCSHHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
-import GiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiGiayChungNhanDoanhNghiep/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
 import GiayDeNghiDangKyThayDoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
-import QuyetDinhHoiDongThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/QuyetDinhHoiDongThanhVienDeclaration";
+import QuyetDinhHoiDongThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiGiayChungNhanDoanhNghiep/FormDeclaration/QuyetDinhHoiDongThanhVienDeclaration";
 import QuyetDinhHoiDongThanhVienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/QuyetDinhHoiDongThanhVienConfirmation";
-import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
 import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
-import GiayDeNghiDangKyThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
-import GiayDeNghiDangKyThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";
-import GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration";
-import GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation";
-import QuyetDinhChuSoHuuThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/QuyetDinhChuSoHuuThayDoiNguoiDaiDienDeclaration";
+import GiayDeNghiDangKyThayDoiChuSoHuuHuongLoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import GiayDeNghiDangKyThayDoiChuSoHuuHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormDeclaration/GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
+import GiayDeNghiDangKyThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";
+import DanhSachCSHHuongLoiThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
+import DanhSachCSHHuongLoiThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
+import GiayUyQuyenThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormDeclaration/GiayUyQuyenDeclaration";
+import GiayUyQuyenThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormConfirmation/GiayUyQuyenConfirmation";
+import GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration";
+import GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormConfirmation/GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation";
+import QuyetDinhChuSoHuuThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormDeclaration/QuyetDinhChuSoHuuThayDoiNguoiDaiDienDeclaration";
 import QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation";
-import GiayUyQuyenThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormDeclaration/GiayUyQuyenThayDoiNguoiDaiDienDeclaration";
+import GiayUyQuyenThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormDeclaration/GiayUyQuyenThayDoiNguoiDaiDienDeclaration";
 import GiayUyQuyenThayDoiNguoiDaiDienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayUyQuyenThayDoiNguoiDaiDienConfirmation";
+import DongThoiGiayDeNghiDangKyThayDoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiDeclaration";
+import DongThoiGiayDeNghiDangKyThayDoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import DongThoiGiayDeNghiThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatDeclaration";
+import DongThoiGiayDeNghiThayDoiNguoiDaiDienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
+import DongThoiGiayDeNghiThayDoiChuSoHuuDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/GiayDeNghiDangKyThayDoiChuSoHuuDeclaration";
+import DongThoiGiayDeNghiThayDoiChuSoHuuConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";
+import DongThoiQuyetDinhThayDoiNguoiDaiDienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/QuyetDinhChuSoHuuThayDoiNguoiDaiDienDeclaration";
+import DongThoiQuyetDinhThayDoiNguoiDaiDienConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation";
+import DongThoiDanhSachCSHHuongLoiDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/DanhSachCSHHuongLoiDeclaration";
+import DongThoiDanhSachCSHHuongLoiConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/DanhSachCSHHuongLoiConfirmation";
+import DongThoiGiayUyQuyenDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/GiayUyQuyenDeclaration";
+import DongThoiGiayUyQuyenConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/GiayUyQuyenConfirmation";
+import HopDongChuyenNhuongVonGopDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/HopDongChuyenNhuongVonGopDeclaration";
+import HopDongChuyenNhuongVonGopConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/HopDongChuyenNhuongVonGopConfirmation";
+import BienBanThanhLyHopDongChuyenNhuongDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormDeclaration/BienBanThanhLyHopDongChuyenNhuongDeclaration";
+import BienBanThanhLyHopDongChuyenNhuongConfirmation from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiDongThoiCSH_NDDPL/FormConfirmation/BienBanThanhLyHopDongChuyenNhuongConfirmation";
 import GiayDeNghi from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayDeNghi";
 import GiayDeNghi2 from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormConfirmation/GiayDeNghi";
 import GiayUyQuyen from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/FormDeclaration/GiayUyQuyen";
@@ -25,8 +47,6 @@ import GiayUyQuyen2 from "@/components/Procedure/ProcedureTemplate/HoKinhDoanh/F
 
 import GiayDeNghiDKDNDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/GiayDeNghiDKDNDeclaration";
 import GiayDeNghiDKDNConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation";
-import GiayDeNghiDKHGDNDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/GiayDeNghiDKHGDNDeclaration";
-import GiayDeNghiDKHGDNConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormConfirmation/GiayDeNghiDKHGDNConfirmation";
 import GiayUyQuyenDeclaration2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/GiayUyQuyenDeclaration";
 import GiayUyQuyenConfirmation2TV from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormConfirmation/GiayUyQuyenConfirmation";
 import DanhSachThanhVienDeclaration from "@/components/Procedure/ProcedureTemplate/CongTyTNHH2TVTroLen/ThanhLapMoi/FormDeclaration/DanhSachThanhVienDeclaration";
@@ -245,9 +265,77 @@ const typeCompanyOptions = [
                         value: "giay_de_nghi_dang_ky_thay_doi_chu_so_huu_cong_ty_tnhh_1_thanh_vien",
                         formsType: [
                             {
-                                title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty TNHH 1 thành viên",
+                                title: "Giấy đề nghị đăng ký thay đổi nội dung Giấy chứng nhận đăng ký doanh nghiệp",
+                                declaration: GiayDeNghiDangKyThayDoiChuSoHuuHuongLoiDeclaration,
+                                confirmation: GiayDeNghiDangKyThayDoiChuSoHuuHuongLoiConfirmation,
+                            },
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty",
+                                aliases: ["Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty TNHH 1 thành viên"],
                                 declaration: GiayDeNghiDangKyThayDoiChuSoHuuDeclaration,
                                 confirmation: GiayDeNghiDangKyThayDoiChuSoHuuConfirmation,
+                            },
+                            {
+                                title: "Danh sách chủ sở hữu hưởng lợi",
+                                aliases: ["Danh sách CSH hưởng lợi"],
+                                declaration: DanhSachCSHHuongLoiThayDoiChuSoHuuDeclaration,
+                                confirmation: DanhSachCSHHuongLoiThayDoiChuSoHuuConfirmation,
+                            },
+                            {
+                                title: "Giấy uỷ quyền",
+                                aliases: ["Giấy ủy quyền"],
+                                declaration: GiayUyQuyenThayDoiChuSoHuuDeclaration,
+                                confirmation: GiayUyQuyenThayDoiChuSoHuuConfirmation,
+                            },
+                        ],
+                    },
+                    {
+                        title: "Đồng thời thay đổi chủ sở hữu công ty và người đại diện theo pháp luật",
+                        value: "dong_thoi_thay_doi_chu_so_huu_cong_ty_va_nguoi_dai_dien_theo_phap_luat",
+                        formsType: [
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi nội dung Giấy chứng nhận đăng ký doanh nghiệp",
+                                declaration: DongThoiGiayDeNghiDangKyThayDoiDeclaration,
+                                confirmation: DongThoiGiayDeNghiDangKyThayDoiConfirmation,
+                            },
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi người đại diện theo pháp luật",
+                                declaration: DongThoiGiayDeNghiThayDoiNguoiDaiDienDeclaration,
+                                confirmation: DongThoiGiayDeNghiThayDoiNguoiDaiDienConfirmation,
+                            },
+                            {
+                                title: "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty",
+                                declaration: DongThoiGiayDeNghiThayDoiChuSoHuuDeclaration,
+                                confirmation: DongThoiGiayDeNghiThayDoiChuSoHuuConfirmation,
+                            },
+                            {
+                                title: "Quyết định thay đổi người đại diện theo pháp luật của Chủ sở hữu công ty",
+                                declaration: DongThoiQuyetDinhThayDoiNguoiDaiDienDeclaration,
+                                confirmation: DongThoiQuyetDinhThayDoiNguoiDaiDienConfirmation,
+                            },
+                            {
+                                title: "Danh sách chủ sở hữu hưởng lợi",
+                                aliases: ["Danh sách CSH hưởng lợi"],
+                                declaration: DongThoiDanhSachCSHHuongLoiDeclaration,
+                                confirmation: DongThoiDanhSachCSHHuongLoiConfirmation,
+                            },
+                            {
+                                title: "Giấy uỷ quyền",
+                                aliases: ["Giấy ủy quyền"],
+                                declaration: DongThoiGiayUyQuyenDeclaration,
+                                confirmation: DongThoiGiayUyQuyenConfirmation,
+                            },
+                            {
+                                title: "Hợp đồng chuyển nhượng vốn góp",
+                                aliases: ["Hợp đồng chuyển nhượng phần vốn góp"],
+                                declaration: HopDongChuyenNhuongVonGopDeclaration,
+                                confirmation: HopDongChuyenNhuongVonGopConfirmation,
+                            },
+                            {
+                                title: "Biên bản thanh lý hợp đồng chuyển nhượng",
+                                aliases: ["Biên bản thanh lý HĐCN", "Biên bản thanh lý hợp đồng chuyển nhượng phần vốn góp"],
+                                declaration: BienBanThanhLyHopDongChuyenNhuongDeclaration,
+                                confirmation: BienBanThanhLyHopDongChuyenNhuongConfirmation,
                             },
                         ],
                     },

@@ -181,8 +181,17 @@ h3.docTitle {
 .content table:not([class*="signature-table"]) em,
 .content table:not([class*="signature-table"]) b,
 .content table:not([class*="signature-table"]) i {
-    font-size: var(--procedure-confirmation-table-font-size, 13pt) !important;
-    line-height: var(--procedure-confirmation-table-line-height, 1.25) !important;
+    font-size: var(--procedure-confirmation-font-size, 18px) !important;
+}
+
+.content table:not([class*="signature-table"]) td.recipientsBlock,
+.content table:not([class*="signature-table"]) td.recipientsBlock p,
+.content table:not([class*="signature-table"]) td.recipientsBlock span,
+.content table:not([class*="signature-table"]) td.recipientsBlock strong,
+.content table:not([class*="signature-table"]) td.recipientsBlock em,
+.content table:not([class*="signature-table"]) td.recipientsBlock b,
+.content table:not([class*="signature-table"]) td.recipientsBlock i {
+    font-size: 16px !important;
 }
 
 .content table.compactPdfTable,

@@ -47,6 +47,10 @@ const THANH_LAP_CONG_TY_SERVICE = "thanh_lap_cong_ty";
 const DANG_KY_THAY_DOI_SERVICE = "dang_ky_thay_doi";
 const DANG_KY_THAY_DOI_NOI_DUNG_TYPE = "giay_de_nghi_dang_ky_thay_doi_noi_dung_giay_chung_nhan_dang_ky_doanh_nghiep";
 const DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE = "giay_de_nghi_dang_ky_thay_doi_nguoi_dai_dien_theo_phap_luat";
+const DANG_KY_THAY_DOI_CHU_SO_HUU_TYPE =
+    "giay_de_nghi_dang_ky_thay_doi_chu_so_huu_cong_ty_tnhh_1_thanh_vien";
+const DANG_KY_THAY_DOI_DONG_THOI_CHU_SO_HUU_NGUOI_DAI_DIEN_TYPE =
+    "dong_thoi_thay_doi_chu_so_huu_cong_ty_va_nguoi_dai_dien_theo_phap_luat";
 const DANG_KY_THAY_DOI_PREFILL_TYPE_COMPANIES = new Set([
     TNHH_1TV_TYPE_COMPANY,
     TNHH_2TV_TYPE_COMPANY,
@@ -332,6 +336,18 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         procedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
         procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
         currentForm?.type === DANG_KY_THAY_DOI_NGUOI_DAI_DIEN_TYPE;
+    const isTnhh1OwnerChangeProcedure =
+        procedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
+        procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
+        currentForm?.type === DANG_KY_THAY_DOI_CHU_SO_HUU_TYPE;
+    const isTnhh1CombinedOwnerRepresentativeChangeProcedure =
+        procedure?.typeCompany === TNHH_1TV_TYPE_COMPANY &&
+        procedure?.serviceType === DANG_KY_THAY_DOI_SERVICE &&
+        currentForm?.type === DANG_KY_THAY_DOI_DONG_THOI_CHU_SO_HUU_NGUOI_DAI_DIEN_TYPE;
+    const isConfiguredTnhh1ChangeProcedure =
+        isTnhh1RepresentativeChangeProcedure ||
+        isTnhh1OwnerChangeProcedure ||
+        isTnhh1CombinedOwnerRepresentativeChangeProcedure;
 
     const isGiayDKDN =
         formComponentName === "GiayDeNghiDKDNDeclaration" ||
@@ -373,7 +389,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             !(
                 isDangKyThayDoiPrefillForm ||
                 isDangKyThayDoiDynamicSupplementForm ||
-                isTnhh1RepresentativeChangeProcedure
+                isConfiguredTnhh1ChangeProcedure
             )
         ) {
             return null;
@@ -412,7 +428,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 foundingShareholderForm: sourceForms.find(isFoundingShareholderForm),
             };
 
-            if (isDangKyThayDoiNguoiDaiDienPhapLuat || isTnhh1RepresentativeChangeProcedure) {
+            if (isDangKyThayDoiNguoiDaiDienPhapLuat || isConfiguredTnhh1ChangeProcedure) {
                 return { registrationForm };
             }
 
@@ -432,7 +448,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
         isDangKyThayDoiDynamicSupplementForm,
         isDangKyThayDoiNguoiDaiDienPhapLuat,
         isDangKyThayDoiPrefillForm,
-        isTnhh1RepresentativeChangeProcedure,
+        isConfiguredTnhh1ChangeProcedure,
         procedure?.procedureId,
         procedure?.typeCompany,
     ]);
@@ -480,8 +496,8 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             : null;
     }, [fetchInitialDangKyThayDoiData]);
 
-    const fetchPreviousRepresentativeChangeData = useCallback(async () => {
-        if (!isTnhh1RepresentativeChangeProcedure || !currentForm?.formId) return null;
+    const fetchPreviousConfiguredChangeData = useCallback(async () => {
+        if (!isConfiguredTnhh1ChangeProcedure || !currentForm?.formId) return null;
 
         const currentIndex = forms?.findIndex((form) => form.formId === currentForm.formId) ?? -1;
         if (currentIndex <= 0) return null;
@@ -505,19 +521,26 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
             {},
         );
         return Object.keys(combined).length ? combined : null;
-    }, [currentForm?.formId, forms, isTnhh1RepresentativeChangeProcedure]);
+    }, [currentForm?.formId, forms, isConfiguredTnhh1ChangeProcedure]);
 
     const fetchCombinedPrefillData = useCallback(async () => {
         const [initialData, previousData] = await Promise.all([
             fetchDangKyThayDoiPrefillData(),
-            fetchPreviousRepresentativeChangeData(),
+            fetchPreviousConfiguredChangeData(),
         ]);
         const combined = {
             ...(initialData || {}),
             ...(previousData || {}),
         };
+        if (isTnhh1CombinedOwnerRepresentativeChangeProcedure && initialData) {
+            combined.duLieuDangKyBanDau = previousData?.duLieuDangKyBanDau || initialData;
+        }
         return Object.keys(combined).length ? combined : null;
-    }, [fetchDangKyThayDoiPrefillData, fetchPreviousRepresentativeChangeData]);
+    }, [
+        fetchDangKyThayDoiPrefillData,
+        fetchPreviousConfiguredChangeData,
+        isTnhh1CombinedOwnerRepresentativeChangeProcedure,
+    ]);
 
     const fetchFormSubmission = useCallback(async () => {
         if (!currentForm?.formId) return;

@@ -522,6 +522,8 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         formRef,
         excludedAOptionNames = DEFAULT_EXCLUDED_A_OPTION_NAMES,
         includeCoPhanFields = false,
+        fixedMainOptionValues = null,
+        fixedAOptionNames = null,
     },
     componentRef,
 ) {
@@ -533,9 +535,29 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         ? DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX
         : DEFAULT_TNHH_COMPANY_NAME_PREFIX;
     const excludedAOptionNamesSet = useMemo(() => new Set(excludedAOptionNames), [excludedAOptionNames]);
+    const fixedMainOptionValuesSet = useMemo(
+        () => (fixedMainOptionValues ? new Set(fixedMainOptionValues) : null),
+        [fixedMainOptionValues],
+    );
+    const fixedAOptionNamesSet = useMemo(
+        () => (fixedAOptionNames ? new Set(fixedAOptionNames) : null),
+        [fixedAOptionNames],
+    );
+    const availableMainChangeOptions = useMemo(
+        () =>
+            fixedMainOptionValuesSet
+                ? MAIN_CHANGE_OPTIONS.filter((option) => fixedMainOptionValuesSet.has(option.value))
+                : MAIN_CHANGE_OPTIONS,
+        [fixedMainOptionValuesSet],
+    );
     const availableAChangeOptions = useMemo(
-        () => A_CHANGE_OPTIONS.filter((option) => !excludedAOptionNamesSet.has(option.name)),
-        [excludedAOptionNamesSet],
+        () =>
+            A_CHANGE_OPTIONS.filter(
+                (option) =>
+                    !excludedAOptionNamesSet.has(option.name) &&
+                    (!fixedAOptionNamesSet || fixedAOptionNamesSet.has(option.name)),
+            ),
+        [excludedAOptionNamesSet, fixedAOptionNamesSet],
     );
     const { provinces } = useFetchAddress();
     const [kinhGuiProvince, setKinhGuiProvince] = useState("");
@@ -569,10 +591,21 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
 
         setKinhGuiProvince(matchedProvince);
         setKinhGuiValue(matchedProvince ? buildKinhGui(matchedProvince) : parsed.kinhGui || "");
-        setMainOptions(normalizeSelectedMainOptions(parsed.noiDungThayDoi));
+        const parsedMainOptions = normalizeSelectedMainOptions(parsed.noiDungThayDoi).filter((value) =>
+            availableMainChangeOptions.some((option) => option.value === value),
+        );
+        setMainOptions(
+            fixedMainOptionValuesSet
+                ? availableMainChangeOptions.map((option) => option.value)
+                : parsedMainOptions.length
+                  ? parsedMainOptions
+                  : availableMainChangeOptions.slice(0, 1).map((option) => option.value),
+        );
         setAOptions(
             availableAChangeOptions.reduce((acc, option) => {
-                acc[option.name] = isTruthy(parsed[option.name]);
+                acc[option.name] = fixedAOptionNamesSet
+                    ? fixedAOptionNamesSet.has(option.name)
+                    : isTruthy(parsed[option.name]);
                 return acc;
             }, {}),
         );
@@ -596,7 +629,15 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
             parsed.doiThanhVienList || parsed.thanhVienList || danhSachThanhVienData?.thanhVienList || [],
         );
         setCoSoThayDoi(parsed.coSoThayDoi || "");
-    }, [availableAChangeOptions, danhSachThanhVienData, dataJson, provinces]);
+    }, [
+        availableAChangeOptions,
+        availableMainChangeOptions,
+        danhSachThanhVienData,
+        dataJson,
+        fixedAOptionNamesSet,
+        fixedMainOptionValuesSet,
+        provinces,
+    ]);
 
     useEffect(() => {
         if (!pendingScrollTarget || !mainOptions.includes("A") || !aOptions[pendingScrollTarget]) return;
@@ -756,12 +797,14 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
     };
 
     const toggleMainOption = (value) => {
+        if (fixedMainOptionValuesSet) return;
         setMainOptions((prev) =>
             prev.includes(value) ? prev.filter((selectedValue) => selectedValue !== value) : [...prev, value],
         );
     };
 
     const toggleAOption = (name) => {
+        if (fixedAOptionNamesSet) return;
         setAOptions((prev) => ({ ...prev, [name]: !prev[name] }));
     };
 
@@ -782,6 +825,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         availableAChangeOptions.length > 0 && availableAChangeOptions.every((option) => !!aOptions[option.name]);
 
     const toggleAllAOptions = () => {
+        if (fixedAOptionNamesSet) return;
         setAOptions(
             availableAChangeOptions.reduce((acc, option) => {
                 acc[option.name] = !areAllAOptionsSelected;
@@ -849,16 +893,20 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
         });
         data.kinhGui = kinhGuiValue;
         data.kinhGuiProvince = kinhGuiProvince;
-        data.noiDungThayDoi = mainOptions;
+        data.noiDungThayDoi = fixedMainOptionValuesSet
+            ? availableMainChangeOptions.map((option) => option.value)
+            : mainOptions;
         data.coSoThayDoi = coSoThayDoi;
         if (coSoThayDoi !== "sap_nhap") {
             data.sapNhap_tenDoanhNghiep = "";
             data.sapNhap_maSoDoanhNghiep = "";
         }
-        const isMainASelected = mainOptions.includes("A");
+        const isMainASelected = data.noiDungThayDoi.includes("A");
         A_CHANGE_OPTIONS.forEach((option) => {
             data[option.name] =
-                isMainASelected && !excludedAOptionNamesSet.has(option.name) && aOptions[option.name]
+                isMainASelected &&
+                !excludedAOptionNamesSet.has(option.name) &&
+                (fixedAOptionNamesSet ? fixedAOptionNamesSet.has(option.name) : aOptions[option.name])
                     ? "true"
                     : "false";
         });
@@ -924,7 +972,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                     <div className={localStyles.stickySection}>
                         <h3 className={localStyles.stickyTitle}>Chọn nội dung kê khai</h3>
                         <div className={localStyles.optionList}>
-                            {MAIN_CHANGE_OPTIONS.map((option) => (
+                            {availableMainChangeOptions.map((option) => (
                                 <label key={option.value} className={localStyles.optionItem}>
                                     <input
                                         type="checkbox"
@@ -932,6 +980,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                         value={option.value}
                                         checked={isMainSelected(option.value)}
                                         onChange={() => toggleMainOption(option.value)}
+                                        disabled={!!fixedMainOptionValuesSet}
                                     />
                                     {option.label}
                                 </label>
@@ -945,9 +994,11 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             <p className={localStyles.stickyNote}>
                                 Chọn một hoặc nhiều nội dung thay đổi, phần kê khai tương ứng hiển thị ở cột bên phải.
                             </p>
-                            <button type="button" className={localStyles.selectAllButton} onClick={toggleAllAOptions}>
-                                {areAllAOptionsSelected ? "Bỏ chọn tất cả" : "Tích chọn tất cả"}
-                            </button>
+                            {!fixedAOptionNamesSet && (
+                                <button type="button" className={localStyles.selectAllButton} onClick={toggleAllAOptions}>
+                                    {areAllAOptionsSelected ? "Bỏ chọn tất cả" : "Tích chọn tất cả"}
+                                </button>
+                            )}
                             <div className={localStyles.optionList}>
                                 {availableAChangeOptions.map((option) => (
                                     <div key={option.name} className={localStyles.optionRow}>
@@ -958,6 +1009,7 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                                 value="true"
                                                 checked={!!aOptions[option.name]}
                                                 onChange={() => toggleAOption(option.name)}
+                                                disabled={!!fixedAOptionNamesSet}
                                             />
                                             <span>{option.label}</span>
                                         </label>
@@ -1000,16 +1052,16 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                             <div className={styles.sectionGroup}>
                                 <h3 className={styles.sectionTitle}>Doanh nghiệp đăng ký thay đổi trên cơ sở:</h3>
                                 <p className={styles.note}>
-                                    Chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi trên cơ sở tách doanh
-                                    nghiệp hoặc sáp nhập doanh nghiệp.
+                                    (Chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi trên cơ sở tách doanh
+                                    nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X vào ô thích hợp)
                                 </p>
                                 <div
                                     className={styles.radioGroup}
                                     style={{ alignItems: "flex-start", flexWrap: "wrap" }}
                                 >
-                                    {[
-                                        ["tach", "Tách doanh nghiệp"],
-                                        ["sap_nhap", "Sáp nhập doanh nghiệp"],
+                                    {[ 
+                                        ["tach", "Đăng ký thay đổi trên cơ sở tách doanh nghiệp"],
+                                        ["sap_nhap", "Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp"],
                                     ].map(([value, label]) => (
                                         <label key={value} className={styles.radioLabel}>
                                             <input
@@ -1025,25 +1077,33 @@ const GiayDeNghiDangKyThayDoiDeclaration = forwardRef(function GiayDeNghiDangKyT
                                 </div>
                                 {coSoThayDoi === "sap_nhap" && (
                                     <div>
-                                        <h3 className={styles.sectionTitle}>Thông tin doanh nghiệp bị sáp nhập:</h3>
+                                        <h3 className={styles.sectionTitle}>
+                                            Thông tin về doanh nghiệp bị sáp nhập (chỉ kê khai trong trường hợp doanh
+                                            nghiệp đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp):
+                                        </h3>
                                         <div className={styles.grid2}>
                                             <Field
-                                                label="Tên doanh nghiệp bị sáp nhập (nếu có)"
+                                                label="Tên doanh nghiệp (ghi bằng chữ in hoa)"
                                                 name="sapNhap_tenDoanhNghiep"
                                                 dataJson={normalizedData}
                                             />
                                             <Field
-                                                label="Mã số doanh nghiệp/Mã số thuế của doanh nghiệp bị sáp nhập"
+                                                label="Mã số doanh nghiệp/Mã số thuế"
                                                 name="sapNhap_maSoDoanhNghiep"
                                                 dataJson={normalizedData}
                                             />
                                         </div>
+                                        <p className={styles.note}>
+                                            Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp
+                                            nhập và các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh
+                                            nghiệp bị sáp nhập.
+                                        </p>
                                     </div>
                                 )}
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>
-                                        Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới,
-                                        ven biển hoặc khu vực ảnh hưởng quốc phòng, an ninh
+                                        Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên
+                                        giới; xã, phường ven biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
                                     </label>
                                     <YesNoRadio name="anNinhQuocPhong" dataJson={normalizedData} />
                                 </div>
