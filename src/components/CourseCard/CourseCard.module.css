@@ -28,12 +28,28 @@
     object-fit: cover;
 }
 
+.image-trigger {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.image-trigger:focus-visible {
+    outline: 3px solid #2b4e9a;
+    outline-offset: -3px;
+}
+
 .badge-container {
     position: absolute;
     top: 8px;
     left: 8px;
     display: flex;
     gap: 4px;
+    pointer-events: none;
 }
 
 .badge {
