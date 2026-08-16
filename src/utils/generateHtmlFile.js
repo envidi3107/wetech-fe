@@ -650,8 +650,20 @@ export function generateHtmlString(element, options = {}) {
     const pageMarginCss = getPageMarginCss(landscape);
     const landscapePageMarginCss = getPageMarginCss(true);
     const bodyHtml = normalizeExportMarkup(element, { normalizeForWord });
-    const exportDocumentFontSize = normalizeForWord ? WORD_DOCUMENT_FONT_SIZE : DOCUMENT_FONT_SIZE;
-    const exportTableFontSize = normalizeForWord ? WORD_TABLE_FONT_SIZE : TABLE_FONT_SIZE;
+    const exportFontSizeElement = element.matches?.("[data-export-document-font-size='13pt']")
+        ? element
+        : element.querySelector?.("[data-export-document-font-size='13pt']");
+    const usesThirteenPointExportFont = Boolean(exportFontSizeElement);
+    const exportDocumentFontSize = usesThirteenPointExportFont
+        ? WORD_DOCUMENT_FONT_SIZE
+        : normalizeForWord
+          ? WORD_DOCUMENT_FONT_SIZE
+          : DOCUMENT_FONT_SIZE;
+    const exportTableFontSize = usesThirteenPointExportFont
+        ? WORD_TABLE_FONT_SIZE
+        : normalizeForWord
+          ? WORD_TABLE_FONT_SIZE
+          : TABLE_FONT_SIZE;
 
     let cssText = "";
     if (!normalizeForWord) {

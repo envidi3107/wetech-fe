@@ -194,6 +194,12 @@ h3.docTitle {
     font-size: 16px !important;
 }
 
+.content table.checkboxParagraphTable,
+.content table.checkboxParagraphTable td {
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
+
 .content table.compactPdfTable,
 .content table.compactPdfTable th,
 .content table.compactPdfTable td,

@@ -10,6 +10,11 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
+};
+
 function Line({ label, value }) {
     return (
         <p>
@@ -119,7 +124,7 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                     <InlineField>Thư điện tử: {data.nguoiDaiDien_email || ""}</InlineField>
                 </p>
 
-                <p style={{ marginTop: 16, fontStyle: "italic" }}>
+                <p style={{ marginTop: 16, fontStyle: "italic", ...LEGAL_PARAGRAPH_STYLE }}>
                     Trường hợp không có số định danh cá nhân hoặc việc kết nối giữa Cơ sở dữ liệu quốc gia về đăng ký
                     doanh nghiệp với Cơ sở dữ liệu quốc gia về dân cư bị gián đoạn thì kê khai các thông tin cá nhân
                     dưới đây:
@@ -152,11 +157,11 @@ function GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation({
                     </tbody>
                 </table>
 
-                <p style={{ width: "100%", marginTop: 16 }}>
+                <p style={{ width: "100%", marginTop: 16, ...LEGAL_PARAGRAPH_STYLE }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Doanh nghiệp cam kết hoàn toàn chịu trách nhiệm trước pháp luật về tính hợp pháp, chính xác và trung
                     thực của nội dung Giấy đề nghị này.
                 </p>

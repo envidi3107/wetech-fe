@@ -14,6 +14,7 @@ export default function GiayUyQuyenThayDoiNguoiDaiDienConfirmation({ dataJson })
         <GiayUyQuyenConfirmationBase
             dataJson={adaptedData}
             procedureActionText="đăng ký thay đổi người đại diện theo pháp luật"
+            indentLegalParagraphs
         />
     );
 }

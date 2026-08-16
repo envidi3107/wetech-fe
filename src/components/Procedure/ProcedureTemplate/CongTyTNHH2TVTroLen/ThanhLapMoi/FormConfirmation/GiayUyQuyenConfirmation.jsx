@@ -9,9 +9,14 @@ import {
 
 const DOCUMENT_TEXT_STYLE = {
     fontFamily: "'Times New Roman', Times, serif",
-    fontSize: "13pt",
+    fontSize: "var(--procedure-confirmation-font-size)",
     lineHeight: 1.6,
     color: "#000",
+};
+
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
 };
 
 const SECTION_TITLE_STYLE = {
@@ -51,8 +56,14 @@ function InlineField({ children, style }) {
     );
 }
 
-export default function GiayUyQuyenConfirmation({ dataJson, procedureActionText = "đăng ký thành lập" }) {
+export default function GiayUyQuyenConfirmation({
+    dataJson,
+    procedureActionText = "đăng ký thành lập",
+    indentLegalParagraphs = false,
+}) {
     if (!dataJson) return null;
+
+    const legalParagraphStyle = indentLegalParagraphs ? LEGAL_PARAGRAPH_STYLE : {};
 
     const {
         uyQuyen_hoTen = "",
@@ -99,7 +110,7 @@ export default function GiayUyQuyenConfirmation({ dataJson, procedureActionText 
     };
 
     return (
-        <div className={styles.page} style={DOCUMENT_TEXT_STYLE}>
+        <div className={styles.page} style={DOCUMENT_TEXT_STYLE} data-export-document-font-size="13pt">
             <div className={styles.header}>
                 <h2
                     className={`${styles.headerTitle} text-center`}
@@ -213,7 +224,10 @@ export default function GiayUyQuyenConfirmation({ dataJson, procedureActionText 
                 Số điện thoại: {uyQuyen_phone}
                 {uyQuyen_email && <InlineField>Email: {uyQuyen_email}</InlineField>}
             </p>
-            <p className={styles.infoLine} style={{ marginTop: "10px", lineHeight: "1.8" }}>
+            <p
+                className={styles.infoLine}
+                style={{ marginTop: "10px", lineHeight: "1.8", ...legalParagraphStyle }}
+            >
                 <>
                     Là người đại diện {procedureActionText} {companyNamePrefix}{" "}
                 </>

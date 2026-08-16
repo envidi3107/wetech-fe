@@ -8,6 +8,7 @@ import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormC
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
 import {
     A_CHANGE_OPTIONS,
+    isTruthy,
     normalizeDataJson,
 } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 import {
@@ -336,6 +337,20 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div className={styles.sectionGroup}>
+                    <label className={styles.radioLabel}>
+                        <input
+                            type="checkbox"
+                            name="deNghiCapGiayXacNhan"
+                            value="true"
+                            className={styles.radioInput}
+                            defaultChecked={isTruthy(normalizedData.deNghiCapGiayXacNhan)}
+                        />
+                        Đề nghị cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho các thông tin thay đổi
+                        nêu trên.
+                    </label>
                 </div>
             </form>
         );

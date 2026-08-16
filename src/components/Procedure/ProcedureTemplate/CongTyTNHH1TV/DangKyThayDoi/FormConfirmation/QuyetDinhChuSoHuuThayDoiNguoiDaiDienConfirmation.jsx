@@ -12,9 +12,13 @@ import {
 
 const DOCUMENT_STYLE = {
     fontFamily: "'Times New Roman', Times, serif",
-    fontSize: "13pt",
+    fontSize: "var(--procedure-confirmation-font-size)",
     lineHeight: 1.5,
     color: "#000",
+};
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
 };
 const DECISION_NUMBER = "01/2026/QĐ-CSH";
 
@@ -58,9 +62,9 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
     const ownerName = data.chuSoHuu_hoTen || "";
 
     return (
-        <div className={styles.container} style={DOCUMENT_STYLE}>
+        <div className={styles.container} style={DOCUMENT_STYLE} data-export-document-font-size="13pt">
             <table
-                className={`${styles.noBorderTable} no-border docx-contained-table decision-header-table`}
+                className={`${styles.noBorderTable} no-border docx-contained-table docx-column-grid-table decision-header-table`}
                 style={{
                     width: "100%",
                     maxWidth: "100%",
@@ -71,19 +75,19 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                 }}
             >
                 <colgroup>
-                    <col width="42%" style={{ width: "42%" }} />
-                    <col width="58%" style={{ width: "58%" }} />
+                    <col width="45%" style={{ width: "45%" }} />
+                    <col width="55%" style={{ width: "55%" }} />
                 </colgroup>
                 <tbody>
                     <tr>
-                        <td style={{ width: "42%", maxWidth: "42%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                        <td style={{ width: "45%", maxWidth: "45%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ margin: 0, textAlign: "center" }}>
                                 <strong>{companyName.toLocaleUpperCase("vi-VN")}</strong>
                             </p>
                             <p style={{ margin: "2pt 0 0", textAlign: "center" }}>-------</p>
                         </td>
-                        <td style={{ width: "58%", maxWidth: "58%", border: "none", textAlign: "center", verticalAlign: "top" }}>
-                            <p style={{ margin: 0, textAlign: "center" }}>
+                        <td style={{ width: "55%", maxWidth: "55%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                            <p style={{ margin: 0, textAlign: "center", whiteSpace: "nowrap" }}>
                                 <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong>
                             </p>
                             <p style={{ margin: "2pt 0 0", textAlign: "center" }}>
@@ -94,10 +98,10 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                         </td>
                     </tr>
                     <tr>
-                        <td style={{ width: "42%", maxWidth: "42%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                        <td style={{ width: "45%", maxWidth: "45%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p style={{ margin: "8pt 0 0", textAlign: "center" }}>Số: {DECISION_NUMBER}</p>
                         </td>
-                        <td style={{ width: "58%", maxWidth: "58%", border: "none", textAlign: "center", verticalAlign: "top" }}>
+                        <td style={{ width: "55%", maxWidth: "55%", border: "none", textAlign: "center", verticalAlign: "top" }}>
                             <p
                                 className="decision-date-line"
                                 style={{
@@ -117,7 +121,10 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                 </tbody>
             </table>
 
-            <h2 className={styles.docTitle} style={{ marginTop: "14pt", textAlign: "center", fontSize: "13pt" }}>
+            <h2
+                className={styles.docTitle}
+                style={{ marginTop: "14pt", textAlign: "center", fontSize: "var(--procedure-confirmation-font-size)" }}
+            >
                 QUYẾT ĐỊNH
             </h2>
             <p style={{ margin: "4pt 0 14pt", textAlign: "center" }}>
@@ -128,12 +135,14 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
             </p>
 
             <div className={styles.content}>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     - Căn cứ Luật Doanh nghiệp số 59/2020/QH14 được Quốc hội thông qua ngày 17 tháng 06 năm 2020, được
                     sửa đổi, bổ sung một số điều theo Luật số 03/2022/QH15 và Luật số 76/2025/QH15;
                 </p>
-                <p>- Căn cứ Nghị định số 168/2025/NĐ-CP về đăng ký doanh nghiệp ban hành ngày 30/06/2025;</p>
-                <p>- Căn cứ Điều lệ {companyName || "Công ty"};</p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
+                    - Căn cứ Nghị định số 168/2025/NĐ-CP về đăng ký doanh nghiệp ban hành ngày 30/06/2025;
+                </p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>- Căn cứ Điều lệ {companyName || "Công ty"};</p>
 
                 <p style={{ margin: "14pt 0", textAlign: "center" }}>
                     <strong>QUYẾT ĐỊNH:</strong>
@@ -141,7 +150,9 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                 <p>
                     <strong>Điều 1: Đăng ký thay đổi người đại diện theo pháp luật</strong>
                 </p>
-                <p>Người đại diện theo pháp luật sau khi thay đổi:</p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
+                    <strong>Người đại diện theo pháp luật sau khi thay đổi:</strong>
+                </p>
                 <p>Họ, chữ đệm và tên (ghi bằng chữ in hoa): {data.nguoiDaiDien_hoTen || ""}</p>
                 <p>Ngày, tháng, năm sinh: {formatDate(data.nguoiDaiDien_ngaySinh)}</p>
                 <p>Giới tính: {data.nguoiDaiDien_gioiTinh || ""}</p>
@@ -168,7 +179,7 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                 </p>
 
                 <table
-                    className="signature-recipients-table no-border"
+                    className="signature-recipients-table no-border docx-column-grid-table"
                     style={{
                         width: "100%",
                         tableLayout: "fixed",
@@ -178,6 +189,10 @@ export default function QuyetDinhChuSoHuuThayDoiNguoiDaiDienConfirmation({ dataJ
                         ...DOCUMENT_STYLE,
                     }}
                 >
+                    <colgroup>
+                        <col width="45%" style={{ width: "45%" }} />
+                        <col width="55%" style={{ width: "55%" }} />
+                    </colgroup>
                     <tbody>
                         <tr>
                             <td

@@ -1,8 +1,12 @@
 import React from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormConfirmation/GiayDeNghiDKDNConfirmation.module.css";
 import CurrentDate from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CurrentDate/CurrentDate";
+import CheckboxChoiceTable from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CheckboxChoiceTable/CheckboxChoiceTable";
 import { formatDate } from "@/utils/dateTimeUtils";
-import { normalizeDataJson } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
+import {
+    isTruthy,
+    normalizeDataJson,
+} from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 import {
     CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
     DEFAULT_TNHH_COMPANY_NAME_PREFIX,
@@ -17,7 +21,12 @@ const DOCUMENT_STYLE = {
     color: "#000",
 };
 
-function Checkbox({ checked }) {
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
+};
+
+function Checkbox({ checked, margin = "0 0 0 4pt" }) {
     return (
         <span
             className={`${styles.checkbox} checkbox-symbol`}
@@ -27,7 +36,7 @@ function Checkbox({ checked }) {
                 fontStyle: "normal",
                 fontSize: "var(--procedure-confirmation-checkbox-font-size, 18pt)",
                 lineHeight: 1,
-                margin: "0 0 0 4pt",
+                margin,
                 minWidth: "18pt",
                 textAlign: "center",
                 verticalAlign: "middle",
@@ -35,19 +44,6 @@ function Checkbox({ checked }) {
         >
             {checked ? "☒" : "☐"}
             {"\u00A0"}
-        </span>
-    );
-}
-
-function CheckboxOption({ label, checked, marginLeft = "0" }) {
-    return (
-        <span
-            className={`${styles.inlineField} inlineField`}
-            style={{ display: "inline-block", marginLeft, fontWeight: "inherit", fontStyle: "normal" }}
-        >
-            {label}
-            {"\u00A0"}
-            <Checkbox checked={checked} />
         </span>
     );
 }
@@ -109,17 +105,64 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
     return (
         <div className={styles.container} style={DOCUMENT_STYLE}>
             <div className={styles.header} style={{ textAlign: "center" }}>
-                <h2 className={styles.nationTitle} style={{ textAlign: "center", fontSize: "13pt" }}>
-                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                </h2>
-                <h3 className={styles.headerSubtitle} style={{ textAlign: "center", fontSize: "13pt" }}>
-                    <strong>
-                        <u>Độc lập - Tự do - Hạnh phúc</u>
-                    </strong>
-                </h3>
-                <p className={styles.dateRight} style={{ textAlign: "right", fontStyle: "italic" }}>
-                    <CurrentDate prefix={data.kinhGuiProvince} />
-                </p>
+                <table
+                    className={`${styles.noBorderTable} no-border docx-contained-table docx-column-grid-table`}
+                    style={{
+                        width: "100%",
+                        maxWidth: "100%",
+                        tableLayout: "fixed",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        ...DOCUMENT_STYLE,
+                    }}
+                >
+                    <colgroup>
+                        <col width="40%" style={{ width: "40%" }} />
+                        <col width="60%" style={{ width: "60%" }} />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td
+                                style={{
+                                    width: "40%",
+                                    maxWidth: "40%",
+                                    border: "none",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                }}
+                            >
+                                <p style={{ margin: 0, textAlign: "center" }}>
+                                    <strong>{companyName.toLocaleUpperCase("vi-VN")}</strong>
+                                </p>
+                                <p style={{ margin: "8pt 0 0", textAlign: "center" }}>Số: ……………</p>
+                            </td>
+                            <td
+                                style={{
+                                    width: "60%",
+                                    maxWidth: "60%",
+                                    border: "none",
+                                    textAlign: "center",
+                                    verticalAlign: "top",
+                                }}
+                            >
+                                <h2
+                                    className={styles.nationTitle}
+                                    style={{ margin: 0, textAlign: "center", fontSize: "13pt", whiteSpace: "nowrap" }}
+                                >
+                                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                                </h2>
+                                <h3 className={styles.headerSubtitle} style={{ textAlign: "center", fontSize: "13pt" }}>
+                                    <strong>
+                                        <u>Độc lập - Tự do - Hạnh phúc</u>
+                                    </strong>
+                                </h3>
+                                <p className={styles.dateRight} style={{ textAlign: "right", fontStyle: "italic" }}>
+                                    <CurrentDate prefix={data.kinhGuiProvince} />
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <h2 className={styles.docTitle} style={{ textAlign: "center", fontSize: "13pt" }}>
@@ -138,7 +181,7 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                     <strong>A. ĐĂNG KÝ THAY ĐỔI NỘI DUNG ĐĂNG KÝ DOANH NGHIỆP</strong>
                 </p>
 
-                <p style={{ margin: "10pt 0 4pt" }}>
+                <p style={{ margin: "10pt 0 4pt", ...LEGAL_PARAGRAPH_STYLE }}>
                     Doanh nghiệp đăng ký thay đổi trên cơ sở (chỉ kê khai trong trường hợp doanh nghiệp đăng ký thay đổi
                     trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X vào ô thích hợp):
                 </p>
@@ -161,16 +204,21 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                     value={data.sapNhap_tenDoanhNghiep}
                 />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.sapNhap_maSoDoanhNghiep} />
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập và các chi nhánh/văn
                     phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp nhập.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     - Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo và xã, phường biên giới; xã, phường ven
                     biển; khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
-                    <CheckboxOption label="Có" checked={data.anNinhQuocPhong === "Có"} marginLeft="36pt" />
-                    <CheckboxOption label="Không" checked={data.anNinhQuocPhong !== "Có"} marginLeft="24pt" />
                 </p>
+                <CheckboxChoiceTable
+                    CheckboxComponent={Checkbox}
+                    options={[
+                        { label: "Có", checked: data.anNinhQuocPhong === "Có" },
+                        { label: "Không", checked: data.anNinhQuocPhong !== "Có" },
+                    ]}
+                />
 
                 <p style={{ margin: "8pt 0", textAlign: "center" }}>THÔNG BÁO THAY ĐỔI THÔNG TIN ĐĂNG KÝ THUẾ</p>
 
@@ -210,12 +258,54 @@ export default function GiayDeNghiDangKyThayDoiThongTinGiamDocConfirmation({ dat
                     </tbody>
                 </table>
 
-                <p style={{ marginTop: "14pt" }}>
+                <table
+                    className={`${styles.noBorderTable} ${styles.checkboxParagraphTable} no-border docx-contained-table`}
+                    style={{
+                        width: "100%",
+                        maxWidth: "100%",
+                        tableLayout: "fixed",
+                        borderCollapse: "collapse",
+                        border: "none",
+                        marginTop: 16,
+                        ...DOCUMENT_STYLE,
+                    }}
+                >
+                    <colgroup>
+                        <col width="36pt" style={{ width: "36pt" }} />
+                        <col />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td
+                                style={{
+                                    width: "36pt",
+                                    maxWidth: "36pt",
+                                    border: "none",
+                                    padding: 0,
+                                    textAlign: "left",
+                                    verticalAlign: "top",
+                                }}
+                            >
+                                <Checkbox checked={isTruthy(data.deNghiCapGiayXacNhan)} margin="0" />
+                            </td>
+                            <td style={{ border: "none", padding: 0, textAlign: "justify", verticalAlign: "top" }}>
+                                Đề nghị Quý Cơ quan cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho doanh
+                                nghiệp đối với các thông tin thay đổi nêu trên.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style={{ marginTop: "14pt", ...LEGAL_PARAGRAPH_STYLE }}>
+                    Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
+                </p>
+
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Doanh nghiệp cam kết hoàn toàn chịu trách nhiệm trước pháp luật về tính hợp pháp, chính xác và trung
                     thực của nội dung Giấy đề nghị này.
                 </p>
 
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Người ký tại Thông báo này cam kết là người có quyền và nghĩa vụ thực hiện thủ tục đăng ký doanh
                     nghiệp theo quy định của pháp luật và Điều lệ công ty.
                 </p>
