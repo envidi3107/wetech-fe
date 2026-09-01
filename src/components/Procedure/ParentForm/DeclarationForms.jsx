@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import * as XLSX from "xlsx";
 import styles from "./DeclarationForms.module.css";
+import useStickyReloadToolbar from "./useStickyReloadToolbar";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { authAxios } from "@/services/axios-instance";
 import { useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProcedure";
@@ -306,6 +307,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
     const formRef = useRef(null);
     const componentRef = useRef(null);
     const importInputRef = useRef(null);
+    const { toolbarRef, buttonWrapRef, isStuck } = useStickyReloadToolbar();
     const { procedure, userCards, refreshUserCards } = useProcessProcedure();
 
     const currentForm = forms?.[currentFormStep];
@@ -1024,26 +1026,33 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                 onChange={handleImportExcel}
             />
             <h2 className={styles.mainTitle}>THÔNG TIN CHI TIẾT {currentForm?.name?.toUpperCase()}</h2>
-            <div className={styles.dataJsonToolbar}>
+            <div
+                ref={toolbarRef}
+                className={`${styles.dataJsonToolbar} ${isStuck ? styles.dataJsonToolbarStuck : ""}`}
+            >
                 {isDataJsonLoading && (
                     <div className={styles.dataJsonLoading} role="status" aria-live="polite">
                         <span className={styles.dataJsonSpinner} aria-hidden="true" />
                         <span className={styles.dataJsonTyping}>Đang tải dữ liệu....</span>
                     </div>
                 )}
-                <Tooltip text="Tải lại dữ liệu">
-                    <button
-                        type="button"
-                        className={styles.reloadDataButton}
-                        onClick={handleReloadDataJson}
-                        disabled={isDataJsonLoading || reloadCooldown > 0}
-                        aria-label={
-                            reloadCooldown > 0 ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây` : "Tải lại dữ liệu"
-                        }
-                    >
-                        {reloadCooldown > 0 ? `${reloadCooldown}s` : "↻"}
-                    </button>
-                </Tooltip>
+                <span ref={buttonWrapRef} className={styles.reloadDataButtonWrap}>
+                    <Tooltip text="Tải lại dữ liệu">
+                        <button
+                            type="button"
+                            className={styles.reloadDataButton}
+                            onClick={handleReloadDataJson}
+                            disabled={isDataJsonLoading || reloadCooldown > 0}
+                            aria-label={
+                                reloadCooldown > 0
+                                    ? `Có thể tải lại dữ liệu sau ${reloadCooldown} giây`
+                                    : "Tải lại dữ liệu"
+                            }
+                        >
+                            {reloadCooldown > 0 ? `${reloadCooldown}s` : "↻"}
+                        </button>
+                    </Tooltip>
+                </span>
             </div>
             {CurrentFormComponent ? (
                 <CurrentFormComponent

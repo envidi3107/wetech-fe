@@ -30,22 +30,32 @@ export const getCompanyName = (rawData) => {
     return `${prefix} ${companyName}`;
 };
 
+// Địa chỉ của Bên A/Bên B trong hợp đồng được lưu dưới dạng cấu trúc
+// (tỉnh/xã/số nhà) theo prefix riêng, ví dụ benA_thuongTru_tinh, benB_lienLac_xa...
 const buildPartyAddress = (data, prefix, addressType) => {
-    const addressPrefix = addressType === "thuongTru" ? `${prefix}_thuongTru` : prefix;
-    return joinAddress(
-        data[`${addressPrefix}_soNha`],
-        data[`${addressPrefix}_xa`],
-        data[`${addressPrefix}_tinh`],
-        data[`${addressPrefix}_quocGia`],
-    );
+    const addressPrefix = `${prefix}_${addressType}`;
+    return joinAddress(data[`${addressPrefix}_soNha`], data[`${addressPrefix}_xa`], data[`${addressPrefix}_tinh`]);
+};
+
+// Địa chỉ nguồn (từ "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty") dùng để
+// đọc dữ liệu chủ sở hữu: thường trú nằm ở chuSoHuu_thuongTru_*, còn liên lạc
+// nằm ngay ở chuSoHuu_* (không có hậu tố _lienLac).
+const buildOwnerSourceAddress = (data, addressType) => {
+    const sourcePrefix = addressType === "thuongTru" ? "chuSoHuu_thuongTru" : "chuSoHuu";
+    return {
+        tinh: data[`${sourcePrefix}_tinh`],
+        xa: data[`${sourcePrefix}_xa`],
+        soNha: data[`${sourcePrefix}_soNha`],
+    };
 };
 
 export const buildContractPrefillData = (rawData) => {
     const data = normalizeDataJson(rawData);
     const originalRegistrationData = normalizeDataJson(data.duLieuDangKyBanDau);
-    const originalOwner = Object.keys(originalRegistrationData).length ? originalRegistrationData : {};
+    const benBThuongTruSource = buildOwnerSourceAddress(data, "thuongTru");
+    const benBLienLacSource = buildOwnerSourceAddress(data, "lienLac");
 
-    return {
+    const result = {
         ...data,
         hopDong_so: savedOr(data, "hopDong_so", `01/${CURRENT_YEAR}/HĐ-CN`),
         hopDong_diaDiemKy: savedOr(data, "hopDong_diaDiemKy", data.kinhGuiProvince),
@@ -59,28 +69,32 @@ export const buildContractPrefillData = (rawData) => {
                 originalRegistrationData.truSo_tinh,
             ),
         ),
-        benA_hoTen: savedOr(data, "benA_hoTen", originalOwner.chuSoHuu_hoTen),
-        benA_ngaySinh: savedOr(data, "benA_ngaySinh", originalOwner.chuSoHuu_ngaySinh),
-        benA_danToc: savedOr(data, "benA_danToc", originalOwner.chuSoHuu_danToc),
-        benA_quocTich: savedOr(data, "benA_quocTich", originalOwner.chuSoHuu_quocTich, "Việt Nam"),
-        benA_cccd: savedOr(data, "benA_cccd", originalOwner.chuSoHuu_cccd),
-        benA_diaChiThuongTru: savedOr(
-            data,
-            "benA_diaChiThuongTru",
-            buildPartyAddress(originalOwner, "chuSoHuu", "thuongTru"),
-        ),
-        benA_diaChiLienLac: savedOr(
-            data,
-            "benA_diaChiLienLac",
-            buildPartyAddress(originalOwner, "chuSoHuu", "lienLac"),
-        ),
+        // Bên A (bên chuyển nhượng - chủ sở hữu cũ): thủ tục không có chỗ khai
+        // thông tin chủ sở hữu cũ nên để trống, chỉ giữ lại nếu người dùng đã tự nhập.
+        benA_hoTen: savedOr(data, "benA_hoTen"),
+        benA_ngaySinh: savedOr(data, "benA_ngaySinh"),
+        benA_danToc: savedOr(data, "benA_danToc"),
+        benA_quocTich: savedOr(data, "benA_quocTich", "Việt Nam"),
+        benA_cccd: savedOr(data, "benA_cccd"),
+        benA_thuongTru_tinh: savedOr(data, "benA_thuongTru_tinh"),
+        benA_thuongTru_xa: savedOr(data, "benA_thuongTru_xa"),
+        benA_thuongTru_soNha: savedOr(data, "benA_thuongTru_soNha"),
+        benA_lienLac_tinh: savedOr(data, "benA_lienLac_tinh"),
+        benA_lienLac_xa: savedOr(data, "benA_lienLac_xa"),
+        benA_lienLac_soNha: savedOr(data, "benA_lienLac_soNha"),
+        // Bên B (bên nhận chuyển nhượng - chủ sở hữu mới): lấy từ thông tin chủ sở hữu
+        // đã khai trong "Giấy đề nghị đăng ký thay đổi chủ sở hữu công ty".
         benB_hoTen: savedOr(data, "benB_hoTen", data.chuSoHuu_hoTen),
         benB_ngaySinh: savedOr(data, "benB_ngaySinh", data.chuSoHuu_ngaySinh),
         benB_danToc: savedOr(data, "benB_danToc", data.chuSoHuu_danToc),
         benB_quocTich: savedOr(data, "benB_quocTich", data.chuSoHuu_quocTich, "Việt Nam"),
         benB_cccd: savedOr(data, "benB_cccd", data.chuSoHuu_cccd),
-        benB_diaChiThuongTru: savedOr(data, "benB_diaChiThuongTru", buildPartyAddress(data, "chuSoHuu", "thuongTru")),
-        benB_diaChiLienLac: savedOr(data, "benB_diaChiLienLac", buildPartyAddress(data, "chuSoHuu", "lienLac")),
+        benB_thuongTru_tinh: savedOr(data, "benB_thuongTru_tinh", benBThuongTruSource.tinh),
+        benB_thuongTru_xa: savedOr(data, "benB_thuongTru_xa", benBThuongTruSource.xa),
+        benB_thuongTru_soNha: savedOr(data, "benB_thuongTru_soNha", benBThuongTruSource.soNha),
+        benB_lienLac_tinh: savedOr(data, "benB_lienLac_tinh", benBLienLacSource.tinh),
+        benB_lienLac_xa: savedOr(data, "benB_lienLac_xa", benBLienLacSource.xa),
+        benB_lienLac_soNha: savedOr(data, "benB_lienLac_soNha", benBLienLacSource.soNha),
         chuyenNhuong_tyLe: savedOr(data, "chuyenNhuong_tyLe", "100"),
         chuyenNhuong_giaTri: savedOr(data, "chuyenNhuong_giaTri", data.vonDieuLe, data.vonDieuLeSauThayDoi),
         chuyenNhuong_giaTriBangChu: savedOr(
@@ -90,6 +104,16 @@ export const buildContractPrefillData = (rawData) => {
             data.vonDieuLeSauThayDoi_bangChu,
         ),
     };
+
+    // Chuỗi địa chỉ đầy đủ dùng để in trong văn bản hợp đồng/biên bản. Ưu tiên dựng
+    // từ các trường cấu trúc ở trên; nếu chưa có (hồ sơ cũ trước khi đổi sang
+    // AddressSelect) thì rơi về chuỗi địa chỉ dạng text đã lưu trước đó.
+    result.benA_diaChiThuongTru = buildPartyAddress(result, "benA", "thuongTru") || data.benA_diaChiThuongTru || "";
+    result.benA_diaChiLienLac = buildPartyAddress(result, "benA", "lienLac") || data.benA_diaChiLienLac || "";
+    result.benB_diaChiThuongTru = buildPartyAddress(result, "benB", "thuongTru") || data.benB_diaChiThuongTru || "";
+    result.benB_diaChiLienLac = buildPartyAddress(result, "benB", "lienLac") || data.benB_diaChiLienLac || "";
+
+    return result;
 };
 
 export const buildLiquidationPrefillData = (rawData) => {

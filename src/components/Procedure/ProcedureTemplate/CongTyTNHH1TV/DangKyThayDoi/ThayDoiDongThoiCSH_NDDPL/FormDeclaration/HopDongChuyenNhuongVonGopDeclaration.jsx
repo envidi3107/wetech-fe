@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/SharedDeclaration.module.css";
 import { buildContractPrefillData } from "../chuyenNhuong.utils";
-import { Field, PartySection, TextAreaField } from "./ChuyenNhuongDeclarationFields";
+import { AmountWithWordsField, Field, PartySection, TextAreaField } from "./ChuyenNhuongDeclarationFields";
 
 const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNhuongVonGopDeclaration(
     { dataJson, onSubmit, formRef },
@@ -79,6 +79,9 @@ const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNh
                         name="hopDong_lanThayDoi"
                         data={normalizedData}
                         styles={styles}
+                        type="number"
+                        min="1"
+                        step="1"
                     />
                     <Field
                         label="Ngày đăng ký thay đổi gần nhất"
@@ -107,34 +110,24 @@ const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNh
                         name="chuyenNhuong_tyLe"
                         data={normalizedData}
                         styles={styles}
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
                     />
-                    <Field
-                        label="Giá trị phần vốn góp (đồng)"
-                        name="chuyenNhuong_giaTri"
+                    <AmountWithWordsField
+                        amountLabel="Giá trị phần vốn góp (đồng)"
+                        amountName="chuyenNhuong_giaTri"
+                        wordsLabel="Giá trị phần vốn góp bằng chữ"
+                        wordsName="chuyenNhuong_giaTriBangChu"
                         data={normalizedData}
                         styles={styles}
                     />
-                    <Field
-                        label="Giá trị phần vốn góp bằng chữ"
-                        name="chuyenNhuong_giaTriBangChu"
-                        data={normalizedData}
-                        styles={styles}
-                    />
-                    <Field
-                        label="Giá chuyển nhượng (đồng)"
-                        name="chuyenNhuong_gia"
-                        data={normalizedData}
-                        styles={styles}
-                    />
-                    <Field
-                        label="Giá chuyển nhượng bằng chữ"
-                        name="chuyenNhuong_giaBangChu"
-                        data={normalizedData}
-                        styles={styles}
-                    />
-                    <Field
-                        label="Người đại diện theo pháp luật xác nhận"
-                        name="nguoiDaiDien_hoTen"
+                    <AmountWithWordsField
+                        amountLabel="Giá chuyển nhượng (đồng)"
+                        amountName="chuyenNhuong_gia"
+                        wordsLabel="Giá chuyển nhượng bằng chữ"
+                        wordsName="chuyenNhuong_giaBangChu"
                         data={normalizedData}
                         styles={styles}
                     />

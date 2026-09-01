@@ -34,7 +34,9 @@ function PartyInformation({ heading, data, prefix }) {
             <p style={{ margin: "12pt 0 4pt" }}>
                 <strong>{heading}</strong>
             </p>
-            <p style={{ margin: "3pt 0" }}>Ông/Bà: {valueOrDots(data[`${prefix}_hoTen`])}</p>
+            <p style={{ margin: "3pt 0" }}>
+                {valueOrDots(data[`${prefix}_xungHo`], "Ông/Bà")}: {valueOrDots(data[`${prefix}_hoTen`])}
+            </p>
             <p style={{ margin: "3pt 0" }}>
                 Sinh ngày: {valueOrDots(formatDateValue(data[`${prefix}_ngaySinh`]), "…/…/……")}
                 <InlineField>Dân tộc: {valueOrDots(data[`${prefix}_danToc`], "……")}</InlineField>

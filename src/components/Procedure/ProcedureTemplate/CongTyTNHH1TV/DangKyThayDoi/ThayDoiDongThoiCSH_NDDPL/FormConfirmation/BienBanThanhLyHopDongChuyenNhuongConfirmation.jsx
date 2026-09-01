@@ -34,7 +34,9 @@ function PartyInformation({ heading, data, prefix }) {
             <p style={{ margin: "12pt 0 4pt" }}>
                 <strong>{heading}</strong>
             </p>
-            <p style={{ margin: "3pt 0" }}>Ông/Bà: {valueOrDots(data[`${prefix}_hoTen`])}</p>
+            <p style={{ margin: "3pt 0" }}>
+                {valueOrDots(data[`${prefix}_xungHo`], "Ông/Bà")}: {valueOrDots(data[`${prefix}_hoTen`])}
+            </p>
             <p style={{ margin: "3pt 0" }}>
                 Sinh ngày: {valueOrDots(formatDateValue(data[`${prefix}_ngaySinh`]), "…/…/……")}
                 <InlineField>Dân tộc: {valueOrDots(data[`${prefix}_danToc`], "……")}</InlineField>
@@ -118,7 +120,8 @@ export default function BienBanThanhLyHopDongChuyenNhuongConfirmation({ dataJson
                     {companyName} cho Bên B theo đúng nội dung mà hai bên đã thỏa thuận trong hợp đồng, cụ thể:
                 </p>
                 <p style={{ margin: "6pt 0" }}>
-                    Bên chuyển nhượng (Ông/Bà {valueOrDots(data.benA_hoTen)}) đã nhận đủ {settlementAmount} đồng ({" "}
+                    Bên chuyển nhượng ({valueOrDots(data.benA_xungHo, "Ông/Bà")} {valueOrDots(data.benA_hoTen)}) đã
+                    nhận đủ {settlementAmount} đồng ({" "}
                     {settlementWords}); Bên nhận chuyển nhượng đã thanh toán đủ số tiền nêu trên, tương ứng với{" "}
                     {transferRatio}% tổng vốn điều lệ Công ty cho Bên chuyển nhượng.
                 </p>
@@ -169,9 +172,11 @@ export default function BienBanThanhLyHopDongChuyenNhuongConfirmation({ dataJson
                     <strong>XÁC NHẬN CỦA CÔNG TY</strong>
                 </p>
                 <p style={{ margin: "3pt 0" }}>
-                    {companyName} xác nhận Bên A (Ông/Bà {valueOrDots(data.benA_hoTen)}) tự nguyện chuyển nhượng{" "}
-                    {transferRatio}% vốn điều lệ trong {companyName}, giá trị vốn góp là {settlementAmount} đồng ({" "}
-                    {settlementWords}) cho Bên B (Ông/Bà {valueOrDots(data.benB_hoTen)}). Hợp đồng chuyển nhượng trên đã
+                    {companyName} xác nhận Bên A ({valueOrDots(data.benA_xungHo, "Ông/Bà")}{" "}
+                    {valueOrDots(data.benA_hoTen)}) tự nguyện chuyển nhượng {transferRatio}% vốn điều lệ trong{" "}
+                    {companyName}, giá trị vốn góp là {settlementAmount} đồng ({settlementWords}) cho Bên B (
+                    {valueOrDots(data.benB_xungHo, "Ông/Bà")} {valueOrDots(data.benB_hoTen)}). Hợp đồng chuyển nhượng
+                    trên đã
                     hoàn thành vào ngày {valueOrDots(formatDateValue(data.thanhLy_ngayHoanThanh), "…/…/……")}.
                 </p>
 

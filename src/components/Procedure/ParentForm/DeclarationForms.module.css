@@ -36,6 +36,20 @@
     gap: 12px;
     min-height: 34px;
     margin: -4px 0 18px;
+    /* Dính lại ngay dưới header cố định (.stepper-header-main) khi cuộn trang,
+       nhờ đó nút tải lại luôn hiển thị trong suốt phần còn lại của form.
+       130px lấy theo margin-top của .stepper-body-main1 (ProcessProcedure.css)
+       - khoảng đệm sẵn có để nội dung không bị header cố định che mất, nên
+       dùng thẳng số đó thay vì đo lại chiều cao header bằng JS (dễ sai/timing). */
+    position: sticky;
+    top: 130px;
+    z-index: 1002;
+}
+
+/* Khi toolbar thực sự đã dính lại (đã cuộn chạm header), dồn nội dung sang
+   góc phải của container thay vì căn giữa như bình thường. */
+.dataJsonToolbarStuck {
+    justify-content: flex-end;
 }
 
 .dataJsonLoading {
@@ -106,6 +120,13 @@
     color: #8c8c8c;
     background-color: #f5f5f5;
     transform: none;
+}
+
+/* Wrapper đứng yên bao quanh nút tải lại - đây là phần tử được hiệu ứng "lăn"
+   (kỹ thuật FLIP trong useStickyReloadToolbar) tác động transform lên, để khi
+   toolbar dính/nhả khỏi header, nút trượt mượt đúng hướng thay vì nhảy khựng. */
+.reloadDataButtonWrap {
+    display: inline-flex;
 }
 
 @keyframes dataJsonSpin {

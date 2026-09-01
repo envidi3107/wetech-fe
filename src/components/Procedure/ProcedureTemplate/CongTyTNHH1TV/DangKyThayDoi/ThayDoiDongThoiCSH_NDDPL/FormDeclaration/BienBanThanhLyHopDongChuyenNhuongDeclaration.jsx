@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styles from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/ThanhLapMoi/FormDeclaration/SharedDeclaration.module.css";
 import { buildLiquidationPrefillData } from "../chuyenNhuong.utils";
-import { Field, PartySection, TextAreaField } from "./ChuyenNhuongDeclarationFields";
+import { AmountWithWordsField, Field, PartySection, TextAreaField } from "./ChuyenNhuongDeclarationFields";
 
 const BienBanThanhLyHopDongChuyenNhuongDeclaration = forwardRef(function BienBanThanhLyHopDongChuyenNhuongDeclaration(
     { dataJson, onSubmit, formRef },
@@ -89,15 +89,11 @@ const BienBanThanhLyHopDongChuyenNhuongDeclaration = forwardRef(function BienBan
                         styles={styles}
                         type="date"
                     />
-                    <Field
-                        label="Số tiền đã thanh toán (đồng)"
-                        name="thanhLy_soTien"
-                        data={normalizedData}
-                        styles={styles}
-                    />
-                    <Field
-                        label="Số tiền bằng chữ"
-                        name="thanhLy_soTienBangChu"
+                    <AmountWithWordsField
+                        amountLabel="Số tiền đã thanh toán (đồng)"
+                        amountName="thanhLy_soTien"
+                        wordsLabel="Số tiền bằng chữ"
+                        wordsName="thanhLy_soTienBangChu"
                         data={normalizedData}
                         styles={styles}
                     />
@@ -106,6 +102,10 @@ const BienBanThanhLyHopDongChuyenNhuongDeclaration = forwardRef(function BienBan
                         name="thanhLy_tyLe"
                         data={normalizedData}
                         styles={styles}
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
                     />
                     <Field
                         label="Ngày hoàn thành hợp đồng"
@@ -113,12 +113,6 @@ const BienBanThanhLyHopDongChuyenNhuongDeclaration = forwardRef(function BienBan
                         data={normalizedData}
                         styles={styles}
                         type="date"
-                    />
-                    <Field
-                        label="Người đại diện theo pháp luật xác nhận"
-                        name="nguoiDaiDien_hoTen"
-                        data={normalizedData}
-                        styles={styles}
                     />
                 </div>
             </div>
