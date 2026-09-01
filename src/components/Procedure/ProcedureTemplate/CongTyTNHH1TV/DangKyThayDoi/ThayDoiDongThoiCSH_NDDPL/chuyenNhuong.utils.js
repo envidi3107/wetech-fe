@@ -7,6 +7,10 @@ import {
 
 export const CURRENT_YEAR = new Date().getFullYear();
 
+// Ngày hiện tại theo định dạng yyyy-MM-dd (định dạng input[type=date]) - dùng làm
+// giá trị mặc định cho ngày ký hợp đồng khi chưa có dữ liệu đã lưu.
+export const getTodayISO = () => new Date().toISOString().slice(0, 10);
+
 export const firstValue = (...values) =>
     values.find((value) => value !== undefined && value !== null && String(value).trim() !== "") || "";
 
@@ -57,7 +61,11 @@ export const buildContractPrefillData = (rawData) => {
 
     const result = {
         ...data,
+        // Ô "Tên doanh nghiệp" hiển thị trên form khai báo cần có đủ prefix loại hình
+        // (CÔNG TY TNHH...), giống tên công ty được in trong văn bản hợp đồng/biên bản.
+        tenDoanhNghiep: getCompanyName(data) || data.tenDoanhNghiep || "",
         hopDong_so: savedOr(data, "hopDong_so", `01/${CURRENT_YEAR}/HĐ-CN`),
+        hopDong_ngayKy: savedOr(data, "hopDong_ngayKy", getTodayISO()),
         hopDong_diaDiemKy: savedOr(data, "hopDong_diaDiemKy", data.kinhGuiProvince),
         hopDong_diaChiCongTy: savedOr(
             data,

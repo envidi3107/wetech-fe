@@ -633,6 +633,7 @@ const DeclarationForms = forwardRef(({ forms, currentFormStep = 0, onStepSubmitS
                     dob: data[`${prefix}_ngaySinh`] || "",
                     nationality: data[`${prefix}_quocTich`] || "",
                     ethnicity: data[`${prefix}_danToc`] || "",
+                    position: data[`${prefix}_chucDanh`] || "",
                     permanentStreet: data[`${prefix}_thuongTru_soNha`] || data[`thuongTru_soNha`] || "",
                     permanentWard: data[`${prefix}_thuongTru_xa`] || data[`thuongTru_xa`] || "",
                     permanentProvince: data[`${prefix}_thuongTru_tinh`] || data[`thuongTru_tinh`] || "",

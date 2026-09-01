@@ -5,7 +5,7 @@ import { useProcessProcedure } from "@/pages/User/ProcessProcedure/ProcessProced
 import { formatDate } from "@/utils/dateTimeUtils";
 import { authAxios } from "@/services/axios-instance";
 import { useNotification } from "@/hooks/useNotification";
-import { GioiTinhSelect, DanTocSelect, QuocTichSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
+import { GioiTinhSelect, DanTocSelect, QuocTichSelect, ChucVuSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import AddressSelect from "@/components/AddressSelect/AddressSelect";
 import { useFetchAddress } from "@/hooks/useFetchAddress";
 
@@ -70,6 +70,7 @@ export default function UserCardDropdown({ onSelect }) {
             phone: card.phone || "",
             nationality: getCardCountry(card),
             ethnicity: card.ethnicity || "",
+            position: card.position || "",
             permanentStreet: card.permanentAddress?.street || "",
             permanentWard: card.permanentAddress?.ward || "",
             permanentProvince: permProvinceName,
@@ -198,6 +199,13 @@ export default function UserCardDropdown({ onSelect }) {
                                                 onChange={(val) => handleSelectChange("ethnicity", val)}
                                             />
                                         )}
+                                        <ChucVuSelect
+                                            key={`position-${editFormData.position}`}
+                                            name="position"
+                                            defaultValue={editFormData.position}
+                                            required={false}
+                                            onChange={(val) => handleSelectChange("position", val)}
+                                        />
                                         <div className={sharedStyles.formGroup}>
                                             <label className={sharedStyles.label}>Email</label>
                                             <input className={sharedStyles.input} name="email" value={editFormData.email} onChange={handleEditChange} />
@@ -275,6 +283,8 @@ export default function UserCardDropdown({ onSelect }) {
                                                     <th>Ngày sinh</th>
                                                     <th>Giới tính</th>
                                                     <th>CCCD</th>
+                                                    <th>Dân tộc</th>
+                                                    <th>Chức vụ</th>
                                                     <th>Quốc gia</th>
                                                     <th>Email</th>
                                                     <th>Số điện thoại</th>
@@ -291,6 +301,8 @@ export default function UserCardDropdown({ onSelect }) {
                                                             <td>{formatDate(card.dob)}</td>
                                                             <td>{card.gender}</td>
                                                             <td style={{ fontWeight: 500, color: "#1b154b" }}>{card.cccd}</td>
+                                                            <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.ethnicity || "Chưa cập nhật"}</td>
+                                                            <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.position || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>{getCardCountry(card) || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.email || "Chưa cập nhật"}</td>
                                                             <td style={{ fontSize: "0.85rem", color: "#555" }}>{card.phone || "Chưa cập nhật"}</td>
@@ -326,7 +338,7 @@ export default function UserCardDropdown({ onSelect }) {
                                                     ))
                                                 ) : (
                                                     <tr>
-                                                        <td colSpan={10} className={styles.empty}>
+                                                        <td colSpan={12} className={styles.empty}>
                                                             {!userCards || userCards.length === 0
                                                                 ? "Chưa có dữ liệu đã lưu. Dữ liệu của bạn sẽ tự động lưu lại khi nộp hồ sơ."
                                                                 : "Không tìm thấy kết quả phù hợp."}

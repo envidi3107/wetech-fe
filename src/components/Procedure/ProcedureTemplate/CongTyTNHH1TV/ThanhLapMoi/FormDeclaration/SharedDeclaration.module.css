@@ -55,6 +55,7 @@
     background-color: #fff;
     min-height: 40px;
     font-size: 14px;
+    font-family: inherit;
 }
 
 .input:focus,
@@ -170,6 +171,7 @@
     background-color: #fff;
     min-height: 40px;
     font-size: 14px;
+    font-family: inherit;
 }
 
 .input:focus,

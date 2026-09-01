@@ -50,6 +50,29 @@ const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNh
             <div className={styles.sectionGroup}>
                 <h3 className={styles.sectionTitle}>Thông tin hợp đồng chuyển nhượng phần vốn góp</h3>
                 <div className={styles.grid2}>
+                    <Field
+                        label="Tên doanh nghiệp"
+                        name="tenDoanhNghiep"
+                        data={normalizedData}
+                        styles={styles}
+                        readOnly
+                    />
+                    <Field
+                        label="Mã số doanh nghiệp"
+                        name="maSoDoanhNghiep"
+                        data={normalizedData}
+                        styles={styles}
+                        readOnly
+                    />
+                </div>
+                <TextAreaField
+                    label="Địa chỉ trụ sở công ty"
+                    name="hopDong_diaChiCongTy"
+                    data={normalizedData}
+                    styles={styles}
+                    readOnly
+                />
+                <div className={styles.grid2} style={{ marginTop: "12px" }}>
                     <Field label="Số hợp đồng" name="hopDong_so" data={normalizedData} styles={styles} />
                     <Field
                         label="Ngày ký hợp đồng"
@@ -59,8 +82,6 @@ const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNh
                         type="date"
                     />
                     <Field label="Địa điểm ký" name="hopDong_diaDiemKy" data={normalizedData} styles={styles} />
-                    <Field label="Tên doanh nghiệp" name="tenDoanhNghiep" data={normalizedData} styles={styles} />
-                    <Field label="Mã số doanh nghiệp" name="maSoDoanhNghiep" data={normalizedData} styles={styles} />
                     <Field
                         label="Cơ quan đăng ký kinh doanh cấp giấy"
                         name="hopDong_coQuanDangKy"
@@ -91,12 +112,6 @@ const HopDongChuyenNhuongVonGopDeclaration = forwardRef(function HopDongChuyenNh
                         type="date"
                     />
                 </div>
-                <TextAreaField
-                    label="Địa chỉ trụ sở công ty"
-                    name="hopDong_diaChiCongTy"
-                    data={normalizedData}
-                    styles={styles}
-                />
             </div>
 
             <PartySection title="Bên A - Bên chuyển nhượng" prefix="benA" data={normalizedData} styles={styles} />

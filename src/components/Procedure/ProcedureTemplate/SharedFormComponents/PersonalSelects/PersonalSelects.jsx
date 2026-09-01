@@ -132,3 +132,64 @@ export const ChucDanhSelect = ({ name, defaultValue, required = true, hideLabel 
         </div>
     );
 };
+
+// Chức vụ của một cá nhân trong công ty (dùng cho "Lịch sử khai báo thông tin cá
+// nhân" và các nơi cần khai chức vụ như Giám đốc/Phó giám đốc). Khác với
+// ChucDanhSelect (chức danh người đại diện pháp luật: Giám đốc/Tổng giám đốc).
+export const ChucVuSelect = ({ name, defaultValue, required = false, hideLabel = false, onChange }) => {
+    const predefinedChucVu = ["Giám đốc", "Phó giám đốc"];
+    const isPredefined = predefinedChucVu.includes(defaultValue || "");
+    const initialChucVuType = defaultValue ? (isPredefined ? defaultValue : "Khác") : "";
+    const initialChucVuOther = isPredefined ? "" : (defaultValue || "");
+
+    const [chucVuType, setChucVuType] = React.useState(initialChucVuType);
+    const [chucVuOther, setChucVuOther] = React.useState(initialChucVuOther);
+    const [hasEdited, setHasEdited] = React.useState(false);
+
+    React.useEffect(() => {
+        if (hasEdited) return;
+        const nextIsPredefined = predefinedChucVu.includes(defaultValue || "");
+        setChucVuType(defaultValue ? (nextIsPredefined ? defaultValue : "Khác") : "");
+        setChucVuOther(nextIsPredefined ? "" : (defaultValue || ""));
+    }, [defaultValue, hasEdited]);
+
+    return (
+        <div className={styles.formGroup}>
+            {!hideLabel && <label className={styles.label}>Chức vụ {required && <span className={styles.required}>*</span>}</label>}
+            <select
+                className={styles.select}
+                value={chucVuType}
+                onChange={(e) => {
+                    setHasEdited(true);
+                    const nextType = e.target.value;
+                    setChucVuType(nextType);
+                    if (nextType !== "Khác") setChucVuOther("");
+                    if (onChange && nextType !== "Khác") onChange(nextType);
+                }}
+                name={chucVuType === "Khác" ? undefined : name}
+                required={chucVuType !== "Khác" ? required : false}
+            >
+                <option value="" disabled>-- Chọn chức vụ --</option>
+                <option value="Giám đốc">Giám đốc</option>
+                <option value="Phó giám đốc">Phó giám đốc</option>
+                <option value="Khác">Khác</option>
+            </select>
+            {chucVuType === "Khác" && (
+                <input
+                    type="text"
+                    className={styles.input}
+                    style={{ marginTop: "8px" }}
+                    name={name}
+                    value={chucVuOther}
+                    onChange={(e) => {
+                        setHasEdited(true);
+                        setChucVuOther(e.target.value);
+                        if (onChange) onChange(e.target.value);
+                    }}
+                    placeholder="Nhập chức vụ khác"
+                    required={required}
+                />
+            )}
+        </div>
+    );
+};
