@@ -1,4 +1,4 @@
-import GiayDeNghiDangKyThayDoiConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiGiayChungNhanDoanhNghiep/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
 import { A_CHANGE_OPTIONS } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/dangKyThayDoi.constants";
 
 const EXCLUDED_A_OPTION_NAMES = A_CHANGE_OPTIONS.filter((option) => option.name !== "a_doiChuSoHuuHuongLoi").map(

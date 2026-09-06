@@ -1,1 +1,1 @@
-export { default } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";
+export { default } from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiChuSoHuu/FormConfirmation/GiayDeNghiDangKyThayDoiChuSoHuuConfirmation";

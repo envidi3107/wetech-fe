@@ -1,4 +1,4 @@
-import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
+import GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiNDDPL/FormConfirmation/GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation";
 import {
     CO_PHAN_COMPANY_NAME_PREFIX_OPTIONS,
     DEFAULT_CO_PHAN_COMPANY_NAME_PREFIX,

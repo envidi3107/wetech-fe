@@ -1,4 +1,4 @@
-import GiayDeNghiDangKyThayDoiConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
+import GiayDeNghiDangKyThayDoiConfirmationBase from "@/components/Procedure/ProcedureTemplate/CongTyTNHH1TV/DangKyThayDoi/ThayDoiGiayChungNhanDoanhNghiep/FormConfirmation/GiayDeNghiDangKyThayDoiConfirmation";
 
 const EXCLUDED_A_OPTION_NAMES = ["a_doiThanhVien", "a_doiVonDauTuDNTN"];
 
