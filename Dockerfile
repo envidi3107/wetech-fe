@@ -10,15 +10,24 @@ WORKDIR /app
 ARG REACT_APP_BACKEND_URL
 ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
 
-COPY package*.json ./
-RUN npm install
+# Repo dung pnpm (packageManager + pnpm-lock.yaml), KHONG co package-lock.json.
+# Cai bang "npm install" se bo qua lockfile va resolve lai toan bo dai ^,
+# cho ra cay dependency khac may dev => loi kieu
+# "'use' is not exported from 'react'".
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN npm install -g corepack@latest && corepack enable
+
+# Copy lockfile TRUOC source de tan dung cache layer cua Docker:
+# doi code khong lam cai lai dependency.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
 # Xoa .env de no khong ghi de ARG o tren (.dockerignore khong loai .env)
 RUN rm -f .env .env.local
 
-RUN npm run build
+RUN pnpm run build
 
 # ======================
 # Stage 2: Serve with Nginx
