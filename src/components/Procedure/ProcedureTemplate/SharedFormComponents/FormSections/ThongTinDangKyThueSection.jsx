@@ -5,6 +5,7 @@ import { GioiTinhSelect } from "@/components/Procedure/ProcedureTemplate/SharedF
 import DateInput from "@/components/DateInput/DateInput";
 import InfoTooltip from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/InfoTooltip/InfoTooltip";
 import CopyAddressCheckbox from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/CopyAddressCheckbox/CopyAddressCheckbox";
+import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import {
     handleUppercaseInput,
     toUppercaseValue,
@@ -26,6 +27,13 @@ export default function ThongTinDangKyThueSection({
     const [giamDocNgaySinh, setGiamDocNgaySinh] = useState(
         dataJson?.giamDoc_ngaySinh || dataJson?.nguoiDaiDien_ngaySinh || "",
     );
+    const [giamDocState, setGiamDocState] = useState({
+        hoTen: dataJson?.giamDoc_hoTen || dataJson?.nguoiDaiDien_hoTen || "",
+        gioiTinh: dataJson?.giamDoc_gioiTinh || dataJson?.nguoiDaiDien_gioiTinh || "",
+        cccd: dataJson?.giamDoc_cccd || dataJson?.nguoiDaiDien_cccd || "",
+        phone: dataJson?.giamDoc_phone || dataJson?.nguoiDaiDien_phone || "",
+    });
+    const [giamDocKey, setGiamDocKey] = useState(0);
 
     // --- Cập nhật real-time: khi người dùng nhập liệu vào người đại diện, tự động điền vào giám đốc ---
     useEffect(() => {
@@ -137,6 +145,31 @@ export default function ThongTinDangKyThueSection({
         }
     };
 
+    // Đổ dữ liệu từ "Lịch sử khai báo thông tin cá nhân". Các input là uncontrolled
+    // (defaultValue) nên phải bump key để remount đúng nhóm trường - cùng cách mà
+    // handleCopyNguoiNopToKeToan ở trên đang dùng.
+    const handleFillGiamDocCard = (card) => {
+        setGiamDocState({
+            hoTen: card.fullName || "",
+            gioiTinh: card.gender || "",
+            cccd: card.cccd || "",
+            phone: card.phone || "",
+        });
+        setGiamDocNgaySinh(card.dob || "");
+        setGiamDocKey((prev) => prev + 1);
+    };
+
+    const handleFillKeToanCard = (card) => {
+        setKeToanState({
+            hoTen: card.fullName || "",
+            ngaySinh: card.dob || "",
+            gioiTinh: card.gender || "",
+            cccd: card.cccd || "",
+            phone: card.phone || "",
+        });
+        setKeToanKey((prev) => prev + 1);
+    };
+
     useEffect(() => {
         if (dataJson) {
             setThueAddressState({
@@ -157,6 +190,13 @@ export default function ThongTinDangKyThueSection({
             });
             setKeToanKey((prev) => prev + 1);
             setGiamDocNgaySinh(dataJson.giamDoc_ngaySinh || dataJson.nguoiDaiDien_ngaySinh || "");
+            setGiamDocState({
+                hoTen: dataJson.giamDoc_hoTen || dataJson.nguoiDaiDien_hoTen || "",
+                gioiTinh: dataJson.giamDoc_gioiTinh || dataJson.nguoiDaiDien_gioiTinh || "",
+                cccd: dataJson.giamDoc_cccd || dataJson.nguoiDaiDien_cccd || "",
+                phone: dataJson.giamDoc_phone || dataJson.nguoiDaiDien_phone || "",
+            });
+            setGiamDocKey((prev) => prev + 1);
         } else {
             setThueAddressState({
                 tinh: "",
@@ -176,6 +216,8 @@ export default function ThongTinDangKyThueSection({
             });
             setKeToanKey((prev) => prev + 1);
             setGiamDocNgaySinh("");
+            setGiamDocState({ hoTen: "", gioiTinh: "", cccd: "", phone: "" });
+            setGiamDocKey((prev) => prev + 1);
         }
     }, [dataJson]);
 
@@ -202,8 +244,13 @@ export default function ThongTinDangKyThueSection({
                     <tr>
                         <td style={{ textAlign: "center" }}>10.1</td>
                         <td>
-                            <p className={styles.sectionTitle}>Thông tin về Giám đốc/Tổng giám đốc (nếu có):</p>
-                            <div className={styles.grid2}>
+                            <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+                                <p className={styles.sectionTitle} style={{ margin: 0 }}>
+                                    Thông tin về Giám đốc/Tổng giám đốc (nếu có):
+                                </p>
+                                <UserCardDropdown onSelect={handleFillGiamDocCard} />
+                            </div>
+                            <div className={styles.grid2} key={`giamdoc-group-${giamDocKey}`}>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>
                                         Họ, chữ đệm và tên Giám đốc/Tổng giám đốc:{" "}
@@ -213,9 +260,7 @@ export default function ThongTinDangKyThueSection({
                                         type="text"
                                         className={styles.input}
                                         name="giamDoc_hoTen"
-                                        defaultValue={toUppercaseValue(
-                                            dataJson?.giamDoc_hoTen || dataJson?.nguoiDaiDien_hoTen,
-                                        )}
+                                        defaultValue={toUppercaseValue(giamDocState.hoTen)}
                                         style={{ textTransform: "uppercase" }}
                                         onInput={handleUppercaseInput}
                                         required
@@ -234,7 +279,7 @@ export default function ThongTinDangKyThueSection({
                                 </div>
                                 <GioiTinhSelect
                                     name="giamDoc_gioiTinh"
-                                    defaultValue={dataJson?.giamDoc_gioiTinh || dataJson?.nguoiDaiDien_gioiTinh}
+                                    defaultValue={giamDocState.gioiTinh}
                                     required
                                 />
                                 <div className={styles.formGroup}>
@@ -245,7 +290,7 @@ export default function ThongTinDangKyThueSection({
                                         type="text"
                                         className={styles.input}
                                         name="giamDoc_cccd"
-                                        defaultValue={dataJson?.giamDoc_cccd || dataJson?.nguoiDaiDien_cccd || ""}
+                                        defaultValue={giamDocState.cccd}
                                         pattern="[0-9]{9,12}"
                                         required
                                     />
@@ -258,7 +303,7 @@ export default function ThongTinDangKyThueSection({
                                         type="tel"
                                         className={styles.input}
                                         name="giamDoc_phone"
-                                        defaultValue={dataJson?.giamDoc_phone || dataJson?.nguoiDaiDien_phone || ""}
+                                        defaultValue={giamDocState.phone}
                                         pattern="(0|\+84)[0-9]{9,10}"
                                         required
                                     />
@@ -269,13 +314,17 @@ export default function ThongTinDangKyThueSection({
                     <tr>
                         <td style={{ textAlign: "center" }}>10.2</td>
                         <td>
-                            <p className={styles.sectionTitle}>
-                                Thông tin về Kế toán trưởng/Phụ trách kế toán{" "}
-                                <span className={styles.note}>
-                                    (Trường hợp doanh nghiệp kê khai hình thức hạch toán là Hạch toán độc lập tại chỉ
-                                    tiêu 5 thì bắt buộc kê khai thông tin về Kế toán trưởng/phụ trách kế toán.):
-                                </span>
-                            </p>
+                            <div style={{ display: "flex", alignItems: "flex-start", marginBottom: "16px" }}>
+                                <p className={styles.sectionTitle} style={{ margin: 0 }}>
+                                    Thông tin về Kế toán trưởng/Phụ trách kế toán{" "}
+                                    <span className={styles.note}>
+                                        (Trường hợp doanh nghiệp kê khai hình thức hạch toán là Hạch toán độc lập tại
+                                        chỉ tiêu 5 thì bắt buộc kê khai thông tin về Kế toán trưởng/phụ trách kế
+                                        toán.):
+                                    </span>
+                                </p>
+                                <UserCardDropdown onSelect={handleFillKeToanCard} />
+                            </div>
                             {!hideKeToanCopyCheckbox && (
                                 <CopyAddressCheckbox
                                     label="Tích chọn nếu Kế toán trưởng/Phụ trách kế toán đồng thời là người soạn hồ sơ"

@@ -6,6 +6,7 @@ import { buildKinhGui } from "@/consts/provinceRoomMap";
 import { GioiTinhSelect } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/PersonalSelects/PersonalSelects";
 import KinhGuiSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/KinhGuiSection";
 import ThongTinDoanhNghiepSection from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/ThongTinDoanhNghiepSection";
+import UserCardDropdown from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/UserCardDropdown/UserCardDropdown";
 import {
     A_CHANGE_OPTIONS,
     isTruthy,
@@ -158,6 +159,27 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
         const handleKinhGuiProvinceChange = (provinceName) => {
             setKinhGuiProvince(provinceName);
             setKinhGuiValue(provinceName ? buildKinhGui(provinceName) : "");
+        };
+
+        // Đổ dữ liệu từ "Lịch sử khai báo thông tin cá nhân" vào nhóm trường tương ứng.
+        // Các input trong PersonFields là uncontrolled (defaultValue) nên phải gom giá trị
+        // đang gõ dở trong form lại rồi bump formVersion để remount - nếu không, những ô
+        // người dùng vừa nhập ở phần khác sẽ bị xoá khi form dựng lại.
+        const handleFillCard = (prefix) => (card) => {
+            const currentValues = formRef?.current
+                ? Object.fromEntries(new FormData(formRef.current).entries())
+                : {};
+
+            setNormalizedData((prev) => ({
+                ...prev,
+                ...currentValues,
+                [`${prefix}_hoTen`]: toUppercaseValue(card.fullName) || "",
+                [`${prefix}_ngaySinh`]: card.dob || "",
+                [`${prefix}_gioiTinh`]: card.gender || "",
+                [`${prefix}_cccd`]: card.cccd || "",
+                [`${prefix}_phone`]: card.phone || "",
+            }));
+            setFormVersion((version) => version + 1);
         };
 
         const collectData = () => {
@@ -320,18 +342,24 @@ const GiayDeNghiDangKyThayDoiThongTinGiamDocDeclaration = forwardRef(
                             <tr>
                                 <td style={{ textAlign: "center" }}>1</td>
                                 <td>
-                                    <p className={styles.sectionTitle}>
-                                        Thông tin về Giám đốc/Tổng giám đốc sau khi thay đổi:
-                                    </p>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+                                        <p className={styles.sectionTitle} style={{ margin: 0 }}>
+                                            Thông tin về Giám đốc/Tổng giám đốc sau khi thay đổi:
+                                        </p>
+                                        <UserCardDropdown onSelect={handleFillCard("giamDoc")} />
+                                    </div>
                                     <PersonFields data={normalizedData} prefix="giamDoc" required />
                                 </td>
                             </tr>
                             <tr>
                                 <td style={{ textAlign: "center" }}>2</td>
                                 <td>
-                                    <p className={styles.sectionTitle}>
-                                        Thông tin về Kế toán trưởng/Phụ trách kế toán (nếu có):
-                                    </p>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+                                        <p className={styles.sectionTitle} style={{ margin: 0 }}>
+                                            Thông tin về Kế toán trưởng/Phụ trách kế toán (nếu có):
+                                        </p>
+                                        <UserCardDropdown onSelect={handleFillCard("keToan")} />
+                                    </div>
                                     <PersonFields data={normalizedData} prefix="keToan" />
                                 </td>
                             </tr>
