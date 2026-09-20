@@ -33,6 +33,13 @@ const Checkbox = ({ checked }) => (
     </span>
 );
 
+// Thụt lề dòng đầu + canh đều hai bên cho các đoạn văn xuôi, khớp với
+// GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation trong cùng nhóm thủ tục.
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
+};
+
 const TOOLTIP = {
     giayToPhapLy: "Nếu kê khai số định danh cá nhân thì không phải kê khai quốc tịch, dân tộc.",
     vonDuocUyQuyen:
@@ -108,28 +115,36 @@ function IndividualOwner({ data }) {
                 Điện thoại: {data.chuSoHuu_phone || ""}
                 <InlineField>Thư điện tử: {data.chuSoHuu_email || ""}</InlineField>
             </p>
-            <p style={{ fontStyle: "italic" }}>
+            <p style={{ fontStyle: "italic", ...LEGAL_PARAGRAPH_STYLE }}>
                 Trường hợp không có số định danh cá nhân hoặc việc kết nối dữ liệu bị gián đoạn thì kê khai các thông
                 tin cá nhân dưới đây:
             </p>
-            <p>
-                Dân tộc: {data.chuSoHuu_danToc || ""}
-                <InlineField>Quốc tịch: {data.chuSoHuu_quocTich || ""}</InlineField>
-            </p>
-            <Line
-                label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
-                value={data.chuSoHuu_soHoChieu}
-            />
-            <p>
-                Ngày cấp: {formatDate(data.chuSoHuu_ngayCapHoChieu)}
-                <InlineField>Nơi cấp: {data.chuSoHuu_noiCapHoChieu || ""}</InlineField>
-            </p>
-            <p>Nơi thường trú:</p>
-            <AddressFields
-                soNha={data.chuSoHuu_thuongTru_soNha}
-                xa={data.chuSoHuu_thuongTru_xa}
-                tinh={data.chuSoHuu_thuongTru_tinh}
-            />
+            <table className={styles.borderTable} style={{ width: "calc(100% - 20px)" }}>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                Dân tộc: {data.chuSoHuu_danToc || ""}
+                                <InlineField>Quốc tịch: {data.chuSoHuu_quocTich || ""}</InlineField>
+                            </p>
+                            <Line
+                                label="Số Hộ chiếu/Số Hộ chiếu nước ngoài hoặc giấy tờ có giá trị thay thế"
+                                value={data.chuSoHuu_soHoChieu}
+                            />
+                            <p>
+                                Ngày cấp: {formatDate(data.chuSoHuu_ngayCapHoChieu)}
+                                <InlineField>Nơi cấp: {data.chuSoHuu_noiCapHoChieu || ""}</InlineField>
+                            </p>
+                            <p>Nơi thường trú:</p>
+                            <AddressFields
+                                soNha={data.chuSoHuu_thuongTru_soNha}
+                                xa={data.chuSoHuu_thuongTru_xa}
+                                tinh={data.chuSoHuu_thuongTru_tinh}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <p>
                 <strong>
                     Thông tin về Giấy chứng nhận đăng ký đầu tư (chỉ kê khai nếu chủ sở hữu là nhà đầu tư nước ngoài):
@@ -557,7 +572,7 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                 <p>Kính gửi: {data.kinhGui}</p>
                 <Line label="Tên doanh nghiệp (ghi bằng chữ in hoa)" value={companyName} />
                 <Line label="Mã số doanh nghiệp/Mã số thuế" value={data.maSoDoanhNghiep} />
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Doanh nghiệp có Giấy chứng nhận quyền sử dụng đất tại đảo, xã/phường biên giới, xã/phường ven biển
                     hoặc khu vực khác có ảnh hưởng đến quốc phòng, an ninh:
                 </p>
@@ -576,15 +591,15 @@ function GiayDeNghiDangKyThayDoiChuSoHuuConfirmation({
                 </p>
                 {ownerType === "to_chuc" ? <OrganizationOwner data={data} /> : <IndividualOwner data={data} />}
 
-                <p style={{ marginTop: 16 }}>
+                <p style={{ marginTop: 16, ...LEGAL_PARAGRAPH_STYLE }}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Doanh nghiệp cam kết hoàn toàn chịu trách nhiệm trước pháp luật về tính hợp pháp, chính xác và trung
                     thực của nội dung Giấy đề nghị này.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Người ký tại Giấy đề nghị này cam kết là người có quyền và nghĩa vụ thực hiện thủ tục đăng ký doanh
                     nghiệp theo quy định của pháp luật và Điều lệ công ty.
                 </p>

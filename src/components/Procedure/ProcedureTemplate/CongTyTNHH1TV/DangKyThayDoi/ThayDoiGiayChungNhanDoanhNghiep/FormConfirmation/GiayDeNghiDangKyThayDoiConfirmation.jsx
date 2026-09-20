@@ -18,6 +18,13 @@ import {
     getCompanyNamePrefix,
 } from "@/components/Procedure/ProcedureTemplate/SharedFormComponents/FormSections/companyNamePrefix";
 
+// Thụt lề dòng đầu + canh đều hai bên cho các đoạn văn xuôi, khớp với
+// GiayDeNghiDangKyThayDoiNguoiDaiDienPhapLuatConfirmation trong cùng nhóm thủ tục.
+const LEGAL_PARAGRAPH_STYLE = {
+    textAlign: "justify",
+    textIndent: "36pt",
+};
+
 const Checkbox = ({ checked }) => (
     <span
         className={`${styles.checkbox} checkbox-symbol`}
@@ -1096,7 +1103,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     <>
                         <Section title={`A. ${documentSubtitle?.toUpperCase()}`}>
                             <div>
-                                <p>
+                                <p style={LEGAL_PARAGRAPH_STYLE}>
                                     Doanh nghiệp đăng ký thay đổi trên cơ sở (chỉ kê khai trong trường hợp doanh nghiệp
                                     đăng ký thay đổi trên cơ sở tách doanh nghiệp hoặc sáp nhập doanh nghiệp, đánh dấu X
                                     vào ô thích hợp):
@@ -1127,7 +1134,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                     label="Mã số doanh nghiệp/Mã số thuế"
                                     value={data.sapNhap_maSoDoanhNghiep}
                                 />
-                                <p>
+                                <p style={LEGAL_PARAGRAPH_STYLE}>
                                     Đề nghị Quý Cơ quan thực hiện chấm dứt tồn tại đối với doanh nghiệp bị sáp nhập và
                                     các chi nhánh/văn phòng đại diện/địa điểm kinh doanh của doanh nghiệp bị sáp nhập.
                                 </p>
@@ -2027,7 +2034,7 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                                 - Thông tin đã đăng ký trong hồ sơ đăng ký doanh nghiệp nộp ngày{" "}
                                 {formatDate(data.hieuDinh_ngayNopHoSo) || ""} là {data.hieuDinh_thongTinHoSo || ""}.
                             </p>
-                            <p>
+                            <p style={LEGAL_PARAGRAPH_STYLE}>
                                 Do vậy, đề nghị Quý Cơ quan hiệu đính thông tin trên Giấy chứng nhận đăng ký doanh
                                 nghiệp, Giấy xác nhận về việc thay đổi nội dung đăng ký doanh nghiệp theo đúng thông tin
                                 trong hồ sơ đăng ký doanh nghiệp mà doanh nghiệp đã đăng ký.
@@ -2041,15 +2048,15 @@ function GiayDeNghiDangKyThayDoiConfirmation({
                     Đề nghị Quý Cơ quan cấp Giấy xác nhận thay đổi nội dung đăng ký doanh nghiệp cho doanh nghiệp đối
                     với các thông tin thay đổi nêu trên.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Trường hợp hồ sơ đăng ký doanh nghiệp hợp lệ, đề nghị Quý Cơ quan đăng công bố nội dung đăng ký
                     doanh nghiệp trên Cổng thông tin quốc gia về đăng ký doanh nghiệp.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Doanh nghiệp cam kết hoàn toàn chịu trách nhiệm trước pháp luật về tính hợp pháp, chính xác và trung
                     thực của nội dung Thông báo này.
                 </p>
-                <p>
+                <p style={LEGAL_PARAGRAPH_STYLE}>
                     Người ký tại Thông báo này cam kết là người có quyền và nghĩa vụ thực hiện thủ tục đăng ký doanh
                     nghiệp theo quy định của pháp luật và Điều lệ công ty.
                 </p>

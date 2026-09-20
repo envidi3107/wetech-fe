@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 // PHẢI khớp với giá trị `top` của .dataJsonToolbar trong DeclarationForms.module.css.
 const DOCK_TOP = 130;
@@ -17,13 +17,23 @@ const ROLL_DURATION_MS = 350;
  * để bật hiệu ứng "lăn" (trượt + xoay) và dồn nút sang góc phải.
  */
 export default function useStickyReloadToolbar() {
-    const toolbarRef = useRef(null);
+    // Dùng callback ref (thay vì useRef) vì toolbar có thể mount TRỄ: form khai báo
+    // render nhánh "Đang tải biểu mẫu..." trước khi `forms` về từ API, nên ở lần
+    // mount đầu tiên phần tử toolbar chưa tồn tại. Với useRef + useEffect([]) thì
+    // effect chỉ chạy đúng một lần lúc đó, thấy ref null rồi thoát và KHÔNG BAO GIỜ
+    // gắn lại listener khi toolbar thật sự xuất hiện - hậu quả là isStuck luôn false
+    // và hiệu ứng dồn nút sang phải không bao giờ chạy (form xác nhận không dính lỗi
+    // này vì nó chỉ mount khi `forms` đã có sẵn). Lưu element vào state để effect
+    // chạy lại đúng thời điểm nó vào/rời DOM.
+    const [toolbarEl, setToolbarEl] = useState(null);
+    const toolbarRef = useCallback((node) => {
+        setToolbarEl(node);
+    }, []);
     const buttonWrapRef = useRef(null);
     const [isStuck, setIsStuck] = useState(false);
     const preToggleLeftRef = useRef(null);
 
     useEffect(() => {
-        const toolbarEl = toolbarRef.current;
         if (!toolbarEl) return undefined;
 
         let rafId = null;
@@ -58,7 +68,7 @@ export default function useStickyReloadToolbar() {
             window.removeEventListener("resize", onScrollOrResize);
             if (rafId) cancelAnimationFrame(rafId);
         };
-    }, []);
+    }, [toolbarEl]);
 
     // Kỹ thuật FLIP (First - Last - Invert - Play): ngay khi justify-content đổi,
     // trình duyệt đã "nhảy" nút sang vị trí mới trong cùng 1 frame (thuộc tính này
